@@ -1,0 +1,103 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumb from './Breadcrumb.astro';
+import ProvozovnaRadek from './ProvozovnaRadek.astro';
+import MapaSalonu from './MapaSalonu.astro';
+import { mestoUrl, krajUrl, pocetText, type Mesto, type Provozovna } from '../lib/data';
+import { ZAMERY, zamerUrl, zameryMesta, statistiky, itemListJsonLd, type Zamer } from '../lib/seo-mesto';
+import { hhmm } from '../lib/oteviraci-doba';
+
+interface Props {
+  z: Zamer;
+  m: Mesto;
+  salony: Provozovna[];
+}
+const { z, m, salony } = Astro.props;
+const nazev = z.nazev(m.nazev);
+const st = statistiky(salony);
+const ostatni = zameryMesta(m).filter((x) => x.z.slug !== z.slug);
+const den = z.slug === 'otevreno-v-nedeli' ? 6 : z.slug === 'otevreno-v-sobotu' ? 5 : -1;
+
+const vety: string[] = [
+  `${m.nazev}: ${pocetText(salony.length, 'salon', 'salony', 'salonů')} z celkem ${m.provozovny.length} v katalogu (${z.popis}).`,
+];
+if (st.sTelefonem) vety.push(`Telefon uvádí ${pocetText(st.sTelefonem, 'salon', 'salony', 'salonů')}, objednat se tak můžete přímo.`);
+if (st.nejdrive && den < 0) vety.push(`Ve všední dny nejdříve otevírá ${st.nejdrive.p.nazev} (od ${hhmm(st.nejdrive.od)}).`);
+if (den >= 0) vety.push('Otevírací dobu přebíráme z veřejných zdrojů a o svátcích se může lišit. Před návštěvou ji raději ověřte telefonicky.');
+
+const breadcrumb = [
+  ...(m.kraj.nazev !== m.nazev ? [{ nazev: m.kraj.nazev, href: krajUrl(m.kraj.slug) }] : []),
+  { nazev: m.nazev, href: mestoUrl(m.slug) },
+  { nazev: nazev.replace(`: ${m.nazev}`, '').replace(` ${m.nazev}`, '') },
+];
+---
+
+<Base
+  title={`${nazev} (${pocetText(salony.length, 'salon', 'salony', 'salonů')})`}
+  description={`${nazev}: ${pocetText(salony.length, 'salon', 'salony', 'salonů')} s adresou, telefonem a otevírací dobou. Aktuální přehled na jednom místě.`}
+  jsonLd={itemListJsonLd(nazev, salony)}
+>
+  <div class="wrap section">
+    <Breadcrumb items={breadcrumb} />
+    <h1>{nazev}</h1>
+    <div class="uvod">{vety.map((t, i) => <p class:list={[i === 0 && 'lead']}>{t}</p>)}</div>
+
+    <ul class="seznam">
+      {salony.map((p) => <ProvozovnaRadek p={p} />)}
+    </ul>
+
+    <section class="blok">
+      <h2>Na mapě</h2>
+      <MapaSalonu salony={salony} popis={`Mapa: ${nazev}`} />
+    </section>
+
+    <nav class="blok dalsi" aria-label="Další výběry">
+      <h2>Další možnosti</h2>
+      <ul>
+        <li><a href={mestoUrl(m.slug)}>Všechna kadeřnictví: {m.nazev}</a> <span class="muted">{m.provozovny.length}</span></li>
+        {ostatni.map(({ z: o, salony: s }) => <li><a href={zamerUrl(o, m.slug)}>{o.nazev(m.nazev)}</a> <span class="muted">{s.length}</span></li>)}
+      </ul>
+    </nav>
+  </div>
+</Base>
+
+<script>
+  import { aplikujStav } from '../scripts/stav';
+  aplikujStav();
+</script>
+
+<style>
+  .uvod p {
+    margin-bottom: 0.6rem;
+  }
+  .uvod p:not(.lead) {
+    color: var(--ink-soft);
+  }
+  .seznam {
+    list-style: none;
+    margin: 2rem 0 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .blok {
+    margin-top: clamp(40px, 6vw, 64px);
+  }
+  .dalsi ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 36rem;
+  }
+  .dalsi li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .dalsi a {
+    text-decoration: none;
+  }
+  .dalsi a:hover {
+    text-decoration: underline;
+  }
+</style>

@@ -1,0 +1,57 @@
+---
+// Mapa všech salonů ve výpisu. Leaflet se načte, až když je mapa vidět.
+import { url, type Provozovna } from '../lib/data';
+
+interface Props {
+  salony: Provozovna[];
+  popis: string;
+}
+const { salony, popis } = Astro.props;
+const body = salony.map((p) => [p.lat, p.lon, p.nazev, url(p)]);
+---
+
+<div class="mapa" data-mapa={JSON.stringify(body)} role="img" aria-label={popis}></div>
+
+<script>
+  import 'leaflet/dist/leaflet.css';
+
+  document.querySelectorAll<HTMLElement>('[data-mapa]').forEach((el) => {
+    const nacti = async () => {
+      const L = (await import('leaflet')).default;
+      const body = JSON.parse(el.dataset.mapa!) as [number, number, string, string][];
+      const map = L.map(el, { scrollWheelZoom: false });
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }).addTo(map);
+      const esc = (s: string) => s.replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
+      const vrstva = L.featureGroup(
+        body.map(([lat, lon, nazev, href]) =>
+          L.circleMarker([lat, lon], { radius: 6, color: '#ffffff', weight: 2, fillColor: '#786b5c', fillOpacity: 1 }).bindPopup(
+            `<a href="${href}">${esc(nazev)}</a>`,
+          ),
+        ),
+      ).addTo(map);
+      map.fitBounds(vrstva.getBounds(), { padding: [24, 24], maxZoom: 16 });
+    };
+    const io = new IntersectionObserver((e) => {
+      if (e[0].isIntersecting) {
+        io.disconnect();
+        nacti();
+      }
+    });
+    io.observe(el);
+  });
+</script>
+
+<style>
+  .mapa {
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    min-height: 280px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--mint);
+    z-index: 0;
+  }
+</style>

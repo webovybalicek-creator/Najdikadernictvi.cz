@@ -53,7 +53,7 @@ interface RegistrZaznam {
   lon: number;
 }
 
-const REZERVOVANE = new Set(['blog', 'kraj', 'kraje', 'hledat', 'kontakt', 'o-webu', 'pridat-provozovnu', 'ochrana-osobnich-udaju', 'okoli', 'praha-hub']);
+const REZERVOVANE = new Set(['blog', 'kraj', 'kraje', 'hledat', 'kontakt', 'o-webu', 'pridat-provozovnu', 'ochrana-osobnich-udaju', 'okoli', 'praha-hub', 'barbershopy', 'detska-kadernictvi', 'otevreno-v-sobotu', 'otevreno-v-nedeli', 'pro-salony']);
 const OBVOD = /^Praha \d+$/;
 const nn = <T,>(v: T | null | undefined) => (v == null || v === '' ? undefined : v);
 

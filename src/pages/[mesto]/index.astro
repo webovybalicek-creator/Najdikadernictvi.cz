@@ -2,6 +2,9 @@
 import Base from '../../layouts/Base.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import ProvozovnaRadek from '../../components/ProvozovnaRadek.astro';
+import MapaSalonu from '../../components/MapaSalonu.astro';
+import Faq from '../../components/Faq.astro';
+import { statistiky, textMesta, faqMesta, faqJsonLd, itemListJsonLd, zameryMesta, zamerUrl } from '../../lib/seo-mesto';
 import { mesta, mestoUrl, krajUrl, pocetText, tyden, type Mesto } from '../../lib/data';
 
 export function getStaticPaths() {
@@ -39,12 +42,11 @@ const breadcrumb = [
   ...(m.kraj.nazev !== m.nazev ? [{ nazev: m.kraj.nazev, href: krajUrl(m.kraj.slug) }] : []),
   { nazev: m.nazev },
 ];
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'ItemList',
-  name: `Kadeřnictví ${m.nazev}`,
-  numberOfItems: vse.length,
-};
+const st = statistiky(vse);
+const uvod = textMesta(m, st);
+const faq = faqMesta(m, st);
+const zamery = zameryMesta(m);
+const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length > 1 ? [faqJsonLd(faq)] : [])];
 ---
 
 <Base
@@ -55,10 +57,20 @@ const jsonLd = {
   <div class="wrap section">
     <Breadcrumb items={breadcrumb} />
     <h1>Kadeřnictví {m.nazev}</h1>
-    <p class="lead">
-      {m.nazev}{m.kraj.nazev !== m.nazev && <> ({m.kraj.nazev})</>}: {pocetText(vse.length, 'salon', 'salony', 'salonů')}{barberu > 0 && <>, z toho {pocetText(barberu, 'barbershop', 'barbershopy', 'barbershopů')}</>}.{' '}
-      {sDobou > 0 && <>U {pocetText(sDobou, 'salonu', 'salonů', 'salonů')} s otevírací dobou ukazujeme, jestli mají právě otevřeno.</>}
-    </p>
+    <div class="uvod">
+      {uvod.map((t, i) => <p class:list={[i === 0 && 'lead']}>{t}</p>)}
+    </div>
+    {
+      zamery.length > 0 && (
+        <nav class="zamery" aria-label="Upřesnit výběr">
+          {zamery.map(({ z, salony }) => (
+            <a href={zamerUrl(z, m.slug)}>
+              {z.nazev(m.nazev).replace(`: ${m.nazev}`, '').replace(` ${m.nazev}`, '')} <span>{salony.length}</span>
+            </a>
+          ))}
+        </nav>
+      )
+    }
 
     {
       vse.length > 3 && (
@@ -95,6 +107,17 @@ const jsonLd = {
       {vse.map((p) => <ProvozovnaRadek p={p} />)}
     </ul>
     <p class="prazdno" data-prazdno hidden>Žádný salon neodpovídá filtrům. Zkuste některý filtr vypnout.</p>
+
+    {
+      vse.length > 1 && (
+        <section class="blok">
+          <h2>Mapa salonů</h2>
+          <MapaSalonu salony={vse} popis={`Mapa kadeřnictví: ${m.nazev}`} />
+        </section>
+      )
+    }
+
+    {faq.length > 1 && <Faq polozky={faq} nadpis={`Časté dotazy: kadeřnictví ${m.nazev}`} />}
 
     <aside class="dalsi">
       <div>
@@ -153,6 +176,38 @@ const jsonLd = {
 </script>
 
 <style>
+  .uvod p {
+    margin-bottom: 0.6rem;
+  }
+  .uvod p:not(.lead) {
+    color: var(--ink-soft);
+  }
+  .zamery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+  .zamery a {
+    display: inline-flex;
+    gap: 0.5em;
+    align-items: center;
+    padding: 0.4em 0.95em;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    font-size: 0.85rem;
+    text-decoration: none;
+  }
+  .zamery a:hover {
+    border-color: var(--ink);
+  }
+  .zamery span {
+    color: var(--ink-soft);
+  }
+  .blok {
+    margin-top: clamp(40px, 6vw, 64px);
+  }
   .filtry {
     display: flex;
     flex-wrap: wrap;
