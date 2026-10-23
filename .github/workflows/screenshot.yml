@@ -1,0 +1,52 @@
+name: Screenshot živého webu
+
+on:
+  workflow_dispatch:
+    inputs:
+      cesty:
+        description: 'Cesty oddělené mezerou'
+        default: '/ /brno/andrea-zubova/'
+
+permissions:
+  contents: write
+
+jobs:
+  shot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -q playwright && python -m playwright install --with-deps chromium >/dev/null
+      - name: Screenshoty
+        env:
+          CESTY: ${{ inputs.cesty }}
+        run: |
+          mkdir -p shots
+          python - <<'PY'
+          import os, re
+          from playwright.sync_api import sync_playwright
+          cesty = os.environ.get('CESTY', '/').split()
+          with sync_playwright() as pw:
+              b = pw.chromium.launch()
+              pg = b.new_page(viewport={'width': 1280, 'height': 900})
+              log = []
+              pg.on('response', lambda r: log.append(f'{r.status} {r.url}') if 'panorama' in r.url else None)
+              pg.on('console', lambda m: log.append(f'console {m.type}: {m.text}'))
+              for c in cesty:
+                  pg.goto('https://najdikadernictvi.cz' + c, wait_until='networkidle')
+                  for y in range(0, 8000, 700):
+                      pg.evaluate(f'window.scrollTo(0,{y})'); pg.wait_for_timeout(250)
+                  pg.wait_for_timeout(1500)
+                  pg.evaluate('window.scrollTo(0,0)'); pg.wait_for_timeout(300)
+                  n = re.sub(r'[^a-z0-9]+', '-', c.strip('/')) or 'uvod'
+                  pg.screenshot(path=f'shots/{n}.png', full_page=True)
+              open('shots/log.txt', 'w').write('\n'.join(log))
+              b.close()
+          PY
+      - name: Uložení do větve screenshots
+        run: |
+          cd shots
+          git init -q && git checkout -q -b screenshots
+          git add . && git -c user.name=bot -c user.email=bot@local commit -qm shots
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" screenshots
