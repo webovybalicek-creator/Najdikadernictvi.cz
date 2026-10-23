@@ -1,0 +1,36 @@
+---
+// Povinná atribuce Mapy.com u fotek „pohled z ulice“ (logo + copyright s odkazem)
+interface Props {
+  text?: string;
+}
+const { text = 'Pohledy z ulice' } = Astro.props;
+---
+
+<p class="mapy-atr">
+  <span>{text}:</span>
+  <a href="https://mapy.com/" rel="noopener" target="_blank" aria-label="Mapy.com"
+    ><img src="https://api.mapy.com/img/api/logo.svg" alt="Mapy.com" width="58" height="14" loading="lazy" /></a
+  >
+  <a href="https://api.mapy.com/copyright" rel="noopener" target="_blank">© Seznam.cz a.s. a další</a>
+</p>
+
+<style>
+  .mapy-atr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.5rem;
+    margin: 0.75rem 0 0;
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    max-width: none;
+  }
+  .mapy-atr img {
+    height: 14px;
+    width: auto;
+    display: block;
+  }
+  .mapy-atr a {
+    color: inherit;
+  }
+</style>

@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Hledani from '../components/Hledani.astro';
 import Karta from '../components/Karta.astro';
 import Magazin from '../components/Magazin.astro';
+import MapyAtribuce from '../components/MapyAtribuce.astro';
 import { KRAJE } from '../lib/kraje';
 import { PROVOZOVNY, nejvetsiMesta, pocetVKraji, krajUrl, mestoUrl, mesta, pocetText, vyber } from '../lib/data';
 import { SITE } from '../lib/config';
@@ -72,6 +73,7 @@ const jsonLd = {
           <ul class="karty">
             {doporucene.map((p) => <Karta p={p} />)}
           </ul>
+          <MapyAtribuce />
         </div>
       </section>
     )
@@ -90,6 +92,7 @@ const jsonLd = {
           <ul class="karty">
             {barbershopy.map((p) => <Karta p={p} />)}
           </ul>
+          <MapyAtribuce />
         </div>
       </section>
     )

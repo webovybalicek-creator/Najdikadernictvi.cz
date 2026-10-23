@@ -4,6 +4,7 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import ProvozovnaRadek from '../../components/ProvozovnaRadek.astro';
 import Vizual from '../../components/Vizual.astro';
 import Tipy from '../../components/Tipy.astro';
+import MapyAtribuce from '../../components/MapyAtribuce.astro';
 import {
   PROVOZOVNY,
   adresa,
@@ -94,7 +95,7 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
     <header class="head">
       <figure class="head__viz">
         <Vizual p={p} velky panorama />
-        <figcaption class="head__popis">Pohled z ulice · Mapy.com</figcaption>
+        <figcaption class="head__popis"><MapyAtribuce text="Pohled z ulice" /></figcaption>
       </figure>
       <div class="head__txt">
       <p class="head__typ">
@@ -263,10 +264,7 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
   }
   .head__popis {
     display: none;
-    margin-top: 0.5rem;
-    font-size: 0.75rem;
-    color: var(--ink-soft);
-    text-align: right;
+    margin-top: 0.25rem;
   }
   .head__viz:has(:global(.viz__foto.ok)) .head__popis {
     display: block;

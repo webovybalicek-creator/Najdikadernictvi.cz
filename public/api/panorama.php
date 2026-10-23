@@ -12,7 +12,9 @@ declare(strict_types=1);
 const API_KLIC = '51DU-WuzB5tq3ivgYzjj3cZrucqTjiScIxk8B4WdB2k';
 const LIMIT_MESIC = 60000;
 const LIMIT_DEN = 2000;
-const VELIKOSTI = ['maly' => [480, 360], 'velky' => [1024, 640]];
+// Obrázky jsou o kus vyšší než zobrazení 4:3 – spodní pruh s vloženou atribucí se ořízne
+// a atribuce Mapy.com se zobrazuje vedle fotek (viz MapyAtribuce.astro).
+const VELIKOSTI = ['maly' => [480, 400], 'velky' => [1024, 830]];
 
 function nenalezeno(int $code = 404, bool $trvale = false): void
 {

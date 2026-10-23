@@ -9,7 +9,7 @@ interface Props {
   panorama?: boolean;
 }
 const { p, velky = false, panorama = false } = Astro.props;
-const panoUrl = `/api/panorama.php?lat=${p.lat}&lon=${p.lon}&s=${velky ? 'velky' : 'maly'}`;
+const panoUrl = `/api/panorama.php?lat=${p.lat}&lon=${p.lon}&s=${velky ? 'velky' : 'maly'}&v=2`;
 
 // Tlumené přírodní tóny (kámen, písek, šalvěj, jíl)
 const PALETA = [
@@ -99,6 +99,7 @@ const id = `v-${p.id}`;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center top;
     opacity: 0;
     transition: opacity 0.4s ease;
   }
