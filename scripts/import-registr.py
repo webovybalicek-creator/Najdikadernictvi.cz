@@ -23,7 +23,7 @@ MAX_MINUT = float(os.environ.get('MAX_MINUT', '300'))
 OBNOVA_DNU = int(os.environ.get('OBNOVA_DNU', '45'))
 VLAKNA = int(os.environ.get('VLAKNA', '6'))
 ZA_SEKUNDU = float(os.environ.get('ZA_SEKUNDU', '8'))
-UA = {'User-Agent': 'najdikadernictvi.cz import (katalog kadeřnictví)', 'Accept-Encoding': 'gzip'}
+UA = {'User-Agent': 'najdikadernictvi.cz import (+https://najdikadernictvi.cz)', 'Accept-Encoding': 'gzip'}
 START = time.time()
 
 KRAJE = {
@@ -282,4 +282,10 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception:
+        import traceback
+        tb = traceback.format_exc().strip().splitlines()
+        gh('error', 'Import selhal: ' + ' | '.join(tb[-6:]).replace('%', '%25'))
+        sys.exit(1)
