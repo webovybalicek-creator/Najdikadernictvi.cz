@@ -5,7 +5,7 @@
  * Spuštění: node scripts/import-osm.ts
  * Výstup:   src/data/provozovny.json, src/data/import-meta.json
  */
-import { writeFile, mkdir } from 'node:fs/promises';
+import { writeFile, mkdir, readFile } from 'node:fs/promises';
 import { KRAJE } from '../src/lib/kraje.ts';
 import { slugify } from '../src/lib/slug.ts';
 
@@ -50,14 +50,18 @@ export interface Provozovna {
   bezbarierove?: string;
 }
 
+const gh = (level: 'notice' | 'warning' | 'error', msg: string) =>
+  console.log(process.env.GITHUB_ACTIONS ? `::${level}::${msg}` : `[${level}] ${msg}`);
+
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 async function overpass(query: string): Promise<OsmElement[]> {
   let lastErr: unknown;
-  for (let attempt = 0; attempt < 6; attempt++) {
+  for (let attempt = 0; attempt < 9; attempt++) {
     const url = ENDPOINTS[attempt % ENDPOINTS.length];
     try {
       const res = await fetch(url, {
+        signal: AbortSignal.timeout(300_000),
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -72,7 +76,7 @@ async function overpass(query: string): Promise<OsmElement[]> {
     } catch (err) {
       lastErr = err;
       console.warn(`  pokus ${attempt + 1} selhal: ${(err as Error).message}`);
-      await sleep(10_000 * (attempt + 1));
+      await sleep(Math.min(15_000 * (attempt + 1), 90_000));
     }
   }
   throw lastErr;
@@ -132,6 +136,13 @@ async function main() {
   const all: Provozovna[] = [];
   const seen = new Set<string>();
 
+  // Předchozí data – použijí se pro kraje, které se tentokrát nepodaří stáhnout
+  let predchozi: Provozovna[] = [];
+  try {
+    predchozi = JSON.parse(await readFile('src/data/provozovny.json', 'utf8'));
+  } catch {}
+  const selhaly: string[] = [];
+
   for (const kraj of KRAJE) {
     console.log(`▶ ${kraj.nazev} (${kraj.iso})`);
     const q = `[out:json][timeout:240];
@@ -144,7 +155,19 @@ area["ISO3166-2"="${kraj.iso}"]->.k;
 out center tags;
 node["place"~"^(city|town|village)$"](area.k);
 out;`;
-    const els = await overpass(q);
+    let els: OsmElement[];
+    try {
+      els = await overpass(q);
+    } catch (err) {
+      const stara = predchozi.filter((p) => p.kraj === kraj.slug);
+      gh('warning', `${kraj.nazev}: stažení selhalo (${(err as Error).message}), ponechávám ${stara.length} předchozích záznamů`);
+      selhaly.push(kraj.nazev);
+      for (const p of stara) {
+        seen.add(p.id);
+        all.push(p);
+      }
+      continue;
+    }
     const places = els
       .filter((e) => e.type === 'node' && e.tags?.place && e.tags?.name)
       .map((e) => ({ name: e.tags!.name, lat: e.lat!, lon: e.lon! }));
@@ -199,7 +222,7 @@ out;`;
         bezbarierove: clean(t.wheelchair),
       });
     }
-    console.log(`  ${n} provozoven`);
+    gh('notice', `${kraj.nazev}: ${n} provozoven`);
     await sleep(5_000);
   }
 
@@ -210,9 +233,12 @@ out;`;
     if (!mestaKraje.has(s)) mestaKraje.set(s, new Set());
     mestaKraje.get(s)!.add(p.kraj);
   }
+  // Slugy rezervované pro jiné stránky webu
+  const REZERVOVANE = new Set(['blog', 'kraj', 'kraje', 'hledat', 'kontakt', 'o-webu', 'pridat-provozovnu', 'ochrana-osobnich-udaju']);
   for (const p of all) {
     const s = slugify(p.mesto);
-    p.mestoSlug = mestaKraje.get(s)!.size > 1 ? `${s}-${p.kraj.replace(/-kraj$|^kraj-/, '')}` : s;
+    p.mestoSlug =
+      mestaKraje.get(s)!.size > 1 || REZERVOVANE.has(s) ? `${s}-${p.kraj.replace(/-kraj$|^kraj-/, '')}` : s;
   }
 
   // Slug provozovny: unikátní v rámci města
@@ -224,16 +250,20 @@ out;`;
     used.add(`${p.mestoSlug}/${p.slug}`);
   }
 
+  if (selhaly.length === KRAJE.length) throw new Error('Nepodařilo se stáhnout žádný kraj');
+  if (all.length === 0) throw new Error('Žádná data');
+
   await mkdir('src/data', { recursive: true });
   await writeFile('src/data/provozovny.json', JSON.stringify(all, null, 1) + '\n');
   await writeFile(
     'src/data/import-meta.json',
     JSON.stringify({ zdroj: 'OpenStreetMap', importovano: new Date().toISOString(), pocet: all.length }, null, 2) + '\n',
   );
-  console.log(`✔ Celkem ${all.length} provozoven`);
+  gh('notice', `Celkem ${all.length} provozoven${selhaly.length ? `, nestaženo: ${selhaly.join(', ')}` : ''}`);
 }
 
 main().catch((err) => {
+  gh('error', `Import selhal: ${(err as Error).message}`);
   console.error(err);
   process.exit(1);
 });
