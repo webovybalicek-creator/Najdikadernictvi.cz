@@ -3,11 +3,10 @@ import Base from '../../layouts/Base.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import BlogKarta from '../../components/BlogKarta.astro';
 import KategorieBlogu from '../../components/KategorieBlogu.astro';
+import Magazin from '../../components/Magazin.astro';
 import { clanky } from '../../lib/blog';
 
 const vse = await clanky();
-const hlavni = vse.find((c) => c.data.hlavni) ?? vse[0];
-const ostatni = vse.filter((c) => c.id !== hlavni.id);
 ---
 
 <Base
@@ -23,22 +22,29 @@ const ostatni = vse.filter((c) => c.id !== hlavni.id);
       <KategorieBlogu />
     </header>
 
-    <BlogKarta c={hlavni} velka />
-
+  </div>
+  <div class="magwrap"><Magazin nadpis={false} /></div>
+  <div class="wrap section">
+    <div class="sec-head"><h2>Všechny články</h2></div>
     <div class="grid">
-      {ostatni.map((c) => <BlogKarta c={c} />)}
+      {vse.map((c) => <BlogKarta c={c} />)}
     </div>
   </div>
 </Base>
 
 <style>
   .hlava {
-    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+    margin-bottom: 0;
+  }
+  .wrap.section:first-child {
+    padding-bottom: 0;
+  }
+  .magwrap :global(.mag) {
+    padding-top: clamp(32px, 5vw, 56px);
   }
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
     gap: clamp(2rem, 4vw, 3rem) clamp(1.25rem, 3vw, 2rem);
-    margin-top: clamp(3rem, 7vw, 5rem);
   }
 </style>

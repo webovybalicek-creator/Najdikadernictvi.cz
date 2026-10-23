@@ -1,0 +1,373 @@
+---
+// Magazínový výpis článků: hlavní článek + sloupec dalších + tmavý pás se záložkami podle kategorií
+import { Image } from 'astro:assets';
+import { clanky, clanekUrl, kategorieUrl, casCteni, KATEGORIE, kategorieSlug } from '../lib/blog';
+
+interface Props {
+  /** Zobrazit nadpis sekce (na úvodu webu ano, na blogu ne) */
+  nadpis?: boolean;
+}
+const { nadpis = true } = Astro.props;
+
+const vse = await clanky();
+const hlavni = vse.find((c) => c.data.hlavni) ?? vse[0];
+const bocni = vse.filter((c) => c.id !== hlavni.id).slice(0, 4);
+const nahore = new Set([hlavni.id, ...bocni.map((c) => c.id)]);
+const zalozky = KATEGORIE.map((k) => ({
+  k,
+  slug: kategorieSlug(k),
+  // v pásu přednostně články, které nejsou nahoře
+  clanky: [
+    ...vse.filter((c) => c.data.kategorie === k && !nahore.has(c.id)),
+    ...vse.filter((c) => c.data.kategorie === k && nahore.has(c.id)),
+  ].slice(0, 3),
+})).filter((z) => z.clanky.length > 0);
+---
+
+<section class="mag">
+  <div class="wrap">
+    {
+      nadpis && (
+        <div class="sec-head">
+          <div>
+            <span class="eyebrow">Magazín</span>
+            <h2>
+              Rady a <em>inspirace</em>
+            </h2>
+          </div>
+          <a class="btn btn--ghost" href="/blog/">
+            Všechny články
+          </a>
+        </div>
+      )
+    }
+
+    <div class="mag__top">
+      <article class="lead">
+        <a href={clanekUrl(hlavni)}>
+          <h3 class="lead__nazev">{hlavni.data.title}</h3>
+          <div class="lead__img">
+            <Image
+              src={hlavni.data.obrazek}
+              alt={hlavni.data.obrazekAlt}
+              widths={[480, 800, 1100]}
+              sizes="(max-width: 900px) 100vw, 55vw"
+            />
+          </div>
+          <p class="lead__perex">{hlavni.data.perex}</p>
+        </a>
+        <p class="meta">
+          <a href={kategorieUrl(hlavni.data.kategorie)}>{hlavni.data.kategorie}</a>
+          <span>{casCteni(hlavni)} min čtení</span>
+        </p>
+      </article>
+
+      <ul class="bocni">
+        {
+          bocni.map((c) => (
+            <li>
+              <article>
+                <div class="bocni__txt">
+                  <h3>
+                    <a href={clanekUrl(c)}>{c.data.title}</a>
+                  </h3>
+                  <p class="meta">
+                    <a href={kategorieUrl(c.data.kategorie)}>{c.data.kategorie}</a>
+                  </p>
+                </div>
+                <a class="bocni__img" href={clanekUrl(c)} tabindex="-1" aria-hidden="true">
+                  <Image src={c.data.obrazek} alt="" widths={[240, 420]} sizes="(max-width: 600px) 40vw, 14rem" />
+                </a>
+              </article>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="pas" data-pas>
+      <h3 class="pas__h">Podle témat</h3>
+      <div class="pas__tabs" role="tablist">
+        {
+          zalozky.map((z, i) => (
+            <button
+              type="button"
+              role="tab"
+              id={`tab-${z.slug}`}
+              aria-controls={`panel-${z.slug}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              tabindex={i === 0 ? 0 : -1}
+            >
+              {z.k}
+            </button>
+          ))
+        }
+      </div>
+      {
+        zalozky.map((z, i) => (
+          <div class="pas__panel" role="tabpanel" id={`panel-${z.slug}`} aria-labelledby={`tab-${z.slug}`} hidden={i !== 0}>
+            {z.clanky.map((c) => (
+              <article>
+                <a href={clanekUrl(c)}>
+                  <div class="pas__img">
+                    <Image src={c.data.obrazek} alt={c.data.obrazekAlt} widths={[360, 640]} sizes="(max-width: 760px) 100vw, 30vw" />
+                  </div>
+                  <h4>{c.data.title}</h4>
+                </a>
+                <p class="meta">
+                  <span>{casCteni(c)} min čtení</span>
+                  <a href={kategorieUrl(c.data.kategorie)}>{c.data.kategorie}</a>
+                </p>
+              </article>
+            ))}
+          </div>
+        ))
+      }
+      <p class="pas__vice">
+        <a class="btn" href="/blog/">Další články <span aria-hidden="true">→</span></a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-pas]').forEach((pas) => {
+    const tabs = [...pas.querySelectorAll<HTMLButtonElement>('[role=tab]')];
+    const vyber = (t: HTMLButtonElement) => {
+      tabs.forEach((x) => {
+        const on = x === t;
+        x.setAttribute('aria-selected', String(on));
+        x.tabIndex = on ? 0 : -1;
+        pas.querySelector<HTMLElement>(`#${x.getAttribute('aria-controls')}`)!.hidden = !on;
+      });
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => vyber(t));
+      t.addEventListener('keydown', (e) => {
+        const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!d) return;
+        const n = tabs[(i + d + tabs.length) % tabs.length];
+        n.focus();
+        vyber(n);
+      });
+    });
+  });
+</script>
+
+<style>
+  .mag {
+    padding-block: clamp(48px, 8vw, 96px);
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 1rem;
+    margin: 0.6rem 0 0;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .meta a {
+    color: var(--bottle);
+    text-decoration: none;
+  }
+  .meta a:hover {
+    text-decoration: underline;
+  }
+
+  /* Horní část */
+  .mag__top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+  }
+  .lead > a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+  .lead__nazev {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 400;
+    line-height: 1.2;
+    margin: 0 0 1.25rem;
+  }
+  .lead > a:hover .lead__nazev {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.15em;
+  }
+  .lead__img {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--mint);
+  }
+  .lead__img :global(img),
+  .bocni__img :global(img),
+  .pas__img :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  .lead > a:hover :global(img),
+  .pas article a:hover :global(img) {
+    transform: scale(1.03);
+  }
+  .lead__perex {
+    max-width: none;
+    margin: 1.1rem 0 0;
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+  }
+
+  .bocni {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.25rem;
+    align-content: space-between;
+  }
+  .bocni li + li {
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+  .bocni article {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(7rem, 30%, 13rem);
+    gap: 1.25rem;
+    align-items: start;
+  }
+  .bocni h3 {
+    font-size: 1.12rem;
+    font-weight: 400;
+    line-height: 1.35;
+    margin: 0;
+    letter-spacing: 0;
+  }
+  .bocni h3 a {
+    text-decoration: none;
+  }
+  .bocni h3 a:hover {
+    text-decoration: underline;
+  }
+  .bocni__img {
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--mint);
+  }
+
+  /* Tmavý pás */
+  .pas {
+    margin-top: clamp(3rem, 7vw, 5rem);
+    background: var(--slate);
+    color: var(--slate-ink);
+    padding: clamp(1.5rem, 4vw, 2.75rem);
+    border-radius: var(--radius);
+  }
+  .pas__h {
+    font-size: 1.6rem;
+    font-weight: 400;
+    margin: 0 0 1.1rem;
+  }
+  .pas__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.75rem;
+    border-bottom: 1px solid rgb(255 255 255 / 0.15);
+    margin-bottom: 1.75rem;
+  }
+  .pas__tabs button {
+    appearance: none;
+    background: none;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    padding: 0.6rem 0;
+    margin-bottom: -1px;
+    font: 500 0.95rem/1.2 var(--f-text);
+    color: rgb(255 255 255 / 0.65);
+    cursor: pointer;
+  }
+  .pas__tabs button:hover {
+    color: #fff;
+  }
+  .pas__tabs button[aria-selected='true'] {
+    color: #fff;
+    border-bottom-color: var(--brass);
+  }
+  .pas__tabs button:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+  .pas__panel {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.75rem;
+  }
+  .pas__panel[hidden] {
+    display: none;
+  }
+  .pas article > a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+  .pas__img {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: rgb(255 255 255 / 0.06);
+  }
+  .pas h4 {
+    font-size: 1.15rem;
+    font-weight: 500;
+    line-height: 1.3;
+    margin: 1rem 0 0;
+  }
+  .pas article > a:hover h4 {
+    text-decoration: underline;
+  }
+  .pas .meta {
+    color: rgb(255 255 255 / 0.55);
+  }
+  .pas .meta a {
+    color: var(--brass);
+  }
+  .pas__vice {
+    text-align: center;
+    max-width: none;
+    margin: 2rem 0 0;
+  }
+  .pas__vice .btn {
+    background: var(--brass);
+    border-color: var(--brass);
+    color: #1f1b16;
+  }
+  .pas__vice .btn:hover {
+    background: #b39f84;
+  }
+
+  @media (max-width: 900px) {
+    .mag__top {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 760px) {
+    .pas__panel {
+      grid-template-columns: 1fr;
+    }
+    .pas__panel article + article {
+      padding-top: 1.5rem;
+      border-top: 1px solid rgb(255 255 255 / 0.12);
+    }
+  }
+</style>
