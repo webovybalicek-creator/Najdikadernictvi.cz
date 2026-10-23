@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import Hledani from '../components/Hledani.astro';
+---
+
+<Base title="Stránka nenalezena" description="Hledaná stránka neexistuje." noindex>
+  <div class="wrap section">
+    <span class="eyebrow">Chyba 404</span>
+    <h1>Tady nic není</h1>
+    <p class="lead">
+      Stránka neexistuje nebo se salon mezitím přesunul. Zkuste ho najít podle města nebo názvu.
+    </p>
+    <Hledani />
+    <p style="margin-top: 1.5rem"><a href="/">Zpět na úvod</a></p>
+  </div>
+</Base>
