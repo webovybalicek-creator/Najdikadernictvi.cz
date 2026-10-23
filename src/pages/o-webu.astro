@@ -1,28 +1,72 @@
 ---
 import Text from '../layouts/Text.astro';
 import { PROVOZOVNY, IMPORT_META, mesta, pocetText } from '../lib/data';
+import { SITE } from '../lib/config';
 const aktualizace = new Date(IMPORT_META.importovano).toLocaleDateString('cs-CZ');
+const zOsm = PROVOZOVNY.filter((p) => p.zdroj === 'osm').length;
+const zRzp = PROVOZOVNY.length - zOsm;
 ---
 
-<Text title="O webu" description="Najdi kadeřnictví je katalog kadeřnictví a barbershopů v celé České republice.">
+<Text title="O webu" description="Najdi kadeřnictví je nezávislý katalog kadeřnictví a barbershopů v celé České republice. Odkud bereme data a jak je ověřujeme.">
   <p class="lead">
     Spousta skvělých kadeřnictví a barberů nemá vlastní web. Hledat je pak znamená proklikávat mapy, sociální sítě a
     staré katalogy. Tady je najdete na jednom místě.
   </p>
   <p>
     Aktuálně evidujeme {pocetText(PROVOZOVNY.length, 'salon', 'salony', 'salonů')} v {pocetText(mesta().length, 'obci', 'obcích', 'obcích')}. U každého ukazujeme adresu,
-    kontakt, otevírací dobu, mapu a další salony v okolí.
+    kontakt, otevírací dobu, mapu a další salony v okolí. Katalog je pro návštěvníky i salony zdarma.
   </p>
+
   <h2>Odkud jsou údaje</h2>
-  <p>
-    Základní údaje přebíráme z otevřené mapové databáze <a href="https://www.openstreetmap.org/copyright"
-      >OpenStreetMap</a
-    > (licence ODbL) a pravidelně je aktualizujeme. Poslední aktualizace proběhla {aktualizace}. Údaje doplněné majiteli salonů mají přednost.
-  </p>
+  <ul>
+    <li>
+      <strong>OpenStreetMap</strong> ({pocetText(zOsm, 'salon', 'salony', 'salonů')}): otevřená mapová databáze, kterou tvoří
+      dobrovolníci (licence <a href="https://www.openstreetmap.org/copyright">ODbL</a>). Odtud pochází většina telefonů,
+      webů a otevíracích dob.
+    </li>
+    {
+      zRzp > 0 && (
+        <li>
+          <strong>Veřejné registry</strong> ({pocetText(zRzp, 'salon', 'salony', 'salonů')}): adresy provozoven s živností
+          „Holičství, kadeřnictví“ z živnostenského rejstříku (ARES) a Registru ekonomických subjektů ČSÚ, souřadnice z
+          RÚIAN. U podnikatelů – fyzických osob nezveřejňujeme jejich jméno, salon pojmenujeme podle adresy.
+        </li>
+      )
+    }
+    <li><strong>Majitelé salonů</strong>: údaje zaslané přes <a href="/pridat-provozovnu/">formulář</a>. Mají přednost.</li>
+  </ul>
+  <p>Data automaticky aktualizujeme každý týden. Poslední aktualizace proběhla {aktualizace}.</p>
+
+  <h2>Redakční zásady</h2>
+  <ul>
+    <li><strong>Nezávislost.</strong> Pořadí salonů ve výpisech nelze koupit. Řadíme je abecedně nebo podle vzdálenosti.</li>
+    <li>
+      <strong>Přesnost.</strong> Údaje nemusí být vždy aktuální, proto u každého salonu uvádíme zdroj. Chyby opravujeme
+      zpravidla do několika dní od nahlášení.
+    </li>
+    <li>
+      <strong>Články.</strong> Rady a tipy píše redakce webu na základě obecně dostupných informací a zkušeností z praxe.
+      Nejsou placenou reklamou. Fotky jsou z Unsplash pod jejich licencí, autor je uveden u každé fotky.
+    </li>
+    <li><strong>Soukromí.</strong> Nezveřejňujeme soukromé údaje osob. Kdokoli může požádat o opravu nebo odstranění záznamu.</li>
+  </ul>
+
   <h2>Jste majitel salonu?</h2>
   <p>
-    Profil si můžete zdarma doplnit nebo opravit. Stačí nám napsat přes <a href="/pridat-provozovnu/"
-      >formulář pro majitele</a
-    >.
+    Profil si můžete zdarma doplnit, opravit nebo nechat odstranit přes <a href="/pridat-provozovnu/">formulář pro majitele</a>.
+    Pro svůj web si můžete vzít i <a href="/pro-salony/">odznak „Najdete nás na Najdi kadeřnictví“</a>.
+  </p>
+
+  <h2>Kontakt</h2>
+  <p>
+    <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+    {SITE.provozovatel.nazev && (
+      <>
+        <br />
+        Provozovatel: {SITE.provozovatel.nazev}
+        {SITE.provozovatel.ico && <>, IČO {SITE.provozovatel.ico}</>}
+        {SITE.provozovatel.sidlo && <>, {SITE.provozovatel.sidlo}</>}
+      </>
+    )}
   </p>
 </Text>

@@ -1,38 +1,300 @@
 ---
-import Text from '../layouts/Text.astro';
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
 import { SITE } from '../lib/config';
 ---
 
-<Text
-  title="Přidat nebo upravit salon"
-  description="Přidejte své kadeřnictví nebo barbershop do katalogu zdarma, nebo opravte údaje o existujícím salonu."
+<Base
+  title="Přidat, upravit nebo odstranit salon"
+  description="Přidejte své kadeřnictví nebo barbershop do katalogu zdarma, opravte údaje o existujícím salonu nebo požádejte o jeho odstranění."
 >
-  <p class="lead">
-    Zápis je zdarma. Pošlete nám údaje a do pár dní je na webu zveřejníme. Stejně tak můžete opravit nebo doplnit
-    údaje o salonu, který už v katalogu je.
-  </p>
-  <h2>Co nám poslat</h2>
-  <ul>
-    <li>název salonu a adresu,</li>
-    <li>telefon, web nebo sociální sítě,</li>
-    <li>otevírací dobu,</li>
-    <li>služby a ceník,</li>
-    <li>fotky salonu (jen takové, ke kterým máte práva).</li>
-  </ul>
-  <p>
-    <a class="btn" id="mail" href={`mailto:${SITE.email}?subject=${encodeURIComponent('Salon na najdikadernictvi.cz')}`}
-      >Napsat e-mail</a
-    >
-  </p>
-  <p class="muted">Formulář přímo na webu připravujeme.</p>
-</Text>
+  <div class="wrap section stranka">
+    <Breadcrumb items={[{ nazev: 'Přidat salon' }]} />
+    <div class="grid">
+      <div class="info">
+        <span class="eyebrow">Pro majitele salonů</span>
+        <h1>Přidat nebo upravit <em>salon</em></h1>
+        <p class="lead">Zápis je zdarma. Údaje zkontrolujeme a obvykle do několika dní zveřejníme.</p>
+        <ul class="vyhody">
+          <li><strong>Kompletní profil</strong> s telefonem, otevírací dobou a službami se zobrazuje výš ve výpisech.</li>
+          <li><strong>Ceník a služby</strong> pomáhají zákazníkům rozhodnout se ještě před zavoláním.</li>
+          <li><strong>Fotky salonu</strong> nám pošlete e-mailem na <a href={`mailto:${SITE.email}`}>{SITE.email}</a> (jen fotky, ke kterým máte práva).</li>
+        </ul>
+        <p class="muted mala">
+          Chcete salon z katalogu odstranit? Vyberte „Odstranit salon“. Žádosti o odstranění vyřizujeme přednostně.
+        </p>
+      </div>
+
+      <form class="form" data-form method="post" action="/api/salon.php" novalidate>
+        <fieldset class="typ">
+          <legend>Co chcete udělat?</legend>
+          <label><input type="radio" name="typ" value="novy" checked /> <span>Přidat nový salon</span></label>
+          <label><input type="radio" name="typ" value="uprava" /> <span>Upravit údaje</span></label>
+          <label><input type="radio" name="typ" value="odstraneni" /> <span>Odstranit salon</span></label>
+        </fieldset>
+
+        <input type="hidden" name="salon" />
+        <input type="hidden" name="t" />
+        <div class="hp" aria-hidden="true">
+          <label>Nevyplňujte <input type="text" name="web2" tabindex="-1" autocomplete="off" /></label>
+        </div>
+
+        <p class="vybrany" data-vybrany hidden></p>
+
+        <div class="pole">
+          <label for="f-nazev">Název salonu</label>
+          <input id="f-nazev" name="nazev" type="text" maxlength="200" autocomplete="organization" />
+        </div>
+        <div class="pole" data-skryt-odstraneni>
+          <label for="f-adresa">Adresa</label>
+          <input id="f-adresa" name="adresa" type="text" maxlength="300" placeholder="Ulice a číslo, obec" autocomplete="street-address" />
+        </div>
+        <div class="dva" data-skryt-odstraneni>
+          <div class="pole">
+            <label for="f-telefon">Telefon salonu</label>
+            <input id="f-telefon" name="telefon" type="tel" maxlength="50" />
+          </div>
+          <div class="pole">
+            <label for="f-web">Web nebo Instagram</label>
+            <input id="f-web" name="webSalonu" type="text" maxlength="300" />
+          </div>
+        </div>
+        <div class="pole" data-skryt-odstraneni>
+          <label for="f-doba">Otevírací doba</label>
+          <textarea id="f-doba" name="oteviraci_doba" rows="3" maxlength="1000" placeholder="Po–Pá 9–18, So 9–12"></textarea>
+        </div>
+        <div class="pole" data-skryt-odstraneni>
+          <label for="f-sluzby">Služby a ceník</label>
+          <textarea id="f-sluzby" name="sluzby" rows="4" maxlength="3000" placeholder="Pánský střih 350 Kč, dámský střih od 500 Kč…"></textarea>
+        </div>
+        <div class="pole">
+          <label for="f-zprava">Zpráva</label>
+          <textarea id="f-zprava" name="zprava" rows="3" maxlength="3000"></textarea>
+        </div>
+
+        <div class="dva">
+          <div class="pole">
+            <label for="f-jmeno">Vaše jméno</label>
+            <input id="f-jmeno" name="jmeno" type="text" maxlength="120" autocomplete="name" />
+          </div>
+          <div class="pole">
+            <label for="f-email">Váš e-mail <span aria-hidden="true">*</span></label>
+            <input id="f-email" name="email" type="email" maxlength="200" required autocomplete="email" />
+          </div>
+        </div>
+        <div class="pole">
+          <label for="f-vztah">Jaký máte vztah k salonu?</label>
+          <select id="f-vztah" name="vztah">
+            <option value="majitel">Jsem majitel / provozovatel</option>
+            <option value="zamestnanec">Pracuji v salonu</option>
+            <option value="zakaznik">Jsem zákazník</option>
+          </select>
+        </div>
+
+        <label class="souhlas">
+          <input type="checkbox" name="souhlas" value="1" required />
+          <span>Souhlasím se <a href="/ochrana-osobnich-udaju/" target="_blank">zpracováním údajů</a> za účelem vyřízení žádosti.</span>
+        </label>
+
+        <p class="stav" data-stav role="status" aria-live="polite"></p>
+        <button class="btn" type="submit">Odeslat</button>
+      </form>
+    </div>
+  </div>
+</Base>
 
 <script>
-  // Odkaz na konkrétní salon předvyplní předmět e-mailu
-  const salon = new URLSearchParams(location.search).get('salon');
-  const a = document.getElementById('mail') as HTMLAnchorElement | null;
-  if (salon && a && salon.startsWith('/')) {
-    const href = new URL(a.href);
-    a.href = `${href.protocol}${href.pathname}?subject=${encodeURIComponent('Úprava salonu ' + location.origin + salon)}`;
+  const form = document.querySelector<HTMLFormElement>('[data-form]')!;
+  const stav = form.querySelector<HTMLElement>('[data-stav]')!;
+  const vybrany = form.querySelector<HTMLElement>('[data-vybrany]')!;
+  (form.elements.namedItem('t') as HTMLInputElement).value = String(Date.now());
+
+  // Předvyplnění z odkazu u salonu: ?salon=/mesto/slug/&nazev=…
+  const q = new URLSearchParams(location.search);
+  const salon = q.get('salon');
+  if (salon && salon.startsWith('/')) {
+    (form.elements.namedItem('salon') as HTMLInputElement).value = salon;
+    (form.querySelector('input[name=typ][value=uprava]') as HTMLInputElement).checked = true;
+    const nazev = q.get('nazev');
+    if (nazev) (form.elements.namedItem('nazev') as HTMLInputElement).value = nazev;
+    vybrany.hidden = false;
+    vybrany.innerHTML = `Salon: <a href="${salon.replace(/"/g, '')}">${(nazev ?? salon).replace(/[<>&]/g, '')}</a>`;
   }
+
+  const prepni = () => {
+    const odstraneni = (form.querySelector('input[name=typ]:checked') as HTMLInputElement).value === 'odstraneni';
+    form.querySelectorAll<HTMLElement>('[data-skryt-odstraneni]').forEach((el) => (el.hidden = odstraneni));
+  };
+  form.addEventListener('change', prepni);
+  prepni();
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const tlacitko = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+    if (!form.checkValidity()) {
+      stav.textContent = 'Vyplňte prosím e-mail a potvrďte souhlas.';
+      stav.dataset.typ = 'chyba';
+      form.reportValidity();
+      return;
+    }
+    tlacitko.disabled = true;
+    stav.textContent = 'Odesílám…';
+    stav.dataset.typ = '';
+    try {
+      const res = await fetch(form.action, { method: 'POST', body: new FormData(form) });
+      const data = await res.json();
+      if (data.ok) {
+        form.reset();
+        prepni();
+        stav.dataset.typ = 'ok';
+        stav.textContent = 'Děkujeme, žádost jsme přijali. Ozveme se vám e-mailem.';
+      } else {
+        stav.dataset.typ = 'chyba';
+        stav.textContent = data.chyba ?? 'Odeslání se nepodařilo.';
+      }
+    } catch {
+      stav.dataset.typ = 'chyba';
+      stav.textContent = 'Odeslání se nepodařilo. Napište nám prosím na info@najdikadernictvi.cz.';
+    } finally {
+      tlacitko.disabled = false;
+      (form.elements.namedItem('t') as HTMLInputElement).value = String(Date.now() - 5000);
+    }
+  });
 </script>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: start;
+  }
+  .vyhody {
+    padding-left: 1.1rem;
+    margin: 1.5rem 0;
+  }
+  .vyhody li {
+    margin-bottom: 0.75rem;
+  }
+  .mala {
+    font-size: 0.9rem;
+  }
+  .form {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: clamp(1.25rem, 4vw, 2.25rem);
+  }
+  .typ {
+    border: 0;
+    padding: 0;
+    margin: 0 0 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .typ legend {
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+  }
+  .typ label {
+    position: relative;
+  }
+  .typ input {
+    position: absolute;
+    opacity: 0;
+  }
+  .typ span {
+    display: block;
+    padding: 0.5em 1em;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.88rem;
+    cursor: pointer;
+    background: #fff;
+  }
+  .typ input:checked + span {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  .typ input:focus-visible + span {
+    outline: 2px solid var(--bottle);
+    outline-offset: 2px;
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+  }
+  .vybrany {
+    margin: -0.5rem 0 1.25rem;
+    font-size: 0.9rem;
+  }
+  .pole {
+    margin-bottom: 1.1rem;
+  }
+  .pole[hidden],
+  .dva[hidden] {
+    display: none;
+  }
+  .pole label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.35rem;
+  }
+  .pole input,
+  .pole textarea,
+  .pole select {
+    width: 100%;
+    font: inherit;
+    font-size: 0.95rem;
+    padding: 0.7em 0.85em;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #fff;
+    color: var(--ink);
+  }
+  .pole input:focus,
+  .pole textarea:focus,
+  .pole select:focus {
+    outline: 1px solid var(--ink);
+    border-color: var(--ink);
+  }
+  .dva {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 1rem;
+  }
+  .souhlas {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    font-size: 0.88rem;
+    margin: 0.5rem 0 1rem;
+  }
+  .souhlas input {
+    margin-top: 0.25rem;
+    accent-color: var(--bottle);
+  }
+  .stav {
+    min-height: 1.5em;
+    font-size: 0.92rem;
+  }
+  .stav[data-typ='ok'] {
+    color: var(--open);
+  }
+  .stav[data-typ='chyba'] {
+    color: var(--closed);
+  }
+  @media (max-width: 860px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 520px) {
+    .dva {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

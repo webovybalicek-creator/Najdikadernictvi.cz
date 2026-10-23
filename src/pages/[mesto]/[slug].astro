@@ -173,7 +173,7 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
         <div class="majitel">
           <h2>Je to váš salon?</h2>
           <p>Doplňte ceník, fotky a aktuální otevírací dobu. Je to zdarma.</p>
-          <a class="btn" href={`/pridat-provozovnu/?salon=${encodeURIComponent(url(p))}`}>Upravit údaje</a>
+          <a class="btn" href={`/pridat-provozovnu/?salon=${encodeURIComponent(url(p))}&nazev=${encodeURIComponent(p.nazev)}`}>Upravit údaje</a>
         </div>
       </div>
     </div>
@@ -202,7 +202,7 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
           <>Adresa pochází z veřejného živnostenského rejstříku (provozovna s živností Holičství, kadeřnictví). Salon nemusí být v provozu.</>
         )
       }
-      Vidíte chybu? <a href={`/pridat-provozovnu/?salon=${encodeURIComponent(url(p))}`}>Nahlaste ji</a>.
+      Vidíte chybu? <a href={`/pridat-provozovnu/?salon=${encodeURIComponent(url(p))}&nazev=${encodeURIComponent(p.nazev)}`}>Nahlaste ji</a>.
     </p>
   </div>
   <Tipy />

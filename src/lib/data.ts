@@ -1,6 +1,7 @@
 import osmRaw from '../data/provozovny.json';
 import registrRaw from '../data/registr.json';
 import meta from '../data/import-meta.json';
+import vyrazene from '../data/vyrazene.json';
 import { KRAJE, type Kraj } from './kraje';
 import { parseTyden, type Tyden } from './oteviraci-doba';
 import { slugify } from './slug';
@@ -163,7 +164,9 @@ function sestav(): Provozovna[] {
     p.slug = kandidati.find((c) => c && !used.has(`${p.mestoSlug}/${c}`)) ?? slugify(p.id);
     used.add(`${p.mestoSlug}/${p.slug}`);
   }
-  return vse;
+  // Salony vyřazené na žádost (id nebo URL)
+  const blok = new Set<string>(vyrazene.polozky);
+  return blok.size ? vse.filter((p) => !blok.has(p.id) && !blok.has(`/${p.mestoSlug}/${p.slug}/`)) : vse;
 }
 
 export const PROVOZOVNY = sestav();

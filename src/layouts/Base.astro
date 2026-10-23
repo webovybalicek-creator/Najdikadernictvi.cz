@@ -27,6 +27,9 @@ const fullTitle = title.includes(SITE.nazev) ? title : `${title} | ${SITE.nazev}
     <meta name="description" content={description} />
     <meta name="robots" content={robots} />
     <link rel="canonical" href={canonical} />
+    {SITE.googleOvereni && <meta name="google-site-verification" content={SITE.googleOvereni} />}
+    {SITE.bingOvereni && <meta name="msvalidate.01" content={SITE.bingOvereni} />}
+    <link rel="sitemap" href="/sitemap.xml" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta name="theme-color" content="#f6f4ef" />
     <meta property="og:type" content="website" />

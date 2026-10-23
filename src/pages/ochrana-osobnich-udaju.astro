@@ -1,19 +1,62 @@
 ---
 import Text from '../layouts/Text.astro';
 import { SITE } from '../lib/config';
+const p = SITE.provozovatel;
 ---
 
-<Text title="Ochrana osobních údajů" description="Jak web Najdi kadeřnictví zachází s osobními údaji.">
+<Text title="Ochrana osobních údajů a cookies" description="Jak web Najdi kadeřnictví zachází s osobními údaji, odkud bere data o salonech a jaké používá cookies.">
+  <h2>Správce</h2>
   <p>
-    Web zobrazuje veřejně dostupné údaje o provozovnách (název, adresa, kontakt, otevírací doba). Neuvádíme
-    soukromé údaje o osobách.
+    {
+      p.nazev ? (
+        <>
+          Správcem osobních údajů je {p.nazev}
+          {p.ico && <>, IČO {p.ico}</>}
+          {p.sidlo && <>, se sídlem {p.sidlo}</>}.
+        </>
+      ) : (
+        <>Správcem osobních údajů je provozovatel webu {SITE.domena}.</>
+      )
+    }{' '}
+    Kontakt: <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
   </p>
-  <h2>Oprava a odstranění údajů</h2>
+
+  <h2>Údaje o salonech</h2>
   <p>
-    Pokud jste majitel provozovny a chcete údaje opravit nebo záznam odstranit, napište na
-    <a href={`mailto:${SITE.email}`}>{SITE.email}</a>. Žádost vyřídíme bez zbytečného odkladu.
+    Web zobrazuje údaje o provozovnách: název, adresu provozovny, kontakt, otevírací dobu a polohu. Pochází z otevřené
+    databáze OpenStreetMap, z veřejných registrů (živnostenský rejstřík, Registr ekonomických subjektů, RÚIAN) a od
+    majitelů salonů.
   </p>
-  <h2>Cookies a měření</h2>
-  <p>Web zatím nepoužívá žádné sledovací cookies ani reklamu. Tuto stránku doplníme před jejich nasazením.</p>
-  <p class="muted">Dokument je pracovní verze a před spuštěním webu ho doplníme o údaje provozovatele.</p>
+  <ul>
+    <li>U podnikatelů – fyzických osob <strong>nezveřejňujeme jméno</strong>, datum narození ani adresu bydliště či sídla. Zobrazujeme jen adresu provozovny.</li>
+    <li>Právním základem je oprávněný zájem na poskytování přehledu služeb veřejnosti (čl. 6 odst. 1 písm. f GDPR).</li>
+    <li>
+      Proti zpracování můžete kdykoli vznést námitku. Stačí vyplnit <a href="/pridat-provozovnu/">formulář</a> s volbou
+      „Odstranit salon“ nebo napsat e-mail. Záznam odstraníme bez zbytečného odkladu a nebudeme ho znovu importovat.
+    </li>
+  </ul>
+
+  <h2>Formulář pro majitele</h2>
+  <p>
+    Při odeslání formuláře zpracováváme údaje, které vyplníte (jméno, e-mail, údaje o salonu), a to jen za účelem vyřízení
+    vaší žádosti a komunikace s vámi. Žádosti uchováváme nejdéle 3 roky. Pro ochranu před zneužitím krátkodobě
+    ukládáme anonymizovaný otisk IP adresy (nejdéle 24 hodin).
+  </p>
+
+  <h2>Vaše práva</h2>
+  <p>
+    Máte právo na přístup k údajům, jejich opravu, výmaz, omezení zpracování, vznesení námitky a podání stížnosti u Úřadu
+    pro ochranu osobních údajů (<a href="https://uoou.gov.cz">uoou.gov.cz</a>).
+  </p>
+
+  <h2>Cookies</h2>
+  <p>
+    Web <strong>nepoužívá žádné sledovací ani reklamní cookies</strong>. Funkce „V mém okolí“ používá polohu vašeho
+    zařízení jen ve vašem prohlížeči a nikam ji neodesílá. Mapové podklady načítáme ze serverů OpenStreetMap, které
+    při tom vidí vaši IP adresu.
+  </p>
+  <p>
+    Pokud v budoucnu nasadíme měření návštěvnosti nebo reklamu (Google AdSense), vyžádáme si předem váš souhlas
+    prostřednictvím lišty se souhlasem a tuto stránku aktualizujeme.
+  </p>
 </Text>

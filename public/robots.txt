@@ -1,3 +1,0 @@
-# Web je ve vývoji – zatím neindexovat.
-User-agent: *
-Disallow: /

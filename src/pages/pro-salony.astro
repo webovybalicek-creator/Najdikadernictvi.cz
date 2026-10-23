@@ -1,0 +1,61 @@
+---
+import Text from '../layouts/Text.astro';
+
+const odznak = `<a href="https://najdikadernictvi.cz/" title="Najdi kadeřnictví – katalog kadeřnictví a barbershopů" style="display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid #d9d3c8;border-radius:4px;background:#fcfbf8;color:#26241f;font:14px/1.2 system-ui,sans-serif;text-decoration:none">✂ Najdete nás na <strong>Najdi kadeřnictví</strong></a>`;
+---
+
+<Text
+  title="Pro salony: odznak a profil zdarma"
+  description="Získejte pro svůj salon zdarma profil v katalogu Najdi kadeřnictví a odznak na web nebo sociální sítě."
+>
+  <p class="lead">
+    Profil v katalogu je zdarma. Pomůže zákazníkům najít váš salon, i když nemáte vlastní web.
+  </p>
+
+  <h2>1. Doplňte svůj profil</h2>
+  <p>
+    Pošlete nám telefon, otevírací dobu, služby, ceník a fotky přes <a href="/pridat-provozovnu/">formulář pro majitele</a>.
+    Kompletní profily zobrazujeme na úvodní stránce a ve výběrech jako „otevřeno v sobotu“.
+  </p>
+
+  <h2>2. Vložte si odznak na web</h2>
+  <p>Pokud máte web nebo blog, zkopírujte tento kód a vložte ho do patičky nebo na stránku s kontakty:</p>
+  <div class="ukazka" set:html={odznak} />
+  <textarea class="kod" readonly rows="5" aria-label="HTML kód odznaku">{odznak}</textarea>
+  <p><button class="btn" type="button" data-kopirovat>Zkopírovat kód</button></p>
+
+  <h2>3. Sdílejte odkaz na profil</h2>
+  <p>
+    Odkaz na profil vašeho salonu můžete dát do bia na Instagramu, na Facebook nebo do Google Firmy. Zákazníci tak na
+    jednom místě uvidí adresu, mapu a otevírací dobu.
+  </p>
+</Text>
+
+<script>
+  document.querySelector('[data-kopirovat]')?.addEventListener('click', async (e) => {
+    const t = document.querySelector<HTMLTextAreaElement>('.kod')!;
+    try {
+      await navigator.clipboard.writeText(t.value);
+    } catch {
+      t.select();
+      document.execCommand('copy');
+    }
+    (e.currentTarget as HTMLButtonElement).textContent = 'Zkopírováno';
+  });
+</script>
+
+<style>
+  .ukazka {
+    margin: 1.25rem 0;
+  }
+  .kod {
+    width: 100%;
+    font: 0.8rem/1.5 ui-monospace, monospace;
+    padding: 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #fff;
+    color: var(--ink);
+    resize: vertical;
+  }
+</style>
