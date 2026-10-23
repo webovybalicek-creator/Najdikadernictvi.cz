@@ -11,6 +11,8 @@ const top = nejvetsiMesta(24);
 const doporucene = vyber(PROVOZOVNY.filter((p) => p.typ === 'kadernictvi'), 8);
 const barbershopy = vyber(PROVOZOVNY.filter((p) => p.typ === 'barber'), 4);
 const pocetBarberu = PROVOZOVNY.filter((p) => p.typ === 'barber').length;
+const pocetObci = mesta().length;
+const cislo = (n: number) => n.toLocaleString('cs-CZ');
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
@@ -27,17 +29,31 @@ const jsonLd = {
 >
   <section class="hero">
     <div class="wrap hero__in">
-      <h1>Kadeřnictví a barbery<br />najdeš tady</h1>
-      <p class="hero__sub">
-        {pocetText(PROVOZOVNY.length, 'salon', 'salony', 'salonů')} v {pocetText(mesta().length, 'obci', 'obcích', 'obcích')} po celé
-        republice. Adresa, telefon a otevírací doba, i když salon nemá vlastní web.
-      </p>
-      <Hledani />
+      <h1>Najděte svého <em>kadeřníka</em></h1>
+      <p class="hero__sub">Kadeřnictví a barbershopy v celé České republice, i ty bez vlastního webu.</p>
+      <div class="hero__srch"><Hledani /></div>
       <ul class="hero__mesta" aria-label="Nejčastěji hledaná města">
         {top.slice(0, 8).map((m) => <li><a href={mestoUrl(m.slug)}>{m.nazev}</a></li>)}
       </ul>
     </div>
-    <div class="hero__pole" aria-hidden="true"></div>
+  </section>
+
+  <section class="section o-webu">
+    <div class="wrap o-webu__in">
+      <span class="eyebrow">O webu</span>
+      <div>
+        <p class="o-webu__text">
+          Katalog kadeřnictví a barbershopů s adresou, kontaktem a otevírací dobou na jednom místě. Bez registrace, bez
+          reklamních profilů.
+        </p>
+        <dl class="cisla">
+          <div><dt>{cislo(PROVOZOVNY.length)}</dt><dd>salonů v katalogu</dd></div>
+          <div><dt>{cislo(pocetObci)}</dt><dd>obcí a městských částí</dd></div>
+          <div><dt>{cislo(pocetBarberu)}</dt><dd>barbershopů</dd></div>
+          <div><dt>14</dt><dd>krajů celé ČR</dd></div>
+        </dl>
+      </div>
+    </div>
   </section>
 
   {
@@ -46,9 +62,10 @@ const jsonLd = {
         <div class="wrap">
           <div class="sec-head">
             <div>
-              <span class="eyebrow">Kompletní profily</span>
-              <h2>Kadeřnictví s kompletními údaji</h2>
+              <h2>Salony s kompletními údaji</h2>
+              <p class="muted">Otevírací doba, telefon i web na jednom místě.</p>
             </div>
+            <a class="btn" href="/kraje/">Všechny salony</a>
           </div>
           <ul class="karty">
             {doporucene.map((p) => <Karta p={p} />)}
@@ -60,14 +77,13 @@ const jsonLd = {
 
   {
     barbershopy.length > 0 && (
-      <section class="section barber-sec">
+      <section class="section alt">
         <div class="wrap">
           <div class="sec-head">
             <div>
-              <span class="eyebrow">Pro pány</span>
               <h2>Barbershopy</h2>
+              <p class="muted">Střih, fade a péče o vousy.</p>
             </div>
-            <p class="muted">Střih, fade a péče o vousy.</p>
           </div>
           <ul class="karty">
             {barbershopy.map((p) => <Karta p={p} />)}
@@ -78,58 +94,52 @@ const jsonLd = {
   }
 
   <section class="section">
-    <div class="wrap">
+    <div class="wrap dva">
       <span class="eyebrow">Podle města</span>
-      <h2>Největší města</h2>
-      <ul class="mesta">
-        {
-          top.map((m) => (
-            <li>
-              <a href={mestoUrl(m.slug)}>
-                <span>{m.nazev}</span>
-                <span class="muted">{m.provozovny.length}</span>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
+      <div>
+        <h2>Největší města</h2>
+        <ul class="mesta">
+          {
+            top.map((m) => (
+              <li>
+                <a href={mestoUrl(m.slug)}>
+                  <span>{m.nazev}</span>
+                  <span class="muted">{m.provozovny.length}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </div>
   </section>
 
-  <section class="section kraje-sec">
-    <div class="wrap kraje-grid">
+  <section class="section alt">
+    <div class="wrap dva">
+      <span class="eyebrow">Celá ČR</span>
       <div>
-        <span class="eyebrow">Celá ČR</span>
         <h2>Podle kraje</h2>
-        <p class="muted">
-          Vyber kraj a uvidíš všechny obce, kde máme kadeřnictví nebo barbershop. Z toho je{' '}
-          {pocetText(pocetBarberu, 'barbershop', 'barbershopy', 'barbershopů')}.
-        </p>
+        <ol class="kraje">
+          {
+            KRAJE.map((k) => (
+              <li>
+                <a href={krajUrl(k.slug)}>{k.nazev}</a>
+                <span class="muted">{pocetVKraji(k.slug)}</span>
+              </li>
+            ))
+          }
+        </ol>
       </div>
-      <ol class="kraje">
-        {
-          KRAJE.map((k) => (
-            <li>
-              <a href={krajUrl(k.slug)}>{k.nazev}</a>
-              <span class="muted">{pocetVKraji(k.slug)}</span>
-            </li>
-          ))
-        }
-      </ol>
     </div>
   </section>
 
   <Tipy />
 
-  <section class="section">
-    <div class="wrap majitel">
-      <div>
-        <h2>Máte salon?</h2>
-        <p>
-          Doplňte ceník, fotky a aktuální otevírací dobu. Profil je zdarma a zákazníci vás najdou i bez vlastního
-          webu.
-        </p>
-      </div>
+  <section class="section majitel">
+    <div class="wrap">
+      <p class="majitel__citat">
+        Máte salon? Doplňte <em>ceník, fotky</em> a aktuální otevírací dobu. Zákazníci vás najdou i bez vlastního webu.
+      </p>
       <a class="btn" href="/pridat-provozovnu/">Přidat nebo upravit salon</a>
     </div>
   </section>
@@ -137,102 +147,117 @@ const jsonLd = {
 
 <style>
   .hero {
-    position: relative;
-    background: var(--bottle);
-    color: var(--bottle-ink);
-    padding: clamp(48px, 9vw, 104px) 0 clamp(64px, 10vw, 120px);
-    overflow: hidden;
+    padding: clamp(56px, 11vw, 140px) 0 clamp(56px, 9vw, 112px);
+    text-align: center;
+    border-bottom: 1px solid var(--line);
   }
   .hero h1 {
-    font-size: clamp(3rem, 9.5vw, 7rem);
-    font-weight: 900;
-    line-height: 0.9;
-    letter-spacing: -0.005em;
-    margin-bottom: 1.5rem;
-    max-width: 12ch;
+    font-size: clamp(2.8rem, 8vw, 5.4rem);
+    line-height: 1;
+    margin: 0 auto 1.25rem;
+    max-width: 14ch;
   }
   .hero__sub {
-    font-size: 1.15rem;
-    opacity: 0.9;
-    max-width: 40rem;
-    margin-bottom: 1.75rem;
+    margin: 0 auto 2.25rem;
+    color: var(--ink-soft);
+    font-size: 1.1rem;
   }
-  .hero :global(.btn) {
-    background: var(--brass);
-    border-color: var(--brass);
-    color: #1b1408;
+  .hero__srch {
+    max-width: 38rem;
+    margin: 0 auto;
+    text-align: left;
   }
-  .hero :global(input) {
-    border-color: transparent;
+  .hero__srch :global(.srch) {
+    max-width: none;
   }
   .hero__mesta {
     list-style: none;
-    margin: 1.25rem 0 0;
+    margin: 1.5rem 0 0;
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem 1.1rem;
-    font-size: 0.95rem;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
   }
   .hero__mesta a {
-    color: var(--bottle-ink);
-    opacity: 0.85;
+    display: inline-block;
+    padding: 0.35em 0.9em;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    text-decoration: none;
+    color: var(--ink-soft);
   }
   .hero__mesta a:hover {
-    opacity: 1;
-  }
-  /* Pruhy holičské tyče – jediný dekorativní prvek webu */
-  .hero__pole {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 18px;
-    background: repeating-linear-gradient(
-      -45deg,
-      var(--paper) 0 14px,
-      var(--brass) 14px 28px,
-      var(--paper) 28px 42px,
-      #2b5f8a 42px 56px
-    );
+    border-color: var(--ink);
+    color: var(--ink);
   }
 
-  .barber-sec {
-    background: var(--ink);
-    color: var(--paper);
-    --ink-soft: color-mix(in srgb, var(--paper) 70%, transparent);
+  .o-webu {
+    background: var(--mint);
   }
-  .barber-sec :global(.karta__typ) {
-    color: var(--brass);
+  .dva,
+  .o-webu__in {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 1.5rem 3rem;
+    align-items: start;
   }
+  .dva > .eyebrow,
+  .o-webu__in > .eyebrow {
+    margin-top: 0.6rem;
+  }
+  .o-webu__text {
+    font-family: var(--f-display);
+    font-size: clamp(1.4rem, 2.6vw, 1.85rem);
+    line-height: 1.3;
+    max-width: 34ch;
+    margin-bottom: 2.5rem;
+  }
+  .cisla {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin: 0;
+  }
+  .cisla div {
+    border-left: 1px solid var(--line);
+    padding-left: 1rem;
+  }
+  .cisla dt {
+    font-family: var(--f-display);
+    font-size: 1.8rem;
+    line-height: 1.1;
+  }
+  .cisla dd {
+    margin: 0.3rem 0 0;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+  }
+
+  .alt {
+    background: var(--surface);
+    border-block: 1px solid var(--line);
+  }
+
   .mesta {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
     column-gap: 2rem;
   }
   .mesta a {
     display: flex;
     justify-content: space-between;
-    padding: 0.7rem 0;
+    padding: 0.65rem 0;
     border-bottom: 1px solid var(--line);
     text-decoration: none;
-    font-weight: 600;
+    font-size: 0.95rem;
   }
   .mesta a:hover span:first-child {
     text-decoration: underline;
-  }
-
-  .kraje-sec {
-    background: var(--surface);
-    border-block: 1px solid var(--line);
-  }
-  .kraje-grid {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 2rem 4rem;
   }
   .kraje {
     list-style: none;
@@ -244,12 +269,12 @@ const jsonLd = {
   .kraje li {
     display: flex;
     justify-content: space-between;
-    padding: 0.55rem 0;
+    padding: 0.65rem 0;
     border-bottom: 1px solid var(--line);
     break-inside: avoid;
+    font-size: 0.95rem;
   }
   .kraje a {
-    font-weight: 600;
     text-decoration: none;
   }
   .kraje a:hover {
@@ -257,29 +282,26 @@ const jsonLd = {
   }
 
   .majitel {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem 3rem;
-    flex-wrap: wrap;
+    text-align: center;
   }
-  .majitel p {
-    margin: 0;
+  .majitel__citat {
+    font-family: var(--f-display);
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    line-height: 1.3;
+    max-width: 30ch;
+    margin: 0 auto 2rem;
   }
+
   @media (max-width: 760px) {
-    .kraje-grid {
+    .dva,
+    .o-webu__in {
       grid-template-columns: 1fr;
+    }
+    .cisla {
+      grid-template-columns: repeat(2, 1fr);
     }
     .kraje {
       columns: 1;
-    }
-    .hero__sub {
-      font-size: 1.05rem;
-    }
-  }
-  @media (max-width: 480px) {
-    .hero :global(.srch) {
-      flex-direction: column;
     }
   }
 </style>

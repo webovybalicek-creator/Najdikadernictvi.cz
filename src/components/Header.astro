@@ -10,7 +10,7 @@ import Logo from './Logo.astro';
         <li><a href="/kraje/">Kraje</a></li>
         <li><a href="/blog/">Rady a tipy</a></li>
         <li><a href="/o-webu/">O webu</a></li>
-        <li><a href="/pridat-provozovnu/" class="hdr__cta">Přidat<span class="hdr__long"> provozovnu</span></a></li>
+        <li><a href="/pridat-provozovnu/" class="btn btn--ghost hdr__cta">Přidat salon</a></li>
       </ul>
     </nav>
   </div>
@@ -19,14 +19,13 @@ import Logo from './Logo.astro';
 <style>
   .hdr {
     background: var(--paper);
-    border-bottom: 1px solid var(--line);
   }
   .hdr__in {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    min-height: 64px;
+    min-height: 76px;
   }
   .hdr__logo {
     text-decoration: none;
@@ -37,25 +36,33 @@ import Logo from './Logo.astro';
     margin: 0;
     padding: 0;
     display: flex;
-    gap: clamp(0.75rem, 2.5vw, 1.75rem);
+    gap: clamp(1rem, 3vw, 2.25rem);
     align-items: center;
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
   nav a {
     text-decoration: none;
     white-space: nowrap;
   }
-  nav a:hover {
+  nav a:not(.btn):hover {
     text-decoration: underline;
   }
   .hdr__cta {
-    color: var(--bottle);
+    padding: 0.6em 1.1em;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
   }
-  @media (max-width: 560px) {
-    nav li:nth-child(2),
-    nav li:nth-child(3),
-    .hdr__long {
+  @media (max-width: 640px) {
+    nav li:nth-child(1),
+    nav li:nth-child(3) {
+      display: none;
+    }
+  }
+  @media (max-width: 420px) {
+    nav li:nth-child(2) {
       display: none;
     }
   }

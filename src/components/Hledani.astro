@@ -130,19 +130,24 @@
   input {
     flex: 1;
     min-width: 0;
-    font: 500 1.1rem/1.2 var(--f-text);
-    padding: 0.9em 1em;
+    font: 400 1.05rem/1.2 var(--f-text);
+    padding: 1.05em 1.2em;
     border-radius: var(--radius);
-    border: 1.5px solid var(--line);
-    background: var(--surface);
+    border: 1px solid var(--line);
+    background: #fff;
     color: var(--ink);
+    box-shadow: 0 1px 2px rgb(38 36 31 / 0.04);
+  }
+  input::placeholder {
+    color: #a39d94;
   }
   input:focus-visible {
-    outline: 3px solid var(--brass);
+    outline: 1px solid var(--ink);
     outline-offset: 0;
+    border-color: var(--ink);
   }
   .btn {
-    padding-inline: 1.4em;
+    padding-inline: 1.8em;
   }
   .srch__res {
     position: absolute;
@@ -154,7 +159,7 @@
     color: var(--ink);
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    box-shadow: 0 12px 32px rgb(21 34 29 / 0.18);
+    box-shadow: 0 16px 40px rgb(38 36 31 / 0.12);
     padding: 0.4rem;
     max-height: 70vh;
     overflow: auto;
