@@ -7,13 +7,17 @@ on:
 
 concurrency:
   group: deploy
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     env:
+      FTP_SERVER: ${{ secrets.FTP_SERVER }}
+      FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
       FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+      SITE_HOST: najdikadernictvi.cz
     steps:
       - uses: actions/checkout@v4
 
@@ -29,14 +33,41 @@ jobs:
         if: env.FTP_PASSWORD == ''
         run: echo "::warning::Chybí secret FTP_PASSWORD – web je sestavený, ale nenahrál se na hosting."
 
-      - name: Nahrání na hosting (FTPS)
+      - name: Zabalení a příprava rozbalovače
         if: env.FTP_PASSWORD != ''
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          port: 21
-          local-dir: ./dist/
-          server-dir: ${{ vars.FTP_DIR || './' }}
+        run: |
+          RAND=$(openssl rand -hex 12)
+          TOKEN=$(openssl rand -hex 32)
+          echo "::add-mask::$TOKEN"
+          HASH=$(printf '%s' "$TOKEN" | sha256sum | cut -d' ' -f1)
+          ZIP="_site-$RAND.zip"
+          PHP="_deploy-$RAND.php"
+          (cd dist && zip -qr -X "../$ZIP" .)
+          sed -e "s/__TOKEN_HASH__/$HASH/" -e "s/__ZIP_NAME__/$ZIP/" deploy/deploy.php > "$PHP"
+          echo "ZIP=$ZIP" >> "$GITHUB_ENV"
+          echo "PHP=$PHP" >> "$GITHUB_ENV"
+          echo "DEPLOY_TOKEN=$TOKEN" >> "$GITHUB_ENV"
+          ls -lh "$ZIP"
+
+      - name: Nahrání ZIPu (FTPS)
+        if: env.FTP_PASSWORD != ''
+        run: |
+          for f in "$ZIP" "$PHP"; do
+            curl -sS --fail --ssl-reqd --insecure --retry 3 \
+              --user "$FTP_USERNAME:$FTP_PASSWORD" \
+              -T "$f" "ftp://$FTP_SERVER/$f"
+          done
+
+      - name: Rozbalení na serveru
+        if: env.FTP_PASSWORD != ''
+        run: |
+          for scheme in https http; do
+            if out=$(curl -sS --fail --max-time 600 -X POST -H "X-Deploy-Token: $DEPLOY_TOKEN" "$scheme://$SITE_HOST/$PHP" 2>&1); then
+              echo "$out"
+              echo "::notice::$out"
+              exit 0
+            fi
+            echo "$scheme: $out"
+          done
+          echo "::error::Rozbalení na serveru selhalo"
+          exit 1
