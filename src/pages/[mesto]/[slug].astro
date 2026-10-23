@@ -92,7 +92,10 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
     <Breadcrumb items={breadcrumb} />
 
     <header class="head">
-      <div class="head__viz"><Vizual p={p} velky /></div>
+      <figure class="head__viz">
+        <Vizual p={p} velky panorama />
+        <figcaption class="head__popis">Pohled z ulice · Mapy.com</figcaption>
+      </figure>
       <div class="head__txt">
       <p class="head__typ">
         <span class:list={['tag', p.typ === 'barber' && 'tag--barber']}>{typ}</span>
@@ -256,6 +259,17 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
   }
   .head__viz {
     order: 2;
+    margin: 0;
+  }
+  .head__popis {
+    display: none;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    text-align: right;
+  }
+  .head__viz:has(:global(.viz__foto.ok)) .head__popis {
+    display: block;
   }
   @media (max-width: 860px) {
     .head {

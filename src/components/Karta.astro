@@ -12,7 +12,7 @@ const misto = p.mesto === 'Praha' && p.cast ? `Praha, ${p.cast}` : p.mesto;
 
 <li class="karta">
   <a href={url(p)}>
-    <Vizual p={p} />
+    <Vizual p={p} panorama />
     <span class="karta__typ">{TYP_NAZEV[p.typ]}</span>
     <h3 class="karta__nazev">{p.nazev}</h3>
     <p class="karta__adr">{[adr, misto].filter(Boolean).join(', ')}</p>

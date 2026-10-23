@@ -5,8 +5,11 @@ import type { Provozovna } from '../lib/data';
 interface Props {
   p: Provozovna;
   velky?: boolean;
+  /** Načíst „pohled z ulice“ z Mapy.com přes /api/panorama.php */
+  panorama?: boolean;
 }
-const { p, velky = false } = Astro.props;
+const { p, velky = false, panorama = false } = Astro.props;
+const panoUrl = `/api/panorama.php?lat=${p.lat}&lon=${p.lon}&s=${velky ? 'velky' : 'maly'}`;
 
 // Tlumené přírodní tóny (kámen, písek, šalvěj, jíl)
 const PALETA = [
@@ -49,6 +52,19 @@ const id = `v-${p.id}`;
     <rect width="400" height="300" fill={`url(#${id})`}></rect>
   </svg>
   <span class="viz__mono">{mono}</span>
+  {
+    panorama && (
+      <img
+        class="viz__foto"
+        src={panoUrl}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        onload="this.classList.add('ok')"
+        onerror="this.remove()"
+      />
+    )
+  }
 </div>
 
 <style>
@@ -76,6 +92,18 @@ const id = `v-${p.id}`;
     font-size: clamp(2.4rem, 6.5vw, 3.8rem);
     letter-spacing: 0.06em;
     line-height: 1;
+  }
+  .viz__foto {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .viz__foto.ok {
+    opacity: 1;
   }
   .viz--velky .viz__mono {
     font-size: clamp(4rem, 12vw, 7.5rem);
