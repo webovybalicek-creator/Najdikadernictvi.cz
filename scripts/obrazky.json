@@ -1,18 +1,117 @@
 [
-  { "soubor": "barber-kreslo.jpg", "id": "1503951914875-452162b0f3f1", "autor": "Allef Vinicius" },
-  { "soubor": "salon-zrcadla.jpg", "id": "1600948836101-f9ffda59d250", "autor": "Greg Trowman" },
-  { "soubor": "strih-damsky.jpg", "id": "1634449571010-02389ed0f9b0", "autor": "Lindsay Cash" },
-  { "soubor": "plastenka.jpg", "id": "1761839256791-6a93f89fb8b0", "autor": "Land O'Lakes, Inc." },
-  { "soubor": "britva.jpg", "id": "1599351431202-1e0f0137899a", "autor": "Agustin Fernandez" },
-  { "soubor": "strih-nuzky.jpg", "id": "1647140655214-e4a2d914971f", "autor": "Nate Johnston" },
-  { "soubor": "vousy.jpg", "id": "1517832606299-7ae9b720a186", "autor": "Nathon Oski" },
-  { "soubor": "nastroje.jpg", "id": "1621605815971-fbc98d665033", "autor": "Andrea Donato" },
-  { "soubor": "fenovani.jpg", "id": "1580618672591-eb180b1a973f", "autor": "Adam Winger" },
-  { "soubor": "bob.jpg", "id": "1779350676620-fde279b1d023", "autor": "Lu" },
-  { "soubor": "barvene-vlasy.jpg", "id": "1554519934-e32b1629d9ee", "autor": "Jessie Dee Dabrowski" },
-  { "soubor": "kartace.jpg", "id": "1595475884562-073c30d45670", "autor": "Adam Winger" },
-  { "soubor": "vlasy-vlny.jpg", "id": "1470259078422-826894b933aa", "autor": "George Bohunicky" },
-  { "soubor": "detsky-strih.jpg", "id": "1704072650662-76df3af134a7", "autor": "Ibrahim Guetar" },
-  { "soubor": "barbershop-interier.jpg", "id": "1585747860715-2ba37e788b70", "autor": "Nathon Oski" },
-  { "soubor": "salon-cihly.jpg", "id": "1633681926022-84c23e8cb2d6", "autor": "Benyamin Bohlouli" }
+  {
+    "soubor": "barber-kreslo.jpg",
+    "id": "1503951914875-452162b0f3f1",
+    "autor": "Allef Vinicius"
+  },
+  {
+    "soubor": "salon-zrcadla.jpg",
+    "id": "1600948836101-f9ffda59d250",
+    "autor": "Greg Trowman"
+  },
+  {
+    "soubor": "strih-damsky.jpg",
+    "id": "1634449571010-02389ed0f9b0",
+    "autor": "Lindsay Cash"
+  },
+  {
+    "soubor": "plastenka.jpg",
+    "id": "1761839256791-6a93f89fb8b0",
+    "autor": "Land O'Lakes, Inc."
+  },
+  {
+    "soubor": "britva.jpg",
+    "id": "1599351431202-1e0f0137899a",
+    "autor": "Agustin Fernandez"
+  },
+  {
+    "soubor": "strih-nuzky.jpg",
+    "id": "1647140655214-e4a2d914971f",
+    "autor": "Nate Johnston"
+  },
+  {
+    "soubor": "vousy.jpg",
+    "id": "1517832606299-7ae9b720a186",
+    "autor": "Nathon Oski"
+  },
+  {
+    "soubor": "nastroje.jpg",
+    "id": "1621605815971-fbc98d665033",
+    "autor": "Andrea Donato"
+  },
+  {
+    "soubor": "fenovani.jpg",
+    "id": "1580618672591-eb180b1a973f",
+    "autor": "Adam Winger"
+  },
+  {
+    "soubor": "bob.jpg",
+    "id": "1779350676620-fde279b1d023",
+    "autor": "Lu"
+  },
+  {
+    "soubor": "barvene-vlasy.jpg",
+    "id": "1554519934-e32b1629d9ee",
+    "autor": "Jessie Dee Dabrowski"
+  },
+  {
+    "soubor": "kartace.jpg",
+    "id": "1595475884562-073c30d45670",
+    "autor": "Adam Winger"
+  },
+  {
+    "soubor": "vlasy-vlny.jpg",
+    "id": "1470259078422-826894b933aa",
+    "autor": "George Bohunicky"
+  },
+  {
+    "soubor": "detsky-strih.jpg",
+    "id": "1704072650662-76df3af134a7",
+    "autor": "Ibrahim Guetar"
+  },
+  {
+    "soubor": "barbershop-interier.jpg",
+    "id": "1585747860715-2ba37e788b70",
+    "autor": "Nathon Oski"
+  },
+  {
+    "soubor": "salon-cihly.jpg",
+    "id": "1633681926022-84c23e8cb2d6",
+    "autor": "Benyamin Bohlouli"
+  },
+  {
+    "soubor": "kudrnate-vlasy.jpg",
+    "id": "1760044567431-423934a340fa",
+    "autor": "Katie Mukhina"
+  },
+  {
+    "soubor": "svatebni-uces.jpg",
+    "id": "1672788725446-c303ec2b318e",
+    "autor": "Enis Yavuz"
+  },
+  {
+    "soubor": "svatebni-ozdoba.jpg",
+    "id": "1523264114838-feca761983c4",
+    "autor": "Valerie Elash"
+  },
+  {
+    "soubor": "prodluzovani.jpg",
+    "id": "1785456463151-623876d5b7af",
+    "autor": "Yovanka Loria Salon"
+  },
+  {
+    "soubor": "fenovani-doma.jpg",
+    "id": "1712641966810-611ff1503c6d",
+    "autor": "TYMO Beauty"
+  },
+  {
+    "soubor": "cop.jpg",
+    "id": "1665923148259-3340e61d3ff2",
+    "autor": "Irina Chishkova"
+  },
+  {
+    "soubor": "vlny-blond-bruneta.jpg",
+    "id": "1785456283212-338f5bc44d50",
+    "autor": "Yovanka Loria Salon"
+  }
 ]
