@@ -1,0 +1,24 @@
+name: Diagnostika
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Panorama přes náš proxy
+        run: |
+          U="https://najdikadernictvi.cz/api/panorama.php?lat=49.209883&lon=16.601053&s=maly"
+          R=$(curl -s -o /tmp/p.bin -w "%{http_code} %{content_type} %{size_download}" -H "Referer: https://najdikadernictvi.cz/" "$U")
+          echo "::notice::proxy: $R"
+          head -c 300 /tmp/p.bin | tr -d '\0' ; echo
+      - name: Mapy.com API přímo (debug)
+        run: |
+          K=$(curl -s "https://najdikadernictvi.cz/api/panorama.php?diag=1" -o /dev/null -w "%{http_code}")
+          U="https://api.mapy.cz/v1/static/pano?lon=16.601053&lat=49.209883&width=480&height=360&yaw=point&radius=50&debug=true&apikey=51DU-WuzB5tq3ivgYzjj3cZrucqTjiScIxk8B4WdB2k"
+          for ref in "" "https://najdikadernictvi.cz/"; do
+            R=$(curl -s -o /tmp/m.bin -w "%{http_code} %{content_type}" ${ref:+-H "Referer: $ref"} "$U")
+            B=$(head -c 300 /tmp/m.bin | tr -d '\0\n' | tr -c '[:print:]' '?')
+            echo "::notice::mapy (referer='${ref}'): $R | $B"
+          done
