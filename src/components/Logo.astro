@@ -1,24 +1,50 @@
 ---
-// Slovní značka ve dvou řádcích, jemná a patková
+// Logo C1: „najdi“ lehce + „kadeřnictví“ tučně, háček nad ř tvoří otevřené nůžky
 ---
 
-<span class="logo">
-  <span class="logo__l1">Najdi</span>
-  <span class="logo__l2">kadeřnictví</span>
+<span class="logo" aria-label="Najdi kadeřnictví" role="img">
+  <span class="logo__l" aria-hidden="true">najdi</span><span class="logo__b" aria-hidden="true"
+    >kade<span class="logo__r"
+      >r<svg viewBox="0 0 18 16" aria-hidden="true"
+        ><g fill="none" stroke-width="1.7" stroke-linecap="round"
+          ><circle cx="3.2" cy="3.4" r="2.4"></circle><circle cx="14.8" cy="3.4" r="2.4"></circle><path
+            d="M5 5.2 L9 13 L13 5.2"></path></g
+        ></svg
+      ></span
+    >nictví</span
+  >
 </span>
 
 <style>
   .logo {
     display: inline-flex;
-    flex-direction: column;
+    align-items: baseline;
     font-family: var(--f-display);
-    font-size: 1.15rem;
-    font-weight: 300;
+    font-size: 1.45rem;
     line-height: 1;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.005em;
     color: var(--ink);
+    white-space: nowrap;
+    --nuzky-logo: var(--bottle);
   }
-  .logo__l2 {
+  .logo__l {
+    font-weight: 300;
+  }
+  .logo__b {
     font-weight: 600;
+  }
+  .logo__r {
+    position: relative;
+    display: inline-block;
+  }
+  .logo__r svg {
+    position: absolute;
+    left: 50%;
+    top: 0.03em;
+    width: 0.5em;
+    height: 0.45em;
+    transform: translateX(-52%);
+    stroke: var(--nuzky-logo);
+    overflow: visible;
   }
 </style>
