@@ -181,8 +181,8 @@ out;`;
         ulice: clean(t['addr:street']) ?? clean(t['addr:place']),
         cisloDomu:
           clean(t['addr:housenumber']) ??
-          [clean(t['addr:conscriptionnumber']), clean(t['addr:streetnumber'])].filter(Boolean).join('/') ||
-          undefined,
+          ([clean(t['addr:conscriptionnumber']), clean(t['addr:streetnumber'])].filter(Boolean).join('/') ||
+            undefined),
         psc: clean(t['addr:postcode']),
         mesto,
         mestoSlug: '',
