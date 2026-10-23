@@ -1,0 +1,57 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+
+const clanky = (await getCollection('blog')).sort((a, b) => b.data.datum.getTime() - a.data.datum.getTime());
+---
+
+<Base
+  title="Rady a tipy pro návštěvu kadeřnictví a barbershopu"
+  description="Články o tom, jak vybrat kadeřníka nebo barbera, jak se připravit na návštěvu salonu a čím se liší barbershop od kadeřnictví."
+>
+  <div class="wrap section">
+    <Breadcrumb items={[{ nazev: 'Rady a tipy' }]} />
+    <span class="eyebrow">Blog</span>
+    <h1>Rady a tipy</h1>
+    <ul class="list">
+      {
+        clanky.map((c) => (
+          <li>
+            <a href={`/blog/${c.id}/`}>
+              <h2>{c.data.title}</h2>
+            </a>
+            <p>{c.data.perex}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .list {
+    list-style: none;
+    margin: 2rem 0 0;
+    padding: 0;
+    max-width: 48rem;
+  }
+  li {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  li a {
+    text-decoration: none;
+  }
+  li a:hover h2 {
+    text-decoration: underline;
+  }
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 0.4rem;
+  }
+  p {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+</style>

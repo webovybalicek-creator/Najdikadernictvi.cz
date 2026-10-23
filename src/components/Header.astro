@@ -1,0 +1,62 @@
+---
+import Logo from './Logo.astro';
+---
+
+<header class="hdr">
+  <div class="wrap hdr__in">
+    <a href="/" class="hdr__logo" aria-label="Najdi kadeřnictví – úvod"><Logo /></a>
+    <nav aria-label="Hlavní menu">
+      <ul>
+        <li><a href="/kraje/">Kraje</a></li>
+        <li><a href="/blog/">Rady a tipy</a></li>
+        <li><a href="/o-webu/">O webu</a></li>
+        <li><a href="/pridat-provozovnu/" class="hdr__cta">Přidat<span class="hdr__long"> provozovnu</span></a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .hdr {
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+  }
+  .hdr__in {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 64px;
+  }
+  .hdr__logo {
+    text-decoration: none;
+    color: var(--ink);
+  }
+  nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: clamp(0.75rem, 2.5vw, 1.75rem);
+    align-items: center;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+  nav a {
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  nav a:hover {
+    text-decoration: underline;
+  }
+  .hdr__cta {
+    color: var(--bottle);
+  }
+  @media (max-width: 560px) {
+    nav li:nth-child(2),
+    nav li:nth-child(3),
+    .hdr__long {
+      display: none;
+    }
+  }
+</style>

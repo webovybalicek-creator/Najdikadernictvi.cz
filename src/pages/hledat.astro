@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import Hledani from '../components/Hledani.astro';
+---
+
+<Base title="Hledat salon" description="Hledejte kadeřnictví a barbershopy podle města nebo názvu." noindex>
+  <div class="wrap section">
+    <h1>Hledat salon</h1>
+    <Hledani />
+  </div>
+</Base>
+
+<script>
+  const q = new URLSearchParams(location.search).get('q');
+  const input = document.querySelector<HTMLInputElement>('#q');
+  if (q && input) {
+    input.value = q;
+    input.dispatchEvent(new Event('input'));
+    input.focus();
+  }
+</script>

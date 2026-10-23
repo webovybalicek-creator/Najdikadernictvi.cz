@@ -1,0 +1,52 @@
+---
+import Vizual from './Vizual.astro';
+import { adresa, url, TYP_NAZEV, type Provozovna } from '../lib/data';
+
+interface Props {
+  p: Provozovna;
+}
+const { p } = Astro.props;
+const adr = adresa(p, false);
+const misto = p.mesto === 'Praha' && p.cast ? `Praha, ${p.cast}` : p.mesto;
+---
+
+<li class="karta">
+  <a href={url(p)}>
+    <Vizual p={p} />
+    <span class="karta__typ">{TYP_NAZEV[p.typ]}</span>
+    <h3 class="karta__nazev">{p.nazev}</h3>
+    <p class="karta__adr">{[adr, misto].filter(Boolean).join(', ')}</p>
+  </a>
+</li>
+
+<style>
+  .karta a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+  .karta__typ {
+    display: block;
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--bottle);
+  }
+  .karta__nazev {
+    font-family: var(--f-text);
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0.2rem 0 0.15rem;
+  }
+  .karta a:hover .karta__nazev {
+    text-decoration: underline;
+  }
+  .karta__adr {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+</style>

@@ -1,0 +1,19 @@
+---
+import Text from '../layouts/Text.astro';
+import { SITE } from '../lib/config';
+---
+
+<Text title="Ochrana osobních údajů" description="Jak web Najdi kadeřnictví zachází s osobními údaji.">
+  <p>
+    Web zobrazuje veřejně dostupné údaje o provozovnách (název, adresa, kontakt, otevírací doba). Neuvádíme
+    soukromé údaje o osobách.
+  </p>
+  <h2>Oprava a odstranění údajů</h2>
+  <p>
+    Pokud jste majitel provozovny a chcete údaje opravit nebo záznam odstranit, napište na
+    <a href={`mailto:${SITE.email}`}>{SITE.email}</a>. Žádost vyřídíme bez zbytečného odkladu.
+  </p>
+  <h2>Cookies a měření</h2>
+  <p>Web zatím nepoužívá žádné sledovací cookies ani reklamu. Tuto stránku doplníme před jejich nasazením.</p>
+  <p class="muted">Dokument je pracovní verze a před spuštěním webu ho doplníme o údaje provozovatele.</p>
+</Text>

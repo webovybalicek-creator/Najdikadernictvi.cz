@@ -1,0 +1,72 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Hledani from '../../components/Hledani.astro';
+import Tipy from '../../components/Tipy.astro';
+import { SITE } from '../../lib/config';
+
+export async function getStaticPaths() {
+  return (await getCollection('blog')).map((c) => ({ params: { slug: c.id }, props: { c } }));
+}
+
+const { c } = Astro.props as { c: CollectionEntry<'blog'> };
+const { Content } = await render(c);
+const datum = c.data.datum.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'long', year: 'numeric' });
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: c.data.title,
+  description: c.data.description,
+  datePublished: c.data.datum.toISOString().slice(0, 10),
+  inLanguage: 'cs',
+  publisher: { '@type': 'Organization', name: SITE.nazev, url: SITE.url },
+};
+---
+
+<Base title={c.data.title} description={c.data.description} jsonLd={jsonLd}>
+  <article class="wrap section clanek">
+    <Breadcrumb items={[{ nazev: 'Rady a tipy', href: '/blog/' }, { nazev: c.data.title }]} />
+    <h1>{c.data.title}</h1>
+    <p class="clanek__datum muted"><time datetime={c.data.datum.toISOString()}>{datum}</time></p>
+    <p class="lead">{c.data.perex}</p>
+    <div class="clanek__text">
+      <Content />
+    </div>
+    <aside class="clanek__cta">
+      <h2>Najděte salon ve svém městě</h2>
+      <Hledani />
+    </aside>
+  </article>
+  <Tipy vynechat={c.id} />
+</Base>
+
+<style>
+  .clanek {
+    max-width: 48rem;
+  }
+  .clanek__datum {
+    font-size: 0.9rem;
+    margin-top: -0.5rem;
+  }
+  .clanek__text :global(h2) {
+    font-size: 1.9rem;
+    margin-top: 2.2rem;
+  }
+  .clanek__text :global(ul),
+  .clanek__text :global(ol) {
+    padding-left: 1.3rem;
+  }
+  .clanek__text :global(li) {
+    margin-bottom: 0.5rem;
+  }
+  .clanek__cta {
+    margin-top: 3rem;
+    padding: 1.75rem;
+    background: var(--mint);
+    border-radius: var(--radius);
+  }
+  .clanek__cta h2 {
+    font-size: 1.75rem;
+  }
+</style>

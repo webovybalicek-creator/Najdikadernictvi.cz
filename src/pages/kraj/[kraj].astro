@@ -1,0 +1,102 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import { KRAJE, type Kraj } from '../../lib/kraje';
+import { mestaVKraji, mestoUrl, pocetVKraji, pocetText } from '../../lib/data';
+
+export function getStaticPaths() {
+  return KRAJE.map((k) => ({ params: { kraj: k.slug }, props: { k } }));
+}
+
+const { k } = Astro.props as { k: Kraj };
+const seznam = mestaVKraji(k.slug);
+const pocet = pocetVKraji(k.slug);
+const nejvetsi = [...seznam].sort((a, b) => b.provozovny.length - a.provozovny.length).slice(0, 3);
+
+// Seskupení podle počátečního písmene (Ch jako samostatné písmeno)
+const pismeno = (n: string) => (/^ch/i.test(n) ? 'Ch' : n[0].toLocaleUpperCase('cs'));
+const skupiny = new Map<string, typeof seznam>();
+for (const m of seznam) {
+  const p = pismeno(m.nazev);
+  if (!skupiny.has(p)) skupiny.set(p, []);
+  skupiny.get(p)!.push(m);
+}
+const breadcrumb = [{ nazev: 'Kraje', href: '/kraje/' }, { nazev: k.nazev }];
+---
+
+<Base
+  title={`Kadeřnictví a barbershopy ${k.vNazev}`}
+  description={`Kadeřnictví a barbershopy ${k.vNazev}: ${pocetText(pocet, 'salon', 'salony', 'salonů')} v ${pocetText(seznam.length, 'obci', 'obcích', 'obcích')}. Adresy, telefony a otevírací doba.`}
+>
+  <div class="wrap section">
+    <Breadcrumb items={breadcrumb} />
+    <h1>Kadeřnictví {k.vNazev}</h1>
+    {
+      seznam.length > 0 ? (
+        <p class="lead">
+          {pocetText(pocet, 'salon', 'salony', 'salonů')} v {pocetText(seznam.length, 'obci', 'obcích', 'obcích')}. Nejvíc jich najdete v těchto obcích:
+          {nejvetsi.map((m, i) => (
+            <>
+              {i > 0 && (i === nejvetsi.length - 1 ? ' a ' : ', ')}
+              <a href={mestoUrl(m.slug)}>{m.nazev}</a>
+            </>
+          ))}
+          .
+        </p>
+      ) : (
+        <p class="lead">V tomto kraji zatím nemáme žádný salon. Znáte nějaký? <a href="/pridat-provozovnu/">Přidejte ho</a>.</p>
+      )
+    }
+
+    <div class="abc">
+      {
+        [...skupiny].map(([p, list]) => (
+          <section>
+            <h2>{p}</h2>
+            <ul>
+              {list.map((m) => (
+                <li>
+                  <a href={mestoUrl(m.slug)}>{m.nazev}</a> <span class="muted">{m.provozovny.length}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</Base>
+
+<style>
+  .abc {
+    margin-top: 2.5rem;
+    columns: 15rem;
+    column-gap: 2.5rem;
+  }
+  section {
+    break-inside: avoid;
+    margin-bottom: 1.5rem;
+  }
+  h2 {
+    font-size: 1.75rem;
+    color: var(--bottle);
+    border-bottom: 2px solid var(--bottle);
+    padding-bottom: 0.2rem;
+    margin-bottom: 0.5rem;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    padding: 0.2rem 0;
+  }
+  li a {
+    text-decoration: none;
+    font-weight: 600;
+  }
+  li a:hover {
+    text-decoration: underline;
+  }
+</style>

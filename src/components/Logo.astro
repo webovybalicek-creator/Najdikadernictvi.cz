@@ -1,0 +1,31 @@
+---
+// Nůžky + slovní značka
+---
+
+<span class="logo">
+  <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+    <circle cx="9" cy="23" r="5" fill="none" stroke="currentColor" stroke-width="2.4"></circle>
+    <circle cx="23" cy="23" r="5" fill="none" stroke="currentColor" stroke-width="2.4"></circle>
+    <path d="M12.5 19.5 24 3M19.5 19.5 8 3" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path>
+  </svg>
+  <span class="logo__txt">najdi<b>kadeřnictví</b></span>
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--bottle);
+  }
+  .logo__txt {
+    font-family: var(--f-display);
+    font-size: 1.6rem;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .logo__txt b {
+    font-weight: 900;
+  }
+</style>

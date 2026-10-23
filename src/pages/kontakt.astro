@@ -1,0 +1,12 @@
+---
+import Text from '../layouts/Text.astro';
+import { SITE } from '../lib/config';
+---
+
+<Text title="Kontakt" description="Kontakt na provozovatele webu Najdi kadeřnictví.">
+  <p>
+    Máte dotaz, připomínku nebo chcete opravit údaje o salonu? Napište nám na
+    <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+  </p>
+  <p>Opravu nebo doplnění konkrétního salonu nejrychleji pošlete přes <a href="/pridat-provozovnu/">formulář pro majitele</a>.</p>
+</Text>

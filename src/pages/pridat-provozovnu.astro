@@ -1,0 +1,38 @@
+---
+import Text from '../layouts/Text.astro';
+import { SITE } from '../lib/config';
+---
+
+<Text
+  title="Přidat nebo upravit salon"
+  description="Přidejte své kadeřnictví nebo barbershop do katalogu zdarma, nebo opravte údaje o existujícím salonu."
+>
+  <p class="lead">
+    Zápis je zdarma. Pošlete nám údaje a do pár dní je na webu zveřejníme. Stejně tak můžete opravit nebo doplnit
+    údaje o salonu, který už v katalogu je.
+  </p>
+  <h2>Co nám poslat</h2>
+  <ul>
+    <li>název salonu a adresu,</li>
+    <li>telefon, web nebo sociální sítě,</li>
+    <li>otevírací dobu,</li>
+    <li>služby a ceník,</li>
+    <li>fotky salonu (jen takové, ke kterým máte práva).</li>
+  </ul>
+  <p>
+    <a class="btn" id="mail" href={`mailto:${SITE.email}?subject=${encodeURIComponent('Salon na najdikadernictvi.cz')}`}
+      >Napsat e-mail</a
+    >
+  </p>
+  <p class="muted">Formulář přímo na webu připravujeme.</p>
+</Text>
+
+<script>
+  // Odkaz na konkrétní salon předvyplní předmět e-mailu
+  const salon = new URLSearchParams(location.search).get('salon');
+  const a = document.getElementById('mail') as HTMLAnchorElement | null;
+  if (salon && a && salon.startsWith('/')) {
+    const href = new URL(a.href);
+    a.href = `${href.protocol}${href.pathname}?subject=${encodeURIComponent('Úprava salonu ' + location.origin + salon)}`;
+  }
+</script>

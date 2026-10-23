@@ -1,0 +1,276 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import ProvozovnaRadek from '../../components/ProvozovnaRadek.astro';
+import { mesta, mestoUrl, krajUrl, pocetText, tyden, type Mesto } from '../../lib/data';
+
+export function getStaticPaths() {
+  return mesta().map((m) => ({ params: { mesto: m.slug }, props: { m } }));
+}
+
+const { m } = Astro.props as { m: Mesto };
+const vse = m.provozovny;
+const barberu = vse.filter((p) => p.typ === 'barber').length;
+const sDobou = vse.filter((p) => tyden(p)).length;
+const casti = [...new Set(vse.map((p) => p.cast).filter(Boolean) as string[])].sort((a, b) => a.localeCompare(b, 'cs'));
+const zamereni = ['panske', 'damske', 'detske'].filter((z) => vse.some((p) => p.zamereni.includes(z)));
+const ZN: Record<string, string> = { panske: 'Pánské', damske: 'Dámské', detske: 'Dětské' };
+
+// Okolní obce: nejbližší střed obce
+const stred = (x: Mesto) => ({
+  lat: x.provozovny.reduce((s, p) => s + p.lat, 0) / x.provozovny.length,
+  lon: x.provozovny.reduce((s, p) => s + p.lon, 0) / x.provozovny.length,
+});
+const c = stred(m);
+const okoli = mesta()
+  .filter((o) => o.slug !== m.slug)
+  .map((o) => {
+    const s = stred(o);
+    return { o, d: (s.lat - c.lat) ** 2 + ((s.lon - c.lon) * 0.64) ** 2 };
+  })
+  .sort((a, b) => a.d - b.d)
+  .slice(0, 10)
+  .map((x) => x.o);
+
+const breadcrumb = [
+  ...(m.kraj.nazev !== m.nazev ? [{ nazev: m.kraj.nazev, href: krajUrl(m.kraj.slug) }] : []),
+  { nazev: m.nazev },
+];
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: `Kadeřnictví ${m.nazev}`,
+  numberOfItems: vse.length,
+};
+---
+
+<Base
+  title={`Kadeřnictví ${m.nazev}: ${pocetText(vse.length, 'salon', 'salony', 'salonů')}`}
+  description={`Kadeřnictví a barbershopy ${m.nazev} (${m.kraj.nazev}): ${pocetText(vse.length, 'salon', 'salony', 'salonů')} s adresou, telefonem a otevírací dobou. Zjistěte, kdo má právě otevřeno.`}
+  jsonLd={jsonLd}
+>
+  <div class="wrap section">
+    <Breadcrumb items={breadcrumb} />
+    <h1>Kadeřnictví {m.nazev}</h1>
+    <p class="lead">
+      {m.nazev}{m.kraj.nazev !== m.nazev && <> ({m.kraj.nazev})</>}: {pocetText(vse.length, 'salon', 'salony', 'salonů')}{barberu > 0 && <>, z toho {pocetText(barberu, 'barbershop', 'barbershopy', 'barbershopů')}</>}.{' '}
+      {sDobou > 0 && <>U {pocetText(sDobou, 'salonu', 'salonů', 'salonů')} s otevírací dobou ukazujeme, jestli mají právě otevřeno.</>}
+    </p>
+
+    {
+      vse.length > 3 && (
+        <form class="filtry" data-filtry aria-label="Filtrovat salony">
+          <label class="filtry__q">
+            <span class="sr-only">Hledat podle názvu nebo ulice</span>
+            <input type="search" name="q" placeholder="Název nebo ulice" />
+          </label>
+          {casti.length > 1 && (
+            <label>
+              <span class="sr-only">Část obce</span>
+              <select name="cast">
+                <option value="">Všechny části</option>
+                {casti.map((c) => <option value={c.toLowerCase()}>{c}</option>)}
+              </select>
+            </label>
+          )}
+          <fieldset class="seg">
+            <legend class="sr-only">Typ</legend>
+            <label><input type="radio" name="typ" value="" checked /><span>Vše</span></label>
+            <label><input type="radio" name="typ" value="kadernictvi" /><span>Kadeřnictví</span></label>
+            {barberu > 0 && <label><input type="radio" name="typ" value="barber" /><span>Barbershop</span></label>}
+          </fieldset>
+          {zamereni.map((z) => (
+            <label class="chk"><input type="checkbox" name="zamereni" value={z} /> {ZN[z]}</label>
+          ))}
+          {sDobou > 0 && <label class="chk"><input type="checkbox" name="open" value="1" /> Otevřeno teď</label>}
+          <p class="filtry__pocet" aria-live="polite" data-pocet></p>
+        </form>
+      )
+    }
+
+    <ul class="seznam" data-seznam>
+      {vse.map((p) => <ProvozovnaRadek p={p} />)}
+    </ul>
+    <p class="prazdno" data-prazdno hidden>Žádný salon neodpovídá filtrům. Zkuste některý filtr vypnout.</p>
+
+    <aside class="dalsi">
+      <div>
+        <h2>Okolní obce</h2>
+        <ul class="okoli">
+          {okoli.map((o) => <li><a href={mestoUrl(o.slug)}>{o.nazev}</a> <span class="muted">{o.provozovny.length}</span></li>)}
+        </ul>
+      </div>
+      <div class="chybi">
+        <h2>Chybí tu salon?</h2>
+        <p>Pokud znáte kadeřnictví {m.nazev}, které tu chybí, nebo je některý údaj špatně, dejte nám vědět.</p>
+        <a class="btn btn--ghost" href="/pridat-provozovnu/">Přidat salon</a>
+      </div>
+    </aside>
+  </div>
+</Base>
+
+<script>
+  import { aplikujStav } from '../../scripts/stav';
+  aplikujStav();
+
+  const norm = (s: string) =>
+    s
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '')
+      .toLowerCase();
+  const form = document.querySelector<HTMLFormElement>('[data-filtry]');
+  const rows = [...document.querySelectorAll<HTMLElement>('[data-seznam] > li')];
+  const pocet = document.querySelector<HTMLElement>('[data-pocet]');
+  const prazdno = document.querySelector<HTMLElement>('[data-prazdno]');
+
+  function filtruj() {
+    if (!form) return;
+    const fd = new FormData(form);
+    const q = norm(String(fd.get('q') ?? '')).trim();
+    const cast = String(fd.get('cast') ?? '');
+    const typ = String(fd.get('typ') ?? '');
+    const zam = fd.getAll('zamereni').map(String);
+    const open = fd.get('open') === '1';
+    let n = 0;
+    for (const r of rows) {
+      const ok =
+        (!q || norm(r.dataset.hledat ?? '').includes(q)) &&
+        (!cast || (r.dataset.hledat ?? '').includes(cast)) &&
+        (!typ || r.dataset.typ === typ) &&
+        zam.every((z) => (r.dataset.zamereni ?? '').split(' ').includes(z)) &&
+        (!open || r.dataset.open === '1');
+      r.hidden = !ok;
+      if (ok) n++;
+    }
+    if (pocet) pocet.textContent = n === rows.length ? '' : `Zobrazeno ${n} z ${rows.length}`;
+    if (prazdno) prazdno.hidden = n > 0;
+  }
+  form?.addEventListener('input', filtruj);
+  form?.addEventListener('submit', (e) => e.preventDefault());
+</script>
+
+<style>
+  .filtry {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    align-items: center;
+    margin: 1.75rem 0 0.5rem;
+    padding: 1rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .filtry input[type='search'],
+  .filtry select {
+    font: inherit;
+    font-size: 0.95rem;
+    padding: 0.5rem 0.7rem;
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .filtry__q {
+    flex: 1 1 14rem;
+  }
+  .filtry__q input {
+    width: 100%;
+  }
+  .seg {
+    display: inline-flex;
+    border: 1.5px solid var(--bottle);
+    border-radius: var(--radius);
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+  }
+  .seg label {
+    position: relative;
+  }
+  .seg input {
+    position: absolute;
+    opacity: 0;
+  }
+  .seg span {
+    display: block;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .seg input:checked + span {
+    background: var(--bottle);
+    color: var(--bottle-ink);
+  }
+  .seg input:focus-visible + span {
+    outline: 3px solid var(--brass);
+    outline-offset: -3px;
+  }
+  .chk {
+    display: inline-flex;
+    gap: 0.35rem;
+    align-items: center;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  .chk input {
+    accent-color: var(--bottle);
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+  .filtry__pocet {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .filtry__pocet:empty {
+    display: none;
+  }
+  .seznam {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .prazdno {
+    padding: 1.5rem 0;
+    color: var(--ink-soft);
+  }
+  .dalsi {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem 4rem;
+    margin-top: clamp(40px, 6vw, 64px);
+  }
+  .dalsi h2 {
+    font-size: 1.75rem;
+  }
+  .okoli {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    columns: 2;
+    column-gap: 2rem;
+  }
+  .okoli li {
+    padding: 0.25rem 0;
+  }
+  .okoli a {
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .okoli a:hover {
+    text-decoration: underline;
+  }
+  .chybi {
+    background: var(--mint);
+    padding: 1.5rem;
+    border-radius: var(--radius);
+  }
+  @media (max-width: 760px) {
+    .dalsi {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

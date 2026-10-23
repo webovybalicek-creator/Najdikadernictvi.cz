@@ -1,0 +1,31 @@
+---
+import Base from './Base.astro';
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+---
+
+<Base title={title} description={description}>
+  <article class="wrap section text">
+    <h1>{title}</h1>
+    <slot />
+  </article>
+</Base>
+
+<style>
+  .text {
+    max-width: 48rem;
+  }
+  .text :global(h2) {
+    font-size: 1.9rem;
+    margin-top: 2rem;
+  }
+  .text :global(ul) {
+    padding-left: 1.2rem;
+  }
+  .text :global(li) {
+    margin-bottom: 0.4rem;
+  }
+</style>

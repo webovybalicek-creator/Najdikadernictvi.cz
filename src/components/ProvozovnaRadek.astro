@@ -1,0 +1,81 @@
+---
+import { adresa, tyden, url, TYP_NAZEV, ZAMERENI_NAZEV, type Provozovna } from '../lib/data';
+
+interface Props {
+  p: Provozovna;
+  vzdalenost?: number;
+  sMestem?: boolean;
+}
+const { p, vzdalenost, sMestem = false } = Astro.props;
+const t = tyden(p);
+---
+
+<li
+  class="row"
+  data-typ={p.typ}
+  data-zamereni={p.zamereni.join(' ')}
+  data-oh={t ? JSON.stringify(t) : undefined}
+  data-hledat={`${p.nazev} ${p.ulice ?? ''} ${p.cast ?? ''}`.toLowerCase()}
+>
+  <div class="row__main">
+    <h3 class="row__name"><a href={url(p)}>{p.nazev}</a></h3>
+    <p class="row__adr">{adresa(p, sMestem) || p.mesto}</p>
+  </div>
+  <div class="row__meta">
+    <span class:list={['tag', p.typ === 'barber' && 'tag--barber']}>{TYP_NAZEV[p.typ]}</span>
+    {p.zamereni.filter((z) => z !== 'unisex').map((z) => <span class="tag">{ZAMERENI_NAZEV[z]}</span>)}
+    {vzdalenost != null && <span class="row__km">{vzdalenost < 1 ? `${Math.round(vzdalenost * 1000)} m` : `${vzdalenost.toFixed(1).replace('.', ',')} km`}</span>}
+    {t && <span class="stav" />}
+  </div>
+</li>
+
+<style>
+  .row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.35rem 1.5rem;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .row__name {
+    font-family: var(--f-text);
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0;
+  }
+  .row__name a {
+    text-decoration: none;
+  }
+  .row__name a:hover {
+    text-decoration: underline;
+  }
+  .row__adr {
+    margin: 0.15rem 0 0;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+  }
+  .row__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.6rem;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .row__km {
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+  }
+  .stav:empty {
+    display: none;
+  }
+  @media (max-width: 640px) {
+    .row {
+      grid-template-columns: 1fr;
+    }
+    .row__meta {
+      justify-content: flex-start;
+    }
+  }
+</style>

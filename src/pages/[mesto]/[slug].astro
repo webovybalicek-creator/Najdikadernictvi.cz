@@ -1,0 +1,373 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import ProvozovnaRadek from '../../components/ProvozovnaRadek.astro';
+import Vizual from '../../components/Vizual.astro';
+import Tipy from '../../components/Tipy.astro';
+import {
+  PROVOZOVNY,
+  adresa,
+  tyden,
+  vOkoli,
+  mestoUrl,
+  krajUrl,
+  url,
+  TYP_NAZEV,
+  ZAMERENI_NAZEV,
+  mesta,
+  pocetText,
+  type Provozovna,
+} from '../../lib/data';
+import { KRAJE } from '../../lib/kraje';
+import { DNY, denText, souhrn, schemaSpec } from '../../lib/oteviraci-doba';
+import { SITE } from '../../lib/config';
+
+export function getStaticPaths() {
+  return PROVOZOVNY.map((p) => ({ params: { mesto: p.mestoSlug, slug: p.slug }, props: { p } }));
+}
+
+const { p } = Astro.props as { p: Provozovna };
+const kraj = KRAJE.find((k) => k.slug === p.kraj)!;
+const t = tyden(p);
+const adr = adresa(p);
+const okoli = vOkoli(p, 6);
+const vMeste = mesta().find((m) => m.slug === p.mestoSlug)!.provozovny.length;
+const typ = TYP_NAZEV[p.typ];
+const zam = p.zamereni.map((z) => ZAMERENI_NAZEV[z].toLowerCase());
+
+const navigace = {
+  mapy: `https://mapy.com/fnc/v1/route?end=${p.lon},${p.lat}`,
+  google: `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lon}`,
+};
+
+// Popis z dostupných údajů
+const vety: string[] = [];
+vety.push(
+  `${p.nazev} je ${p.typ === 'barber' ? 'barbershop' : 'kadeřnictví'}${zam.length ? ` se zaměřením na ${zam.map((z) => (z === 'unisex' ? 'muže i ženy' : z === 'pánské' ? 'pány' : z === 'dámské' ? 'dámy' : 'děti')).join(' a ')}` : ''}${adr ? ` na adrese ${adr}` : ` v obci ${p.mesto}`}.`,
+);
+if (t) {
+  const s = souhrn(t).filter((x) => x.cas !== 'Zavřeno');
+  if (s.length) vety.push(`Otevřeno má ${s.map((x) => `${x.dny} ${x.cas}`).join(', ')}.`);
+}
+const kontakt = [p.telefon && 'telefonicky', p.web && 'přes web', (p.facebook || p.instagram) && 'přes sociální sítě'].filter(Boolean);
+if (kontakt.length) vety.push(`Objednat se můžete ${kontakt.join(', ').replace(/, ([^,]*)$/, ' nebo $1')}.`);
+if (vMeste > 1) vety.push(`V obci ${p.mesto} evidujeme celkem ${pocetText(vMeste, 'salon', 'salony', 'salonů')}.`);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': p.typ === 'barber' ? 'BarberShop' : 'HairSalon',
+  name: p.nazev,
+  url: new URL(url(p), SITE.url).href,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: [p.ulice, p.cisloDomu].filter(Boolean).join(' ') || undefined,
+    postalCode: p.psc,
+    addressLocality: p.mesto,
+    addressRegion: kraj.nazev,
+    addressCountry: 'CZ',
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: p.lat, longitude: p.lon },
+  telephone: p.telefon,
+  email: p.email,
+  sameAs: [p.web, p.facebook, p.instagram].filter(Boolean),
+  openingHoursSpecification: t ? schemaSpec(t) : undefined,
+};
+
+const breadcrumb = [
+  ...(kraj.nazev !== p.mesto ? [{ nazev: kraj.nazev, href: krajUrl(kraj.slug) }] : []),
+  { nazev: p.mesto, href: mestoUrl(p.mestoSlug) },
+  { nazev: p.nazev },
+];
+const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+---
+
+<Base
+  title={`${p.nazev}, ${p.mesto}: ${typ.toLowerCase()}${t ? ', otevírací doba' : ''}`}
+  description={`${p.nazev} – ${typ.toLowerCase()} ${adr ? `na adrese ${adr}` : `v obci ${p.mesto}`}. ${t ? 'Otevírací doba, ' : ''}${p.telefon ? 'telefon, ' : ''}mapa a další salony v okolí.`}
+  jsonLd={jsonLd}
+>
+  <div class="wrap section">
+    <Breadcrumb items={breadcrumb} />
+
+    <header class="head">
+      <div class="head__viz"><Vizual p={p} velky /></div>
+      <div class="head__txt">
+      <p class="head__typ">
+        <span class:list={['tag', p.typ === 'barber' && 'tag--barber']}>{typ}</span>
+        {p.zamereni.filter((z) => z !== 'unisex').map((z) => <span class="tag">{ZAMERENI_NAZEV[z]}</span>)}
+      </p>
+      <h1>{p.nazev}</h1>
+      <p class="head__adr">{adr || p.mesto}</p>
+      {t && <p class="head__stav" data-oh={JSON.stringify(t)}><span class="stav"></span></p>}
+      <div class="akce">
+        {p.telefon && <a class="btn" href={`tel:${p.telefon.replace(/\s/g, '')}`}>Zavolat {p.telefon}</a>}
+        <a class:list={['btn', p.telefon && 'btn--ghost']} href={navigace.google} rel="noopener" target="_blank">Navigovat</a>
+        {p.web && <a class="btn btn--ghost" href={p.web} rel="noopener nofollow" target="_blank">Web salonu</a>}
+      </div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div class="info">
+        <section>
+          <h2>Otevírací doba</h2>
+          {
+            t ? (
+              <table class="doba" data-tyden>
+                <tbody>
+                  {DNY.map((d, i) => (
+                    <tr data-den={i}>
+                      <th scope="row">{d}</th>
+                      <td>{denText(t[i])}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : p.oteviraciDoba ? (
+              <p>{p.oteviraciDoba}</p>
+            ) : (
+              <p class="muted">
+                Otevírací dobu zatím neznáme. {p.telefon ? 'Ověřte si ji prosím telefonicky.' : ''}
+              </p>
+            )
+          }
+        </section>
+
+        <section>
+          <h2>Kontakt</h2>
+          <dl class="udaje">
+            <dt>Adresa</dt>
+            <dd>{adr || p.mesto}{p.cast && p.cast !== p.mesto && !adr.includes(p.cast) && <>, {p.cast}</>}</dd>
+            {p.telefon && (<><dt>Telefon</dt><dd><a href={`tel:${p.telefon.replace(/\s/g, '')}`}>{p.telefon}</a></dd></>)}
+            {p.email && (<><dt>E-mail</dt><dd><a href={`mailto:${p.email}`}>{p.email}</a></dd></>)}
+            {p.web && (<><dt>Web</dt><dd><a href={p.web} rel="noopener nofollow" target="_blank">{host(p.web)}</a></dd></>)}
+            {p.instagram && (<><dt>Instagram</dt><dd><a href={p.instagram} rel="noopener nofollow" target="_blank">{host(p.instagram).replace(/^instagram\.com\//, '@')}</a></dd></>)}
+            {p.facebook && (<><dt>Facebook</dt><dd><a href={p.facebook} rel="noopener nofollow" target="_blank">Profil na Facebooku</a></dd></>)}
+            {p.bezbarierove && (<><dt>Bezbariérový přístup</dt><dd>{p.bezbarierove === 'yes' ? 'Ano' : p.bezbarierove === 'limited' ? 'Částečně' : 'Ne'}</dd></>)}
+          </dl>
+        </section>
+
+        <section>
+          <h2>O salonu</h2>
+          {vety.map((v) => <p>{v}</p>)}
+        </section>
+      </div>
+
+      <div class="mapa-wrap">
+        <div
+          id="mapa"
+          class="mapa"
+          data-lat={p.lat}
+          data-lon={p.lon}
+          data-nazev={p.nazev}
+          role="img"
+          aria-label={`Mapa: ${p.nazev}, ${adr || p.mesto}`}
+        >
+        </div>
+        <p class="mapa__odkazy">
+          Otevřít v <a href={`https://mapy.com/zakladni?x=${p.lon}&y=${p.lat}&z=17&source=coor&id=${p.lon},${p.lat}`} rel="noopener" target="_blank">Mapy.com</a> nebo <a href={`https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lon}`} rel="noopener" target="_blank">Google Maps</a>
+        </p>
+
+        <div class="majitel">
+          <h2>Je to váš salon?</h2>
+          <p>Doplňte ceník, fotky a aktuální otevírací dobu. Je to zdarma.</p>
+          <a class="btn" href={`/pridat-provozovnu/?salon=${encodeURIComponent(url(p))}`}>Upravit údaje</a>
+        </div>
+      </div>
+    </div>
+
+    {
+      okoli.length > 0 && (
+        <section class="okoli">
+          <h2>Další salony v okolí</h2>
+          <ul>
+            {okoli.map(({ p: o, km }) => (
+              <ProvozovnaRadek p={o} vzdalenost={km} sMestem={o.mesto !== p.mesto} />
+            ))}
+          </ul>
+          <p>
+            <a href={mestoUrl(p.mestoSlug)}>Všechna kadeřnictví: {p.mesto}</a>
+          </p>
+        </section>
+      )
+    }
+
+    <p class="zdroj muted">
+      Údaje pochází z <a href={p.osm} rel="noopener" target="_blank">OpenStreetMap</a> a nemusí být aktuální.
+      Vidíte chybu? <a href={`/pridat-provozovnu/?salon=${encodeURIComponent(url(p))}`}>Nahlaste ji</a>.
+    </p>
+  </div>
+  <Tipy />
+</Base>
+
+<script>
+  import 'leaflet/dist/leaflet.css';
+  import { aplikujStav, prahaTed } from '../../scripts/stav';
+  aplikujStav();
+  const { den } = prahaTed();
+  document.querySelector(`[data-tyden] tr[data-den="${den}"]`)?.classList.add('dnes');
+
+  const el = document.getElementById('mapa');
+  if (el) {
+    const nacti = async () => {
+      const L = (await import('leaflet')).default;
+      const lat = Number(el.dataset.lat);
+      const lon = Number(el.dataset.lon);
+      const map = L.map(el, { scrollWheelZoom: false }).setView([lat, lon], 16);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }).addTo(map);
+      L.circleMarker([lat, lon], {
+        radius: 10,
+        color: '#ffffff',
+        weight: 3,
+        fillColor: '#1e4a3c',
+        fillOpacity: 1,
+      })
+        .addTo(map)
+        .bindTooltip(el.dataset.nazev ?? '', { direction: 'top', offset: [0, -10] });
+    };
+    const io = new IntersectionObserver((e) => {
+      if (e[0].isIntersecting) {
+        io.disconnect();
+        nacti();
+      }
+    });
+    io.observe(el);
+  }
+</script>
+
+<style>
+  .head {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: clamp(24px, 4vw, 56px);
+    align-items: center;
+    margin-bottom: clamp(32px, 5vw, 56px);
+  }
+  .head__viz {
+    order: 2;
+  }
+  @media (max-width: 860px) {
+    .head {
+      grid-template-columns: 1fr;
+    }
+    .head__viz {
+      order: 0;
+      max-width: 28rem;
+    }
+  }
+  .head__typ {
+    display: flex;
+    gap: 0.4rem;
+    margin: 0 0 0.75rem;
+  }
+  .head h1 {
+    margin-bottom: 0.25em;
+  }
+  .head__adr {
+    font-size: 1.2rem;
+    margin: 0 0 0.25rem;
+  }
+  .head__stav {
+    margin: 0 0 1.25rem;
+  }
+  .head__stav .stav {
+    font-size: 1rem;
+  }
+  .akce {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1rem;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: clamp(24px, 4vw, 56px);
+    align-items: start;
+  }
+  .info section {
+    margin-bottom: 2rem;
+  }
+  .info h2,
+  .majitel h2,
+  .okoli h2 {
+    font-size: 1.75rem;
+  }
+  .doba {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 26rem;
+  }
+  .doba th,
+  .doba td {
+    text-align: left;
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid var(--line);
+    font-weight: 400;
+  }
+  .doba th {
+    width: 40%;
+  }
+  .doba :global(tr.dnes) {
+    background: var(--mint);
+    font-weight: 700;
+  }
+  .doba :global(tr.dnes) th {
+    font-weight: 700;
+  }
+  .udaje {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.5rem 1.5rem;
+    margin: 0;
+  }
+  .udaje dt {
+    color: var(--ink-soft);
+  }
+  .udaje dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+  .mapa {
+    aspect-ratio: 4 / 3;
+    width: 100%;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--mint);
+    z-index: 0;
+  }
+  .mapa__odkazy {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    margin: 0.5rem 0 1.5rem;
+  }
+  .majitel {
+    background: var(--mint);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+  }
+  .majitel p {
+    margin-bottom: 1rem;
+  }
+  .okoli {
+    margin-top: clamp(32px, 5vw, 56px);
+  }
+  .okoli ul {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .zdroj {
+    margin-top: 2.5rem;
+    font-size: 0.9rem;
+  }
+  @media (max-width: 860px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

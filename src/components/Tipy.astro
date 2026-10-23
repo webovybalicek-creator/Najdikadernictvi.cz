@@ -1,0 +1,83 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+  vynechat?: string;
+  pocet?: number;
+}
+const { vynechat, pocet = 3 } = Astro.props;
+const clanky = (await getCollection('blog'))
+  .filter((c) => c.id !== vynechat)
+  .sort((a, b) => b.data.datum.getTime() - a.data.datum.getTime())
+  .slice(0, pocet);
+---
+
+{
+  clanky.length > 0 && (
+    <section class="tipy">
+      <div class="wrap section">
+        <div class="sec-head">
+          <div>
+            <span class="eyebrow">Rady a tipy</span>
+            <h2>Než půjdete ke kadeřníkovi</h2>
+          </div>
+          <a href="/blog/">Všechny články</a>
+        </div>
+        <ul class="tipy__list">
+          {clanky.map((c) => (
+            <li>
+              <a href={`/blog/${c.id}/`}>
+                <h3>{c.data.title}</h3>
+                <p>{c.data.perex}</p>
+                <span class="tipy__vice">Číst dál</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .tipy {
+    background: var(--surface);
+    border-block: 1px solid var(--line);
+  }
+  .tipy__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(17rem, 100%), 1fr));
+    gap: 1.5rem;
+  }
+  .tipy__list a {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--brass);
+    background: var(--paper);
+    text-decoration: none;
+  }
+  .tipy__list a:hover h3 {
+    text-decoration: underline;
+  }
+  h3 {
+    font-size: 1.6rem;
+    margin-bottom: 0.6rem;
+  }
+  p {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    flex: 1;
+  }
+  .tipy__vice {
+    font-weight: 700;
+    color: var(--bottle);
+    font-size: 0.95rem;
+  }
+</style>

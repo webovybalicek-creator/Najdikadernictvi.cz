@@ -1,0 +1,190 @@
+---
+// Vyhledávání podle města nebo názvu salonu. Index se načte až při prvním psaní.
+---
+
+<form class="srch" role="search" action="/hledat/" method="get" data-hledani>
+  <label for="q" class="sr-only">Město nebo název salonu</label>
+  <input
+    id="q"
+    name="q"
+    type="search"
+    autocomplete="off"
+    placeholder="Město nebo název salonu, např. Brno"
+    aria-controls="srch-vysledky"
+    aria-autocomplete="list"
+  />
+  <button class="btn" type="submit">Hledat</button>
+  <div id="srch-vysledky" class="srch__res" role="listbox" hidden></div>
+</form>
+
+<script>
+  type Mesto = [string, string, number, string]; // název, url, počet, kraj
+  type Salon = [string, string, string]; // název, url, město
+  let index: { m: Mesto[]; s: Salon[] } | null = null;
+  const norm = (s: string) =>
+    s
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '')
+      .toLowerCase();
+
+  async function nacti() {
+    if (!index) index = await (await fetch('/hledat.json')).json();
+    return index!;
+  }
+
+  function vyhledej(q: string, idx: { m: Mesto[]; s: Salon[] }) {
+    const t = norm(q).split(/\s+/).filter(Boolean);
+    const shoda = (txt: string) => {
+      const n = norm(txt);
+      return t.every((w) => n.includes(w));
+    };
+    const mesta = idx.m
+      .filter((m) => shoda(m[0]))
+      .sort((a, b) => Number(norm(b[0]).startsWith(t[0])) - Number(norm(a[0]).startsWith(t[0])) || b[2] - a[2])
+      .slice(0, 6);
+    const salony = idx.s.filter((s) => shoda(`${s[0]} ${s[2]}`)).slice(0, 8);
+    return { mesta, salony };
+  }
+
+  document.querySelectorAll<HTMLFormElement>('[data-hledani]').forEach((form) => {
+    const input = form.querySelector('input')!;
+    const box = form.querySelector<HTMLElement>('.srch__res')!;
+    let token = 0;
+
+    const render = async () => {
+      const q = input.value.trim();
+      const my = ++token;
+      if (q.length < 2) {
+        box.hidden = true;
+        return;
+      }
+      const idx = await nacti();
+      if (my !== token) return;
+      const { mesta, salony } = vyhledej(q, idx);
+      if (!mesta.length && !salony.length) {
+        box.innerHTML = '<p class="srch__empty">Nic jsme nenašli. Zkuste jiný název nebo jen město.</p>';
+      } else {
+        const esc = (s: string) => s.replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
+        box.innerHTML =
+          (mesta.length
+            ? `<p class="srch__h">Města</p>` +
+              mesta
+                .map(
+                  (m) =>
+                    `<a role="option" href="${m[1]}"><span>${esc(m[0])}</span><small>${esc(m[3])} · ${m[2]}</small></a>`,
+                )
+                .join('')
+            : '') +
+          (salony.length
+            ? `<p class="srch__h">Salony</p>` +
+              salony
+                .map((s) => `<a role="option" href="${s[1]}"><span>${esc(s[0])}</span><small>${esc(s[2])}</small></a>`)
+                .join('')
+            : '');
+      }
+      box.hidden = false;
+    };
+
+    input.addEventListener('input', render);
+    input.addEventListener('focus', () => {
+      nacti();
+      if (input.value.trim().length >= 2) render();
+    });
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const idx = await nacti();
+      const { mesta, salony } = vyhledej(input.value.trim(), idx);
+      const prvni = mesta[0]?.[1] ?? salony[0]?.[1];
+      if (prvni) location.href = prvni;
+      else render();
+    });
+    document.addEventListener('click', (e) => {
+      if (!form.contains(e.target as Node)) box.hidden = true;
+    });
+    form.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') box.hidden = true;
+      if (e.key === 'ArrowDown') {
+        const links = [...box.querySelectorAll<HTMLAnchorElement>('a')];
+        const i = links.indexOf(document.activeElement as HTMLAnchorElement);
+        links[Math.min(i + 1, links.length - 1)]?.focus();
+        e.preventDefault();
+      }
+      if (e.key === 'ArrowUp') {
+        const links = [...box.querySelectorAll<HTMLAnchorElement>('a')];
+        const i = links.indexOf(document.activeElement as HTMLAnchorElement);
+        if (i <= 0) input.focus();
+        else links[i - 1].focus();
+        e.preventDefault();
+      }
+    });
+  });
+</script>
+
+<style>
+  .srch {
+    position: relative;
+    display: flex;
+    gap: 0.5rem;
+    max-width: 40rem;
+  }
+  input {
+    flex: 1;
+    min-width: 0;
+    font: 500 1.1rem/1.2 var(--f-text);
+    padding: 0.9em 1em;
+    border-radius: var(--radius);
+    border: 1.5px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+  }
+  input:focus-visible {
+    outline: 3px solid var(--brass);
+    outline-offset: 0;
+  }
+  .btn {
+    padding-inline: 1.4em;
+  }
+  .srch__res {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    z-index: 20;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 12px 32px rgb(21 34 29 / 0.18);
+    padding: 0.4rem;
+    max-height: 70vh;
+    overflow: auto;
+  }
+  .srch__res :global(a) {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.55rem 0.7rem;
+    border-radius: 4px;
+    text-decoration: none;
+  }
+  .srch__res :global(a:hover),
+  .srch__res :global(a:focus-visible) {
+    background: var(--mint);
+    color: var(--ink);
+    outline: none;
+  }
+  .srch__res :global(small) {
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .srch__res :global(.srch__h) {
+    margin: 0.4rem 0.7rem 0.2rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--ink-soft);
+  }
+  .srch__res :global(.srch__empty) {
+    margin: 0.6rem 0.7rem;
+    color: var(--ink-soft);
+  }
+</style>

@@ -1,0 +1,36 @@
+---
+title: 'Barbershop, nebo kadeřnictví? V čem je rozdíl'
+description: 'Čím se liší barbershop od klasického pánského kadeřnictví, co kde dostanete a kam zajít podle toho, jaký účes nebo vousy chcete.'
+perex: 'Barbershopy jsou dnes skoro v každém větším městě. Kdy ale dává smysl zajít k barberovi a kdy je lepší klasické kadeřnictví?'
+datum: 2026-10-23
+---
+
+Ještě před patnácti lety by většina mužů v Česku zašla prostě „ke kadeřnici“. Dnes mají na výběr mezi klasickým kadeřnictvím, unisex salonem a barbershopem. Hranice mezi nimi nejsou ostré, přesto se v něčem liší.
+
+## Co je barbershop
+
+Barbershop navazuje na tradici holičství. Specializuje se na **pánské střihy a péči o vousy**: zastřihování a tvarování vousů, holení břitvou, horký ručník. Typické jsou krátké střihy s plynulým přechodem do ztracena (fade), práce se strojkem a precizní kontury.
+
+K barbershopu obvykle patří i atmosféra: pánské prostředí, kafe nebo pivo během čekání, často online rezervace na konkrétního barbera.
+
+## Co je kadeřnictví
+
+Kadeřnictví stříhá dámy, pány i děti a kromě střihu nabízí **barvení, melíry, trvalou, foukanou nebo společenské účesy**. Pánské kadeřnictví zvládne běžné pánské střihy, holení a úpravu vousů ale nabízí jen některá.
+
+Pro delší pánské vlasy, barvení nebo když chcete stříhat celou rodinu na jednom místě, je kadeřnictví praktičtější volba.
+
+## Kam tedy zajít?
+
+- **Krátký střih s fadem, ostré kontury, úprava vousů** → barbershop.
+- **Delší vlasy, barvení, melír, dámský nebo dětský střih** → kadeřnictví.
+- **Klasický pánský střih bez speciálních požadavků** → obojí, rozhodne spíš cena, vzdálenost a volný termín.
+
+## Na co se dívat při výběru
+
+Ať už vybíráte barbershop, nebo kadeřnictví, vyplatí se:
+
+1. **Prohlédnout si ukázky práce.** Většina salonů má Instagram nebo Facebook s fotkami střihů.
+2. **Zjistit, jestli se objednává předem.** Barbershopy často pracují jen na rezervace, některá kadeřnictví berou i zákazníky z ulice.
+3. **Ověřit otevírací dobu.** Hlavně o víkendu a ve svátky se liší.
+
+V našem katalogu u každého salonu najdete typ provozovny, kontakt a otevírací dobu, pokud ji známe. Stačí [vyhledat své město](/).

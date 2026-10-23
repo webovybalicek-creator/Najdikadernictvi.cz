@@ -1,0 +1,27 @@
+---
+import Text from '../layouts/Text.astro';
+import { PROVOZOVNY, mesta, pocetText } from '../lib/data';
+---
+
+<Text title="O webu" description="Najdi kadeřnictví je katalog kadeřnictví a barbershopů v celé České republice.">
+  <p class="lead">
+    Spousta skvělých kadeřnictví a barberů nemá vlastní web. Hledat je pak znamená proklikávat mapy, sociální sítě a
+    staré katalogy. Tady je najdete na jednom místě.
+  </p>
+  <p>
+    Aktuálně evidujeme {pocetText(PROVOZOVNY.length, 'salon', 'salony', 'salonů')} v {pocetText(mesta().length, 'obci', 'obcích', 'obcích')}. U každého ukazujeme adresu,
+    kontakt, otevírací dobu, mapu a další salony v okolí.
+  </p>
+  <h2>Odkud jsou údaje</h2>
+  <p>
+    Základní údaje přebíráme z otevřené mapové databáze <a href="https://www.openstreetmap.org/copyright"
+      >OpenStreetMap</a
+    > (licence ODbL) a pravidelně je aktualizujeme. Údaje doplněné majiteli salonů mají přednost.
+  </p>
+  <h2>Jste majitel salonu?</h2>
+  <p>
+    Profil si můžete zdarma doplnit nebo opravit. Stačí nám napsat přes <a href="/pridat-provozovnu/"
+      >formulář pro majitele</a
+    >.
+  </p>
+</Text>
