@@ -1,0 +1,46 @@
+---
+import Text from '../layouts/Text.astro';
+import { SITE } from '../lib/config';
+const p = SITE.provozovatel;
+---
+
+<Text title="Podmínky užití" description="Podmínky užívání webu Najdi kadeřnictví: obsah, údaje o salonech, odpovědnost a autorská práva.">
+  <h2>Provozovatel</h2>
+  <p>
+    Web {SITE.domena} provozuje {p.nazev || 'jeho provozovatel'}{p.ico && <>, IČO {p.ico}</>}{p.sidlo && <>, {p.sidlo}</>}.
+    Kontakt: <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+  </p>
+
+  <h2>Co web nabízí</h2>
+  <p>
+    Najdi kadeřnictví je bezplatný informační katalog kadeřnictví a barbershopů v České republice a magazín s radami o
+    péči o vlasy. Web nezprostředkovává objednávky ani platby, nejsme provozovatelem uvedených salonů a neneseme
+    odpovědnost za jejich služby.
+  </p>
+
+  <h2>Údaje o salonech</h2>
+  <p>
+    Údaje přebíráme z otevřených zdrojů (OpenStreetMap, veřejné registry) a od majitelů salonů. Snažíme se, aby byly
+    přesné, ale nemůžeme zaručit jejich úplnost ani aktuálnost, zejména otevírací dobu. Před návštěvou doporučujeme
+    údaje ověřit přímo u salonu. Chyby můžete nahlásit přes <a href="/pridat-provozovnu/">formulář</a>.
+  </p>
+
+  <h2>Pořadí a reklama</h2>
+  <p>
+    Pořadí salonů ve výpisech nelze zaplatit. Web může zobrazovat reklamu třetích stran (Google AdSense), která je
+    zřetelně oddělená od obsahu. Za obsah reklam odpovídají jejich zadavatelé.
+  </p>
+
+  <h2>Autorská práva</h2>
+  <p>
+    Texty článků a vzhled webu jsou chráněné autorským právem a bez souhlasu je nelze kopírovat ani dále šířit. Data o
+    salonech z OpenStreetMap jsou © přispěvatelé OpenStreetMap (licence ODbL). Fotky v článcích pochází z Unsplash pod
+    jejich licencí, fotky z ulice z Mapy.com © Seznam.cz, a.s. a další.
+  </p>
+
+  <h2>Odkazy na jiné weby</h2>
+  <p>Odkazy na weby salonů a jiných subjektů slouží pro pohodlí uživatelů. Za jejich obsah neodpovídáme.</p>
+
+  <h2>Změny podmínek</h2>
+  <p>Podmínky můžeme průběžně upravovat. Aktuální znění je vždy na této stránce.</p>
+</Text>

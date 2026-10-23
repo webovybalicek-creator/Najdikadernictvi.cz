@@ -41,6 +41,14 @@ const fullTitle = title.includes(SITE.nazev) ? title : `${title} | ${SITE.nazev}
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    {
+      SITE.adsense && (
+        <>
+          <script is:inline set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});`} />
+          <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${SITE.adsense}`} crossorigin="anonymous" />
+        </>
+      )
+    }
     <slot name="head" />
   </head>
   <body>

@@ -49,14 +49,39 @@ const p = SITE.provozovatel;
     pro ochranu osobních údajů (<a href="https://uoou.gov.cz">uoou.gov.cz</a>).
   </p>
 
-  <h2>Cookies</h2>
+  <h2>Cookies a reklama</h2>
+  {
+    SITE.adsense ? (
+      <>
+        <p>
+          Web je financován reklamou <strong>Google AdSense</strong>. Google a jeho partneři mohou s vaším souhlasem
+          používat cookies a podobné technologie k zobrazování reklam, měření jejich výkonu a k personalizaci reklam
+          podle vašich zájmů. Bez souhlasu se zobrazují jen nepersonalizované reklamy a nezbytné technologie.
+        </p>
+        <p>
+          Souhlas udělujete nebo odmítáte v liště při první návštěvě. Spravuje ji Google prostřednictvím certifikované
+          platformy pro správu souhlasů (IAB TCF). Souhlas můžete kdykoli změnit nebo odvolat odkazem
+          <a href="#" data-cookies>Nastavení cookies</a> v patičce webu.
+        </p>
+        <p>
+          Jak Google používá údaje z webů partnerů, popisuje stránka{' '}
+          <a href="https://policies.google.com/technologies/partner-sites?hl=cs" rel="noopener">
+            Jak Google využívá informace z webů a aplikací
+          </a>
+          . Personalizované reklamy můžete vypnout také v{' '}
+          <a href="https://adssettings.google.com/" rel="noopener">nastavení reklam Google</a>.
+        </p>
+      </>
+    ) : (
+      <p>
+        Web nyní <strong>nepoužívá žádné sledovací ani reklamní cookies</strong>. Než nasadíme reklamu (Google
+        AdSense), vyžádáme si váš souhlas a tuto stránku aktualizujeme.
+      </p>
+    )
+  }
   <p>
-    Web <strong>nepoužívá žádné sledovací ani reklamní cookies</strong>. Funkce „V mém okolí“ používá polohu vašeho
-    zařízení jen ve vašem prohlížeči a nikam ji neodesílá. Mapové podklady načítáme ze serverů OpenStreetMap, které
-    při tom vidí vaši IP adresu.
-  </p>
-  <p>
-    Pokud v budoucnu nasadíme měření návštěvnosti nebo reklamu (Google AdSense), vyžádáme si předem váš souhlas
-    prostřednictvím lišty se souhlasem a tuto stránku aktualizujeme.
+    Funkce „V mém okolí“ používá polohu vašeho zařízení jen ve vašem prohlížeči a nikam ji neodesílá. Mapové podklady
+    načítáme ze serverů OpenStreetMap a fotky z ulice ze serverů Mapy.com (Seznam.cz), které při tom vidí vaši IP
+    adresu. Cookies tyto služby na našem webu neukládají.
   </p>
 </Text>

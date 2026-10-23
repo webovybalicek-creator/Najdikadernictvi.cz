@@ -18,4 +18,11 @@ export const SITE = {
   googleOvereni: '',
   /** Ověření v Bing Webmaster Tools (msvalidate.01) */
   bingOvereni: '',
+  /**
+   * Google AdSense – ID vydavatele ve tvaru „ca-pub-1234567890123456“.
+   * Prázdné = reklama i souhlas s cookies jsou vypnuté.
+   * Souhlas s cookies (GDPR, IAB TCF) zajišťuje certifikovaný CMP Googlu:
+   * AdSense → Ochrana soukromí a zprávy → Evropské předpisy (GDPR) – vytvořit a publikovat zprávu.
+   */
+  adsense: '',
 };

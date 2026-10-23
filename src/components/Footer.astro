@@ -32,6 +32,8 @@ const rok = new Date().getFullYear();
         <li><a href="/pridat-provozovnu/">Jste majitel salonu?</a></li>
         <li><a href="/pro-salony/">Odznak pro salony</a></li>
         <li><a href="/ochrana-osobnich-udaju/">Ochrana osobních údajů</a></li>
+        <li><a href="/podminky-uziti/">Podmínky užití</a></li>
+        {SITE.adsense && <li><a href="#" data-cookies>Nastavení cookies</a></li>}
       </ul>
     </div>
   </div>
@@ -44,6 +46,22 @@ const rok = new Date().getFullYear();
     </p>
   </div>
 </footer>
+
+{
+  SITE.adsense && (
+    <script is:inline>
+      // Znovu otevře lištu souhlasu (CMP Googlu z AdSense)
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest && e.target.closest('[data-cookies]');
+        if (!a) return;
+        e.preventDefault();
+        window.googlefc = window.googlefc || {};
+        window.googlefc.callbackQueue = window.googlefc.callbackQueue || [];
+        window.googlefc.callbackQueue.push({ CONSENT_DATA_READY: function () { window.googlefc.showRevocationMessage(); } });
+      });
+    </script>
+  )
+}
 
 <style>
   .ftr {
