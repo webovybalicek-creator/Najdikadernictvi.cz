@@ -1,0 +1,26 @@
+{
+  "name": "najdikadernictvi",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webovybalicek-creator/najdikadernictvi.cz.git"
+  },
+  "bugs": {
+    "url": "https://github.com/webovybalicek-creator/najdikadernictvi.cz/issues"
+  },
+  "homepage": "https://github.com/webovybalicek-creator/najdikadernictvi.cz#readme",
+  "dependencies": {
+    "astro": "^7.4.2"
+  },
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  }
+}
