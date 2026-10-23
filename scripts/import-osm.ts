@@ -253,7 +253,7 @@ out;`;
     mestaKraje.get(s)!.add(p.kraj);
   }
   // Slugy rezervované pro jiné stránky webu
-  const REZERVOVANE = new Set(['blog', 'kraj', 'kraje', 'hledat', 'kontakt', 'o-webu', 'pridat-provozovnu', 'ochrana-osobnich-udaju']);
+  const REZERVOVANE = new Set(['blog', 'kraj', 'kraje', 'hledat', 'kontakt', 'o-webu', 'pridat-provozovnu', 'ochrana-osobnich-udaju', 'okoli', 'praha-hub']);
   for (const p of all) {
     const s = slugify(p.mesto);
     p.mestoSlug =

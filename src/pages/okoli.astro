@@ -1,0 +1,243 @@
+---
+import Base from '../layouts/Base.astro';
+import Hledani from '../components/Hledani.astro';
+---
+
+<Base
+  title="Kadeřnictví v mém okolí"
+  description="Nejbližší kadeřnictví a barbershopy podle vaší aktuální polohy."
+  noindex
+>
+  <div class="wrap section">
+    <span class="eyebrow">V mém okolí</span>
+    <h1>Nejbližší <em>salony</em></h1>
+
+    <div class="filtr" data-filtr hidden>
+      <fieldset class="seg">
+        <legend class="sr-only">Typ</legend>
+        <label><input type="radio" name="typ" value="" checked /><span>Vše</span></label>
+        <label><input type="radio" name="typ" value="0" /><span>Kadeřnictví</span></label>
+        <label><input type="radio" name="typ" value="1" /><span>Barbershopy</span></label>
+      </fieldset>
+      <label class="chk"><input type="checkbox" name="open" /> Otevřeno teď</label>
+    </div>
+
+    <p class="stav-hledani" data-stav aria-live="polite">Zjišťuji vaši polohu…</p>
+    <ol class="seznam" data-seznam></ol>
+    <p class="vice" data-vice hidden><button class="btn btn--ghost" type="button">Zobrazit další</button></p>
+
+    <div class="nahrada" data-nahrada hidden>
+      <p>Polohu se nepodařilo zjistit. Zadejte město nebo název salonu:</p>
+      <Hledani />
+    </div>
+  </div>
+</Base>
+
+<script>
+  import { stav } from '../scripts/stav';
+
+  type Zaznam = [number, number, string, string, string, 0 | 1, [number, number][][] | 0];
+  const elStav = document.querySelector<HTMLElement>('[data-stav]')!;
+  const seznam = document.querySelector<HTMLOListElement>('[data-seznam]')!;
+  const vice = document.querySelector<HTMLElement>('[data-vice]')!;
+  const nahrada = document.querySelector<HTMLElement>('[data-nahrada]')!;
+  const filtr = document.querySelector<HTMLElement>('[data-filtr]')!;
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
+
+  function km(lat1: number, lon1: number, lat2: number, lon2: number) {
+    const r = Math.PI / 180;
+    const a =
+      Math.sin(((lat2 - lat1) * r) / 2) ** 2 +
+      Math.cos(lat1 * r) * Math.cos(lat2 * r) * Math.sin(((lon2 - lon1) * r) / 2) ** 2;
+    return 12742 * Math.asin(Math.sqrt(a));
+  }
+  const vzd = (d: number) => (d < 1 ? `${Math.round(d * 100) * 10} m` : `${d.toFixed(1).replace('.', ',')} km`);
+
+  let serazene: { z: Zaznam; d: number }[] = [];
+  let zobrazeno = 20;
+
+  function vykresli() {
+    const typ = (filtr.querySelector<HTMLInputElement>('input[name=typ]:checked')?.value ?? '') as '' | '0' | '1';
+    const jenOtevreno = filtr.querySelector<HTMLInputElement>('input[name=open]')!.checked;
+    const vyhovuje = serazene.filter(
+      ({ z }) => (typ === '' || String(z[5]) === typ) && (!jenOtevreno || (z[6] && stav(z[6]).open)),
+    );
+    seznam.innerHTML = vyhovuje
+      .slice(0, zobrazeno)
+      .map(({ z, d }) => {
+        const s = z[6] ? stav(z[6]) : null;
+        return `<li class="row">
+          <div><h2 class="row__name"><a href="${z[3]}">${esc(z[2])}</a></h2><p class="row__adr">${esc(z[4])}</p></div>
+          <div class="row__meta">
+            <span class="tag${z[5] ? ' tag--barber' : ''}">${z[5] ? 'Barbershop' : 'Kadeřnictví'}</span>
+            ${s ? `<span class="stav" data-stav="${s.open ? 'open' : 'closed'}">${s.text}</span>` : ''}
+            <span class="row__km">${vzd(d)}</span>
+          </div></li>`;
+      })
+      .join('');
+    vice.hidden = vyhovuje.length <= zobrazeno;
+    elStav.textContent = vyhovuje.length
+      ? 'Salony seřazené podle vzdálenosti od vás.'
+      : 'Žádný salon v okolí neodpovídá filtru.';
+  }
+
+  async function start(lat: number, lon: number) {
+    elStav.textContent = 'Hledám nejbližší salony…';
+    const data: Zaznam[] = await (await fetch('/okoli.json')).json();
+    serazene = data
+      .filter((z) => Math.abs(z[0] - lat) < 0.5 && Math.abs(z[1] - lon) < 0.8)
+      .map((z) => ({ z, d: km(lat, lon, z[0], z[1]) }))
+      .sort((a, b) => a.d - b.d)
+      .slice(0, 300);
+    if (!serazene.length) {
+      elStav.textContent = 'V okolí 50 km jsme žádný salon nenašli.';
+      nahrada.hidden = false;
+      return;
+    }
+    filtr.hidden = false;
+    vykresli();
+  }
+
+  filtr.addEventListener('input', () => {
+    zobrazeno = 20;
+    vykresli();
+  });
+  vice.querySelector('button')!.addEventListener('click', () => {
+    zobrazeno += 20;
+    vykresli();
+  });
+
+  const q = new URLSearchParams(location.search);
+  const qLat = Number(q.get('lat'));
+  const qLon = Number(q.get('lon'));
+  if (qLat && qLon) {
+    start(qLat, qLon);
+  } else if (!('geolocation' in navigator)) {
+    elStav.textContent = 'Váš prohlížeč neumí zjistit polohu.';
+    nahrada.hidden = false;
+  } else {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => start(pos.coords.latitude, pos.coords.longitude),
+      (err) => {
+        elStav.textContent =
+          err.code === err.PERMISSION_DENIED
+            ? 'Přístup k poloze jste nepovolili. Povolte ho v prohlížeči, nebo hledejte podle města.'
+            : 'Polohu se nepodařilo zjistit.';
+        nahrada.hidden = false;
+      },
+      { enableHighAccuracy: false, timeout: 15000, maximumAge: 300000 },
+    );
+  }
+</script>
+
+<style>
+  .filtr {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+    align-items: center;
+    margin: 1.5rem 0 0.5rem;
+  }
+  .seg {
+    display: inline-flex;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    background: #fff;
+  }
+  .seg label {
+    position: relative;
+  }
+  .seg input {
+    position: absolute;
+    opacity: 0;
+  }
+  .seg span {
+    display: block;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .seg input:checked + span {
+    background: var(--bottle);
+    color: var(--bottle-ink);
+  }
+  .seg input:focus-visible + span {
+    outline: 2px solid var(--ink);
+    outline-offset: -2px;
+  }
+  .chk {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  .chk input {
+    accent-color: var(--bottle);
+  }
+  .stav-hledani {
+    color: var(--ink-soft);
+    margin: 1rem 0;
+  }
+  .seznam {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .seznam :global(.row) {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.35rem 1.5rem;
+    align-items: center;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .seznam :global(.row__name) {
+    font-size: 1.15rem;
+    font-weight: 400;
+    margin: 0;
+    letter-spacing: 0;
+  }
+  .seznam :global(.row__name a) {
+    text-decoration: none;
+  }
+  .seznam :global(.row__name a:hover) {
+    text-decoration: underline;
+  }
+  .seznam :global(.row__adr) {
+    margin: 0.15rem 0 0;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .seznam :global(.row__meta) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.7rem;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .seznam :global(.row__km) {
+    font-size: 0.85rem;
+    font-weight: 500;
+    min-width: 4.5em;
+    text-align: right;
+  }
+  .vice {
+    margin-top: 1.5rem;
+  }
+  .nahrada {
+    margin-top: 1rem;
+  }
+  @media (max-width: 640px) {
+    .seznam :global(.row) {
+      grid-template-columns: 1fr;
+    }
+    .seznam :global(.row__meta) {
+      justify-content: flex-start;
+    }
+  }
+</style>

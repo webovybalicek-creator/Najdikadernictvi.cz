@@ -13,6 +13,17 @@
     aria-controls="srch-vysledky"
     aria-autocomplete="list"
   />
+  <a class="srch__geo" href="/okoli/" title="Salony v mém okolí">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"
+      ><path
+        d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"></path><circle cx="12" cy="10" r="2.3" fill="none" stroke="currentColor" stroke-width="1.5"
+      ></circle></svg
+    >
+    <span>V mém okolí</span>
+  </a>
   <button class="btn" type="submit">Hledat</button>
   <div id="srch-vysledky" class="srch__res" role="listbox" hidden></div>
 </form>
@@ -148,6 +159,37 @@
   }
   .btn {
     padding-inline: 1.8em;
+  }
+  .srch__geo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0 1em;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #fff;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .srch__geo:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  @media (max-width: 560px) {
+    .srch {
+      flex-wrap: wrap;
+    }
+    input {
+      flex-basis: 100%;
+    }
+    .srch__geo,
+    .btn {
+      flex: 1;
+      justify-content: center;
+      padding-block: 0.8em;
+    }
   }
   .srch__res {
     position: absolute;
