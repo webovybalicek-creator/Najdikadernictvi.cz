@@ -2,6 +2,11 @@ name: Import dat z OpenStreetMap
 
 on:
   workflow_dispatch:
+    inputs:
+      kraje:
+        description: 'Jen vybrané kraje (ISO kódy oddělené čárkou, např. CZ-64,CZ-80). Prázdné = všechny.'
+        required: false
+        default: ''
   schedule:
     # každé pondělí ve 3:17 UTC
     - cron: '17 3 * * 1'
@@ -28,6 +33,8 @@ jobs:
 
       - run: npm ci
       - run: node scripts/import-osm.ts
+        env:
+          IMPORT_KRAJE: ${{ inputs.kraje }}
 
       - name: Commit dat
         id: commit

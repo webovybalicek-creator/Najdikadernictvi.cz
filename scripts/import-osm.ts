@@ -143,7 +143,17 @@ async function main() {
   } catch {}
   const selhaly: string[] = [];
 
+  // IMPORT_KRAJE=CZ-64,CZ-80 → stáhnout jen vybrané kraje, ostatní převzít z předchozích dat
+  const jen = (process.env.IMPORT_KRAJE ?? '').split(',').map((s) => s.trim()).filter(Boolean);
+
   for (const kraj of KRAJE) {
+    if (jen.length && !jen.includes(kraj.iso)) {
+      for (const p of predchozi.filter((p) => p.kraj === kraj.slug)) {
+        seen.add(p.id);
+        all.push(p);
+      }
+      continue;
+    }
     console.log(`▶ ${kraj.nazev} (${kraj.iso})`);
     const q = `[out:json][timeout:240];
 area["ISO3166-2"="${kraj.iso}"]->.k;
@@ -250,7 +260,7 @@ out;`;
     used.add(`${p.mestoSlug}/${p.slug}`);
   }
 
-  if (selhaly.length === KRAJE.length) throw new Error('Nepodařilo se stáhnout žádný kraj');
+  if (selhaly.length && selhaly.length === (jen.length || KRAJE.length)) throw new Error('Nepodařilo se stáhnout žádný kraj');
   if (all.length === 0) throw new Error('Žádná data');
 
   await mkdir('src/data', { recursive: true });
