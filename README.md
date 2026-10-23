@@ -22,7 +22,7 @@ Potřebné GitHub secrets (*Settings → Secrets and variables → Actions → S
 - `FTP_USERNAME`
 - `FTP_PASSWORD`
 
-Volitelná proměnná (*… → Variables*): `FTP_DIR` – cílová složka na serveru, výchozí `./najdikadernictvi.cz/`.
+Volitelná proměnná (*… → Variables*): `FTP_DIR` – cílová složka na serveru, výchozí `./` (FTP účet vede přímo do webové složky domény).
 
 ## Stav
 

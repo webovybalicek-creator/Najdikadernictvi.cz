@@ -39,4 +39,4 @@ jobs:
           protocol: ftps
           port: 21
           local-dir: ./dist/
-          server-dir: ${{ vars.FTP_DIR || './najdikadernictvi.cz/' }}
+          server-dir: ${{ vars.FTP_DIR || './' }}
