@@ -14,10 +14,11 @@ const LIMIT_MESIC = 60000;
 const LIMIT_DEN = 2000;
 const VELIKOSTI = ['maly' => [480, 360], 'velky' => [1024, 640]];
 
-function nenalezeno(int $code = 404): void
+function nenalezeno(int $code = 404, bool $trvale = false): void
 {
     http_response_code($code);
-    header('Cache-Control: public, max-age=86400');
+    // „Panorama tu není“ si prohlížeč může pamatovat týden, dočasné chyby vůbec
+    header($trvale ? 'Cache-Control: public, max-age=604800' : 'Cache-Control: no-store');
     exit;
 }
 
@@ -91,8 +92,8 @@ $typ = (string)curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
 curl_close($ch);
 
 if ($kod !== 200 || !is_string($obrazek) || !str_starts_with($typ, 'image/')) {
-    // V okolí není panorama (nebo chyba API) → v prohlížeči zůstane monogram
-    nenalezeno(404);
+    // V okolí není panorama (4xx) nebo chyba API (5xx) → v prohlížeči zůstane monogram
+    nenalezeno(404, $kod === 404 || $kod === 204);
 }
 
 header('Content-Type: ' . $typ);

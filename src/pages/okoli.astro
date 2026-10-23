@@ -66,7 +66,9 @@ import Hledani from '../components/Hledani.astro';
       .slice(0, zobrazeno)
       .map(({ z, d }) => {
         const s = z[6] ? stav(z[6]) : null;
+        const init = z[2].replace(/^(kadeřnictví|barbershop|barber|salon|studio)\s+/i, '').slice(0, 2).toUpperCase();
         return `<li class="row">
+          <a class="row__img" href="${z[3]}" tabindex="-1" aria-hidden="true"><span>${esc(init)}</span><img src="/api/panorama.php?lat=${z[0]}&lon=${z[1]}&s=maly" alt="" loading="lazy" onload="this.classList.add('ok')" onerror="this.remove()"></a>
           <div><h2 class="row__name"><a href="${z[3]}">${esc(z[2])}</a></h2><p class="row__adr">${esc(z[4])}</p></div>
           <div class="row__meta">
             <span class="tag${z[5] ? ' tag--barber' : ''}">${z[5] ? 'Barbershop' : 'Kadeřnictví'}</span>
@@ -190,11 +192,37 @@ import Hledani from '../components/Hledani.astro';
   }
   .seznam :global(.row) {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 6.5rem minmax(0, 1fr) auto;
     gap: 0.35rem 1.5rem;
     align-items: center;
     padding: 1.1rem 0;
     border-bottom: 1px solid var(--line);
+  }
+  .seznam :global(.row__img) {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius);
+    background: var(--mint);
+    color: var(--ink-soft);
+    font-weight: 200;
+    font-size: 1.3rem;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    overflow: hidden;
+  }
+  .seznam :global(.row__img img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .seznam :global(.row__img img.ok) {
+    opacity: 1;
   }
   .seznam :global(.row__name) {
     font-size: 1.15rem;
@@ -234,7 +262,10 @@ import Hledani from '../components/Hledani.astro';
   }
   @media (max-width: 640px) {
     .seznam :global(.row) {
-      grid-template-columns: 1fr;
+      grid-template-columns: 5.5rem minmax(0, 1fr);
+    }
+    .seznam :global(.row__img) {
+      grid-row: span 2;
     }
     .seznam :global(.row__meta) {
       justify-content: flex-start;

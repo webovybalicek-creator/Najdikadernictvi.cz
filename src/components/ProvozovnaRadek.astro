@@ -1,22 +1,32 @@
 ---
+import Vizual from './Vizual.astro';
 import { adresa, tyden, url, TYP_NAZEV, ZAMERENI_NAZEV, type Provozovna } from '../lib/data';
 
 interface Props {
   p: Provozovna;
   vzdalenost?: number;
   sMestem?: boolean;
+  /** Malý náhled „pohled z ulice“ (stojí kredity Mapy.com, jen ve výpisech měst) */
+  nahled?: boolean;
 }
-const { p, vzdalenost, sMestem = false } = Astro.props;
+const { p, vzdalenost, sMestem = false, nahled = false } = Astro.props;
 const t = tyden(p);
 ---
 
 <li
-  class="row"
+  class:list={['row', nahled && 'row--nahled']}
   data-typ={p.typ}
   data-zamereni={p.zamereni.join(' ')}
   data-oh={t ? JSON.stringify(t) : undefined}
   data-hledat={`${p.nazev} ${p.ulice ?? ''} ${p.cast ?? ''}`.toLowerCase()}
 >
+  {
+    nahled && (
+      <a class="row__img" href={url(p)} tabindex="-1" aria-hidden="true">
+        <Vizual p={p} panorama />
+      </a>
+    )
+  }
   <div class="row__main">
     <h3 class="row__name"><a href={url(p)}>{p.nazev}</a></h3>
     <p class="row__adr">{adresa(p, sMestem) || p.mesto}</p>
@@ -37,6 +47,19 @@ const t = tyden(p);
     align-items: center;
     padding: 1.1rem 0;
     border-bottom: 1px solid var(--line);
+  }
+  .row--nahled {
+    grid-template-columns: 6.5rem minmax(0, 1fr) auto;
+  }
+  .row__img {
+    display: block;
+    width: 6.5rem;
+  }
+  .row__img :global(.viz) {
+    aspect-ratio: 4 / 3;
+  }
+  .row__img :global(.viz__mono) {
+    font-size: 1.4rem;
   }
   .row__name {
     font-family: var(--f-display);
@@ -73,6 +96,13 @@ const t = tyden(p);
   @media (max-width: 640px) {
     .row {
       grid-template-columns: 1fr;
+    }
+    .row--nahled {
+      grid-template-columns: 5.5rem minmax(0, 1fr);
+    }
+    .row--nahled .row__img {
+      width: 5.5rem;
+      grid-row: span 2;
     }
     .row__meta {
       justify-content: flex-start;
