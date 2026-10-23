@@ -1,0 +1,3605 @@
+[
+ {
+  "ico": "05344425",
+  "forma": "101",
+  "rzp": {
+   "icoId": "05344425",
+   "zaznamy": [
+    {
+     "ico": "05344425",
+     "obchodniJmeno": "Josef Kroupa",
+     "pravniForma": "101",
+     "financniUrad": "006",
+     "datumVzniku": "2016-08-29",
+     "datumAktualizace": "2026-05-06",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 19,
+       "nazevKraje": "Hlavní město Praha",
+       "kodObce": 554782,
+       "nazevObce": "Praha",
+       "kodSpravnihoObvodu": 60,
+       "nazevSpravnihoObvodu": "Praha 6",
+       "kodMestskehoObvodu": 60,
+       "nazevMestskehoObvodu": "Praha 6",
+       "kodMestskeCastiObvodu": 500178,
+       "kodUlice": 466051,
+       "nazevMestskeCastiObvodu": "Praha 6",
+       "nazevUlice": "Eliášova",
+       "cisloDomovni": 467,
+       "kodCastiObce": 490024,
+       "cisloOrientacni": 28,
+       "nazevCastiObce": "Bubeneč",
+       "kodAdresnihoMista": 22178538,
+       "psc": 16000,
+       "textovaAdresa": "Eliášova 467/28, Bubeneč, 16000 Praha 6",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "2026-05-07",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "310006",
+     "zivnostiStav": {
+      "pocetAktivnich": 2,
+      "pocetZaniklych": 0,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 0,
+      "pocetCelkem": 2
+     },
+     "provozovnyStav": {
+      "pocetCelkem": 3,
+      "pocetZaniklych": 1,
+      "pocetAktivnich": 2,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Josef",
+      "prijmeni": "Kroupa",
+      "datumNarozeni": "1994-08-05",
+      "statniObcanstvi": "CZ",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "2016-08-29",
+       "predmetPodnikani": "Holičství, kadeřnictví",
+       "datumAktualizace": "2020-06-10",
+       "druhZivnosti": "R",
+       "provozovny": [
+        {
+         "icp": 1013278518,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 35,
+          "nazevKraje": "Jihočeský kraj",
+          "kodOkresu": 3301,
+          "nazevOkresu": "České Budějovice",
+          "kodObce": 544256,
+          "nazevObce": "České Budějovice",
+          "kodUlice": 75701,
+          "nazevUlice": "Novohradská",
+          "cisloDomovni": 763,
+          "kodCastiObce": 403911,
+          "cisloOrientacni": 37,
+          "nazevCastiObce": "České Budějovice 6",
+          "kodAdresnihoMista": 23406704,
+          "psc": 37008,
+          "textovaAdresa": "Novohradská 763/37, České Budějovice 6, 37008 České Budějovice",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2020-06-11",
+         "typProvozovny": "1"
+        }
+       ]
+      },
+      {
+       "datumVzniku": "2020-06-22",
+       "predmetPodnikani": "Výroba, obchod a služby neuvedené v přílohách 1 až 3 živnostenského zákona",
+       "datumAktualizace": "2026-03-16",
+       "druhZivnosti": "L",
+       "oboryCinnosti": [
+        {
+         "platnostOd": "2020-06-22",
+         "oborNazev": "Zprostředkování obchodu a služeb"
+        },
+        {
+         "platnostOd": "2020-06-22",
+         "oborNazev": "Velkoobchod a maloobchod"
+        },
+        {
+         "platnostOd": "2026-03-17",
+         "oborNazev": "Pronájem a půjčování věcí movitých"
+        }
+       ],
+       "provozovny": [
+        {
+         "icp": 1013278518,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 35,
+          "nazevKraje": "Jihočeský kraj",
+          "kodOkresu": 3301,
+          "nazevOkresu": "České Budějovice",
+          "kodObce": 544256,
+          "nazevObce": "České Budějovice",
+          "kodUlice": 75701,
+          "nazevUlice": "Novohradská",
+          "cisloDomovni": 763,
+          "kodCastiObce": 403911,
+          "cisloOrientacni": 37,
+          "nazevCastiObce": "České Budějovice 6",
+          "kodAdresnihoMista": 23406704,
+          "psc": 37008,
+          "textovaAdresa": "Novohradská 763/37, České Budějovice 6, 37008 České Budějovice",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2020-06-22",
+         "typProvozovny": "1",
+         "oboryCinnosti": [
+          {
+           "platnostOd": "2020-06-22",
+           "oborNazev": "Velkoobchod a maloobchod"
+          },
+          {
+           "platnostOd": "2020-06-22",
+           "oborNazev": "Zprostředkování obchodu a služeb"
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "08048274",
+  "forma": "101",
+  "rzp": {
+   "icoId": "08048274",
+   "zaznamy": [
+    {
+     "ico": "08048274",
+     "obchodniJmeno": "Bc. Věra Pařízková",
+     "pravniForma": "101",
+     "financniUrad": "009",
+     "datumVzniku": "2019-04-01",
+     "datumAktualizace": "2022-01-25",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 19,
+       "nazevKraje": "Hlavní město Praha",
+       "kodObce": 554782,
+       "nazevObce": "Praha",
+       "kodSpravnihoObvodu": 94,
+       "nazevSpravnihoObvodu": "Praha 9",
+       "kodMestskehoObvodu": 94,
+       "nazevMestskehoObvodu": "Praha 9",
+       "kodMestskeCastiObvodu": 547361,
+       "kodUlice": 918164,
+       "nazevMestskeCastiObvodu": "Praha 14",
+       "nazevUlice": "Břeclavská",
+       "cisloDomovni": 1674,
+       "kodCastiObce": 400785,
+       "cisloOrientacni": 3,
+       "nazevCastiObce": "Kyje",
+       "kodAdresnihoMista": 73954314,
+       "psc": 19800,
+       "textovaAdresa": "Břeclavská 1674/3, Kyje, 19800 Praha 9",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "2019-04-03",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "310015",
+     "zivnostiStav": {
+      "pocetAktivnich": 0,
+      "pocetZaniklych": 0,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 2,
+      "pocetCelkem": 2
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Věra",
+      "prijmeni": "Pařízková",
+      "titulPredJmenem": "Bc.",
+      "datumNarozeni": "1988-10-10",
+      "statniObcanstvi": "CZ",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "2019-04-01",
+       "predmetPodnikani": "Manikúra",
+       "preruseniZivnosti": [
+        {
+         "platnostOd": "2024-07-24",
+         "platnostDo": "2099-12-31"
+        }
+       ],
+       "datumAktualizace": "2024-07-23",
+       "druhZivnosti": "R"
+      },
+      {
+       "datumVzniku": "2019-04-01",
+       "predmetPodnikani": "Výroba, obchod a služby neuvedené v přílohách 1 až 3 živnostenského zákona",
+       "preruseniZivnosti": [
+        {
+         "platnostOd": "2024-07-24",
+         "platnostDo": "2099-12-31"
+        }
+       ],
+       "datumAktualizace": "2024-07-23",
+       "druhZivnosti": "L",
+       "oboryCinnosti": [
+        {
+         "platnostOd": "2019-04-01",
+         "oborNazev": "Zprostředkování obchodu a služeb"
+        },
+        {
+         "platnostOd": "2019-04-01",
+         "oborNazev": "Reklamní činnost, marketing, mediální zastoupení"
+        },
+        {
+         "platnostOd": "2019-04-01",
+         "oborNazev": "Mimoškolní výchova a vzdělávání, pořádání kurzů, školení, včetně lektorské činnosti"
+        },
+        {
+         "platnostOd": "2019-04-01",
+         "oborNazev": "Fotografické služby"
+        },
+        {
+         "platnostOd": "2019-04-01",
+         "oborNazev": "Výroba textilií, textilních výrobků, oděvů a oděvních doplňků"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "07510845",
+  "forma": "112",
+  "rzp": {
+   "icoId": "07510845",
+   "zaznamy": [
+    {
+     "ico": "07510845",
+     "obchodniJmeno": "Hair Academy s.r.o.",
+     "pravniForma": "112",
+     "financniUrad": "009",
+     "datumVzniku": "2018-10-02",
+     "datumAktualizace": "2018-10-08",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 19,
+       "nazevKraje": "Hlavní město Praha",
+       "kodObce": 554782,
+       "nazevObce": "Praha",
+       "kodSpravnihoObvodu": 94,
+       "nazevSpravnihoObvodu": "Praha 9",
+       "kodMestskehoObvodu": 94,
+       "nazevMestskehoObvodu": "Praha 9",
+       "kodMestskeCastiObvodu": 538949,
+       "kodUlice": 492817,
+       "nazevMestskeCastiObvodu": "Praha 21",
+       "nazevUlice": "Zaříčanská",
+       "cisloDomovni": 657,
+       "kodCastiObce": 173771,
+       "nazevCastiObce": "Újezd nad Lesy",
+       "kodAdresnihoMista": 22525645,
+       "psc": 19016,
+       "textovaAdresa": "Zaříčanská 657, Újezd nad Lesy, 19016 Praha 9",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "2018-09-19",
+       "typAdresy": "SIDLO"
+      }
+     ],
+     "typSubjektu": "P",
+     "zivnostenskyUrad": "310025",
+     "zivnostiStav": {
+      "pocetAktivnich": 2,
+      "pocetZaniklych": 0,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 0,
+      "pocetCelkem": 2
+     },
+     "datumZapisuVr": "2018-10-02",
+     "provozovnyStav": {
+      "pocetCelkem": 2,
+      "pocetZaniklych": 0,
+      "pocetAktivnich": 2,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "angazovaneOsoby": [
+      {
+       "jmeno": "Taťána",
+       "prijmeni": "Jiříková",
+       "datumNarozeni": "1975-06-17",
+       "platnostOd": "2018-10-02",
+       "statniObcanstvi": "CZ",
+       "typAngazma": "STATUTARNI_ZASTUPCE_RZP"
+      }
+     ],
+     "zivnosti": [
+      {
+       "datumVzniku": "2018-10-02",
+       "predmetPodnikani": "Výroba, obchod a služby neuvedené v přílohách 1 až 3 živnostenského zákona",
+       "datumAktualizace": "2020-03-03",
+       "druhZivnosti": "L",
+       "oboryCinnosti": [
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Skladování, balení zboží, manipulace s nákladem a technické činnosti v dopravě"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Zasilatelství a zastupování v celním řízení"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Poskytování software, poradenství v oblasti informačních technologií, zpracování dat, hostingové a související činnosti a webové portály"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Činnost informačních a zpravodajských kanceláří"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Pronájem a půjčování věcí movitých"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Poradenská a konzultační činnost, zpracování odborných studií a posudků"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Projektování pozemkových úprav"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Příprava a vypracování technických návrhů, grafické a kresličské práce"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Projektování elektrických zařízení"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výzkum a vývoj v oblasti přírodních a technických věd nebo společenských věd"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Reklamní činnost, marketing, mediální zastoupení"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Překladatelská a tlumočnická činnost"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Služby v oblasti administrativní správy a služby organizačně hospodářské povahy"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Provozování cestovní agentury a průvodcovská činnost v oblasti cestovního ruchu"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Mimoškolní výchova a vzdělávání, pořádání kurzů, školení, včetně lektorské činnosti"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Provozování kulturních, kulturně-vzdělávacích a zábavních zařízení, pořádání kulturních produkcí, zábav, výstav, veletrhů, přehlídek, prodejních a obdobných akcí"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Provozování tělovýchovných a sportovních zařízení a organizování sportovní činnosti"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Poskytování technických služeb"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Chov zvířat a jejich výcvik (s výjimkou živočišné výroby)"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Poskytování služeb osobního charakteru a pro osobní hygienu"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Úprava nerostů, dobývání rašeliny a bahna"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba potravinářských a škrobárenských výrobků"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba, obchod a služby jinde nezařazené"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba krmiv, krmných směsí, doplňkových látek a premixů"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba textilií, textilních výrobků, oděvů a oděvních doplňků"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba a opravy obuvi, brašnářského a sedlářského zboží"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Činnost odborného lesního hospodáře a vyhotovování lesních hospodářských plánů a osnov"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Zpracování dřeva, výroba dřevěných, korkových, proutěných a slaměných výrobků"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Diagnostická, zkušební a poradenská činnost v ochraně rostlin a ošetřování rostlin, rostlinných produktů, objektů a půdy proti škodlivým organismům přípravky na ochranu rostlin nebo biocidními přípravky"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba vlákniny, papíru a lepenky a zboží z těchto materiálů"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Vydavatelské činnosti, polygrafická výroba, knihařské a kopírovací práce"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Nakládání s reprodukčním materiálem lesních dřevin"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba koksu, surového dehtu a jiných pevných paliv"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba chemických látek a chemických směsí nebo předmětů a kosmetických přípravků"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba hnojiv"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba a zpracování skla"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba stavebních hmot, porcelánových, keramických a sádrových výrobků"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba brusiv a ostatních minerálních nekovových výrobků"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Broušení technického a šperkového kamene"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba a hutní zpracování železa, drahých a neželezných kovů a jejich slitin"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba kovových konstrukcí a kovodělných výrobků"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Povrchové úpravy a svařování kovů a dalších materiálů"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba měřicích, zkušebních, navigačních, optických a fotografických přístrojů a zařízení"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba neelektrických zařízení pro domácnost"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba strojů a zařízení"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba motorových a přípojných vozidel a karoserií"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Stavba a výroba plavidel"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba, vývoj, projektování, zkoušky, instalace, údržba, opravy, modifikace a konstrukční změny letadel, motorů letadel, vrtulí, letadlových částí a zařízení a leteckých  pozemních zařízení"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba drážních hnacích vozidel a drážních vozidel na dráze tramvajové, trolejbusové a lanové a železničního parku"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba jízdních kol, vozíků pro invalidy a jiných nemotorových dopravních prostředků"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba a opravy čalounických výrobků"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba, opravy a údržba sportovních potřeb, her, hraček a dětských kočárků"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba zdravotnických prostředků"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba a opravy zdrojů ionizujícího záření"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba školních a kancelářských potřeb, kromě výrobků z papíru, výroba bižuterie, kartáčnického a konfekčního zboží, deštníků, upomínkových předmětů"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba dalších výrobků zpracovatelského průmyslu"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Provozování vodovodů a kanalizací a úprava a rozvod vody"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Nakládání s odpady (vyjma nebezpečných)"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Přípravné a dokončovací stavební práce, specializované stavební činnosti"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Sklenářské práce, rámování a paspartování"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Zprostředkování obchodu a služeb"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Velkoobchod a maloobchod"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Zastavárenská činnost a maloobchod s použitým zbožím"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Údržba motorových vozidel a jejich příslušenství"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Potrubní a pozemní doprava (vyjma železniční a silniční motorové dopravy)"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Ubytovací služby"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba, rozmnožování, distribuce, prodej, pronájem zvukových a zvukově-obrazových záznamů a výroba nenahraných nosičů údajů a záznamů"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Fotografické služby"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Pěstitelské pálení"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Umělecko-řemeslné zpracování kovů"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Návrhářská, designérská, aranžérská činnost a modeling"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Praní pro domácnost, žehlení, opravy a údržba oděvů, bytového textilu a osobního zboží"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Poskytování služeb pro rodinu a domácnost"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Testování, měření, analýzy a kontroly"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Opravy a údržba potřeb pro domácnost, předmětů kulturní povahy, výrobků jemné mechaniky, optických přístrojů a měřidel"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Poskytování služeb pro zemědělství, zahradnictví, rybníkářství, lesnictví a myslivost"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba elektronických součástek, elektrických zařízení a výroba a opravy elektrických strojů, přístrojů a elektronických zařízení pracujících na malém napětí"
+        },
+        {
+         "platnostOd": "2018-10-02",
+         "oborNazev": "Výroba plastových a pryžových výrobků"
+        },
+        {
+         "platnostOd": "2020-03-03",
+         "oborNazev": "Nákup, prodej, správa a údržba nemovitostí"
+        }
+       ],
+       "provozovny": [
+        {
+         "icp": 1013122658,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 19,
+          "nazevKraje": "Hlavní město Praha",
+          "kodObce": 554782,
+          "nazevObce": "Praha",
+          "kodSpravnihoObvodu": 94,
+          "nazevSpravnihoObvodu": "Praha 9",
+          "kodMestskehoObvodu": 94,
+          "nazevMestskehoObvodu": "Praha 9",
+          "kodMestskeCastiObvodu": 500216,
+          "kodUlice": 509141,
+          "nazevMestskeCastiObvodu": "Praha 9",
+          "nazevUlice": "bratří Dohalských",
+          "cisloDomovni": 138,
+          "kodCastiObce": 490245,
+          "cisloOrientacni": 10,
+          "nazevCastiObce": "Vysočany",
+          "kodAdresnihoMista": 25489810,
+          "psc": 19000,
+          "textovaAdresa": "bratří Dohalských 138/10, Vysočany, 19000 Praha 9",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2020-04-01",
+         "typProvozovny": "1",
+         "oboryCinnosti": [
+          {
+           "platnostOd": "2020-04-01",
+           "oborNazev": "Mimoškolní výchova a vzdělávání, pořádání kurzů, školení, včetně lektorské činnosti"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "datumVzniku": "2018-10-02",
+       "predmetPodnikani": "Holičství, kadeřnictví",
+       "datumAktualizace": "2020-02-12",
+       "druhZivnosti": "R",
+       "odpovedniZastupci": [
+        {
+         "jmeno": "Taťána",
+         "prijmeni": "Jiříková",
+         "datumNarozeni": "1975-06-17",
+         "platnostOd": "2018-10-02",
+         "statniObcanstvi": "CZ",
+         "typAngazma": "ODPOVEDNY_ZASTUPCE_RZP"
+        }
+       ],
+       "provozovny": [
+        {
+         "icp": 1013122658,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 19,
+          "nazevKraje": "Hlavní město Praha",
+          "kodObce": 554782,
+          "nazevObce": "Praha",
+          "kodSpravnihoObvodu": 94,
+          "nazevSpravnihoObvodu": "Praha 9",
+          "kodMestskehoObvodu": 94,
+          "nazevMestskehoObvodu": "Praha 9",
+          "kodMestskeCastiObvodu": 500216,
+          "kodUlice": 509141,
+          "nazevMestskeCastiObvodu": "Praha 9",
+          "nazevUlice": "bratří Dohalských",
+          "cisloDomovni": 138,
+          "kodCastiObce": 490245,
+          "cisloOrientacni": 10,
+          "nazevCastiObce": "Vysočany",
+          "kodAdresnihoMista": 25489810,
+          "psc": 19000,
+          "textovaAdresa": "bratří Dohalských 138/10, Vysočany, 19000 Praha 9",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2020-04-01",
+         "typProvozovny": "1"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "66312825",
+  "forma": "101",
+  "rzp": {
+   "icoId": "66312825",
+   "zaznamy": [
+    {
+     "ico": "66312825",
+     "obchodniJmeno": "Helena Dolečková",
+     "pravniForma": "101",
+     "financniUrad": "238",
+     "datumVzniku": "1997-08-11",
+     "datumAktualizace": "2011-02-11",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 86,
+       "nazevKraje": "Královéhradecký kraj",
+       "kodOkresu": 3604,
+       "nazevOkresu": "Jičín",
+       "kodObce": 572659,
+       "nazevObce": "Jičín",
+       "kodUlice": 165204,
+       "nazevUlice": "Vrcha",
+       "cisloDomovni": 234,
+       "kodCastiObce": 59552,
+       "nazevCastiObce": "Holínské Předměstí",
+       "kodAdresnihoMista": 17433266,
+       "psc": 50601,
+       "textovaAdresa": "Vrcha 234, Holínské Předměstí, 50601 Jičín",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "1997-08-11",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "360401",
+     "zivnostiStav": {
+      "pocetAktivnich": 1,
+      "pocetZaniklych": 0,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 0,
+      "pocetCelkem": 1
+     },
+     "provozovnyStav": {
+      "pocetCelkem": 2,
+      "pocetZaniklych": 1,
+      "pocetAktivnich": 1,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Helena",
+      "prijmeni": "Dolečková",
+      "datumNarozeni": "1977-05-01",
+      "platnostOd": "1997-08-11",
+      "statniObcanstvi": "CZ",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "1997-08-11",
+       "predmetPodnikani": "Kadeřnictví",
+       "datumAktualizace": "2015-02-10",
+       "druhZivnosti": "R",
+       "provozovny": [
+        {
+         "icp": 1010129457,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 86,
+          "nazevKraje": "Královéhradecký kraj",
+          "kodOkresu": 3604,
+          "nazevOkresu": "Jičín",
+          "kodObce": 572659,
+          "nazevObce": "Jičín",
+          "kodUlice": 164259,
+          "nazevUlice": "Českých bratří",
+          "cisloDomovni": 311,
+          "kodCastiObce": 410225,
+          "nazevCastiObce": "Valdické Předměstí",
+          "kodAdresnihoMista": 17526051,
+          "psc": 50601,
+          "textovaAdresa": "Českých bratří 311, Valdické Předměstí, 50601 Jičín",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2015-03-01",
+         "typProvozovny": "1"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "17790395",
+  "forma": "101",
+  "rzp": {
+   "icoId": "17790395",
+   "zaznamy": [
+    {
+     "ico": "17790395",
+     "obchodniJmeno": "Kateryna Myronenko",
+     "pravniForma": "101",
+     "financniUrad": "145",
+     "datumVzniku": "2022-11-30",
+     "datumAktualizace": "2026-02-23",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 43,
+       "nazevKraje": "Plzeňský kraj",
+       "kodOkresu": 3407,
+       "nazevOkresu": "Plzeň-sever",
+       "kodObce": 559661,
+       "nazevObce": "Zbůch",
+       "kodUlice": 3150534,
+       "nazevUlice": "K Újezdu",
+       "cisloDomovni": 676,
+       "kodCastiObce": 191957,
+       "nazevCastiObce": "Zbůch",
+       "kodAdresnihoMista": 86554891,
+       "psc": 33022,
+       "textovaAdresa": "K Újezdu 676, 33022 Zbůch",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "2025-05-19",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "340704",
+     "zivnostiStav": {
+      "pocetAktivnich": 4,
+      "pocetZaniklych": 0,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 0,
+      "pocetCelkem": 4
+     },
+     "provozovnyStav": {
+      "pocetCelkem": 2,
+      "pocetZaniklych": 0,
+      "pocetAktivnich": 2,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "UA",
+     "osobaPodnikatel": {
+      "jmeno": "Kateryna",
+      "prijmeni": "Myronenko",
+      "datumNarozeni": "1998-12-28",
+      "statniObcanstvi": "UA",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "2022-11-30",
+       "platnostDo": "2027-03-31",
+       "predmetPodnikani": "Kosmetické služby",
+       "datumAktualizace": "2026-07-27",
+       "druhZivnosti": "R",
+       "provozovny": [
+        {
+         "icp": 1014709954,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 43,
+          "nazevKraje": "Plzeňský kraj",
+          "kodOkresu": 3405,
+          "nazevOkresu": "Plzeň-město",
+          "kodObce": 554791,
+          "nazevObce": "Plzeň",
+          "kodMestskeCastiObvodu": 546003,
+          "kodUlice": 397750,
+          "nazevMestskeCastiObvodu": "Plzeň 3",
+          "nazevUlice": "Skrétova",
+          "cisloDomovni": 475,
+          "kodCastiObce": 406368,
+          "cisloOrientacni": 8,
+          "nazevCastiObce": "Jižní Předměstí",
+          "kodAdresnihoMista": 24534137,
+          "psc": 30100,
+          "textovaAdresa": "Skrétova 475/8, Jižní Předměstí, 30100 Plzeň",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2023-03-01",
+         "typProvozovny": "1"
+        }
+       ]
+      },
+      {
+       "datumVzniku": "2022-11-30",
+       "platnostDo": "2027-03-31",
+       "predmetPodnikani": "Výroba, obchod a služby neuvedené v přílohách 1 až 3 živnostenského zákona",
+       "datumAktualizace": "2026-07-27",
+       "druhZivnosti": "L",
+       "oboryCinnosti": [
+        {
+         "platnostOd": "2022-11-30",
+         "oborNazev": "Velkoobchod a maloobchod"
+        },
+        {
+         "platnostOd": "2022-11-30",
+         "oborNazev": "Poskytování služeb osobního charakteru a pro osobní hygienu"
+        },
+        {
+         "platnostOd": "2024-08-27",
+         "oborNazev": "Příprava a vypracování technických návrhů, grafické a kresličské práce"
+        },
+        {
+         "platnostOd": "2024-08-27",
+         "oborNazev": "Testování, měření, analýzy a kontroly"
+        },
+        {
+         "platnostOd": "2024-08-27",
+         "oborNazev": "Reklamní činnost, marketing, mediální zastoupení"
+        },
+        {
+         "platnostOd": "2024-08-27",
+         "oborNazev": "Fotografické služby"
+        },
+        {
+         "platnostOd": "2024-08-27",
+         "oborNazev": "Překladatelská a tlumočnická činnost"
+        },
+        {
+         "platnostOd": "2024-08-27",
+         "oborNazev": "Služby v oblasti administrativní správy a služby organizačně hospodářské povahy"
+        },
+        {
+         "platnostOd": "2024-08-27",
+         "oborNazev": "Mimoškolní výchova a vzdělávání, pořádání kurzů, školení, včetně lektorské činnosti"
+        },
+        {
+         "platnostOd": "2024-08-27",
+         "oborNazev": "Poskytování služeb pro rodinu a domácnost"
+        },
+        {
+         "platnostOd": "2024-08-27",
+         "oborNazev": "Praní pro domácnost, žehlení, opravy a údržba oděvů, bytového textilu a osobního zboží"
+        },
+        {
+         "platnostOd": "2024-08-27",
+         "oborNazev": "Výroba, obchod a služby jinde nezařazené"
+        },
+        {
+         "platnostOd": "2024-08-27",
+         "oborNazev": "Poskytování služeb pro zemědělství, zahradnictví, rybníkářství, lesnictví a myslivost"
+        },
+        {
+         "platnostOd": "2024-08-27",
+         "oborNazev": "Diagnostická, zkušební a poradenská činnost v ochraně rostlin a ošetřování rostlin, rostlinných produktů, objektů a půdy proti škodlivým organismům přípravky na ochranu rostlin nebo biocidními přípravky"
+        },
+        {
+         "platnostOd": "2024-08-27",
+         "oborNazev": "Zprostředkování obchodu a služeb"
+        },
+        {
+         "platnostOd": "2024-08-27",
+         "oborNazev": "Projektování pozemkových úprav"
+        }
+       ]
+      },
+      {
+       "datumVzniku": "2025-11-05",
+       "platnostDo": "2027-03-31",
+       "predmetPodnikani": "Činnosti, při kterých je porušována integrita lidské kůže",
+       "datumAktualizace": "2026-07-27",
+       "druhZivnosti": "V"
+      },
+      {
+       "datumVzniku": "2026-02-24",
+       "platnostDo": "2027-03-31",
+       "predmetPodnikani": "Pedikúra, manikúra",
+       "datumAktualizace": "2026-07-27",
+       "druhZivnosti": "R",
+       "provozovny": [
+        {
+         "icp": 1014709954,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 43,
+          "nazevKraje": "Plzeňský kraj",
+          "kodOkresu": 3405,
+          "nazevOkresu": "Plzeň-město",
+          "kodObce": 554791,
+          "nazevObce": "Plzeň",
+          "kodMestskeCastiObvodu": 546003,
+          "kodUlice": 397750,
+          "nazevMestskeCastiObvodu": "Plzeň 3",
+          "nazevUlice": "Skrétova",
+          "cisloDomovni": 475,
+          "kodCastiObce": 406368,
+          "cisloOrientacni": 8,
+          "nazevCastiObce": "Jižní Předměstí",
+          "kodAdresnihoMista": 24534137,
+          "psc": 30100,
+          "textovaAdresa": "Skrétova 475/8, Jižní Předměstí, 30100 Plzeň",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2026-02-24",
+         "typProvozovny": "1"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "47521821",
+  "forma": "101",
+  "rzp": {
+   "icoId": "47521821",
+   "zaznamy": [
+    {
+     "ico": "47521821",
+     "obchodniJmeno": "Vladimír HUML",
+     "pravniForma": "101",
+     "financniUrad": "026",
+     "datumVzniku": "1994-05-03",
+     "datumAktualizace": "2010-08-20",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 27,
+       "nazevKraje": "Středočeský kraj",
+       "kodOkresu": 3202,
+       "nazevOkresu": "Beroun",
+       "kodObce": 531057,
+       "nazevObce": "Beroun",
+       "kodUlice": 8001,
+       "nazevUlice": "Preislerova",
+       "cisloDomovni": 487,
+       "kodCastiObce": 401901,
+       "cisloOrientacni": 16,
+       "nazevCastiObce": "Beroun-Město",
+       "kodAdresnihoMista": 5930847,
+       "psc": 26601,
+       "textovaAdresa": "Preislerova 487/16, Beroun-Město, 26601 Beroun",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "1994-05-09",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "320201",
+     "zivnostiStav": {
+      "pocetAktivnich": 1,
+      "pocetZaniklych": 1,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 0,
+      "pocetCelkem": 2
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Vladimír",
+      "prijmeni": "HUML",
+      "datumNarozeni": "1967-02-01",
+      "platnostOd": "1994-05-03",
+      "statniObcanstvi": "CZ",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "1994-05-03",
+       "predmetPodnikani": "Výroba, obchod a služby neuvedené v přílohách 1 až 3 živnostenského zákona",
+       "datumAktualizace": "2008-07-01",
+       "druhZivnosti": "L",
+       "oboryCinnosti": [
+        {
+         "platnostOd": "1994-05-03",
+         "oborNazev": "Úklidové práce"
+        }
+       ]
+      },
+      {
+       "datumVzniku": "1994-05-03",
+       "datumZaniku": "2008-06-30",
+       "predmetPodnikani": "Úklidové práce",
+       "datumAktualizace": "2008-07-01",
+       "druhZivnosti": "L"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "24588717",
+  "forma": "101",
+  "rzp": {
+   "icoId": "24588717",
+   "zaznamy": [
+    {
+     "ico": "24588717",
+     "obchodniJmeno": "Anastasiia Rebbeka Panko",
+     "pravniForma": "101",
+     "financniUrad": "192",
+     "datumVzniku": "2026-03-04",
+     "datumAktualizace": "2026-10-20",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 78,
+       "nazevKraje": "Liberecký kraj",
+       "kodOkresu": 3505,
+       "nazevOkresu": "Liberec",
+       "kodObce": 563889,
+       "nazevObce": "Liberec",
+       "kodMestskeCastiObvodu": 556904,
+       "kodUlice": 253031,
+       "nazevMestskeCastiObvodu": "Liberec (nečleněné město)",
+       "nazevUlice": "Lípová",
+       "cisloDomovni": 664,
+       "kodCastiObce": 408948,
+       "cisloOrientacni": 6,
+       "cisloOrientacniPismeno": "a",
+       "nazevCastiObce": "Liberec IV-Perštýn",
+       "kodAdresnihoMista": 26291274,
+       "psc": 46001,
+       "textovaAdresa": "Lípová 664/6a, Liberec IV-Perštýn, 46001 Liberec",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "2026-03-05",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "350506",
+     "zivnostiStav": {
+      "pocetAktivnich": 2,
+      "pocetZaniklych": 2,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 0,
+      "pocetCelkem": 4
+     },
+     "provozovnyStav": {
+      "pocetCelkem": 3,
+      "pocetZaniklych": 1,
+      "pocetAktivnich": 2,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Anastasiia Rebbeka",
+      "prijmeni": "Panko",
+      "datumNarozeni": "2001-11-06",
+      "statniObcanstvi": "UA",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "2026-10-20",
+       "platnostDo": "2027-03-31",
+       "predmetPodnikani": "Kosmetické služby",
+       "datumAktualizace": "2026-10-20",
+       "druhZivnosti": "R",
+       "provozovny": [
+        {
+         "icp": 1016067054,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 78,
+          "nazevKraje": "Liberecký kraj",
+          "kodOkresu": 3505,
+          "nazevOkresu": "Liberec",
+          "kodObce": 563889,
+          "nazevObce": "Liberec",
+          "kodMestskeCastiObvodu": 556904,
+          "kodUlice": 253472,
+          "nazevMestskeCastiObvodu": "Liberec (nečleněné město)",
+          "nazevUlice": "5. května",
+          "cisloDomovni": 40,
+          "kodCastiObce": 408638,
+          "cisloOrientacni": 32,
+          "nazevCastiObce": "Liberec I-Staré Město",
+          "kodAdresnihoMista": 23653442,
+          "psc": 46001,
+          "textovaAdresa": "5. května 40/32, Liberec I-Staré Město, 46001 Liberec",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2026-10-20",
+         "typProvozovny": "1"
+        }
+       ]
+      },
+      {
+       "datumVzniku": "2026-10-20",
+       "platnostDo": "2027-03-31",
+       "predmetPodnikani": "Výroba, obchod a služby neuvedené v přílohách 1 až 3 živnostenského zákona",
+       "datumAktualizace": "2026-10-20",
+       "druhZivnosti": "L",
+       "oboryCinnosti": [
+        {
+         "platnostOd": "2026-10-20",
+         "oborNazev": "Poskytování služeb pro rodinu a domácnost"
+        },
+        {
+         "platnostOd": "2026-10-20",
+         "oborNazev": "Služby v oblasti administrativní správy a služby organizačně hospodářské povahy"
+        },
+        {
+         "platnostOd": "2026-10-20",
+         "oborNazev": "Výroba, obchod a služby jinde nezařazené"
+        },
+        {
+         "platnostOd": "2026-10-20",
+         "oborNazev": "Zprostředkování obchodu a služeb"
+        },
+        {
+         "platnostOd": "2026-10-20",
+         "oborNazev": "Poskytování software, poradenství v oblasti informačních technologií, zpracování dat, hostingové a související činnosti a webové portály"
+        },
+        {
+         "platnostOd": "2026-10-20",
+         "oborNazev": "Reklamní činnost, marketing, mediální zastoupení"
+        }
+       ],
+       "provozovny": [
+        {
+         "icp": 1016067054,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 78,
+          "nazevKraje": "Liberecký kraj",
+          "kodOkresu": 3505,
+          "nazevOkresu": "Liberec",
+          "kodObce": 563889,
+          "nazevObce": "Liberec",
+          "kodMestskeCastiObvodu": 556904,
+          "kodUlice": 253472,
+          "nazevMestskeCastiObvodu": "Liberec (nečleněné město)",
+          "nazevUlice": "5. května",
+          "cisloDomovni": 40,
+          "kodCastiObce": 408638,
+          "cisloOrientacni": 32,
+          "nazevCastiObce": "Liberec I-Staré Město",
+          "kodAdresnihoMista": 23653442,
+          "psc": 46001,
+          "textovaAdresa": "5. května 40/32, Liberec I-Staré Město, 46001 Liberec",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2026-10-20",
+         "typProvozovny": "1",
+         "oboryCinnosti": [
+          {
+           "platnostOd": "2026-10-20",
+           "oborNazev": "Poskytování služeb pro rodinu a domácnost"
+          },
+          {
+           "platnostOd": "2026-10-20",
+           "oborNazev": "Výroba, obchod a služby jinde nezařazené"
+          },
+          {
+           "platnostOd": "2026-10-20",
+           "oborNazev": "Zprostředkování obchodu a služeb"
+          },
+          {
+           "platnostOd": "2026-10-20",
+           "oborNazev": "Reklamní činnost, marketing, mediální zastoupení"
+          },
+          {
+           "platnostOd": "2026-10-20",
+           "oborNazev": "Poskytování software, poradenství v oblasti informačních technologií, zpracování dat, hostingové a související činnosti a webové portály"
+          },
+          {
+           "platnostOd": "2026-10-20",
+           "oborNazev": "Služby v oblasti administrativní správy a služby organizačně hospodářské povahy"
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "22037781",
+  "forma": "101",
+  "rzp": {
+   "icoId": "22037781",
+   "zaznamy": [
+    {
+     "ico": "22037781",
+     "obchodniJmeno": "Anna Lepetchuk",
+     "pravniForma": "101",
+     "financniUrad": "005",
+     "datumVzniku": "2024-09-09",
+     "datumAktualizace": "2024-09-15",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 19,
+       "nazevKraje": "Hlavní město Praha",
+       "kodObce": 554782,
+       "nazevObce": "Praha",
+       "kodSpravnihoObvodu": 51,
+       "nazevSpravnihoObvodu": "Praha 5",
+       "kodMestskehoObvodu": 51,
+       "nazevMestskehoObvodu": "Praha 5",
+       "kodMestskeCastiObvodu": 539694,
+       "kodUlice": 503541,
+       "nazevMestskeCastiObvodu": "Praha 13",
+       "nazevUlice": "Petržílkova",
+       "cisloDomovni": 2486,
+       "kodCastiObce": 490172,
+       "cisloOrientacni": 46,
+       "nazevCastiObce": "Stodůlky",
+       "kodAdresnihoMista": 22714774,
+       "psc": 15800,
+       "textovaAdresa": "Petržílkova 2486/46, Stodůlky, 15800 Praha 5",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "2024-09-16",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "310013",
+     "zivnostiStav": {
+      "pocetAktivnich": 2,
+      "pocetZaniklych": 0,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 0,
+      "pocetCelkem": 2
+     },
+     "provozovnyStav": {
+      "pocetCelkem": 2,
+      "pocetZaniklych": 0,
+      "pocetAktivnich": 2,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "UA",
+     "osobaPodnikatel": {
+      "jmeno": "Anna",
+      "prijmeni": "Lepetchuk",
+      "datumNarozeni": "1997-02-26",
+      "statniObcanstvi": "UA",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "2024-09-09",
+       "platnostDo": "2027-03-31",
+       "predmetPodnikani": "Kosmetické služby",
+       "datumAktualizace": "2026-03-05",
+       "druhZivnosti": "R",
+       "provozovny": [
+        {
+         "icp": 1015331211,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 19,
+          "nazevKraje": "Hlavní město Praha",
+          "kodObce": 554782,
+          "nazevObce": "Praha",
+          "kodSpravnihoObvodu": 19,
+          "nazevSpravnihoObvodu": "Praha 1",
+          "kodMestskehoObvodu": 19,
+          "nazevMestskehoObvodu": "Praha 1",
+          "kodMestskeCastiObvodu": 500054,
+          "kodUlice": 480606,
+          "nazevMestskeCastiObvodu": "Praha 1",
+          "nazevUlice": "Senovážné náměstí",
+          "cisloDomovni": 978,
+          "kodCastiObce": 490148,
+          "cisloOrientacni": 23,
+          "nazevCastiObce": "Nové Město",
+          "kodAdresnihoMista": 21707952,
+          "psc": 11000,
+          "textovaAdresa": "Senovážné náměstí 978/23, Nové Město, 11000 Praha 1",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2024-10-01",
+         "typProvozovny": "1"
+        }
+       ]
+      },
+      {
+       "datumVzniku": "2024-09-09",
+       "platnostDo": "2027-03-31",
+       "predmetPodnikani": "Výroba, obchod a služby neuvedené v přílohách 1 až 3 živnostenského zákona",
+       "datumAktualizace": "2026-03-05",
+       "druhZivnosti": "L",
+       "oboryCinnosti": [
+        {
+         "platnostOd": "2024-09-09",
+         "oborNazev": "Velkoobchod a maloobchod"
+        }
+       ],
+       "provozovny": [
+        {
+         "icp": 1015331211,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 19,
+          "nazevKraje": "Hlavní město Praha",
+          "kodObce": 554782,
+          "nazevObce": "Praha",
+          "kodSpravnihoObvodu": 19,
+          "nazevSpravnihoObvodu": "Praha 1",
+          "kodMestskehoObvodu": 19,
+          "nazevMestskehoObvodu": "Praha 1",
+          "kodMestskeCastiObvodu": 500054,
+          "kodUlice": 480606,
+          "nazevMestskeCastiObvodu": "Praha 1",
+          "nazevUlice": "Senovážné náměstí",
+          "cisloDomovni": 978,
+          "kodCastiObce": 490148,
+          "cisloOrientacni": 23,
+          "nazevCastiObce": "Nové Město",
+          "kodAdresnihoMista": 21707952,
+          "psc": 11000,
+          "textovaAdresa": "Senovážné náměstí 978/23, Nové Město, 11000 Praha 1",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2024-10-01",
+         "typProvozovny": "1",
+         "oboryCinnosti": [
+          {
+           "platnostOd": "2024-10-01",
+           "oborNazev": "Velkoobchod a maloobchod"
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "03688470",
+  "forma": "101",
+  "rzp": {
+   "icoId": "03688470",
+   "zaznamy": [
+    {
+     "ico": "03688470",
+     "obchodniJmeno": "Quynh Trang Leová",
+     "pravniForma": "101",
+     "financniUrad": "002",
+     "datumVzniku": "2015-01-05",
+     "datumAktualizace": "2023-11-20",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 19,
+       "nazevKraje": "Hlavní město Praha",
+       "kodObce": 554782,
+       "nazevObce": "Praha",
+       "kodSpravnihoObvodu": 27,
+       "nazevSpravnihoObvodu": "Praha 2",
+       "kodMestskehoObvodu": 27,
+       "nazevMestskehoObvodu": "Praha 2",
+       "kodMestskeCastiObvodu": 500089,
+       "kodUlice": 453536,
+       "nazevMestskeCastiObvodu": "Praha 2",
+       "nazevUlice": "Krkonošská",
+       "cisloDomovni": 1494,
+       "kodCastiObce": 490229,
+       "cisloOrientacni": 3,
+       "nazevCastiObce": "Vinohrady",
+       "kodAdresnihoMista": 21754195,
+       "psc": 12000,
+       "textovaAdresa": "Krkonošská 1494/3, Vinohrady, 12000 Praha 2",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "2023-11-08",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "310002",
+     "zivnostiStav": {
+      "pocetAktivnich": 0,
+      "pocetZaniklych": 0,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 1,
+      "pocetCelkem": 1
+     },
+     "provozovnyStav": {
+      "pocetCelkem": 1,
+      "pocetZaniklych": 1,
+      "pocetAktivnich": 0,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Quynh Trang",
+      "prijmeni": "Leová",
+      "datumNarozeni": "1996-02-09",
+      "statniObcanstvi": "VN",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "2015-01-05",
+       "predmetPodnikani": "Pedikúra, manikúra",
+       "preruseniZivnosti": [
+        {
+         "platnostOd": "2016-03-02",
+         "platnostDo": "2026-12-31"
+        }
+       ],
+       "datumAktualizace": "2023-01-12",
+       "druhZivnosti": "R"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "17108896",
+  "forma": "101",
+  "rzp": {
+   "icoId": "17108896",
+   "zaznamy": [
+    {
+     "ico": "17108896",
+     "obchodniJmeno": "Jakub Beneš",
+     "pravniForma": "101",
+     "financniUrad": "182",
+     "datumVzniku": "2022-05-04",
+     "datumAktualizace": "2022-05-05",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 60,
+       "nazevKraje": "Ústecký kraj",
+       "kodOkresu": 3503,
+       "nazevOkresu": "Chomutov",
+       "kodObce": 563099,
+       "nazevObce": "Jirkov",
+       "kodUlice": 146251,
+       "nazevUlice": "Zátiší",
+       "cisloDomovni": 1101,
+       "kodCastiObce": 407909,
+       "nazevCastiObce": "Jirkov",
+       "kodAdresnihoMista": 23541903,
+       "psc": 43111,
+       "textovaAdresa": "Zátiší 1101, 43111 Jirkov",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "2022-05-05",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "350302",
+     "zivnostiStav": {
+      "pocetAktivnich": 2,
+      "pocetZaniklych": 0,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 0,
+      "pocetCelkem": 2
+     },
+     "provozovnyStav": {
+      "pocetCelkem": 1,
+      "pocetZaniklych": 0,
+      "pocetAktivnich": 1,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Jakub",
+      "prijmeni": "Beneš",
+      "datumNarozeni": "1989-10-30",
+      "platnostOd": "2022-05-04",
+      "statniObcanstvi": "CZ",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "2022-05-04",
+       "predmetPodnikani": "Holičství, kadeřnictví",
+       "datumAktualizace": "2022-05-05",
+       "druhZivnosti": "R",
+       "provozovny": [
+        {
+         "icp": 1014456380,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 19,
+          "nazevKraje": "Hlavní město Praha",
+          "kodObce": 554782,
+          "nazevObce": "Praha",
+          "kodSpravnihoObvodu": 19,
+          "nazevSpravnihoObvodu": "Praha 1",
+          "kodMestskehoObvodu": 19,
+          "nazevMestskehoObvodu": "Praha 1",
+          "kodMestskeCastiObvodu": 500054,
+          "kodUlice": 468177,
+          "nazevMestskeCastiObvodu": "Praha 1",
+          "nazevUlice": "Růžová",
+          "cisloDomovni": 950,
+          "kodCastiObce": 490148,
+          "cisloOrientacni": 15,
+          "nazevCastiObce": "Nové Město",
+          "kodAdresnihoMista": 21707600,
+          "psc": 11000,
+          "textovaAdresa": "Růžová 950/15, Nové Město, 11000 Praha 1",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2022-10-07",
+         "typProvozovny": "1"
+        }
+       ]
+      },
+      {
+       "datumVzniku": "2022-05-04",
+       "predmetPodnikani": "Výroba, obchod a služby neuvedené v přílohách 1 až 3 živnostenského zákona",
+       "datumAktualizace": "2022-05-05",
+       "druhZivnosti": "L",
+       "oboryCinnosti": [
+        {
+         "platnostOd": "2022-05-04",
+         "oborNazev": "Mimoškolní výchova a vzdělávání, pořádání kurzů, školení, včetně lektorské činnosti"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "72234270",
+  "forma": "101",
+  "rzp": {
+   "icoId": "72234270",
+   "zaznamy": [
+    {
+     "ico": "72234270",
+     "obchodniJmeno": "Vladimíra Heidenreichová",
+     "pravniForma": "101",
+     "financniUrad": "138",
+     "datumVzniku": "2001-03-05",
+     "datumAktualizace": "2011-02-11",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 43,
+       "nazevKraje": "Plzeňský kraj",
+       "kodOkresu": 3405,
+       "nazevOkresu": "Plzeň-město",
+       "kodObce": 554791,
+       "nazevObce": "Plzeň",
+       "kodMestskeCastiObvodu": 545970,
+       "kodUlice": 397318,
+       "nazevMestskeCastiObvodu": "Plzeň 1",
+       "nazevUlice": "Rabštejnská",
+       "cisloDomovni": 1599,
+       "kodCastiObce": 122122,
+       "cisloOrientacni": 53,
+       "nazevCastiObce": "Bolevec",
+       "kodAdresnihoMista": 24430765,
+       "psc": 32300,
+       "textovaAdresa": "Rabštejnská 1599/53, Bolevec, 32300 Plzeň",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "2001-03-05",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "340500",
+     "zivnostiStav": {
+      "pocetAktivnich": 1,
+      "pocetZaniklych": 0,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 0,
+      "pocetCelkem": 1
+     },
+     "provozovnyStav": {
+      "pocetCelkem": 3,
+      "pocetZaniklych": 2,
+      "pocetAktivnich": 1,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Vladimíra",
+      "prijmeni": "Heidenreichová",
+      "datumNarozeni": "1964-01-14",
+      "platnostOd": "2001-03-05",
+      "statniObcanstvi": "CZ",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "2001-03-05",
+       "predmetPodnikani": "Kosmetické služby",
+       "datumAktualizace": "2014-04-23",
+       "druhZivnosti": "R",
+       "odpovedniZastupci": [
+        {
+         "jmeno": "Marie",
+         "prijmeni": "Hrubá",
+         "datumNarozeni": "1969-05-25",
+         "platnostOd": "2001-03-05",
+         "platnostDo": "2005-03-14",
+         "statniObcanstvi": "CZ",
+         "typAngazma": "ODPOVEDNY_ZASTUPCE_RZP"
+        }
+       ],
+       "provozovny": [
+        {
+         "icp": 1009626523,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 43,
+          "nazevKraje": "Plzeňský kraj",
+          "kodOkresu": 3405,
+          "nazevOkresu": "Plzeň-město",
+          "kodObce": 554791,
+          "nazevObce": "Plzeň",
+          "kodMestskeCastiObvodu": 545970,
+          "kodUlice": 391875,
+          "nazevMestskeCastiObvodu": "Plzeň 1",
+          "nazevUlice": "alej Svobody",
+          "cisloDomovni": 853,
+          "kodCastiObce": 406317,
+          "cisloOrientacni": 55,
+          "nazevCastiObce": "Severní Předměstí",
+          "kodAdresnihoMista": 24485021,
+          "psc": 32300,
+          "textovaAdresa": "alej Svobody 853/55, Severní Předměstí, 32300 Plzeň",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2001-06-01",
+         "typProvozovny": "1"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "69016151",
+  "forma": "101",
+  "rzp": {
+   "icoId": "69016151",
+   "zaznamy": [
+    {
+     "ico": "69016151",
+     "obchodniJmeno": "Lucie Paseková",
+     "pravniForma": "101",
+     "financniUrad": "248",
+     "datumVzniku": "1999-07-01",
+     "datumAktualizace": "2014-08-13",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 94,
+       "nazevKraje": "Pardubický kraj",
+       "kodOkresu": 3606,
+       "nazevOkresu": "Pardubice",
+       "kodObce": 575551,
+       "nazevObce": "Rohovládova Bělá",
+       "cisloDomovni": 193,
+       "kodCastiObce": 140449,
+       "nazevCastiObce": "Rohovládova Bělá",
+       "kodAdresnihoMista": 41774213,
+       "psc": 53343,
+       "textovaAdresa": "č.p. 193, 53343 Rohovládova Bělá",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "2013-08-05",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "360601",
+     "zivnostiStav": {
+      "pocetAktivnich": 1,
+      "pocetZaniklych": 2,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 1,
+      "pocetCelkem": 4
+     },
+     "provozovnyStav": {
+      "pocetCelkem": 1,
+      "pocetZaniklych": 1,
+      "pocetAktivnich": 0,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Lucie",
+      "prijmeni": "Paseková",
+      "datumNarozeni": "1976-04-06",
+      "platnostOd": "1999-07-01",
+      "statniObcanstvi": "CZ",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "1999-07-01",
+       "predmetPodnikani": "Pedikúra, manikúra",
+       "preruseniZivnosti": [
+        {
+         "platnostOd": "2011-05-04",
+         "platnostDo": "2031-05-04"
+        }
+       ],
+       "datumAktualizace": "2011-07-30",
+       "druhZivnosti": "R"
+      },
+      {
+       "datumVzniku": "2001-10-15",
+       "predmetPodnikani": "Výroba, obchod a služby neuvedené v přílohách 1 až 3 živnostenského zákona",
+       "datumAktualizace": "2020-03-03",
+       "druhZivnosti": "L",
+       "oboryCinnosti": [
+        {
+         "platnostOd": "2009-06-08",
+         "oborNazev": "Překladatelská a tlumočnická činnost"
+        },
+        {
+         "platnostOd": "2009-06-08",
+         "oborNazev": "Služby v oblasti administrativní správy a služby organizačně hospodářské povahy"
+        },
+        {
+         "platnostOd": "2009-06-08",
+         "oborNazev": "Provozování kulturních, kulturně-vzdělávacích a zábavních zařízení, pořádání kulturních produkcí, zábav, výstav, veletrhů, přehlídek, prodejních a obdobných akcí"
+        },
+        {
+         "platnostOd": "2009-06-08",
+         "oborNazev": "Výroba, obchod a služby jinde nezařazené"
+        },
+        {
+         "platnostOd": "2009-06-08",
+         "oborNazev": "Zprostředkování obchodu a služeb"
+        },
+        {
+         "platnostOd": "2009-06-08",
+         "oborNazev": "Velkoobchod a maloobchod"
+        },
+        {
+         "platnostOd": "2009-06-08",
+         "oborNazev": "Poradenská a konzultační činnost, zpracování odborných studií a posudků"
+        },
+        {
+         "platnostOd": "2009-06-08",
+         "oborNazev": "Pronájem a půjčování věcí movitých"
+        },
+        {
+         "platnostOd": "2009-06-08",
+         "oborNazev": "Reklamní činnost, marketing, mediální zastoupení"
+        },
+        {
+         "platnostOd": "2009-06-08",
+         "oborNazev": "Návrhářská, designérská, aranžérská činnost a modeling"
+        },
+        {
+         "platnostOd": "2020-03-03",
+         "oborNazev": "Nákup, prodej, správa a údržba nemovitostí"
+        }
+       ]
+      },
+      {
+       "datumVzniku": "2001-10-15",
+       "datumZaniku": "2008-06-30",
+       "predmetPodnikani": "Velkoobchod",
+       "datumAktualizace": "2008-07-01",
+       "druhZivnosti": "L"
+      },
+      {
+       "datumVzniku": "2001-10-15",
+       "datumZaniku": "2008-06-30",
+       "predmetPodnikani": "Zprostředkování obchodu",
+       "datumAktualizace": "2008-07-01",
+       "druhZivnosti": "L"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "76049396",
+  "forma": "101",
+  "rzp": {
+   "icoId": "76049396",
+   "zaznamy": [
+    {
+     "ico": "76049396",
+     "obchodniJmeno": "Dagmar Mariánková",
+     "pravniForma": "101",
+     "financniUrad": "291",
+     "datumVzniku": "2008-01-09",
+     "datumAktualizace": "2008-01-15",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 116,
+       "nazevKraje": "Jihomoravský kraj",
+       "kodOkresu": 3702,
+       "nazevOkresu": "Brno-město",
+       "kodObce": 582786,
+       "nazevObce": "Brno",
+       "kodMestskeCastiObvodu": 550990,
+       "kodUlice": 32042,
+       "nazevMestskeCastiObvodu": "Brno-Žabovřesky",
+       "nazevUlice": "Sovova",
+       "cisloDomovni": 1407,
+       "kodCastiObce": 411922,
+       "cisloOrientacni": 8,
+       "nazevCastiObce": "Žabovřesky",
+       "kodAdresnihoMista": 19590245,
+       "psc": 61600,
+       "textovaAdresa": "Sovova 1407/8, Žabovřesky, 61600 Brno",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "2008-01-15",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "370200",
+     "zivnostiStav": {
+      "pocetAktivnich": 1,
+      "pocetZaniklych": 0,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 0,
+      "pocetCelkem": 1
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Dagmar",
+      "prijmeni": "Mariánková",
+      "datumNarozeni": "1971-07-26",
+      "platnostOd": "2008-01-09",
+      "statniObcanstvi": "CZ",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "2008-01-09",
+       "predmetPodnikani": "Kadeřnictví",
+       "datumAktualizace": "2008-01-15",
+       "druhZivnosti": "R"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "67223281",
+  "forma": "101",
+  "rzp": {
+   "icoId": "67223281",
+   "zaznamy": [
+    {
+     "ico": "67223281",
+     "obchodniJmeno": "Iveta Dohnalová",
+     "pravniForma": "101",
+     "financniUrad": "179",
+     "datumVzniku": "1998-07-22",
+     "datumAktualizace": "2013-07-11",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 60,
+       "nazevKraje": "Ústecký kraj",
+       "kodOkresu": 3502,
+       "nazevOkresu": "Děčín",
+       "kodObce": 562432,
+       "nazevObce": "Dolní Podluží",
+       "cisloDomovni": 41,
+       "kodCastiObce": 407615,
+       "nazevCastiObce": "Kateřina",
+       "kodAdresnihoMista": 100480,
+       "psc": 40755,
+       "textovaAdresa": "Kateřina 41, 40755 Dolní Podluží",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "1998-09-23",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "350206",
+     "zivnostiStav": {
+      "pocetAktivnich": 2,
+      "pocetZaniklych": 1,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 0,
+      "pocetCelkem": 3
+     },
+     "provozovnyStav": {
+      "pocetCelkem": 6,
+      "pocetZaniklych": 5,
+      "pocetAktivnich": 1,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Iveta",
+      "prijmeni": "Dohnalová",
+      "datumNarozeni": "1970-01-24",
+      "platnostOd": "1998-07-22",
+      "statniObcanstvi": "CZ",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "1998-07-22",
+       "predmetPodnikani": "Holičství, kadeřnictví",
+       "datumAktualizace": "2012-02-28",
+       "druhZivnosti": "R",
+       "odpovedniZastupci": [
+        {
+         "jmeno": "Marcela",
+         "prijmeni": "Soukupová",
+         "datumNarozeni": "1945-04-17",
+         "platnostOd": "1998-07-22",
+         "platnostDo": "2004-08-11",
+         "statniObcanstvi": "CZ",
+         "typAngazma": "ODPOVEDNY_ZASTUPCE_RZP"
+        }
+       ],
+       "provozovny": [
+        {
+         "icp": 1005104964,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 60,
+          "nazevKraje": "Ústecký kraj",
+          "kodOkresu": 3502,
+          "nazevOkresu": "Děčín",
+          "kodObce": 562882,
+          "nazevObce": "Varnsdorf",
+          "kodUlice": 95494,
+          "nazevUlice": "Bratislavská",
+          "cisloDomovni": 1267,
+          "kodCastiObce": 407828,
+          "nazevCastiObce": "Varnsdorf",
+          "kodAdresnihoMista": 174831,
+          "psc": 40747,
+          "textovaAdresa": "Bratislavská 1267, 40747 Varnsdorf",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2009-08-17",
+         "typProvozovny": "1"
+        }
+       ]
+      },
+      {
+       "datumVzniku": "2003-03-26",
+       "datumZaniku": "2008-03-31",
+       "predmetPodnikani": "Poskytování služeb pro osobní hygienu a služeb souvisejících s péčí o vzhled osob",
+       "datumAktualizace": "2008-03-31",
+       "druhZivnosti": "L"
+      },
+      {
+       "datumVzniku": "2013-07-09",
+       "predmetPodnikani": "Výroba, obchod a služby neuvedené v přílohách 1 až 3 živnostenského zákona",
+       "datumAktualizace": "2013-07-11",
+       "druhZivnosti": "L",
+       "oboryCinnosti": [
+        {
+         "platnostOd": "2013-07-09",
+         "oborNazev": "Zprostředkování obchodu a služeb"
+        },
+        {
+         "platnostOd": "2013-07-09",
+         "oborNazev": "Ubytovací služby"
+        },
+        {
+         "platnostOd": "2013-07-09",
+         "oborNazev": "Výroba, obchod a služby jinde nezařazené"
+        },
+        {
+         "platnostOd": "2013-07-09",
+         "oborNazev": "Výroba školních a kancelářských potřeb, kromě výrobků z papíru, výroba bižuterie, kartáčnického a konfekčního zboží, deštníků, upomínkových předmětů"
+        },
+        {
+         "platnostOd": "2013-07-09",
+         "oborNazev": "Velkoobchod a maloobchod"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "87350785",
+  "forma": "101",
+  "rzp": {
+   "icoId": "87350785",
+   "zaznamy": [
+    {
+     "ico": "87350785",
+     "obchodniJmeno": "Renáta Králová",
+     "pravniForma": "101",
+     "financniUrad": "374",
+     "datumVzniku": "2010-10-04",
+     "datumAktualizace": "2024-02-13",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 132,
+       "nazevKraje": "Moravskoslezský kraj",
+       "kodOkresu": 3804,
+       "nazevOkresu": "Nový Jičín",
+       "kodObce": 599867,
+       "nazevObce": "Spálov",
+       "cisloDomovni": 66,
+       "kodCastiObce": 152757,
+       "nazevCastiObce": "Spálov",
+       "kodAdresnihoMista": 8293317,
+       "psc": 74237,
+       "textovaAdresa": "č.p. 66, 74237 Spálov",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "2023-10-26",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "380405",
+     "zivnostiStav": {
+      "pocetAktivnich": 1,
+      "pocetZaniklych": 0,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 0,
+      "pocetCelkem": 1
+     },
+     "provozovnyStav": {
+      "pocetCelkem": 2,
+      "pocetZaniklych": 2,
+      "pocetAktivnich": 0,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Renáta",
+      "prijmeni": "Králová",
+      "datumNarozeni": "1988-11-17",
+      "statniObcanstvi": "CZ",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "2010-10-04",
+       "predmetPodnikani": "Holičství, kadeřnictví",
+       "datumAktualizace": "2021-01-01",
+       "druhZivnosti": "R"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "73159875",
+  "forma": "101",
+  "rzp": {
+   "icoId": "73159875",
+   "zaznamy": [
+    {
+     "ico": "73159875",
+     "obchodniJmeno": "Zuzana Stohsová",
+     "pravniForma": "101",
+     "financniUrad": "394",
+     "datumVzniku": "2002-09-25",
+     "datumAktualizace": "2021-05-03",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 124,
+       "nazevKraje": "Olomoucký kraj",
+       "kodOkresu": 3808,
+       "nazevOkresu": "Přerov",
+       "kodObce": 514705,
+       "nazevObce": "Lipník nad Bečvou",
+       "kodUlice": 521345,
+       "nazevUlice": "Smetanova",
+       "cisloDomovni": 721,
+       "kodCastiObce": 414476,
+       "cisloOrientacni": 59,
+       "nazevCastiObce": "Lipník nad Bečvou I-Město",
+       "kodAdresnihoMista": 11317523,
+       "psc": 75131,
+       "textovaAdresa": "Smetanova 721/59, Lipník nad Bečvou I-Město, 75131 Lipník nad Bečvou",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "2005-07-19",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "380805",
+     "zivnostiStav": {
+      "pocetAktivnich": 0,
+      "pocetZaniklych": 0,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 1,
+      "pocetCelkem": 1
+     },
+     "provozovnyStav": {
+      "pocetCelkem": 1,
+      "pocetZaniklych": 1,
+      "pocetAktivnich": 0,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Zuzana",
+      "prijmeni": "Stohsová",
+      "datumNarozeni": "1979-07-10",
+      "platnostOd": "2002-09-25",
+      "statniObcanstvi": "CZ",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "2002-09-25",
+       "predmetPodnikani": "Holičství, kadeřnictví",
+       "preruseniZivnosti": [
+        {
+         "platnostOd": "2021-05-01",
+         "platnostDo": "2099-12-31"
+        }
+       ],
+       "datumAktualizace": "2021-05-03",
+       "druhZivnosti": "R",
+       "odpovedniZastupci": [
+        {
+         "jmeno": "Jarmila",
+         "prijmeni": "Frydrychová",
+         "datumNarozeni": "1960-02-11",
+         "platnostOd": "2002-09-25",
+         "statniObcanstvi": "CZ",
+         "typAngazma": "ODPOVEDNY_ZASTUPCE_RZP"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "75777541",
+  "forma": "101",
+  "rzp": {
+   "icoId": "75777541",
+   "zaznamy": [
+    {
+     "ico": "75777541",
+     "obchodniJmeno": "Iveta Siruková",
+     "pravniForma": "101",
+     "financniUrad": "346",
+     "datumVzniku": "2005-03-01",
+     "datumAktualizace": "2010-08-20",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 116,
+       "nazevKraje": "Jihomoravský kraj",
+       "kodOkresu": 3713,
+       "nazevOkresu": "Znojmo",
+       "kodObce": 594881,
+       "nazevObce": "Šatov",
+       "cisloDomovni": 196,
+       "kodCastiObce": 162078,
+       "nazevCastiObce": "Šatov",
+       "kodAdresnihoMista": 10916695,
+       "psc": 67122,
+       "textovaAdresa": "č.p. 196, 67122 Šatov",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "2005-02-18",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "371301",
+     "zivnostiStav": {
+      "pocetAktivnich": 1,
+      "pocetZaniklych": 0,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 0,
+      "pocetCelkem": 1
+     },
+     "provozovnyStav": {
+      "pocetCelkem": 4,
+      "pocetZaniklych": 3,
+      "pocetAktivnich": 1,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Iveta",
+      "prijmeni": "Siruková",
+      "datumNarozeni": "1974-11-17",
+      "statniObcanstvi": "CZ",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "2005-03-01",
+       "predmetPodnikani": "Pedikúra, manikúra",
+       "datumAktualizace": "2024-03-31",
+       "druhZivnosti": "R",
+       "provozovny": [
+        {
+         "icp": 1009397435,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 116,
+          "nazevKraje": "Jihomoravský kraj",
+          "kodOkresu": 3713,
+          "nazevOkresu": "Znojmo",
+          "kodObce": 594059,
+          "nazevObce": "Hnanice",
+          "kodUlice": 647578,
+          "nazevUlice": "Znojemská",
+          "cisloDomovni": 88,
+          "kodCastiObce": 40002,
+          "nazevCastiObce": "Hnanice",
+          "kodAdresnihoMista": 10727370,
+          "psc": 66902,
+          "textovaAdresa": "Znojemská 88, 66902 Hnanice",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2014-02-01",
+         "typProvozovny": "1"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "28594151",
+  "forma": "101",
+  "rzp": {
+   "icoId": "28594151",
+   "zaznamy": [
+    {
+     "ico": "28594151",
+     "obchodniJmeno": "Thien Huong Do",
+     "pravniForma": "101",
+     "financniUrad": "336",
+     "datumVzniku": "2009-07-30",
+     "datumAktualizace": "2021-08-18",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 141,
+       "nazevKraje": "Zlínský kraj",
+       "kodOkresu": 3711,
+       "nazevOkresu": "Uherské Hradiště",
+       "kodObce": 550752,
+       "nazevObce": "Staré Město",
+       "kodUlice": 609676,
+       "nazevUlice": "Hradišťská",
+       "cisloDomovni": 141,
+       "kodCastiObce": 412651,
+       "nazevCastiObce": "Staré Město",
+       "kodAdresnihoMista": 4972601,
+       "psc": 68603,
+       "textovaAdresa": "Hradišťská 141, 68603 Staré Město",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "2021-07-07",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "371101",
+     "zivnostiStav": {
+      "pocetAktivnich": 3,
+      "pocetZaniklych": 0,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 0,
+      "pocetCelkem": 3
+     },
+     "provozovnyStav": {
+      "pocetCelkem": 2,
+      "pocetZaniklych": 1,
+      "pocetAktivnich": 1,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "VN",
+     "osobaPodnikatel": {
+      "jmeno": "Thien Huong",
+      "prijmeni": "Do",
+      "datumNarozeni": "1976-07-30",
+      "statniObcanstvi": "VN",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "2009-07-30",
+       "predmetPodnikani": "Výroba, obchod a služby neuvedené v přílohách 1 až 3 živnostenského zákona",
+       "datumAktualizace": "2021-08-18",
+       "druhZivnosti": "L",
+       "oboryCinnosti": [
+        {
+         "platnostOd": "2009-07-30",
+         "oborNazev": "Velkoobchod a maloobchod"
+        },
+        {
+         "platnostOd": "2010-03-25",
+         "oborNazev": "Zprostředkování obchodu a služeb"
+        },
+        {
+         "platnostOd": "2010-03-25",
+         "oborNazev": "Povrchové úpravy a svařování kovů a dalších materiálů"
+        },
+        {
+         "platnostOd": "2021-08-18",
+         "oborNazev": "Výroba textilií, textilních výrobků, oděvů a oděvních doplňků"
+        },
+        {
+         "platnostOd": "2021-08-18",
+         "oborNazev": "Výroba a opravy obuvi, brašnářského a sedlářského zboží"
+        },
+        {
+         "platnostOd": "2021-08-18",
+         "oborNazev": "Překladatelská a tlumočnická činnost"
+        },
+        {
+         "platnostOd": "2021-08-18",
+         "oborNazev": "Výroba kovových konstrukcí a kovodělných výrobků"
+        },
+        {
+         "platnostOd": "2021-08-18",
+         "oborNazev": "Přípravné a dokončovací stavební práce, specializované stavební činnosti"
+        },
+        {
+         "platnostOd": "2021-08-18",
+         "oborNazev": "Praní pro domácnost, žehlení, opravy a údržba oděvů, bytového textilu a osobního zboží"
+        },
+        {
+         "platnostOd": "2021-08-18",
+         "oborNazev": "Údržba motorových vozidel a jejich příslušenství"
+        },
+        {
+         "platnostOd": "2021-08-18",
+         "oborNazev": "Poskytování technických služeb"
+        },
+        {
+         "platnostOd": "2021-08-18",
+         "oborNazev": "Skladování, balení zboží, manipulace s nákladem a technické činnosti v dopravě"
+        },
+        {
+         "platnostOd": "2021-08-18",
+         "oborNazev": "Opravy a údržba potřeb pro domácnost, předmětů kulturní povahy, výrobků jemné mechaniky, optických přístrojů a měřidel"
+        },
+        {
+         "platnostOd": "2021-08-18",
+         "oborNazev": "Ubytovací služby"
+        },
+        {
+         "platnostOd": "2021-08-18",
+         "oborNazev": "Poskytování služeb pro rodinu a domácnost"
+        },
+        {
+         "platnostOd": "2021-08-18",
+         "oborNazev": "Poskytování software, poradenství v oblasti informačních technologií, zpracování dat, hostingové a související činnosti a webové portály"
+        },
+        {
+         "platnostOd": "2021-08-18",
+         "oborNazev": "Činnost informačních a zpravodajských kanceláří"
+        },
+        {
+         "platnostOd": "2021-08-18",
+         "oborNazev": "Nákup, prodej, správa a údržba nemovitostí"
+        },
+        {
+         "platnostOd": "2021-08-18",
+         "oborNazev": "Pronájem a půjčování věcí movitých"
+        },
+        {
+         "platnostOd": "2021-08-18",
+         "oborNazev": "Příprava a vypracování technických návrhů, grafické a kresličské práce"
+        },
+        {
+         "platnostOd": "2021-08-18",
+         "oborNazev": "Testování, měření, analýzy a kontroly"
+        }
+       ]
+      },
+      {
+       "datumVzniku": "2019-04-03",
+       "predmetPodnikani": "Pedikúra, manikúra",
+       "datumAktualizace": "2025-09-29",
+       "druhZivnosti": "R",
+       "provozovny": [
+        {
+         "icp": 1015848869,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 141,
+          "nazevKraje": "Zlínský kraj",
+          "kodOkresu": 3711,
+          "nazevOkresu": "Uherské Hradiště",
+          "kodObce": 592731,
+          "nazevObce": "Uherský Brod",
+          "kodUlice": 613924,
+          "nazevUlice": "Mariánské nám.",
+          "cisloDomovni": 2371,
+          "kodCastiObce": 412643,
+          "nazevCastiObce": "Uherský Brod",
+          "kodAdresnihoMista": 27499391,
+          "psc": 68801,
+          "textovaAdresa": "Mariánské nám. 2371, 68801 Uherský Brod",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2025-10-01",
+         "typProvozovny": "1",
+         "nazev": "Nabi Nails & Beauty"
+        }
+       ]
+      },
+      {
+       "datumVzniku": "2025-07-02",
+       "predmetPodnikani": "Kosmetické služby",
+       "datumAktualizace": "2025-07-02",
+       "druhZivnosti": "R"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "03699871",
+  "forma": "101",
+  "rzp": {
+   "icoId": "03699871",
+   "zaznamy": [
+    {
+     "ico": "03699871",
+     "obchodniJmeno": "Gabriela Vášová",
+     "pravniForma": "101",
+     "financniUrad": "001",
+     "datumVzniku": "2015-01-09",
+     "datumAktualizace": "2019-07-22",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 19,
+       "nazevKraje": "Hlavní město Praha",
+       "kodObce": 554782,
+       "nazevObce": "Praha",
+       "kodSpravnihoObvodu": 19,
+       "nazevSpravnihoObvodu": "Praha 1",
+       "kodMestskehoObvodu": 19,
+       "nazevMestskehoObvodu": "Praha 1",
+       "kodMestskeCastiObvodu": 500054,
+       "kodUlice": 480606,
+       "nazevMestskeCastiObvodu": "Praha 1",
+       "nazevUlice": "Senovážné náměstí",
+       "cisloDomovni": 982,
+       "kodCastiObce": 490148,
+       "cisloOrientacni": 20,
+       "nazevCastiObce": "Nové Město",
+       "kodAdresnihoMista": 21707987,
+       "psc": 11000,
+       "textovaAdresa": "Senovážné náměstí 982/20, Nové Město, 11000 Praha 1",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "2019-07-22",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "310001",
+     "zivnostiStav": {
+      "pocetAktivnich": 0,
+      "pocetZaniklych": 0,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 2,
+      "pocetCelkem": 2
+     },
+     "provozovnyStav": {
+      "pocetCelkem": 4,
+      "pocetZaniklych": 2,
+      "pocetAktivnich": 2,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Gabriela",
+      "prijmeni": "Vášová",
+      "datumNarozeni": "1990-04-06",
+      "platnostOd": "2015-01-09",
+      "statniObcanstvi": "CZ",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "2015-01-09",
+       "predmetPodnikani": "Výroba, obchod a služby neuvedené v přílohách 1 až 3 živnostenského zákona",
+       "preruseniZivnosti": [
+        {
+         "platnostOd": "2020-09-26",
+         "platnostDo": "2040-09-30"
+        }
+       ],
+       "datumAktualizace": "2020-09-26",
+       "druhZivnosti": "L",
+       "oboryCinnosti": [
+        {
+         "platnostOd": "2015-01-09",
+         "oborNazev": "Velkoobchod a maloobchod"
+        }
+       ],
+       "provozovny": [
+        {
+         "icp": 1010088254,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 19,
+          "nazevKraje": "Hlavní město Praha",
+          "kodObce": 554782,
+          "nazevObce": "Praha",
+          "kodSpravnihoObvodu": 94,
+          "nazevSpravnihoObvodu": "Praha 9",
+          "kodMestskehoObvodu": 94,
+          "nazevMestskehoObvodu": "Praha 9",
+          "kodMestskeCastiObvodu": 500216,
+          "kodUlice": 469718,
+          "nazevMestskeCastiObvodu": "Praha 9",
+          "nazevUlice": "Sokolovská",
+          "cisloDomovni": 974,
+          "kodCastiObce": 490105,
+          "cisloOrientacni": 199,
+          "nazevCastiObce": "Libeň",
+          "kodAdresnihoMista": 22498605,
+          "psc": 19000,
+          "textovaAdresa": "Sokolovská 974/199, Libeň, 19000 Praha 9",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "umisteniProvozovny": "SALON Vibi, Sokolovská 974/199, Praha - Libeň",
+         "platnostOd": "2015-01-19",
+         "typProvozovny": "1",
+         "oboryCinnosti": [
+          {
+           "platnostOd": "2015-01-19",
+           "oborNazev": "Velkoobchod a maloobchod"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "datumVzniku": "2015-01-09",
+       "predmetPodnikani": "Holičství, kadeřnictví",
+       "preruseniZivnosti": [
+        {
+         "platnostOd": "2020-09-26",
+         "platnostDo": "2040-09-30"
+        }
+       ],
+       "datumAktualizace": "2020-09-26",
+       "druhZivnosti": "R",
+       "provozovny": [
+        {
+         "icp": 1010088254,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 19,
+          "nazevKraje": "Hlavní město Praha",
+          "kodObce": 554782,
+          "nazevObce": "Praha",
+          "kodSpravnihoObvodu": 94,
+          "nazevSpravnihoObvodu": "Praha 9",
+          "kodMestskehoObvodu": 94,
+          "nazevMestskehoObvodu": "Praha 9",
+          "kodMestskeCastiObvodu": 500216,
+          "kodUlice": 469718,
+          "nazevMestskeCastiObvodu": "Praha 9",
+          "nazevUlice": "Sokolovská",
+          "cisloDomovni": 974,
+          "kodCastiObce": 490105,
+          "cisloOrientacni": 199,
+          "nazevCastiObce": "Libeň",
+          "kodAdresnihoMista": 22498605,
+          "psc": 19000,
+          "textovaAdresa": "Sokolovská 974/199, Libeň, 19000 Praha 9",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "umisteniProvozovny": "SALON Vibi, Sokolovská 974/199, Praha - Libeň",
+         "platnostOd": "2015-01-19",
+         "typProvozovny": "1"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "02971798",
+  "forma": "101",
+  "rzp": {
+   "icoId": "02971798",
+   "zaznamy": [
+    {
+     "ico": "02971798",
+     "obchodniJmeno": "Dana Klímová",
+     "pravniForma": "101",
+     "financniUrad": "105",
+     "datumVzniku": "2014-05-05",
+     "datumAktualizace": "2015-12-07",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 35,
+       "nazevKraje": "Jihočeský kraj",
+       "kodOkresu": 3307,
+       "nazevOkresu": "Strakonice",
+       "kodObce": 536822,
+       "nazevObce": "Lom",
+       "cisloDomovni": 53,
+       "kodCastiObce": 86541,
+       "nazevCastiObce": "Lom",
+       "kodAdresnihoMista": 26333252,
+       "psc": 38801,
+       "textovaAdresa": "č.p. 53, 38801 Lom",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "2015-12-07",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "330703",
+     "zivnostiStav": {
+      "pocetAktivnich": 0,
+      "pocetZaniklych": 0,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 2,
+      "pocetCelkem": 2
+     },
+     "provozovnyStav": {
+      "pocetCelkem": 1,
+      "pocetZaniklych": 1,
+      "pocetAktivnich": 0,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Dana",
+      "prijmeni": "Klímová",
+      "datumNarozeni": "1995-03-10",
+      "platnostOd": "2014-05-05",
+      "statniObcanstvi": "CZ",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "2014-05-05",
+       "predmetPodnikani": "Výroba, obchod a služby neuvedené v přílohách 1 až 3 živnostenského zákona",
+       "preruseniZivnosti": [
+        {
+         "platnostOd": "2020-01-01",
+         "platnostDo": "2030-12-31"
+        }
+       ],
+       "datumAktualizace": "2020-01-01",
+       "druhZivnosti": "L",
+       "oboryCinnosti": [
+        {
+         "platnostOd": "2014-05-05",
+         "oborNazev": "Velkoobchod a maloobchod"
+        }
+       ]
+      },
+      {
+       "datumVzniku": "2014-05-05",
+       "predmetPodnikani": "Holičství, kadeřnictví",
+       "preruseniZivnosti": [
+        {
+         "platnostOd": "2020-01-01",
+         "platnostDo": "2030-12-31"
+        }
+       ],
+       "datumAktualizace": "2020-01-01",
+       "druhZivnosti": "R"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "66565553",
+  "forma": "101",
+  "rzp": {
+   "icoId": "66565553",
+   "zaznamy": [
+    {
+     "ico": "66565553",
+     "obchodniJmeno": "Lucie Šedá",
+     "pravniForma": "101",
+     "financniUrad": "289",
+     "datumVzniku": "1997-08-25",
+     "datumAktualizace": "2024-02-26",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 116,
+       "nazevKraje": "Jihomoravský kraj",
+       "kodOkresu": 3702,
+       "nazevOkresu": "Brno-město",
+       "kodObce": 582786,
+       "nazevObce": "Brno",
+       "kodMestskeCastiObvodu": 551066,
+       "kodUlice": 32051,
+       "nazevMestskeCastiObvodu": "Brno-Černovice",
+       "nazevUlice": "Spáčilova",
+       "cisloDomovni": 684,
+       "kodCastiObce": 411752,
+       "cisloOrientacni": 13,
+       "nazevCastiObce": "Černovice",
+       "kodAdresnihoMista": 19347537,
+       "psc": 61800,
+       "textovaAdresa": "Spáčilova 684/13, Černovice, 61800 Brno",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "2024-02-27",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "370200",
+     "zivnostiStav": {
+      "pocetAktivnich": 2,
+      "pocetZaniklych": 1,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 0,
+      "pocetCelkem": 3
+     },
+     "provozovnyStav": {
+      "pocetCelkem": 4,
+      "pocetZaniklych": 2,
+      "pocetAktivnich": 2,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Lucie",
+      "prijmeni": "Šedá",
+      "datumNarozeni": "1977-08-23",
+      "statniObcanstvi": "CZ",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "1997-08-25",
+       "predmetPodnikani": "Výroba, obchod a služby neuvedené v přílohách 1 až 3 živnostenského zákona",
+       "datumAktualizace": "2024-02-26",
+       "druhZivnosti": "L",
+       "oboryCinnosti": [
+        {
+         "platnostOd": "2015-04-01",
+         "oborNazev": "Velkoobchod a maloobchod"
+        }
+       ],
+       "provozovny": [
+        {
+         "icp": 1015060374,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 116,
+          "nazevKraje": "Jihomoravský kraj",
+          "kodOkresu": 3702,
+          "nazevOkresu": "Brno-město",
+          "kodObce": 582786,
+          "nazevObce": "Brno",
+          "kodMestskeCastiObvodu": 551066,
+          "kodUlice": 32051,
+          "nazevMestskeCastiObvodu": "Brno-Černovice",
+          "nazevUlice": "Spáčilova",
+          "cisloDomovni": 684,
+          "kodCastiObce": 411752,
+          "cisloOrientacni": 13,
+          "nazevCastiObce": "Černovice",
+          "kodAdresnihoMista": 19347537,
+          "psc": 61800,
+          "textovaAdresa": "Spáčilova 684/13, Černovice, 61800 Brno",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2024-02-21",
+         "typProvozovny": "1",
+         "oboryCinnosti": [
+          {
+           "platnostOd": "2024-02-21",
+           "oborNazev": "Velkoobchod a maloobchod"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "datumVzniku": "1998-06-15",
+       "predmetPodnikani": "Kadeřnictví",
+       "datumAktualizace": "2024-02-26",
+       "druhZivnosti": "R",
+       "provozovny": [
+        {
+         "icp": 1015060374,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 116,
+          "nazevKraje": "Jihomoravský kraj",
+          "kodOkresu": 3702,
+          "nazevOkresu": "Brno-město",
+          "kodObce": 582786,
+          "nazevObce": "Brno",
+          "kodMestskeCastiObvodu": 551066,
+          "kodUlice": 32051,
+          "nazevMestskeCastiObvodu": "Brno-Černovice",
+          "nazevUlice": "Spáčilova",
+          "cisloDomovni": 684,
+          "kodCastiObce": 411752,
+          "cisloOrientacni": 13,
+          "nazevCastiObce": "Černovice",
+          "kodAdresnihoMista": 19347537,
+          "psc": 61800,
+          "textovaAdresa": "Spáčilova 684/13, Černovice, 61800 Brno",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2024-02-21",
+         "typProvozovny": "1"
+        }
+       ]
+      },
+      {
+       "datumVzniku": "1997-08-25",
+       "datumZaniku": "2008-06-30",
+       "predmetPodnikani": "Koupě zboží za účelem jeho dalšího prodeje a prodej",
+       "datumAktualizace": "2008-07-01",
+       "druhZivnosti": "L"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "74102541",
+  "forma": "101",
+  "rzp": {
+   "icoId": "74102541",
+   "zaznamy": [
+    {
+     "ico": "74102541",
+     "obchodniJmeno": "Barbora Košková",
+     "pravniForma": "101",
+     "financniUrad": "004",
+     "datumVzniku": "2010-06-02",
+     "datumAktualizace": "2023-01-25",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 19,
+       "nazevKraje": "Hlavní město Praha",
+       "kodObce": 554782,
+       "nazevObce": "Praha",
+       "kodSpravnihoObvodu": 43,
+       "nazevSpravnihoObvodu": "Praha 4",
+       "kodMestskehoObvodu": 43,
+       "nazevMestskehoObvodu": "Praha 4",
+       "kodMestskeCastiObvodu": 500119,
+       "kodUlice": 484822,
+       "nazevMestskeCastiObvodu": "Praha 4",
+       "nazevUlice": "Stavbařů",
+       "cisloDomovni": 289,
+       "kodCastiObce": 128091,
+       "cisloOrientacni": 5,
+       "nazevCastiObce": "Hodkovičky",
+       "kodAdresnihoMista": 21825157,
+       "psc": 14700,
+       "textovaAdresa": "Stavbařů 289/5, Hodkovičky, 14700 Praha 4",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "2019-01-21",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "310004",
+     "zivnostiStav": {
+      "pocetAktivnich": 2,
+      "pocetZaniklych": 0,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 0,
+      "pocetCelkem": 2
+     },
+     "provozovnyStav": {
+      "pocetCelkem": 5,
+      "pocetZaniklych": 4,
+      "pocetAktivnich": 1,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Barbora",
+      "prijmeni": "Košková",
+      "datumNarozeni": "1985-02-02",
+      "statniObcanstvi": "CZ",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "2010-06-02",
+       "predmetPodnikani": "Výroba, obchod a služby neuvedené v přílohách 1 až 3 živnostenského zákona",
+       "datumAktualizace": "2023-01-25",
+       "druhZivnosti": "L",
+       "oboryCinnosti": [
+        {
+         "platnostOd": "2010-06-02",
+         "oborNazev": "Velkoobchod a maloobchod"
+        }
+       ]
+      },
+      {
+       "datumVzniku": "2010-06-02",
+       "predmetPodnikani": "Holičství, kadeřnictví",
+       "datumAktualizace": "2026-02-11",
+       "druhZivnosti": "R",
+       "provozovny": [
+        {
+         "icp": 1016036914,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 19,
+          "nazevKraje": "Hlavní město Praha",
+          "kodObce": 554782,
+          "nazevObce": "Praha",
+          "kodSpravnihoObvodu": 43,
+          "nazevSpravnihoObvodu": "Praha 4",
+          "kodMestskehoObvodu": 43,
+          "nazevMestskehoObvodu": "Praha 4",
+          "kodMestskeCastiObvodu": 547107,
+          "kodUlice": 469548,
+          "nazevMestskeCastiObvodu": "Praha 12",
+          "nazevUlice": "Lehárova",
+          "cisloDomovni": 1066,
+          "kodCastiObce": 400238,
+          "cisloOrientacni": 14,
+          "nazevCastiObce": "Modřany",
+          "kodAdresnihoMista": 21927171,
+          "psc": 14300,
+          "textovaAdresa": "Lehárova 1066/14, Modřany, 14300 Praha 4",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2026-02-12",
+         "typProvozovny": "1"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "49962426",
+  "forma": "101",
+  "rzp": {
+   "icoId": "49962426",
+   "zaznamy": [
+    {
+     "ico": "49962426",
+     "obchodniJmeno": "Marcela Kuchyňková",
+     "pravniForma": "101",
+     "financniUrad": "298",
+     "datumVzniku": "1995-07-24",
+     "datumAktualizace": "2022-05-17",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 116,
+       "nazevKraje": "Jihomoravský kraj",
+       "kodOkresu": 3704,
+       "nazevOkresu": "Břeclav",
+       "kodObce": 584649,
+       "nazevObce": "Mikulov",
+       "kodUlice": 60615,
+       "nazevUlice": "Nová",
+       "cisloDomovni": 1033,
+       "kodCastiObce": 412139,
+       "cisloOrientacni": 7,
+       "nazevCastiObce": "Mikulov",
+       "kodAdresnihoMista": 15309975,
+       "psc": 69201,
+       "textovaAdresa": "Nová 1033/7, 69201 Mikulov",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "1995-08-15",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "370402",
+     "zivnostiStav": {
+      "pocetAktivnich": 2,
+      "pocetZaniklych": 2,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 0,
+      "pocetCelkem": 4
+     },
+     "provozovnyStav": {
+      "pocetCelkem": 11,
+      "pocetZaniklych": 9,
+      "pocetAktivnich": 2,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Marcela",
+      "prijmeni": "Kuchyňková",
+      "datumNarozeni": "1970-04-19",
+      "platnostOd": "1995-07-24",
+      "statniObcanstvi": "CZ",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "1995-07-24",
+       "datumZaniku": "2008-06-30",
+       "predmetPodnikani": "Zprostředkovatelská činnost v oblasti obchodu\na služeb",
+       "datumAktualizace": "2022-05-17",
+       "druhZivnosti": "L"
+      },
+      {
+       "datumVzniku": "2015-08-03",
+       "predmetPodnikani": "Kosmetické služby",
+       "datumAktualizace": "2022-05-17",
+       "druhZivnosti": "R",
+       "odpovedniZastupci": [
+        {
+         "jmeno": "Lenka",
+         "prijmeni": "Fejfarová Kellnerová",
+         "datumNarozeni": "1971-06-23",
+         "platnostOd": "2015-08-03",
+         "platnostDo": "2017-06-28",
+         "statniObcanstvi": "CZ",
+         "typAngazma": "ODPOVEDNY_ZASTUPCE_RZP"
+        }
+       ],
+       "provozovny": [
+        {
+         "icp": 1010354001,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 116,
+          "nazevKraje": "Jihomoravský kraj",
+          "kodOkresu": 3704,
+          "nazevOkresu": "Břeclav",
+          "kodObce": 584649,
+          "nazevObce": "Mikulov",
+          "kodUlice": 60330,
+          "nazevUlice": "Svobody",
+          "cisloDomovni": 220,
+          "kodCastiObce": 412139,
+          "cisloOrientacni": 2,
+          "nazevCastiObce": "Mikulov",
+          "kodAdresnihoMista": 15302032,
+          "psc": 69201,
+          "textovaAdresa": "Svobody 220/2, 69201 Mikulov",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2015-08-13",
+         "typProvozovny": "1"
+        }
+       ]
+      },
+      {
+       "datumVzniku": "1997-10-06",
+       "datumZaniku": "2022-05-16",
+       "predmetPodnikani": "Hostinská činnost",
+       "datumAktualizace": "2022-05-17",
+       "druhZivnosti": "R"
+      },
+      {
+       "datumVzniku": "1995-07-24",
+       "predmetPodnikani": "Výroba, obchod a služby neuvedené v přílohách 1 až 3 živnostenského zákona",
+       "datumAktualizace": "2022-05-17",
+       "druhZivnosti": "L",
+       "oboryCinnosti": [
+        {
+         "platnostOd": "2009-01-20",
+         "oborNazev": "Velkoobchod a maloobchod"
+        },
+        {
+         "platnostOd": "2009-01-20",
+         "oborNazev": "Poradenská a konzultační činnost, zpracování odborných studií a posudků"
+        },
+        {
+         "platnostOd": "2009-01-20",
+         "oborNazev": "Mimoškolní výchova a vzdělávání, pořádání kurzů, školení, včetně lektorské činnosti"
+        },
+        {
+         "platnostOd": "2009-01-20",
+         "oborNazev": "Provozování kulturních, kulturně-vzdělávacích a zábavních zařízení, pořádání kulturních produkcí, zábav, výstav, veletrhů, přehlídek, prodejních a obdobných akcí"
+        },
+        {
+         "platnostOd": "2009-01-20",
+         "oborNazev": "Poskytování služeb osobního charakteru a pro osobní hygienu"
+        },
+        {
+         "platnostOd": "2009-01-20",
+         "oborNazev": "Zprostředkování obchodu a služeb"
+        }
+       ],
+       "provozovny": [
+        {
+         "icp": 1010354001,
+         "sidloProvozovny": {
+          "kodStatu": "CZ",
+          "nazevStatu": "Česká republika",
+          "kodKraje": 116,
+          "nazevKraje": "Jihomoravský kraj",
+          "kodOkresu": 3704,
+          "nazevOkresu": "Břeclav",
+          "kodObce": 584649,
+          "nazevObce": "Mikulov",
+          "kodUlice": 60330,
+          "nazevUlice": "Svobody",
+          "cisloDomovni": 220,
+          "kodCastiObce": 412139,
+          "cisloOrientacni": 2,
+          "nazevCastiObce": "Mikulov",
+          "kodAdresnihoMista": 15302032,
+          "psc": 69201,
+          "textovaAdresa": "Svobody 220/2, 69201 Mikulov",
+          "standardizaceAdresy": true,
+          "typCisloDomovni": 1
+         },
+         "platnostOd": "2015-06-15",
+         "typProvozovny": "1",
+         "oboryCinnosti": [
+          {
+           "platnostOd": "2015-06-15",
+           "oborNazev": "Poradenská a konzultační činnost, zpracování odborných studií a posudků"
+          },
+          {
+           "platnostOd": "2015-06-15",
+           "oborNazev": "Velkoobchod a maloobchod"
+          },
+          {
+           "platnostOd": "2015-06-15",
+           "oborNazev": "Poskytování služeb osobního charakteru a pro osobní hygienu"
+          },
+          {
+           "platnostOd": "2015-06-15",
+           "oborNazev": "Zprostředkování obchodu a služeb"
+          },
+          {
+           "platnostOd": "2015-06-15",
+           "oborNazev": "Mimoškolní výchova a vzdělávání, pořádání kurzů, školení, včetně lektorské činnosti"
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "67905269",
+  "forma": "101",
+  "rzp": {
+   "icoId": "67905269",
+   "zaznamy": [
+    {
+     "ico": "67905269",
+     "obchodniJmeno": "Zuzana Mercová",
+     "pravniForma": "101",
+     "financniUrad": "043",
+     "datumVzniku": "1999-09-06",
+     "datumAktualizace": "2018-10-22",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 27,
+       "nazevKraje": "Středočeský kraj",
+       "kodOkresu": 3206,
+       "nazevOkresu": "Mělník",
+       "kodObce": 535087,
+       "nazevObce": "Neratovice",
+       "kodUlice": 283886,
+       "nazevUlice": "Čtvercová",
+       "cisloDomovni": 882,
+       "kodCastiObce": 402451,
+       "nazevCastiObce": "Neratovice",
+       "kodAdresnihoMista": 6246711,
+       "psc": 27711,
+       "textovaAdresa": "Čtvercová 882, 27711 Neratovice",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 1,
+       "platnostOd": "2018-10-22",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "320603",
+     "zivnostiStav": {
+      "pocetAktivnich": 2,
+      "pocetZaniklych": 2,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 0,
+      "pocetCelkem": 4
+     },
+     "provozovnyStav": {
+      "pocetCelkem": 2,
+      "pocetZaniklych": 2,
+      "pocetAktivnich": 0,
+      "pocetPozastavenych": 0
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Zuzana",
+      "prijmeni": "Mercová",
+      "datumNarozeni": "1962-10-29",
+      "statniObcanstvi": "CZ",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "2012-03-05",
+       "predmetPodnikani": "Výroba, obchod a služby neuvedené v přílohách 1 až 3 živnostenského zákona",
+       "datumAktualizace": "2024-10-22",
+       "druhZivnosti": "L",
+       "oboryCinnosti": [
+        {
+         "platnostOd": "2012-03-05",
+         "oborNazev": "Velkoobchod a maloobchod"
+        },
+        {
+         "platnostOd": "2012-03-05",
+         "oborNazev": "Poradenská a konzultační činnost, zpracování odborných studií a posudků"
+        }
+       ]
+      },
+      {
+       "datumVzniku": "2000-10-30",
+       "predmetPodnikani": "Kosmetické služby",
+       "datumAktualizace": "2024-10-22",
+       "druhZivnosti": "R",
+       "odpovedniZastupci": [
+        {
+         "jmeno": "Šárka",
+         "prijmeni": "Dubská",
+         "datumNarozeni": "1972-06-22",
+         "platnostOd": "2000-10-30",
+         "platnostDo": "2006-06-28",
+         "statniObcanstvi": "CZ",
+         "typAngazma": "ODPOVEDNY_ZASTUPCE_RZP"
+        }
+       ]
+      },
+      {
+       "datumVzniku": "1999-09-06",
+       "datumZaniku": "2000-06-01",
+       "predmetPodnikani": "masáže",
+       "datumAktualizace": "2006-03-31",
+       "druhZivnosti": "L"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "ico": "71792937",
+  "forma": "101",
+  "rzp": {
+   "icoId": "71792937",
+   "zaznamy": [
+    {
+     "ico": "71792937",
+     "obchodniJmeno": "Kateřina Hanzová",
+     "pravniForma": "101",
+     "financniUrad": "082",
+     "datumVzniku": "2006-02-13",
+     "datumAktualizace": "2018-01-16",
+     "adresySubjektu": [
+      {
+       "kodStatu": "CZ",
+       "nazevStatu": "Česká republika",
+       "kodKraje": 35,
+       "nazevKraje": "Jihočeský kraj",
+       "kodOkresu": 3302,
+       "nazevOkresu": "Český Krumlov",
+       "kodObce": 545511,
+       "nazevObce": "Horní Planá",
+       "kodUlice": 84743,
+       "nazevUlice": "Karlovy dvory I",
+       "cisloDomovni": 410,
+       "kodCastiObce": 43711,
+       "nazevCastiObce": "Hůrka",
+       "kodAdresnihoMista": 26822695,
+       "psc": 38226,
+       "textovaAdresa": "Karlovy dvory I č.ev. 410, Hůrka, 38226 Horní Planá",
+       "standardizaceAdresy": true,
+       "typCisloDomovni": 2,
+       "platnostOd": "2018-01-16",
+       "typAdresy": "MISTOPODNIKANI"
+      }
+     ],
+     "typSubjektu": "F",
+     "zivnostenskyUrad": "330201",
+     "zivnostiStav": {
+      "pocetAktivnich": 1,
+      "pocetZaniklych": 0,
+      "pocetPozastavenych": 0,
+      "pocetPrerusenych": 0,
+      "pocetCelkem": 1
+     },
+     "primarniZaznam": true,
+     "kodStatu": "CZ",
+     "osobaPodnikatel": {
+      "jmeno": "Kateřina",
+      "prijmeni": "Hanzová",
+      "datumNarozeni": "1984-04-13",
+      "platnostOd": "2006-02-13",
+      "statniObcanstvi": "CZ",
+      "typAngazma": "PODNIKATEL_RZP"
+     },
+     "zivnosti": [
+      {
+       "datumVzniku": "2006-02-13",
+       "predmetPodnikani": "Holičství, kadeřnictví",
+       "datumAktualizace": "2018-01-15",
+       "druhZivnosti": "R"
+      }
+     ]
+    }
+   ]
+  }
+ }
+]

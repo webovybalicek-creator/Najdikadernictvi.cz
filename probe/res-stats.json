@@ -1,0 +1,672 @@
+{
+ "header": [
+  "ICO",
+  "OKRESLAU",
+  "DDATVZN",
+  "DDATZAN",
+  "ZPZAN",
+  "DDATPAKT",
+  "FORMA",
+  "ROSFORMA",
+  "KATPO",
+  "NACE",
+  "NACE2025",
+  "ICZUJ",
+  "FIRMA",
+  "CISS2010",
+  "KODADM",
+  "TEXTADR",
+  "PSC",
+  "OBEC_TEXT",
+  "COBCE_TEXT",
+  "ULICE_TEXT",
+  "TYPCDOM",
+  "CDOM",
+  "COR",
+  "DATPLAT",
+  "PRIZNAK"
+ ],
+ "nace_kombinace": {
+  "96020|96210": 75063,
+  "96040|96230": 32583,
+  "9602|96210": 381,
+  "9604|96230": 324,
+  "96020|96220": 43,
+  "96020|": 33,
+  "9602|96220": 26,
+  "9602|": 9,
+  "461|96230": 3,
+  "G|96210": 3,
+  "96|96210": 1,
+  "471|96210": 1,
+  "74200|96210": 1,
+  "74200|96230": 1,
+  "960|96210": 1,
+  "47190|96230": 1,
+  "461|96210": 1,
+  "960|96230": 1,
+  "96020|96910": 1
+ },
+ "aktivni_9621": 75396,
+ "forma": [
+  [
+   "101",
+   71433
+  ],
+  [
+   "112",
+   2269
+  ],
+  [
+   "424",
+   1638
+  ],
+  [
+   "105",
+   35
+  ],
+  [
+   "121",
+   6
+  ],
+  [
+   "111",
+   4
+  ],
+  [
+   "205",
+   3
+  ],
+  [
+   "301",
+   2
+  ],
+  [
+   "107",
+   2
+  ],
+  [
+   "425",
+   2
+  ],
+  [
+   "706",
+   1
+  ],
+  [
+   "421",
+   1
+  ]
+ ],
+ "rosforma": [
+  [
+   "100",
+   71470
+  ],
+  [
+   "112",
+   2269
+  ],
+  [
+   "424",
+   1638
+  ],
+  [
+   "121",
+   6
+  ],
+  [
+   "111",
+   4
+  ],
+  [
+   "205",
+   3
+  ],
+  [
+   "301",
+   2
+  ],
+  [
+   "425",
+   2
+  ],
+  [
+   "706",
+   1
+  ],
+  [
+   "421",
+   1
+  ]
+ ],
+ "obce_top": [
+  [
+   "Praha",
+   11075
+  ],
+  [
+   "Brno",
+   2855
+  ],
+  [
+   "Ostrava",
+   1889
+  ],
+  [
+   "Plzeň",
+   1432
+  ],
+  [
+   "Liberec",
+   806
+  ],
+  [
+   "Olomouc",
+   752
+  ],
+  [
+   "České Budějovice",
+   727
+  ],
+  [
+   "Hradec Králové",
+   711
+  ],
+  [
+   "Pardubice",
+   633
+  ],
+  [
+   "Zlín",
+   576
+  ],
+  [
+   "Karlovy Vary",
+   514
+  ],
+  [
+   "Ústí nad Labem",
+   512
+  ],
+  [
+   "Kladno",
+   454
+  ],
+  [
+   "Havířov",
+   401
+  ],
+  [
+   "Cheb",
+   379
+  ],
+  [
+   "Jihlava",
+   358
+  ],
+  [
+   "Teplice",
+   349
+  ],
+  [
+   "Mladá Boleslav",
+   342
+  ],
+  [
+   "Jablonec nad Nisou",
+   336
+  ],
+  [
+   "Most",
+   336
+  ],
+  [
+   "Děčín",
+   318
+  ],
+  [
+   "Opava",
+   317
+  ],
+  [
+   "Prostějov",
+   305
+  ],
+  [
+   "Frýdek-Místek",
+   300
+  ],
+  [
+   "Znojmo",
+   273
+  ],
+  [
+   "Chomutov",
+   265
+  ],
+  [
+   "Přerov",
+   255
+  ],
+  [
+   "Karviná",
+   255
+  ],
+  [
+   "Příbram",
+   251
+  ],
+  [
+   "Tábor",
+   239
+  ]
+ ],
+ "vzorek_res": [
+  {
+   "ICO": "12118770",
+   "OKRESLAU": "CZ0723",
+   "DDATVZN": "1990-10-01",
+   "DDATZAN": "",
+   "ZPZAN": "",
+   "DDATPAKT": "2026-01-15",
+   "FORMA": "101",
+   "ROSFORMA": "100",
+   "KATPO": "110",
+   "NACE": "96020",
+   "NACE2025": "96210",
+   "ICZUJ": "545058",
+   "FIRMA": "Ivana Vašíčková",
+   "CISS2010": "14200",
+   "KODADM": "24269808",
+   "TEXTADR": "",
+   "PSC": "75701",
+   "OBEC_TEXT": "Valašské Meziříčí",
+   "COBCE_TEXT": "Krásno nad Bečvou",
+   "ULICE_TEXT": "Hranická",
+   "TYPCDOM": "1",
+   "CDOM": "290",
+   "COR": "3",
+   "DATPLAT": "2026-10-15",
+   "PRIZNAK": ""
+  },
+  {
+   "ICO": "88625176",
+   "OKRESLAU": "CZ0100",
+   "DDATVZN": "2012-03-05",
+   "DDATZAN": "",
+   "ZPZAN": "",
+   "DDATPAKT": "2026-06-30",
+   "FORMA": "101",
+   "ROSFORMA": "100",
+   "KATPO": "110",
+   "NACE": "96020",
+   "NACE2025": "96210",
+   "ICZUJ": "500143",
+   "FIRMA": "Lucie Pevná",
+   "CISS2010": "14200",
+   "KODADM": "22022970",
+   "TEXTADR": "",
+   "PSC": "15000",
+   "OBEC_TEXT": "Praha",
+   "COBCE_TEXT": "Košíře",
+   "ULICE_TEXT": "Vrchlického",
+   "TYPCDOM": "1",
+   "CDOM": "483",
+   "COR": "47",
+   "DATPLAT": "2026-10-15",
+   "PRIZNAK": ""
+  },
+  {
+   "ICO": "05837227",
+   "OKRESLAU": "CZ0714",
+   "DDATVZN": "2017-02-21",
+   "DDATZAN": "",
+   "ZPZAN": "",
+   "DDATPAKT": "2026-01-15",
+   "FORMA": "112",
+   "ROSFORMA": "112",
+   "KATPO": "000",
+   "NACE": "9602",
+   "NACE2025": "96210",
+   "ICZUJ": "511382",
+   "FIRMA": "Apartmány Přerov s.r.o.",
+   "CISS2010": "11002",
+   "KODADM": "11218649",
+   "TEXTADR": "",
+   "PSC": "75002",
+   "OBEC_TEXT": "Přerov",
+   "COBCE_TEXT": "Přerov I-Město",
+   "ULICE_TEXT": "Žerotínovo nám.",
+   "TYPCDOM": "1",
+   "CDOM": "169",
+   "COR": "22",
+   "DATPLAT": "2026-10-15",
+   "PRIZNAK": ""
+  },
+  {
+   "ICO": "24947482",
+   "OKRESLAU": "CZ0644",
+   "DDATVZN": "2026-04-13",
+   "DDATZAN": "",
+   "ZPZAN": "",
+   "DDATPAKT": "2026-04-16",
+   "FORMA": "101",
+   "ROSFORMA": "100",
+   "KATPO": "000",
+   "NACE": "96020",
+   "NACE2025": "96210",
+   "ICZUJ": "584291",
+   "FIRMA": "Tomáš Jordánek",
+   "CISS2010": "14200",
+   "KODADM": "82034541",
+   "TEXTADR": "",
+   "PSC": "69141",
+   "OBEC_TEXT": "Břeclav",
+   "COBCE_TEXT": "Charvátská Nová Ves",
+   "ULICE_TEXT": "Hájky",
+   "TYPCDOM": "1",
+   "CDOM": "881",
+   "COR": "1",
+   "DATPLAT": "2026-10-15",
+   "PRIZNAK": ""
+  },
+  {
+   "ICO": "09735747",
+   "OKRESLAU": "CZ0511",
+   "DDATVZN": "2020-12-09",
+   "DDATZAN": "",
+   "ZPZAN": "",
+   "DDATPAKT": "2026-06-16",
+   "FORMA": "101",
+   "ROSFORMA": "100",
+   "KATPO": "000",
+   "NACE": "96020",
+   "NACE2025": "96210",
+   "ICZUJ": "561541",
+   "FIRMA": "Michaela Fliegerová",
+   "CISS2010": "14200",
+   "KODADM": "13025490",
+   "TEXTADR": "",
+   "PSC": "47126",
+   "OBEC_TEXT": "Dubnice",
+   "COBCE_TEXT": "Dubnice",
+   "ULICE_TEXT": "",
+   "TYPCDOM": "1",
+   "CDOM": "80",
+   "COR": "",
+   "DATPLAT": "2026-10-15",
+   "PRIZNAK": ""
+  },
+  {
+   "ICO": "75503336",
+   "OKRESLAU": "CZ0644",
+   "DDATVZN": "2002-10-16",
+   "DDATZAN": "",
+   "ZPZAN": "",
+   "DDATPAKT": "2026-01-15",
+   "FORMA": "101",
+   "ROSFORMA": "100",
+   "KATPO": "000",
+   "NACE": "96020",
+   "NACE2025": "96210",
+   "ICZUJ": "584291",
+   "FIRMA": "Kateřina Mělnická",
+   "CISS2010": "14200",
+   "KODADM": "19004559",
+   "TEXTADR": "",
+   "PSC": "69003",
+   "OBEC_TEXT": "Břeclav",
+   "COBCE_TEXT": "Břeclav",
+   "ULICE_TEXT": "Mánesova",
+   "TYPCDOM": "1",
+   "CDOM": "1567",
+   "COR": "30",
+   "DATPLAT": "2026-10-15",
+   "PRIZNAK": ""
+  },
+  {
+   "ICO": "73421421",
+   "OKRESLAU": "CZ0100",
+   "DDATVZN": "2004-11-19",
+   "DDATZAN": "",
+   "ZPZAN": "",
+   "DDATPAKT": "2026-01-15",
+   "FORMA": "101",
+   "ROSFORMA": "100",
+   "KATPO": "000",
+   "NACE": "96020",
+   "NACE2025": "96210",
+   "ICZUJ": "500119",
+   "FIRMA": "Hai Vo Thanh",
+   "CISS2010": "14200",
+   "KODADM": "21861129",
+   "TEXTADR": "",
+   "PSC": "14000",
+   "OBEC_TEXT": "Praha",
+   "COBCE_TEXT": "Krč",
+   "ULICE_TEXT": "Višňová",
+   "TYPCDOM": "1",
+   "CDOM": "348",
+   "COR": "10",
+   "DATPLAT": "2026-10-15",
+   "PRIZNAK": ""
+  },
+  {
+   "ICO": "74413210",
+   "OKRESLAU": "CZ0525",
+   "DDATVZN": "2007-03-15",
+   "DDATZAN": "",
+   "ZPZAN": "",
+   "DDATPAKT": "2026-01-15",
+   "FORMA": "101",
+   "ROSFORMA": "100",
+   "KATPO": "110",
+   "NACE": "96020",
+   "NACE2025": "96210",
+   "ICZUJ": "579777",
+   "FIRMA": "Kateřina Šafránková",
+   "CISS2010": "14200",
+   "KODADM": "15177661",
+   "TEXTADR": "",
+   "PSC": "54232",
+   "OBEC_TEXT": "Úpice",
+   "COBCE_TEXT": "Úpice",
+   "ULICE_TEXT": "Dvořákova",
+   "TYPCDOM": "1",
+   "CDOM": "686",
+   "COR": "",
+   "DATPLAT": "2026-10-15",
+   "PRIZNAK": ""
+  },
+  {
+   "ICO": "67868819",
+   "OKRESLAU": "CZ0511",
+   "DDATVZN": "1999-04-28",
+   "DDATZAN": "",
+   "ZPZAN": "",
+   "DDATPAKT": "2026-01-15",
+   "FORMA": "101",
+   "ROSFORMA": "100",
+   "KATPO": "110",
+   "NACE": "96020",
+   "NACE2025": "96210",
+   "ICZUJ": "561835",
+   "FIRMA": "Monika Dobrovová",
+   "CISS2010": "14200",
+   "KODADM": "27495957",
+   "TEXTADR": "",
+   "PSC": "47124",
+   "OBEC_TEXT": "Mimoň",
+   "COBCE_TEXT": "Mimoň I",
+   "ULICE_TEXT": "Ralská",
+   "TYPCDOM": "1",
+   "CDOM": "673",
+   "COR": "",
+   "DATPLAT": "2026-10-15",
+   "PRIZNAK": ""
+  },
+  {
+   "ICO": "21918601",
+   "OKRESLAU": "CZ0100",
+   "DDATVZN": "2024-08-12",
+   "DDATZAN": "",
+   "ZPZAN": "",
+   "DDATPAKT": "2026-01-15",
+   "FORMA": "101",
+   "ROSFORMA": "100",
+   "KATPO": "110",
+   "NACE": "96020",
+   "NACE2025": "96210",
+   "ICZUJ": "547387",
+   "FIRMA": "Tetiana Sytnyk",
+   "CISS2010": "14200",
+   "KODADM": "22562711",
+   "TEXTADR": "",
+   "PSC": "10900",
+   "OBEC_TEXT": "Praha",
+   "COBCE_TEXT": "Horní Měcholupy",
+   "ULICE_TEXT": "Boloňská",
+   "TYPCDOM": "1",
+   "CDOM": "302",
+   "COR": "2",
+   "DATPLAT": "2026-10-15",
+   "PRIZNAK": ""
+  },
+  {
+   "ICO": "08193673",
+   "OKRESLAU": "CZ0322",
+   "DDATVZN": "2019-05-22",
+   "DDATZAN": "",
+   "ZPZAN": "",
+   "DDATPAKT": "2026-01-15",
+   "FORMA": "101",
+   "ROSFORMA": "100",
+   "KATPO": "110",
+   "NACE": "96020",
+   "NACE2025": "96210",
+   "ICZUJ": "557153",
+   "FIRMA": "Kryštof Krištof",
+   "CISS2010": "14200",
+   "KODADM": "7015801",
+   "TEXTADR": "",
+   "PSC": "34201",
+   "OBEC_TEXT": "Sušice",
+   "COBCE_TEXT": "Sušice II",
+   "ULICE_TEXT": "Družstevní",
+   "TYPCDOM": "1",
+   "CDOM": "1041",
+   "COR": "",
+   "DATPLAT": "2026-10-15",
+   "PRIZNAK": ""
+  },
+  {
+   "ICO": "75204401",
+   "OKRESLAU": "CZ0100",
+   "DDATVZN": "2009-04-27",
+   "DDATZAN": "",
+   "ZPZAN": "",
+   "DDATPAKT": "2026-03-31",
+   "FORMA": "101",
+   "ROSFORMA": "100",
+   "KATPO": "000",
+   "NACE": "96020",
+   "NACE2025": "96210",
+   "ICZUJ": "500216",
+   "FIRMA": "Kateřina Junková",
+   "CISS2010": "14200",
+   "KODADM": "22516352",
+   "TEXTADR": "",
+   "PSC": "19000",
+   "OBEC_TEXT": "Praha",
+   "COBCE_TEXT": "Střížkov (Praha 9)",
+   "ULICE_TEXT": "Varnsdorfská",
+   "TYPCDOM": "1",
+   "CDOM": "332",
+   "COR": "15",
+   "DATPLAT": "2026-10-15",
+   "PRIZNAK": ""
+  },
+  {
+   "ICO": "03071316",
+   "OKRESLAU": "CZ0511",
+   "DDATVZN": "2014-06-04",
+   "DDATZAN": "",
+   "ZPZAN": "",
+   "DDATPAKT": "2026-01-15",
+   "FORMA": "101",
+   "ROSFORMA": "100",
+   "KATPO": "000",
+   "NACE": "96020",
+   "NACE2025": "96210",
+   "ICZUJ": "561681",
+   "FIRMA": "Radka Hájková",
+   "CISS2010": "14200",
+   "KODADM": "16565321",
+   "TEXTADR": "",
+   "PSC": "47114",
+   "OBEC_TEXT": "Kamenický Šenov",
+   "COBCE_TEXT": "Kamenický Šenov",
+   "ULICE_TEXT": "Pískovec I",
+   "TYPCDOM": "1",
+   "CDOM": "905",
+   "COR": "",
+   "DATPLAT": "2026-10-15",
+   "PRIZNAK": ""
+  },
+  {
+   "ICO": "68670273",
+   "OKRESLAU": "CZ0641",
+   "DDATVZN": "1999-09-01",
+   "DDATZAN": "",
+   "ZPZAN": "",
+   "DDATPAKT": "2026-01-15",
+   "FORMA": "101",
+   "ROSFORMA": "100",
+   "KATPO": "110",
+   "NACE": "96020",
+   "NACE2025": "96210",
+   "ICZUJ": "581542",
+   "FIRMA": "Romana Smrčková",
+   "CISS2010": "14200",
+   "KODADM": "26535360",
+   "TEXTADR": "",
+   "PSC": "67911",
+   "OBEC_TEXT": "Doubravice nad Svitavou",
+   "COBCE_TEXT": "Doubravice nad Svitavou",
+   "ULICE_TEXT": "Klemov",
+   "TYPCDOM": "1",
+   "CDOM": "434",
+   "COR": "",
+   "DATPLAT": "2026-10-15",
+   "PRIZNAK": ""
+  },
+  {
+   "ICO": "72373261",
+   "OKRESLAU": "CZ0643",
+   "DDATVZN": "2001-02-14",
+   "DDATZAN": "",
+   "ZPZAN": "",
+   "DDATPAKT": "2026-01-15",
+   "FORMA": "101",
+   "ROSFORMA": "100",
+   "KATPO": "110",
+   "NACE": "96020",
+   "NACE2025": "96210",
+   "ICZUJ": "583791",
+   "FIRMA": "Jana Havíř Dittrichová",
+   "CISS2010": "14200",
+   "KODADM": "23990422",
+   "TEXTADR": "",
+   "PSC": "66434",
+   "OBEC_TEXT": "Rozdrojovice",
+   "COBCE_TEXT": "Rozdrojovice",
+   "ULICE_TEXT": "Pod Školou",
+   "TYPCDOM": "1",
+   "CDOM": "334",
+   "COR": "",
+   "DATPLAT": "2026-10-15",
+   "PRIZNAK": ""
+  }
+ ]
+}
