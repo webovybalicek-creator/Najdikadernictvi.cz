@@ -1,0 +1,27 @@
+name: Průzkum registrů (RES, RŽP)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/probe-registry.py
+      - name: Uložení výsledků do větve probe
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan probe
+          git rm -rfq --cached .
+          git add probe/
+          git commit -qm "Výsledky průzkumu registrů"
+          git push -f origin probe
