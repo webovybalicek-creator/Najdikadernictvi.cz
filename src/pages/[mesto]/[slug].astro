@@ -16,6 +16,7 @@ import {
   ZAMERENI_NAZEV,
   mesta,
   pocetText,
+  indexovatDetail,
   type Provozovna,
 } from '../../lib/data';
 import { KRAJE } from '../../lib/kraje';
@@ -85,6 +86,7 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
   title={`${p.nazev}, ${p.mesto}: ${typ.toLowerCase()}${t ? ', otevírací doba' : ''}`}
   description={`${p.nazev} – ${typ.toLowerCase()} ${adr ? `na adrese ${adr}` : `v obci ${p.mesto}`}. ${t ? 'Otevírací doba, ' : ''}${p.telefon ? 'telefon, ' : ''}mapa a další salony v okolí.`}
   jsonLd={jsonLd}
+  noindex={!indexovatDetail(p)}
 >
   <div class="wrap section">
     <Breadcrumb items={breadcrumb} />
@@ -193,7 +195,13 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
     }
 
     <p class="zdroj muted">
-      Údaje pochází z <a href={p.osm} rel="noopener" target="_blank">OpenStreetMap</a> a nemusí být aktuální.
+      {
+        p.zdroj === 'osm' ? (
+          <>Údaje pochází z <a href={p.osm} rel="noopener" target="_blank">OpenStreetMap</a> a nemusí být aktuální.</>
+        ) : (
+          <>Adresa pochází z veřejného živnostenského rejstříku (provozovna s živností Holičství, kadeřnictví). Salon nemusí být v provozu.</>
+        )
+      }
       Vidíte chybu? <a href={`/pridat-provozovnu/?salon=${encodeURIComponent(url(p))}`}>Nahlaste ji</a>.
     </p>
   </div>

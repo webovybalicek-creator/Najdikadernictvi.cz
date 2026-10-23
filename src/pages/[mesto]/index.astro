@@ -5,7 +5,10 @@ import ProvozovnaRadek from '../../components/ProvozovnaRadek.astro';
 import { mesta, mestoUrl, krajUrl, pocetText, tyden, type Mesto } from '../../lib/data';
 
 export function getStaticPaths() {
-  return mesta().map((m) => ({ params: { mesto: m.slug }, props: { m } }));
+  // /praha/ má vlastní rozcestník (src/pages/praha/index.astro)
+  return mesta()
+    .filter((m) => m.slug !== 'praha')
+    .map((m) => ({ params: { mesto: m.slug }, props: { m } }));
 }
 
 const { m } = Astro.props as { m: Mesto };

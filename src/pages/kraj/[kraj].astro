@@ -5,7 +5,8 @@ import { KRAJE, type Kraj } from '../../lib/kraje';
 import { mestaVKraji, mestoUrl, pocetVKraji, pocetText } from '../../lib/data';
 
 export function getStaticPaths() {
-  return KRAJE.map((k) => ({ params: { kraj: k.slug }, props: { k } }));
+  // Praha má rozcestník na /praha/
+  return KRAJE.filter((k) => k.slug !== 'praha').map((k) => ({ params: { kraj: k.slug }, props: { k } }));
 }
 
 const { k } = Astro.props as { k: Kraj };

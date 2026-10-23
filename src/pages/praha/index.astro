@@ -1,0 +1,111 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Hledani from '../../components/Hledani.astro';
+import Karta from '../../components/Karta.astro';
+import ProvozovnaRadek from '../../components/ProvozovnaRadek.astro';
+import { mestaVKraji, mestoUrl, pocetVKraji, pocetText, vyber, PROVOZOVNY } from '../../lib/data';
+
+const obvody = mestaVKraji('praha')
+  .filter((m) => m.slug !== 'praha')
+  .sort((a, b) => a.nazev.localeCompare(b.nazev, 'cs', { numeric: true }));
+const bezObvodu = mestaVKraji('praha').find((m) => m.slug === 'praha')?.provozovny ?? [];
+const vPraze = PROVOZOVNY.filter((p) => p.kraj === 'praha');
+const doporucene = vyber(vPraze, 8);
+const barberu = vPraze.filter((p) => p.typ === 'barber').length;
+const pocet = pocetVKraji('praha');
+---
+
+<Base
+  title={`Kadeřnictví Praha: ${pocetText(pocet, 'salon', 'salony', 'salonů')} podle obvodů`}
+  description={`Kadeřnictví a barbershopy v Praze: ${pocetText(pocet, 'salon', 'salony', 'salonů')} rozdělených podle obvodů Praha 1 až Praha 10. Adresy, telefony, otevírací doba a mapa.`}
+>
+  <div class="wrap section">
+    <Breadcrumb items={[{ nazev: 'Praha' }]} />
+    <h1>Kadeřnictví Praha</h1>
+    <p class="lead">
+      {pocetText(pocet, 'salon', 'salony', 'salonů')} v celé Praze{barberu > 0 && <>, z toho {pocetText(barberu, 'barbershop', 'barbershopy', 'barbershopů')}</>}.
+      Vyberte obvod nebo hledejte podle názvu.
+    </p>
+    <Hledani />
+
+    {
+      obvody.length > 0 && (
+        <section class="obvody-sec">
+          <span class="eyebrow">Podle obvodu</span>
+          <h2>Pražské obvody</h2>
+          <ul class="obvody">
+            {obvody.map((o) => (
+              <li>
+                <a href={mestoUrl(o.slug)}>
+                  <span>{o.nazev}</span>
+                  <span class="muted">{o.provozovny.length}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      doporucene.length > 0 && (
+        <section class="obvody-sec">
+          <span class="eyebrow">Kompletní profily</span>
+          <h2>Salony s nejvíc údaji</h2>
+          <ul class="karty">
+            {doporucene.map((p) => <Karta p={p} />)}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      bezObvodu.length > 0 && (
+        <section class="obvody-sec">
+          <h2>Další salony v Praze</h2>
+          <ul class="seznam">
+            {bezObvodu.map((p) => <ProvozovnaRadek p={p} />)}
+          </ul>
+        </section>
+      )
+    }
+  </div>
+</Base>
+
+<script>
+  import { aplikujStav } from '../../scripts/stav';
+  aplikujStav();
+</script>
+
+<style>
+  .obvody-sec {
+    margin-top: clamp(40px, 6vw, 64px);
+  }
+  .obvody {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    column-gap: 2rem;
+  }
+  .obvody a {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+  .obvody a:hover span:first-child {
+    text-decoration: underline;
+  }
+  .seznam {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+</style>

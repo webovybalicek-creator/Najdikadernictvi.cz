@@ -1,11 +1,16 @@
-import raw from '../data/provozovny.json';
+import osmRaw from '../data/provozovny.json';
+import registrRaw from '../data/registr.json';
 import meta from '../data/import-meta.json';
 import { KRAJE, type Kraj } from './kraje';
 import { parseTyden, type Tyden } from './oteviraci-doba';
+import { slugify } from './slug';
 
 export interface Provozovna {
   id: string;
-  osm: string;
+  /** Zdroj údajů: OpenStreetMap nebo živnostenský rejstřík */
+  zdroj: 'osm' | 'rzp';
+  /** Odkaz na záznam v OSM (jen u zdroj = osm) */
+  osm?: string;
   nazev: string;
   slug: string;
   typ: 'barber' | 'kadernictvi';
@@ -35,12 +40,141 @@ export interface Mesto {
   provozovny: Provozovna[];
 }
 
-export const PROVOZOVNY = raw as Provozovna[];
+interface RegistrZaznam {
+  id: string;
+  nazev: string | null;
+  ulice?: string | null;
+  cisloDomu?: string | null;
+  psc?: string | null;
+  mesto: string;
+  cast?: string | null;
+  kraj: string;
+  lat: number;
+  lon: number;
+}
+
+const REZERVOVANE = new Set(['blog', 'kraj', 'kraje', 'hledat', 'kontakt', 'o-webu', 'pridat-provozovnu', 'ochrana-osobnich-udaju']);
+const OBVOD = /^Praha \d+$/;
+const nn = <T,>(v: T | null | undefined) => (v == null || v === '' ? undefined : v);
+
+function metry(a: { lat: number; lon: number }, b: { lat: number; lon: number }) {
+  const dy = (a.lat - b.lat) * 111_320;
+  const dx = (a.lon - b.lon) * 111_320 * Math.cos((a.lat * Math.PI) / 180);
+  return Math.hypot(dx, dy);
+}
+
+const normAdr = (ulice?: string, cislo?: string) =>
+  slugify(`${ulice ?? ''} ${(cislo ?? '').split('/').pop() ?? ''}`);
+
+function sestav(): Provozovna[] {
+  const osm: Provozovna[] = (osmRaw as Omit<Provozovna, 'zdroj'>[]).map((p) => ({ ...p, zdroj: 'osm' as const }));
+
+  // Mřížka pro hledání blízkých bodů (~100 m)
+  const mriz = new Map<string, Provozovna[]>();
+  const klic = (lat: number, lon: number) => `${Math.round(lat * 1000)}:${Math.round(lon * 700)}`;
+  const vOkoliBodu = (lat: number, lon: number) => {
+    const out: Provozovna[] = [];
+    const a = Math.round(lat * 1000);
+    const b = Math.round(lon * 700);
+    for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) out.push(...(mriz.get(`${a + i}:${b + j}`) ?? []));
+    return out;
+  };
+  for (const p of osm) {
+    const k = klic(p.lat, p.lon);
+    if (!mriz.has(k)) mriz.set(k, []);
+    mriz.get(k)!.push(p);
+  }
+
+  // Záznamy z rejstříku, které nejsou duplicitou salonu z OSM
+  const rzp: Provozovna[] = [];
+  for (const r of registrRaw as RegistrZaznam[]) {
+    const blizko = vOkoliBodu(r.lat, r.lon).filter((o) => metry(o, r) < 60);
+    const adr = normAdr(nn(r.ulice), nn(r.cisloDomu));
+    if (blizko.some((o) => metry(o, r) < 15 || (o.ulice && normAdr(o.ulice, o.cisloDomu) === adr))) continue;
+    const adresaText = [nn(r.ulice) ?? nn(r.cast) ?? r.mesto, nn(r.cisloDomu)].filter(Boolean).join(' ');
+    const nazev = nn(r.nazev) ?? `Kadeřnictví ${adresaText}`;
+    rzp.push({
+      id: r.id,
+      zdroj: 'rzp',
+      nazev,
+      slug: '',
+      typ: /barber|holič/i.test(nazev) ? 'barber' : 'kadernictvi',
+      zamereni: [],
+      ulice: nn(r.ulice),
+      cisloDomu: nn(r.cisloDomu),
+      psc: nn(r.psc),
+      mesto: r.mesto,
+      mestoSlug: '',
+      cast: nn(r.cast),
+      kraj: r.kraj,
+      lat: r.lat,
+      lon: r.lon,
+    });
+  }
+
+  // Praha se dělí na obvody (Praha 1–10). Salony z OSM dostanou obvod podle nejbližší adresy z rejstříku.
+  const prazske = rzp.filter((p) => p.kraj === 'praha' && p.cast && OBVOD.test(p.cast));
+  for (const p of [...osm, ...rzp]) {
+    if (p.kraj !== 'praha') continue;
+    let obvod = p.cast && OBVOD.test(p.cast) ? p.cast : undefined;
+    if (!obvod && prazske.length) {
+      let best = Infinity;
+      for (const r of prazske) {
+        const d = Math.abs(r.lat - p.lat) + Math.abs(r.lon - p.lon);
+        if (d < best) {
+          best = d;
+          obvod = r.cast;
+        }
+      }
+      if (best > 0.01) obvod = undefined;
+    }
+    if (obvod) {
+      p.mesto = obvod;
+      if (p.cast === obvod) p.cast = undefined;
+    }
+  }
+
+  const vse = [...osm, ...rzp];
+
+  // Slug města: unikátní v rámci ČR
+  const mestaKraje = new Map<string, Set<string>>();
+  for (const p of vse) {
+    const s = slugify(p.mesto);
+    if (!mestaKraje.has(s)) mestaKraje.set(s, new Set());
+    mestaKraje.get(s)!.add(p.kraj);
+  }
+  for (const p of vse) {
+    const s = slugify(p.mesto);
+    p.mestoSlug =
+      mestaKraje.get(s)!.size > 1 || REZERVOVANE.has(s) ? `${s}-${p.kraj.replace(/-kraj$|^kraj-/, '')}` : s;
+  }
+
+  // Slug salonu: unikátní v rámci města, OSM má přednost (stabilnější názvy)
+  const used = new Set<string>();
+  vse.sort(
+    (a, b) =>
+      a.mestoSlug.localeCompare(b.mestoSlug) ||
+      (a.zdroj === b.zdroj ? 0 : a.zdroj === 'osm' ? -1 : 1) ||
+      a.nazev.localeCompare(b.nazev, 'cs') ||
+      a.id.localeCompare(b.id),
+  );
+  for (const p of vse) {
+    const kandidati = [slugify(p.nazev), slugify(`${p.nazev} ${p.ulice ?? ''}`), slugify(`${p.nazev} ${p.id}`)];
+    p.slug = kandidati.find((c) => c && !used.has(`${p.mestoSlug}/${c}`)) ?? slugify(p.id);
+    used.add(`${p.mestoSlug}/${p.slug}`);
+  }
+  return vse;
+}
+
+export const PROVOZOVNY = sestav();
 export const IMPORT_META = meta as { zdroj: string; importovano: string; pocet: number };
+
+/** Detail salonu jen z rejstříku je pro Google příliš chudý – neindexujeme ho, dokud nemá víc údajů */
+export const indexovatDetail = (p: Provozovna) => p.zdroj === 'osm';
 
 export const url = (p: Provozovna) => `/${p.mestoSlug}/${p.slug}/`;
 export const mestoUrl = (slug: string) => `/${slug}/`;
-export const krajUrl = (slug: string) => `/kraj/${slug}/`;
+export const krajUrl = (slug: string) => (slug === 'praha' ? '/praha/' : `/kraj/${slug}/`);
 
 export function adresa(p: Provozovna, sMestem = true): string {
   const ulice = [p.ulice, p.cisloDomu].filter(Boolean).join(' ');
