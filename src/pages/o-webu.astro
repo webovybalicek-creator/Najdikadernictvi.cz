@@ -1,6 +1,7 @@
 ---
 import Text from '../layouts/Text.astro';
-import { PROVOZOVNY, mesta, pocetText } from '../lib/data';
+import { PROVOZOVNY, IMPORT_META, mesta, pocetText } from '../lib/data';
+const aktualizace = new Date(IMPORT_META.importovano).toLocaleDateString('cs-CZ');
 ---
 
 <Text title="O webu" description="Najdi kadeřnictví je katalog kadeřnictví a barbershopů v celé České republice.">
@@ -16,7 +17,7 @@ import { PROVOZOVNY, mesta, pocetText } from '../lib/data';
   <p>
     Základní údaje přebíráme z otevřené mapové databáze <a href="https://www.openstreetmap.org/copyright"
       >OpenStreetMap</a
-    > (licence ODbL) a pravidelně je aktualizujeme. Údaje doplněné majiteli salonů mají přednost.
+    > (licence ODbL) a pravidelně je aktualizujeme. Poslední aktualizace proběhla {aktualizace}. Údaje doplněné majiteli salonů mají přednost.
   </p>
   <h2>Jste majitel salonu?</h2>
   <p>

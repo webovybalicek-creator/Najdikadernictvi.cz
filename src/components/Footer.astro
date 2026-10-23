@@ -1,11 +1,10 @@
 ---
 import { KRAJE } from '../lib/kraje';
-import { krajUrl, IMPORT_META } from '../lib/data';
+import { krajUrl } from '../lib/data';
 import { SITE } from '../lib/config';
 import Logo from './Logo.astro';
 
 const rok = new Date().getFullYear();
-const aktualizace = new Date(IMPORT_META.importovano).toLocaleDateString('cs-CZ');
 ---
 
 <footer class="ftr">
@@ -40,7 +39,7 @@ const aktualizace = new Date(IMPORT_META.importovano).toLocaleDateString('cs-CZ'
     <p>
       Data o provozovnách: © přispěvatelé <a href="https://www.openstreetmap.org/copyright" rel="noopener"
         >OpenStreetMap</a
-      >, licence ODbL. Aktualizováno {aktualizace}.
+      >, licence ODbL.
     </p>
   </div>
 </footer>
