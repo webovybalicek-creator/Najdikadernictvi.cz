@@ -155,19 +155,22 @@ async function main() {
       continue;
     }
     console.log(`▶ ${kraj.nazev} (${kraj.iso})`);
-    const q = `[out:json][timeout:240];
-area["ISO3166-2"="${kraj.iso}"]->.k;
+    const area = `area["ISO3166-2"="${kraj.iso}"]["boundary"="administrative"]->.k;`;
+    const qSalony = `[out:json][timeout:180];
+${area}
 (
   nwr["shop"="hairdresser"](area.k);
   nwr["shop"="barber"](area.k);
   nwr["craft"="hairdresser"](area.k);
 );
-out center tags;
-node["place"~"^(city|town|village)$"](area.k);
+out center tags;`;
+    const qObce = `[out:json][timeout:180];
+${area}
+node["place"~"^(city|town|village)$"]["name"](area.k);
 out;`;
-    let els: OsmElement[];
+    let shops: OsmElement[];
     try {
-      els = await overpass(q);
+      shops = (await overpass(qSalony)).filter((e) => e.tags);
     } catch (err) {
       const stara = predchozi.filter((p) => p.kraj === kraj.slug);
       gh('warning', `${kraj.nazev}: stažení selhalo (${(err as Error).message}), ponechávám ${stara.length} předchozích záznamů`);
@@ -178,10 +181,16 @@ out;`;
       }
       continue;
     }
-    const places = els
-      .filter((e) => e.type === 'node' && e.tags?.place && e.tags?.name)
-      .map((e) => ({ name: e.tags!.name, lat: e.lat!, lon: e.lon! }));
-    const shops = els.filter((e) => e.tags && !e.tags.place);
+    // Obce slouží jen k doplnění chybějícího addr:city, jejich selhání import nezastaví
+    let places: { name: string; lat: number; lon: number }[] = [];
+    if (kraj.iso !== 'CZ-10') {
+      await sleep(3_000);
+      try {
+        places = (await overpass(qObce)).map((e) => ({ name: e.tags!.name, lat: e.lat!, lon: e.lon! }));
+      } catch (err) {
+        gh('warning', `${kraj.nazev}: seznam obcí se nepodařilo stáhnout, salony bez addr:city budou vynechány`);
+      }
+    }
 
     let n = 0;
     for (const e of shops) {
