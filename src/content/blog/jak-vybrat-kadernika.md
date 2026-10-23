@@ -2,7 +2,11 @@
 title: 'Jak vybrat dobrého kadeřníka nebo barbera'
 description: 'Praktický návod, jak najít kadeřníka nebo barbera, se kterým budete spokojení: kde hledat, co sledovat a jak poznat, že to není to pravé.'
 perex: 'Dobrého kadeřníka člověk nemění. Jak ho ale najít, když se stěhujete nebo nejste spokojení s tím současným?'
-datum: 2026-10-23
+datum: 2026-10-14
+kategorie: 'Rady a návody'
+obrazek: '../../assets/blog/strih-damsky.jpg'
+obrazekAlt: 'Mytí vlasů v kadeřnictví'
+obrazekAutor: 'Lindsay Cash'
 ---
 
 Najít kadeřníka, kterému můžete věřit, chvíli trvá. Pár jednoduchých kroků ale ušetří zklamání i peníze.
@@ -18,6 +22,8 @@ Fotky střihů na Instagramu nebo Facebooku řeknou víc než popis. Všímejte 
 ## 3. Zeptejte se známých
 
 Doporučení od lidí, jejichž účes se vám líbí, je pořád nejspolehlivější zdroj. Klidně se zeptejte, kam chodí.
+
+![Interiér kadeřnictví s cihlovou zdí](../../assets/blog/salon-cihly.jpg)
 
 ## 4. Začněte jednodušší službou
 

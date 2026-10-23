@@ -2,7 +2,11 @@
 title: 'Barbershop, nebo kadeřnictví? V čem je rozdíl'
 description: 'Čím se liší barbershop od klasického pánského kadeřnictví, co kde dostanete a kam zajít podle toho, jaký účes nebo vousy chcete.'
 perex: 'Barbershopy jsou dnes skoro v každém větším městě. Kdy ale dává smysl zajít k barberovi a kdy je lepší klasické kadeřnictví?'
-datum: 2026-10-23
+datum: 2026-10-13
+kategorie: 'Rady a návody'
+obrazek: '../../assets/blog/barber-kreslo.jpg'
+obrazekAlt: 'Holení v barbershopu'
+obrazekAutor: 'Allef Vinicius'
 ---
 
 Ještě před patnácti lety by většina mužů v Česku zašla prostě „ke kadeřnici“. Dnes mají na výběr mezi klasickým kadeřnictvím, unisex salonem a barbershopem. Hranice mezi nimi nejsou ostré, přesto se v něčem liší.
@@ -12,6 +16,8 @@ Ještě před patnácti lety by většina mužů v Česku zašla prostě „ke k
 Barbershop navazuje na tradici holičství. Specializuje se na **pánské střihy a péči o vousy**: zastřihování a tvarování vousů, holení břitvou, horký ručník. Typické jsou krátké střihy s plynulým přechodem do ztracena (fade), práce se strojkem a precizní kontury.
 
 K barbershopu obvykle patří i atmosféra: pánské prostředí, kafe nebo pivo během čekání, často online rezervace na konkrétního barbera.
+
+![Moderní salon s černými křesly a kulatými zrcadly](../../assets/blog/salon-zrcadla.jpg)
 
 ## Co je kadeřnictví
 

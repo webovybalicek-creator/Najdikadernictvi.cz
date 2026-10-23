@@ -1,57 +1,44 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import BlogKarta from '../../components/BlogKarta.astro';
+import KategorieBlogu from '../../components/KategorieBlogu.astro';
+import { clanky } from '../../lib/blog';
 
-const clanky = (await getCollection('blog')).sort((a, b) => b.data.datum.getTime() - a.data.datum.getTime());
+const vse = await clanky();
+const hlavni = vse.find((c) => c.data.hlavni) ?? vse[0];
+const ostatni = vse.filter((c) => c.id !== hlavni.id);
 ---
 
 <Base
-  title="Rady a tipy pro návštěvu kadeřnictví a barbershopu"
-  description="Články o tom, jak vybrat kadeřníka nebo barbera, jak se připravit na návštěvu salonu a čím se liší barbershop od kadeřnictví."
+  title="Rady a tipy: střihy, barvení, péče o vlasy a vousy"
+  description="Články o pánských a dámských střizích, barvení vlasů, péči o vousy a vlasy a o tom, jak vybrat kadeřníka nebo barbera."
 >
   <div class="wrap section">
     <Breadcrumb items={[{ nazev: 'Rady a tipy' }]} />
-    <span class="eyebrow">Blog</span>
-    <h1>Rady a tipy</h1>
-    <ul class="list">
-      {
-        clanky.map((c) => (
-          <li>
-            <a href={`/blog/${c.id}/`}>
-              <h2>{c.data.title}</h2>
-            </a>
-            <p>{c.data.perex}</p>
-          </li>
-        ))
-      }
-    </ul>
+    <header class="hlava">
+      <span class="eyebrow">Blog</span>
+      <h1>Rady a <em>tipy</em></h1>
+      <p class="lead">Střihy, barvení, péče o vlasy a vousy. Prakticky a bez reklamních řečí.</p>
+      <KategorieBlogu />
+    </header>
+
+    <BlogKarta c={hlavni} velka />
+
+    <div class="grid">
+      {ostatni.map((c) => <BlogKarta c={c} />)}
+    </div>
   </div>
 </Base>
 
 <style>
-  .list {
-    list-style: none;
-    margin: 2rem 0 0;
-    padding: 0;
-    max-width: 48rem;
+  .hlava {
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
   }
-  li {
-    padding: 1.5rem 0;
-    border-bottom: 1px solid var(--line);
-  }
-  li a {
-    text-decoration: none;
-  }
-  li a:hover h2 {
-    text-decoration: underline;
-  }
-  h2 {
-    font-size: 2rem;
-    margin-bottom: 0.4rem;
-  }
-  p {
-    margin: 0;
-    color: var(--ink-soft);
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
+    gap: clamp(2rem, 4vw, 3rem) clamp(1.25rem, 3vw, 2rem);
+    margin-top: clamp(3rem, 7vw, 5rem);
   }
 </style>

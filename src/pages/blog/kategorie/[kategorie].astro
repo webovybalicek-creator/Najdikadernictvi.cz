@@ -1,0 +1,35 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import BlogKarta from '../../../components/BlogKarta.astro';
+import KategorieBlogu from '../../../components/KategorieBlogu.astro';
+import { clanky, KATEGORIE, kategorieSlug } from '../../../lib/blog';
+
+export function getStaticPaths() {
+  return KATEGORIE.map((k) => ({ params: { kategorie: kategorieSlug(k) }, props: { k } }));
+}
+
+const { k } = Astro.props as { k: (typeof KATEGORIE)[number] };
+const vse = (await clanky()).filter((c) => c.data.kategorie === k);
+---
+
+<Base title={`${k}: rady a tipy`} description={`Články v kategorii ${k}: praktické rady o střizích, barvení a péči o vlasy.`}>
+  <div class="wrap section">
+    <Breadcrumb items={[{ nazev: 'Rady a tipy', href: '/blog/' }, { nazev: k }]} />
+    <span class="eyebrow">Blog</span>
+    <h1>{k}</h1>
+    <KategorieBlogu aktivni={k} />
+    <div class="grid">
+      {vse.map((c) => <BlogKarta c={c} />)}
+    </div>
+  </div>
+</Base>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
+    gap: clamp(2rem, 4vw, 3rem) clamp(1.25rem, 3vw, 2rem);
+    margin-top: clamp(2rem, 5vw, 3.5rem);
+  }
+</style>

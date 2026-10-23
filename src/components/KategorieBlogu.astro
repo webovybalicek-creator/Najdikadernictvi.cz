@@ -1,0 +1,40 @@
+---
+import { KATEGORIE, kategorieUrl } from '../lib/blog';
+
+interface Props {
+  aktivni?: string;
+}
+const { aktivni } = Astro.props;
+---
+
+<nav class="kat" aria-label="Kategorie článků">
+  <a href="/blog/" class:list={[!aktivni && 'is-on']}>Vše</a>
+  {KATEGORIE.map((k) => <a href={kategorieUrl(k)} class:list={[aktivni === k && 'is-on']}>{k}</a>)}
+</nav>
+
+<style>
+  .kat {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+  .kat a {
+    padding: 0.4em 1em;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    text-decoration: none;
+    color: var(--ink-soft);
+    background: var(--surface);
+  }
+  .kat a:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .kat a.is-on {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+</style>

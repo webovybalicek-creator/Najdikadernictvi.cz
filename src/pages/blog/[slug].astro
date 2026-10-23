@@ -1,72 +1,278 @@
 ---
-import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import { Image, getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import Hledani from '../../components/Hledani.astro';
-import Tipy from '../../components/Tipy.astro';
+import BlogKarta from '../../components/BlogKarta.astro';
+import { clanky, kategorieUrl, casCteni, datumText, souvisejici, type Clanek } from '../../lib/blog';
 import { SITE } from '../../lib/config';
 
 export async function getStaticPaths() {
-  return (await getCollection('blog')).map((c) => ({ params: { slug: c.id }, props: { c } }));
+  const vse = await clanky();
+  return vse.map((c) => ({ params: { slug: c.id }, props: { c, vse } }));
 }
 
-const { c } = Astro.props as { c: CollectionEntry<'blog'> };
-const { Content } = await render(c);
-const datum = c.data.datum.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'long', year: 'numeric' });
+const { c, vse } = Astro.props as { c: Clanek; vse: Clanek[] };
+const { Content, headings } = await render(c);
+const obsah = headings.filter((h) => h.depth === 2);
+const dalsi = souvisejici(vse, c, 3);
+const og = await getImage({ src: c.data.obrazek, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Article',
   headline: c.data.title,
   description: c.data.description,
+  image: new URL(og.src, SITE.url).href,
   datePublished: c.data.datum.toISOString().slice(0, 10),
   inLanguage: 'cs',
+  articleSection: c.data.kategorie,
   publisher: { '@type': 'Organization', name: SITE.nazev, url: SITE.url },
 };
 ---
 
 <Base title={c.data.title} description={c.data.description} jsonLd={jsonLd}>
-  <article class="wrap section clanek">
-    <Breadcrumb items={[{ nazev: 'Rady a tipy', href: '/blog/' }, { nazev: c.data.title }]} />
-    <h1>{c.data.title}</h1>
-    <p class="clanek__datum muted"><time datetime={c.data.datum.toISOString()}>{datum}</time></p>
-    <p class="lead">{c.data.perex}</p>
-    <div class="clanek__text">
-      <Content />
+  <meta slot="head" property="og:image" content={new URL(og.src, SITE.url).href} />
+  <article>
+    <header class="wrap hlava">
+      <Breadcrumb items={[{ nazev: 'Rady a tipy', href: '/blog/' }, { nazev: c.data.kategorie, href: kategorieUrl(c.data.kategorie) }]} />
+      <p class="meta">
+        <a href={kategorieUrl(c.data.kategorie)}>{c.data.kategorie}</a>
+        <span><time datetime={c.data.datum.toISOString()}>{datumText(c.data.datum)}</time></span>
+        <span>{casCteni(c)} min čtení</span>
+      </p>
+      <h1>{c.data.title}</h1>
+      <p class="perex">{c.data.perex}</p>
+    </header>
+
+    <figure class="wrap cover">
+      <Image
+        src={c.data.obrazek}
+        alt={c.data.obrazekAlt}
+        widths={[640, 1000, 1400, 1800]}
+        sizes="(max-width: 1100px) 100vw, 1100px"
+        loading="eager"
+        fetchpriority="high"
+      />
+      <figcaption>Foto: {c.data.obrazekAutor} / Unsplash</figcaption>
+    </figure>
+
+    <div class="wrap telo">
+      <aside class="bok">
+        {
+          obsah.length > 2 && (
+            <nav class="toc" aria-label="Obsah článku">
+              <p class="toc__h">Obsah</p>
+              <ol>
+                {obsah.map((h) => (
+                  <li>
+                    <a href={`#${h.slug}`}>{h.text}</a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          )
+        }
+      </aside>
+      <div class="text">
+        <Content />
+        <aside class="cta">
+          <p class="cta__h">Najděte salon ve svém okolí</p>
+          <Hledani />
+        </aside>
+      </div>
     </div>
-    <aside class="clanek__cta">
-      <h2>Najděte salon ve svém městě</h2>
-      <Hledani />
-    </aside>
   </article>
-  <Tipy vynechat={c.id} />
+
+  <section class="dalsi">
+    <div class="wrap section">
+      <div class="sec-head">
+        <h2>Mohlo by vás zajímat</h2>
+        <a class="btn btn--ghost" href="/blog/">Všechny články</a>
+      </div>
+      <div class="dalsi__grid">
+        {dalsi.map((x) => <BlogKarta c={x} />)}
+      </div>
+    </div>
+  </section>
 </Base>
 
 <style>
-  .clanek {
-    max-width: 48rem;
+  .hlava {
+    max-width: 52rem;
+    padding-top: clamp(32px, 5vw, 56px);
+    text-align: center;
   }
-  .clanek__datum {
-    font-size: 0.9rem;
-    margin-top: -0.5rem;
+  .hlava :global(.breadcrumb ol) {
+    justify-content: center;
   }
-  .clanek__text :global(h2) {
-    font-size: 1.9rem;
-    margin-top: 2.2rem;
+  .meta {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+    margin: 0 auto 1.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
   }
-  .clanek__text :global(ul),
-  .clanek__text :global(ol) {
+  .meta a {
+    color: var(--ink);
+  }
+  .hlava h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    margin: 0 auto 1rem;
+  }
+  .perex {
+    font-size: 1.2rem;
+    color: var(--ink-soft);
+    margin: 0 auto;
+    max-width: 40rem;
+  }
+
+  .cover {
+    max-width: 72rem;
+    margin: clamp(2rem, 5vw, 3.5rem) auto;
+  }
+  .cover :global(img) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+  figcaption {
+    margin-top: 0.6rem;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    text-align: right;
+  }
+
+  .telo {
+    display: grid;
+    grid-template-columns: 14rem minmax(0, 42rem);
+    justify-content: center;
+    gap: clamp(2rem, 5vw, 4.5rem);
+    padding-bottom: clamp(48px, 8vw, 96px);
+  }
+  .bok {
+    position: relative;
+  }
+  .toc {
+    position: sticky;
+    top: 1.5rem;
+    font-size: 0.85rem;
+  }
+  .toc__h {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .toc ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 1px solid var(--line);
+  }
+  .toc li a {
+    display: block;
+    padding: 0.35rem 0 0.35rem 1rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+    line-height: 1.35;
+  }
+  .toc li a:hover {
+    color: var(--ink);
+  }
+
+  .text {
+    font-size: 1.075rem;
+    line-height: 1.75;
+  }
+  .text :global(h2) {
+    font-size: clamp(1.5rem, 2.8vw, 1.9rem);
+    font-weight: 400;
+    margin: 2.75rem 0 1rem;
+    scroll-margin-top: 1.5rem;
+  }
+  .text :global(p) {
+    max-width: none;
+  }
+  .text :global(ul),
+  .text :global(ol) {
     padding-left: 1.3rem;
+    margin: 0 0 1.25rem;
   }
-  .clanek__text :global(li) {
+  .text :global(li) {
     margin-bottom: 0.5rem;
   }
-  .clanek__cta {
-    margin-top: 3rem;
-    padding: 1.75rem;
+  .text :global(li::marker) {
+    color: var(--brass);
+  }
+  .text :global(strong) {
+    font-weight: 600;
+  }
+  .text :global(img) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: var(--radius);
+    margin: 1.5rem 0 2rem;
+  }
+  .text :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0 2rem;
+    font-size: 0.95rem;
+  }
+  .text :global(th),
+  .text :global(td) {
+    text-align: left;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .text :global(th) {
+    font-weight: 600;
+    background: var(--mint);
+  }
+  .text :global(a) {
+    text-decoration-color: var(--brass);
+  }
+
+  .cta {
+    margin-top: 3.5rem;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
     background: var(--mint);
     border-radius: var(--radius);
   }
-  .clanek__cta h2 {
-    font-size: 1.75rem;
+  .cta__h {
+    font-size: 1.4rem;
+    font-weight: 300;
+    margin: 0 0 1.25rem;
+  }
+
+  .dalsi {
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+  }
+  .dalsi__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
+    gap: 2rem;
+  }
+
+  @media (max-width: 960px) {
+    .telo {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .bok {
+      display: none;
+    }
   }
 </style>
