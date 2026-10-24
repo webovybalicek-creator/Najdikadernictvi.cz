@@ -1,18 +1,12 @@
 ---
 import Base from '../layouts/Base.astro';
 import Hledani from '../components/Hledani.astro';
-import Karta from '../components/Karta.astro';
 import Magazin from '../components/Magazin.astro';
 import { KRAJE } from '../lib/kraje';
-import { PROVOZOVNY, nejvetsiMesta, pocetVKraji, krajUrl, mestoUrl, mestaSloucena, pocetText, vyber } from '../lib/data';
+import { PROVOZOVNY, nejvetsiMesta, krajUrl, mestoUrl, pocetText } from '../lib/data';
 import { SITE } from '../lib/config';
 
 const top = nejvetsiMesta(24);
-const doporucene = vyber(PROVOZOVNY.filter((p) => p.typ === 'kadernictvi'), 8);
-const barbershopy = vyber(PROVOZOVNY.filter((p) => p.typ === 'barber'), 4);
-const pocetBarberu = PROVOZOVNY.filter((p) => p.typ === 'barber').length;
-const pocetObci = mestaSloucena().length;
-const cislo = (n: number) => n.toLocaleString('cs-CZ');
 const jsonLd = [
   {
     '@context': 'https://schema.org',
@@ -53,128 +47,21 @@ const jsonLd = [
     </div>
   </section>
 
-  <section class="section o-webu">
-    <div class="wrap o-webu__in">
-      <span class="eyebrow">O webu</span>
-      <div>
-        <p class="o-webu__text">
-          Katalog kadeřnictví a barbershopů s adresou, kontaktem a otevírací dobou na jednom místě. Bez registrace, bez
-          reklamních profilů.
-        </p>
-        <dl class="cisla">
-          <div><dt>{cislo(PROVOZOVNY.length)}</dt><dd>salonů v katalogu</dd></div>
-          <div><dt>{cislo(pocetObci)}</dt><dd>obcí a městských částí</dd></div>
-          <div><dt>{cislo(pocetBarberu)}</dt><dd>barbershopů</dd></div>
-          <div><dt>14</dt><dd>krajů celé ČR</dd></div>
-        </dl>
-      </div>
+  <section class="rychle" aria-labelledby="rychle-h">
+    <div class="wrap">
+      <h2 id="rychle-h" class="rychle__h">Nejbližší salon, který…</h2>
+      <ul class="rychle__list">
+        <li><a href="/okoli/?open=1"><strong>má otevřeno teď</strong><span>Podle otevírací doby salonů</span></a></li>
+        <li><a href="/okoli/?typ=1"><strong>je barbershop</strong><span>Střih, fade a úprava vousů</span></a></li>
+        <li><a href="/okoli/?sobota=1"><strong>má otevřeno v sobotu</strong><span>Když přes týden nestíháte</span></a></li>
+        <li><a href="/okoli/?detske=1"><strong>stříhá děti</strong><span>Salony s dětskými střihy</span></a></li>
+      </ul>
+      <p class="rychle__pozn">Použijeme vaši polohu jen v prohlížeči, nikam ji neukládáme.</p>
     </div>
   </section>
+
 
   <Magazin />
-
-  {
-    doporucene.length > 0 && (
-      <section class="section">
-        <div class="wrap">
-          <div class="sec-head">
-            <div>
-              <h2>Salony s kompletními údaji</h2>
-              <p class="muted">Otevírací doba, telefon i web na jednom místě.</p>
-            </div>
-            <a class="btn" href="/kraje/">Všechny salony</a>
-          </div>
-          <ul class="karty">
-            {doporucene.map((p) => <Karta p={p} />)}
-          </ul>
-        </div>
-      </section>
-    )
-  }
-
-  {
-    barbershopy.length > 0 && (
-      <section class="section alt">
-        <div class="wrap">
-          <div class="sec-head">
-            <div>
-              <h2>Barbershopy</h2>
-              <p class="muted">Střih, fade a péče o vousy.</p>
-            </div>
-          </div>
-          <ul class="karty">
-            {barbershopy.map((p) => <Karta p={p} />)}
-          </ul>
-        </div>
-      </section>
-    )
-  }
-
-  <section class="section">
-    <div class="wrap dva">
-      <span class="eyebrow">Podle města</span>
-      <div>
-        <h2>Největší města</h2>
-        <ul class="mesta">
-          {
-            top.map((m) =>
-              m.obvody ? (
-                <li class="mesta__praha">
-                  <details>
-                    <summary>
-                      <span>{m.nazev}</span>
-                      <span class="muted">{m.provozovny.length}</span>
-                    </summary>
-                    <ul>
-                      <li>
-                        <a href={mestoUrl(m.slug)}>
-                          <span>Celá Praha</span>
-                        </a>
-                      </li>
-                      {m.obvody.map((o) => (
-                        <li>
-                          <a href={mestoUrl(o.slug)}>
-                            <span>{o.nazev}</span>
-                            <span class="muted">{o.provozovny.length}</span>
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </details>
-                </li>
-              ) : (
-                <li>
-                  <a href={mestoUrl(m.slug)}>
-                    <span>{m.nazev}</span>
-                    <span class="muted">{m.provozovny.length}</span>
-                  </a>
-                </li>
-              ),
-            )
-          }
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <section class="section alt">
-    <div class="wrap dva">
-      <span class="eyebrow">Celá ČR</span>
-      <div>
-        <h2>Podle kraje</h2>
-        <ol class="kraje">
-          {
-            KRAJE.map((k) => (
-              <li>
-                <a href={krajUrl(k.slug)}>{k.nazev}</a>
-                <span class="muted">{pocetVKraji(k.slug)}</span>
-              </li>
-            ))
-          }
-        </ol>
-      </div>
-    </div>
-  </section>
 
   <section class="section majitel">
     <div class="wrap">
@@ -184,10 +71,132 @@ const jsonLd = [
       <a class="btn" href="/pridat-provozovnu/">Přidat nebo upravit salon</a>
     </div>
   </section>
+
+  <nav class="rozcestnik" aria-label="Kadeřnictví podle měst a krajů">
+    <div class="wrap">
+      <p class="rozcestnik__h">Kadeřnictví podle měst</p>
+      <ul>
+        {top.map((m) => <li><a href={mestoUrl(m.slug)}>{m.nazev}</a></li>)}
+        <li><a href="/kraje/">Všechna města →</a></li>
+      </ul>
+      <p class="rozcestnik__h">Podle krajů</p>
+      <ul>
+        {KRAJE.map((k) => <li><a href={krajUrl(k.slug)}>{k.nazev}</a></li>)}
+      </ul>
+    </div>
+  </nav>
 </Base>
 
 
 <style>
+  .rychle {
+    padding: clamp(32px, 5vw, 56px) 0 0;
+  }
+  .rychle__h {
+    font-size: clamp(1.4rem, 3vw, 1.9rem);
+    margin: 0 0 1rem;
+  }
+  .rychle__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+  .rychle__list a {
+    display: block;
+    height: 100%;
+    padding: 1.1rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--ink);
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .rychle__list a:hover {
+    border-color: var(--ink);
+    transform: translateY(-2px);
+  }
+  .rychle__list strong {
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 500;
+  }
+  .rychle__list span {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+  }
+  .rychle__pozn {
+    margin: 0.75rem 0 0;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+  @media (max-width: 860px) {
+    .rychle__list {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 640px) {
+    .hero {
+      padding: 28px 0 32px !important;
+    }
+    .hero h1 {
+      font-size: 2.5rem !important;
+      margin-bottom: 0.75rem !important;
+    }
+    .hero__sub {
+      font-size: 0.95rem !important;
+      margin-bottom: 1.25rem !important;
+    }
+    .hero__mesta li:nth-child(n + 7) {
+      display: none;
+    }
+    .rychle {
+      padding-top: 24px;
+    }
+    .rychle__list a {
+      padding: 0.85rem 1rem;
+    }
+    .rychle__list span {
+      display: none;
+    }
+  }
+  .rozcestnik {
+    padding: 2rem 0 2.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+  }
+  .rozcestnik__h {
+    margin: 0 0 0.4rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .rozcestnik ul {
+    list-style: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+  }
+  .rozcestnik ul:last-child {
+    margin-bottom: 0;
+  }
+  .rozcestnik a {
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  .rozcestnik a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
   .hero {
     padding: clamp(56px, 11vw, 140px) 0 clamp(56px, 9vw, 112px);
     text-align: center;
