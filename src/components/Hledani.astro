@@ -133,18 +133,21 @@
 
 <style>
   .srch {
+    --srch-h: 3.25rem;
     position: relative;
     display: flex;
+    align-items: center;
     gap: 0.5rem;
     max-width: 40rem;
   }
   input {
     flex: 1;
     min-width: 0;
+    height: var(--srch-h);
     font: 400 1.05rem/1.2 var(--f-text);
-    padding: 1.05em 1.2em;
+    padding: 0 1.2em;
     border-radius: var(--radius);
-    border: 1px solid var(--line);
+    border: 1px solid #cfc7b9;
     background: #fff;
     color: var(--ink);
     box-shadow: 0 1px 2px rgb(38 36 31 / 0.04);
@@ -158,14 +161,17 @@
     border-color: var(--ink);
   }
   .btn {
-    padding-inline: 1.8em;
+    height: var(--srch-h);
+    padding: 0 1.8em;
+    justify-content: center;
   }
   .srch__geo {
     display: inline-flex;
     align-items: center;
     gap: 0.4em;
     padding: 0 1em;
-    border: 1px solid var(--line);
+    height: var(--srch-h);
+    border: 1px solid #cfc7b9;
     border-radius: var(--radius);
     background: #fff;
     font-size: 0.85rem;
@@ -188,7 +194,6 @@
     .btn {
       flex: 1;
       justify-content: center;
-      padding-block: 0.8em;
     }
   }
   .srch__res {
