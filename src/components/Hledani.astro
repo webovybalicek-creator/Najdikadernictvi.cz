@@ -101,7 +101,7 @@
                 .map((s) => {
                   const mono = esc(s[0].replace(/^(kadeřnictví|barbershop|barber|salon|studio)\s+/i, '').slice(0, 2).toUpperCase());
                   const foto = s[5] ?? `/api/panorama.php?lat=${s[3]}&lon=${s[4]}&s=maly&v=2`;
-                  return `<a role="option" class="srch__salon" href="${s[1]}"><span class="srch__th"><b>${mono}</b><img src="${foto}" alt="" loading="lazy" onload="this.classList.add('ok')" onerror="this.remove()"></span><span class="srch__txt"><span>${esc(s[0])}</span><small>${esc(s[2])}</small></span></a>`;
+                  return `<a role="option" class="srch__salon" href="${s[1]}"><span class="srch__th"><b>${mono}</b><img src="${foto}" alt="" loading="lazy" onload="this.classList.add('ok')" onerror="this.parentNode.classList.add('bez');this.remove()"></span><span class="srch__txt"><span>${esc(s[0])}</span><small>${esc(s[2])}</small></span></a>`;
                 })
                 .join('') +
               `<p class="srch__atr">Náhledy z ulice © Mapy.com</p>`
@@ -263,14 +263,21 @@
     height: 2.75rem;
     border-radius: 10px;
     overflow: hidden;
-    background: var(--accent-soft);
+    background: #f1f1f3;
     display: grid;
     place-items: center;
   }
   .srch__res :global(.srch__th b) {
+    display: none;
     font-size: 0.8rem;
     font-weight: 600;
     color: #c2410c;
+  }
+  .srch__res :global(.srch__th.bez) {
+    background: var(--accent-soft);
+  }
+  .srch__res :global(.srch__th.bez b) {
+    display: block;
   }
   .srch__res :global(.srch__th img) {
     position: absolute;

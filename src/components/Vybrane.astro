@@ -82,6 +82,9 @@ const mestaSVyberem = mesta.filter((m) => pool.some((x) => x.m === m.slug));
 
 <style>
   .vyb {
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
     padding: clamp(32px, 5vw, 56px) 0 0;
   }
   .vyb__hlava {

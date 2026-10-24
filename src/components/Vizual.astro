@@ -34,7 +34,7 @@ const mono = (slova.length > 1 ? slova[0][0] + slova[1][0] : (slova[0] ?? p.naze
 const id = `v-${p.id}`;
 ---
 
-<div class:list={['viz', velky && 'viz--velky']} style={`--bg:${bg};--fg:${fg}`} aria-hidden="true">
+<div class:list={['viz', velky && 'viz--velky', (panorama || vlastni) && 'viz--foto']} style={`--bg:${bg};--fg:${fg}`} aria-hidden="true">
   <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
     <defs>
       {
@@ -63,7 +63,7 @@ const id = `v-${p.id}`;
         loading="lazy"
         decoding="async"
         onload="this.classList.add('ok')"
-        onerror="this.remove()"
+        onerror="this.parentNode.classList.remove('viz--foto');this.remove()"
       />
     )
   }
@@ -111,6 +111,14 @@ const id = `v-${p.id}`;
   }
   .viz__foto.ok {
     opacity: 1;
+  }
+  /* Dokud se fotka načítá: jen neutrální šedé pozadí, bez monogramu (ten jen když fotka není) */
+  .viz--foto {
+    background: #f1f1f3;
+  }
+  .viz--foto svg,
+  .viz--foto .viz__mono {
+    display: none;
   }
   .viz--velky .viz__mono {
     font-size: clamp(4rem, 12vw, 7.5rem);
