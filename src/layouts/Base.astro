@@ -24,7 +24,7 @@ const og = {
   h: obrazek?.h ?? 630,
 };
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
-const robots = !SITE.indexovat || noindex ? 'noindex, nofollow' : 'index, follow';
+const robots = !SITE.indexovat || noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large';
 const fullTitle = title.includes(SITE.nazev) ? title : `${title} | ${SITE.nazev}`;
 ---
 
