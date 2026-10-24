@@ -35,6 +35,7 @@ import Hledani from '../components/Hledani.astro';
 
 <script>
   import { stav } from '../scripts/stav';
+  import { nactiObdelnik } from '../scripts/dlazdice';
 
   type Zaznam = [number, number, string, string, string, 0 | 1, [number, number][][] | 0];
   const elStav = document.querySelector<HTMLElement>('[data-stav]')!;
@@ -85,7 +86,7 @@ import Hledani from '../components/Hledani.astro';
 
   async function start(lat: number, lon: number) {
     elStav.textContent = 'Hledám nejbližší salony…';
-    const data: Zaznam[] = await (await fetch('/okoli.json')).json();
+    const data = (await nactiObdelnik(lat - 0.5, lon - 0.8, lat + 0.5, lon + 0.8)) as Zaznam[];
     serazene = data
       .filter((z) => Math.abs(z[0] - lat) < 0.5 && Math.abs(z[1] - lon) < 0.8)
       .map((z) => ({ z, d: km(lat, lon, z[0], z[1]) }))

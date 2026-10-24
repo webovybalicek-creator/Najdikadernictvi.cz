@@ -1,4 +1,8 @@
-# Soubory v /_astro/ mají v názvu hash obsahu → lze je cachovat natrvalo
+# Soubory sestavené Astrem mají v názvu otisk obsahu → při změně vznikne nový soubor, lze je cachovat napořád.
 <IfModule mod_headers.c>
   Header set Cache-Control "public, max-age=31536000, immutable"
+</IfModule>
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 year"
 </IfModule>

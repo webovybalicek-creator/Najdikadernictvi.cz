@@ -1,18 +1,20 @@
 <?php
 /**
- * Jednorázový rozbalovač deploye. GitHub Action do něj před nahráním doplní hash tokenu
- * a název ZIPu, nahraje ho pod náhodným jménem, zavolá a skript se po dokončení sám smaže.
+ * Jednorázový rozbalovač přírůstkového deploye. GitHub Action do něj doplní hash tokenu a název ZIPu,
+ * nahraje ho pod náhodným jménem a volá ve dvou krocích:
+ *   akce=manifest  → vrátí seznam souborů s otisky z minulého deploye („cesta<TAB>md5“)
+ *   akce=rozbalit  → rozbalí ZIP se změněnými soubory, smaže soubory, které v novém deployi nejsou,
+ *                    uloží nový manifest a smaže ZIP i sám sebe
  */
 declare(strict_types=1);
 
 const TOKEN_HASH = '__TOKEN_HASH__';
 const ZIP_NAME = '__ZIP_NAME__';
 const MANIFEST = '.deploy-manifest.txt';
+const NOVY_MANIFEST = '.deploy-manifest-new.txt';
 
 header('Content-Type: text/plain; charset=utf-8');
 $root = __DIR__;
-$self = __FILE__;
-$zipPath = $root . '/' . ZIP_NAME;
 
 function konec(int $code, string $msg): void
 {
@@ -25,45 +27,44 @@ $token = $_SERVER['HTTP_X_DEPLOY_TOKEN'] ?? '';
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !hash_equals(TOKEN_HASH, hash('sha256', $token))) {
     konec(404, 'Not found');
 }
+$akce = $_POST['akce'] ?? $_GET['akce'] ?? 'rozbalit';
+$bezpecna = fn(string $p): bool => $p !== '' && !str_contains($p, '..') && !str_starts_with($p, '/');
+
+if ($akce === 'manifest') {
+    $m = $root . '/' . MANIFEST;
+    echo is_file($m) ? file_get_contents($m) : '';
+    exit;
+}
 
 @set_time_limit(0);
 @ignore_user_abort(true);
-
-if (!class_exists('ZipArchive')) {
-    konec(500, 'CHYBA: PHP nemá rozšíření ZipArchive');
-}
+if (!class_exists('ZipArchive')) konec(500, 'CHYBA: PHP nemá rozšíření ZipArchive');
 $zip = new ZipArchive();
-if ($zip->open($zipPath) !== true) {
-    konec(500, 'CHYBA: nelze otevřít ZIP');
-}
-
-$nove = [];
+if ($zip->open($root . '/' . ZIP_NAME) !== true) konec(500, 'CHYBA: nelze otevřít ZIP');
 for ($i = 0; $i < $zip->numFiles; $i++) {
-    $name = $zip->getNameIndex($i);
-    if ($name === false || str_contains($name, '..') || str_starts_with($name, '/')) {
-        konec(500, 'CHYBA: neplatná cesta v ZIPu');
-    }
-    if (!str_ends_with($name, '/')) {
-        $nove[$name] = true;
-    }
+    $name = (string)$zip->getNameIndex($i);
+    if (!$bezpecna($name)) konec(500, 'CHYBA: neplatná cesta v ZIPu');
 }
-
-if (!$zip->extractTo($root)) {
-    konec(500, 'CHYBA: rozbalení selhalo');
-}
+$zmeneno = $zip->numFiles - 1;
+if (!$zip->extractTo($root)) konec(500, 'CHYBA: rozbalení selhalo');
 $zip->close();
 
-// Smazání souborů z minulého deploye, které v novém už nejsou
+// Nový manifest: všechny soubory nového deploye (i nezměněné)
+$novy = [];
+$novyText = (string)@file_get_contents($root . '/' . NOVY_MANIFEST);
+foreach (preg_split('/\R/', $novyText, -1, PREG_SPLIT_NO_EMPTY) as $r) {
+    $novy[explode("\t", $r)[0]] = true;
+}
+if (count($novy) < 100) konec(500, 'CHYBA: nový manifest chybí nebo je neúplný, nic se nemaže');
+
 $smazano = 0;
 if (is_file($root . '/' . MANIFEST)) {
-    foreach (file($root . '/' . MANIFEST, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $old) {
-        if (isset($nove[$old]) || str_contains($old, '..') || str_starts_with($old, '/')) {
-            continue;
-        }
+    foreach (file($root . '/' . MANIFEST, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $r) {
+        $old = explode("\t", $r)[0];
+        if (isset($novy[$old]) || !$bezpecna($old)) continue;
         $p = $root . '/' . $old;
         if (is_file($p) && @unlink($p)) {
             $smazano++;
-            // prázdné složky po smazaném souboru
             $dir = dirname($p);
             while ($dir !== $root && is_dir($dir) && count(scandir($dir)) === 2) {
                 @rmdir($dir);
@@ -72,8 +73,7 @@ if (is_file($root . '/' . MANIFEST)) {
         }
     }
 }
-file_put_contents($root . '/' . MANIFEST, implode("\n", array_keys($nove)) . "\n");
-
-@unlink($zipPath);
-@unlink($self);
-echo 'OK: ' . count($nove) . ' souborů, smazáno ' . $smazano . "\n";
+rename($root . '/' . NOVY_MANIFEST, $root . '/' . MANIFEST);
+@unlink($root . '/' . ZIP_NAME);
+@unlink(__FILE__);
+echo 'OK: změněno ' . $zmeneno . ' z ' . count($novy) . ' souborů, smazáno ' . $smazano . "\n";

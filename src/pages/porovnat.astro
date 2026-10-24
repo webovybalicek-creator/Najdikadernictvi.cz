@@ -22,6 +22,7 @@ import Breadcrumb from '../components/Breadcrumb.astro';
 <script>
   import { porovnani, odeberZPorovnani } from '../scripts/oblibene';
   import { stav } from '../scripts/stav';
+  import { dlazdice, klic } from '../scripts/dlazdice';
 
   type Z = [number, number, string, string, string, 0 | 1, [number, number][][] | 0, 0 | 1, string, 0 | 1, 0 | 1];
   const DNY = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
@@ -42,7 +43,10 @@ import Breadcrumb from '../components/Breadcrumb.astro';
 
   (async () => {
   const [index, hod] = await Promise.all([
-    fetch('/okoli.json').then((r) => r.json() as Promise<Z[]>),
+    // jen dlaždice, ve kterých porovnávané salony leží (ne celý katalog)
+    Promise.all([...new Set(porovnani().filter((s) => s.la && s.lo).map((s) => klic(s.la!, s.lo!)))].map(dlazdice)).then(
+      (t) => t.flat() as Z[],
+    ),
     fetch('/api/hodnoceni.php?souhrn=1')
       .then((r) => (r.ok ? r.json() : {}))
       .catch(() => ({})) as Promise<Record<string, [number, number]>>,

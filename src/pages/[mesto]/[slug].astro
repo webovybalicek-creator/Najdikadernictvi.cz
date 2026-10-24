@@ -21,8 +21,11 @@ import {
   mesta,
   pocetText,
   indexovatDetail,
+  ctvrtSalonu,
+  ctvrtUrl,
   type Provozovna,
 } from '../../lib/data';
+import { zameryMesta, zamerUrl } from '../../lib/seo-mesto';
 import { KRAJE } from '../../lib/kraje';
 import { DNY, denText, souhrn, schemaSpec } from '../../lib/oteviraci-doba';
 import { SITE } from '../../lib/config';
@@ -92,6 +95,10 @@ const breadcrumb = [
   { nazev: p.mesto, href: mestoUrl(p.mestoSlug) },
   { nazev: p.nazev },
 ];
+// Vnitřní odkazy: čtvrť a výběry ve městě, do kterých salon patří
+const mestoObj = mesta().find((x) => x.slug === p.mestoSlug)!; // (mesta() je cachované)
+const ctvrt = ctvrtSalonu(p);
+const vybery = zameryMesta(mestoObj).filter(({ ids }) => ids.has(p.id));
 const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
 ---
 
@@ -247,9 +254,11 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
               <ProvozovnaRadek p={o} vzdalenost={km} sMestem={o.mesto !== p.mesto} />
             ))}
           </ul>
-          <p>
-            <a href={mestoUrl(p.mestoSlug)}>Všechna kadeřnictví: {p.mesto}</a>
-          </p>
+          <ul class="souvis">
+            <li><a href={mestoUrl(p.mestoSlug)}>Všechna kadeřnictví: {p.mesto}</a></li>
+            {ctvrt && <li><a href={ctvrtUrl(ctvrt)}>Kadeřnictví {p.mesto} – {ctvrt.nazev}</a></li>}
+            {vybery.map(({ z }) => <li><a href={zamerUrl(z, p.mestoSlug)}>{z.nazev(p.mesto)}</a></li>)}
+          </ul>
         </section>
       )
     }
@@ -470,6 +479,14 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
     margin: 0 0 1rem;
     padding: 0;
     border-top: 1px solid var(--line);
+  }
+  .souvis {
+    list-style: none;
+    padding: 0;
+    margin: 1.25rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
   }
   .galerie {
     list-style: none;

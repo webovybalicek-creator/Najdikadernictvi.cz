@@ -1,26 +1,14 @@
 import type { APIRoute } from 'astro';
-import { getCollection } from 'astro:content';
-import { KRAJE } from '../lib/kraje';
-import { PROVOZOVNY, mesta, url, mestoUrl, krajUrl, indexovatDetail, vsechnyCtvrti, ctvrtUrl } from '../lib/data';
 import { SITE } from '../lib/config';
-import { KATEGORIE, kategorieUrl } from '../lib/blog';
-import { zameryMesta, zamerUrl } from '../lib/seo-mesto';
+import { IMPORT_META } from '../lib/data';
+import { CASTI } from '../lib/sitemap';
 
-// Vlastní sitemap: obsahuje jen stránky, které chceme indexovat (bez detailů salonů jen z rejstříku)
-export const GET: APIRoute = async () => {
-  const cesty = new Set<string>(['/', '/kraje/', '/mapa/', '/blog/', '/o-webu/', '/kontakt/', '/pridat-provozovnu/', '/pro-salony/', '/ochrana-osobnich-udaju/', '/podminky-uziti/']);
-  for (const k of KRAJE) cesty.add(krajUrl(k.slug));
-  for (const m of mesta()) {
-    cesty.add(mestoUrl(m.slug));
-    for (const { z } of zameryMesta(m)) cesty.add(zamerUrl(z, m.slug));
-  }
-  for (const c of vsechnyCtvrti()) cesty.add(ctvrtUrl(c));
-  for (const p of PROVOZOVNY) if (indexovatDetail(p)) cesty.add(url(p));
-  for (const c of await getCollection('blog')) cesty.add(`/blog/${c.id}/`);
-  for (const k of KATEGORIE) cesty.add(kategorieUrl(k));
+// Index sitemap: jednotlivé části zvlášť, ať je v Search Console vidět indexace podle typu stránek
+export const GET: APIRoute = () => {
+  const lastmod = new Date(IMPORT_META.importovano).toISOString().slice(0, 10);
   const body =
-    '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-    [...cesty].map((c) => `<url><loc>${new URL(c, SITE.url).href}</loc></url>`).join('\n') +
-    '\n</urlset>\n';
+    '<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+    CASTI.map((c) => `<sitemap><loc>${SITE.url}/sitemap-${c}.xml</loc><lastmod>${lastmod}</lastmod></sitemap>`).join('\n') +
+    '\n</sitemapindex>\n';
   return new Response(body, { headers: { 'Content-Type': 'application/xml' } });
 };

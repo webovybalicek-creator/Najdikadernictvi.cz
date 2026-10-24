@@ -7,6 +7,7 @@ import Hledani from '../../components/Hledani.astro';
 import BlogKarta from '../../components/BlogKarta.astro';
 import { clanky, kategorieUrl, casCteni, datumText, souvisejici, type Clanek } from '../../lib/blog';
 import { SITE } from '../../lib/config';
+import { nejvetsiMesta, mestoUrl } from '../../lib/data';
 
 export async function getStaticPaths() {
   const vse = await clanky();
@@ -86,6 +87,9 @@ const jsonLd = {
         <aside class="cta">
           <p class="cta__h">Najděte salon ve svém okolí</p>
           <Hledani />
+          <ul class="cta__mesta">
+            {nejvetsiMesta(12).map((m) => <li><a href={mestoUrl(m.slug)}>{m.nazev}</a></li>)}
+          </ul>
         </aside>
       </div>
     </div>
@@ -263,6 +267,15 @@ const jsonLd = {
     margin: 0 0 1.25rem;
   }
 
+  .cta__mesta {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1rem;
+    font-size: 0.9rem;
+  }
   .dalsi {
     background: var(--surface);
     border-top: 1px solid var(--line);

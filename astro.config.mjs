@@ -6,6 +6,6 @@ export default defineConfig({
   build: {
     format: 'directory',
     // CSS jako sdílený soubor (cache v prohlížeči) místo vkládání do každé z tisíců stránek
-    inlineStylesheets: 'never',
+    inlineStylesheets: 'auto',
   },
 });

@@ -38,9 +38,18 @@
       .replace(/[̀-ͯ]/g, '')
       .toLowerCase();
 
+  let nacitani: Promise<{ m: Mesto[]; s: Salon[] }> | null = null;
   async function nacti() {
-    if (!index) index = await (await fetch('/hledat.json')).json();
-    return index!;
+    if (index) return index;
+    nacitani ??= fetch('/hledat.json')
+      .then((r) => r.json())
+      .then((d: { m: Mesto[]; s: [string, string, number][] }) => ({
+        m: d.m,
+        // rozbalení kompaktního formátu: [název, slug, index města] → [název, url, město]
+        s: d.s.map(([n, slug, i]) => [n, `${d.m[i][1]}${slug}/`, d.m[i][0]] as Salon),
+      }));
+    index = await nacitani;
+    return index;
   }
 
   function vyhledej(q: string, idx: { m: Mesto[]; s: Salon[] }) {

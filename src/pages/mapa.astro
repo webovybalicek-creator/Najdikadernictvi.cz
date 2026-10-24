@@ -42,6 +42,7 @@ import Base from '../layouts/Base.astro';
 <script>
   import 'leaflet/dist/leaflet.css';
   import { stav } from '../scripts/stav';
+  import { body, dlazdice, klic, nactiObdelnik, P } from '../scripts/dlazdice';
 
   type Z = [number, number, string, string, string, 0 | 1, [number, number][][] | 0, 0 | 1, string, 0 | 1, 0 | 1];
   const el = document.querySelector<HTMLElement>('[data-mapa-plocha]')!;
@@ -52,7 +53,8 @@ import Base from '../layouts/Base.astro';
 
   (async () => {
     const L = (await import('leaflet')).default;
-    const data: Z[] = await (await fetch('/okoli.json')).json();
+    const plocha = await body();
+    const PODROBNE = 10; // od tohoto přiblížení se načítají celé údaje (dlaždice)
 
     const q = new URLSearchParams(location.search);
     const map = L.map(el, { preferCanvas: true, zoomControl: true }).setView(
@@ -66,43 +68,83 @@ import Base from '../layouts/Base.astro';
     const renderer = L.canvas({ padding: 0.3 });
     const vrstva = L.layerGroup().addTo(map);
 
-    const filtr = (z: Z) => {
+    const volby = () => {
       const fd = new FormData(form);
-      const typ = String(fd.get('typ') ?? '');
-      if (typ !== '' && String(z[5]) !== typ) return false;
-      if (fd.get('detske') && !z[7]) return false;
-      if (fd.get('bezbar') && !z[9]) return false;
-      if (fd.get('karta') && !z[10]) return false;
-      if (fd.get('sobota') && !(z[6] && z[6][5].length)) return false;
-      if (fd.get('nedele') && !(z[6] && z[6][6].length)) return false;
-      if (fd.get('ted') && !(z[6] && stav(z[6]).open)) return false;
-      return true;
+      return {
+        typ: String(fd.get('typ') ?? ''),
+        maska:
+          (fd.get('detske') ? P.detske : 0) |
+          (fd.get('bezbar') ? P.bezbar : 0) |
+          (fd.get('karta') ? P.karta : 0) |
+          (fd.get('sobota') ? P.sobota : 0) |
+          (fd.get('nedele') ? P.nedele : 0),
+        ted: !!fd.get('ted'),
+      };
     };
+    const vlajky = (z: Z) =>
+      (z[5] ? P.barber : 0) | (z[7] ? P.detske : 0) | (z[9] ? P.bezbar : 0) | (z[10] ? P.karta : 0) |
+      (z[6] && z[6][5].length ? P.sobota : 0) | (z[6] && z[6][6].length ? P.nedele : 0);
+    const vyhovuje = (f: number, v: ReturnType<typeof volby>) =>
+      (v.typ === '' || String(f & P.barber ? 1 : 0) === v.typ) && (f & v.maska) === v.maska;
 
     const polomer = () => (map.getZoom() < 9 ? 2.5 : map.getZoom() < 12 ? 4 : 6);
-    let vybrane: Z[] = [];
-    function vykresliBody() {
-      vybrane = data.filter(filtr);
-      vrstva.clearLayers();
-      for (const z of vybrane) {
-        L.circleMarker([z[0], z[1]], {
-          renderer,
-          radius: polomer(),
-          weight: polomer() < 3 ? 0.5 : 1.5,
-          color: '#ffffff',
-          fillColor: z[5] ? '#26241f' : '#786b5c',
-          fillOpacity: 1,
-        })
-          .bindPopup(`<a href="${z[3]}"><strong>${esc(z[2])}</strong></a><br>${esc(z[4])}`)
-          .addTo(vrstva);
+    const znacka = (lat: number, lon: number, barber: boolean) =>
+      L.circleMarker([lat, lon], {
+        renderer,
+        radius: polomer(),
+        weight: polomer() < 3 ? 0.5 : 1.5,
+        color: '#ffffff',
+        fillColor: barber ? '#26241f' : '#786b5c',
+        fillOpacity: 1,
+      });
+    const popup = (z: Z) => `<a href="${z[3]}"><strong>${esc(z[2])}</strong></a><br>${esc(z[4])}`;
+
+    let zaznamy: Z[] = [];
+    let beh = 0;
+    async function vykresli() {
+      const my = ++beh;
+      const v = volby();
+      const b = map.getBounds();
+      const podrobne = map.getZoom() >= PODROBNE;
+      if (podrobne) {
+        const vse = (await nactiObdelnik(b.getSouth(), b.getWest(), b.getNorth(), b.getEast())) as Z[];
+        if (my !== beh) return;
+        zaznamy = vse.filter((z) => vyhovuje(vlajky(z), v) && (!v.ted || (z[6] && stav(z[6]).open)));
+        vrstva.clearLayers();
+        for (const z of zaznamy) znacka(z[0], z[1], !!z[5]).bindPopup(popup(z)).addTo(vrstva);
+        vykresliSeznam();
+        return;
       }
-      vykresliSeznam();
+      // Oddálená mapa: jen lehké body z přehledu, údaje se dočtou po kliknutí
+      zaznamy = [];
+      vrstva.clearLayers();
+      let n = 0;
+      if (!v.ted) {
+        for (let i = 0; i < plocha.length; i += 3) {
+          const f = plocha[i + 2];
+          if (!vyhovuje(f, v)) continue;
+          const lat = plocha[i];
+          const lon = plocha[i + 1];
+          if (b.contains([lat, lon])) n++;
+          znacka(lat, lon, !!(f & P.barber))
+            .on('click', async (e) => {
+              const t = (await dlazdice(klic(lat, lon))) as Z[];
+              const z = t.find((x) => x[0] === lat && x[1] === lon);
+              if (z) L.popup().setLatLng(e.latlng).setContent(popup(z)).openOn(map);
+            })
+            .addTo(vrstva);
+        }
+      }
+      seznam.innerHTML = '';
+      pocet.textContent = v.ted
+        ? 'Filtr „Otevřeno teď“ funguje po přiblížení mapy na město.'
+        : `${n.toLocaleString('cs-CZ')} salonů ve výřezu mapy. Přibližte mapu a uvidíte jejich seznam.`;
     }
 
     function vykresliSeznam() {
       const b = map.getBounds();
       const c = map.getCenter();
-      const vVyrezu = vybrane.filter((z) => b.contains([z[0], z[1]]));
+      const vVyrezu = zaznamy.filter((z) => b.contains([z[0], z[1]]));
       pocet.textContent = vVyrezu.length
         ? `${vVyrezu.length.toLocaleString('cs-CZ')} salonů ve výřezu mapy${vVyrezu.length > 40 ? ' · nejbližší ke středu:' : ''}`
         : 'Ve výřezu mapy nic není. Posuňte nebo oddalte mapu, případně upravte filtry.';
@@ -117,18 +159,25 @@ import Base from '../layouts/Base.astro';
         .join('');
     }
 
-    form.addEventListener('input', vykresliBody);
-    let posledniPolomer = polomer();
-    map.on('zoomend', () => {
-      if (polomer() !== posledniPolomer) {
-        posledniPolomer = polomer();
-        vykresliBody();
-      }
-    });
+    form.addEventListener('input', vykresli);
+    let posledni = '';
+    const stavMapy = () => (map.getZoom() >= PODROBNE ? 'podrobne' : `prehled-${polomer()}`);
     map.on('moveend', () => {
-      vykresliSeznam();
       const c = map.getCenter();
       history.replaceState(null, '', `?lat=${c.lat.toFixed(4)}&lon=${c.lng.toFixed(4)}&z=${map.getZoom()}`);
+      const st = stavMapy();
+      // Přiblížená mapa: při každém posunu dočíst dlaždice. Oddálená: překreslit jen při změně velikosti bodů.
+      if (st === 'podrobne' || st !== posledni) {
+        posledni = st;
+        vykresli();
+        return;
+      }
+      const v = volby();
+      if (v.ted) return;
+      const bb = map.getBounds();
+      let n = 0;
+      for (let i = 0; i < plocha.length; i += 3) if (vyhovuje(plocha[i + 2], v) && bb.contains([plocha[i], plocha[i + 1]])) n++;
+      pocet.textContent = `${n.toLocaleString('cs-CZ')} salonů ve výřezu mapy. Přibližte mapu a uvidíte jejich seznam.`;
     });
     document.querySelector('[data-poloha]')!.addEventListener('click', () => {
       navigator.geolocation?.getCurrentPosition(
@@ -137,7 +186,8 @@ import Base from '../layouts/Base.astro';
         { timeout: 15000, maximumAge: 300000 },
       );
     });
-    vykresliBody();
+    posledni = stavMapy();
+    vykresli();
   })();
 </script>
 

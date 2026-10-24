@@ -53,6 +53,8 @@ const uvod = textMesta(m, st);
 const faq = faqMesta(m, st);
 const zamery = zameryMesta(m);
 const castiMesta = ctvrti(m);
+/** Kolik salonů ukázat hned, zbytek po kliknutí (celý seznam je v HTML kvůli vyhledávačům) */
+const ZOBRAZIT = 60;
 const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length > 1 ? [faqJsonLd(faq)] : [])];
 ---
 
@@ -135,9 +137,18 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
       )
     }
 
-    <ul class="seznam" data-seznam>
+    <ul class:list={['seznam', vse.length > ZOBRAZIT && 'zkraceny']} data-seznam style={`--zobrazit:${ZOBRAZIT}`}>
       {vse.map((p, i) => <ProvozovnaRadek p={p} nahled={i < 30} />)}
     </ul>
+    {
+      vse.length > ZOBRAZIT && (
+        <p class="dalsi-btn" data-dalsi-wrap>
+          <button type="button" class="btn btn--ghost" data-dalsi>
+            Zobrazit všech {pocetText(vse.length, 'salon', 'salony', 'salonů')}
+          </button>
+        </p>
+      )
+    }
     <p class="prazdno" data-prazdno hidden>Žádný salon neodpovídá filtrům. Zkuste některý filtr vypnout.</p>
 
     {
@@ -202,8 +213,17 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
       if (ok) n++;
     }
     if (pocet) pocet.textContent = n === rows.length ? '' : `Zobrazeno ${n} z ${rows.length}`;
+    if (n !== rows.length) rozbal();
     if (prazdno) prazdno.hidden = n > 0;
   }
+  // Zkrácený výpis velkých měst
+  function rozbal() {
+    document.querySelector('[data-seznam]')?.classList.remove('zkraceny');
+    const w = document.querySelector<HTMLElement>('[data-dalsi-wrap]');
+    if (w) w.hidden = true;
+  }
+  document.querySelector('[data-dalsi]')?.addEventListener('click', rozbal);
+
   // Řazení výpisu
   const seznamEl = document.querySelector<HTMLElement>('[data-seznam]');
   rows.forEach((r, i) => (r.dataset.poradi = String(i)));
@@ -402,6 +422,18 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
     margin: 0;
     padding: 0;
     border-top: 1px solid var(--line);
+  }
+  /* Řádky mimo obrazovku prohlížeč nevykresluje, dokud k nim nedoroluje */
+  .seznam > :global(li) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 96px;
+  }
+  .seznam.zkraceny > :global(li:nth-child(n + 61)) {
+    display: none;
+  }
+  .dalsi-btn {
+    margin: 1.25rem 0 0;
+    text-align: center;
   }
   .prazdno {
     padding: 1.5rem 0;

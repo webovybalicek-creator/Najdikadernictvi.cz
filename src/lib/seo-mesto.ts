@@ -78,8 +78,20 @@ export const ZAMERY: Zamer[] = [
 /** Cílené podstránky vznikají jen tam, kde mají aspoň tolik výsledků */
 export const MIN_ZAMER = 3;
 export const zamerUrl = (z: Zamer, mestoSlug: string) => `/${z.slug}/${mestoSlug}/`;
-export const zameryMesta = (m: Mesto) =>
-  ZAMERY.map((z) => ({ z, salony: m.provozovny.filter(z.filtr) })).filter((x) => x.salony.length >= MIN_ZAMER);
+const _zamery = new Map<string, { z: Zamer; salony: Provozovna[]; ids: Set<string> }[]>();
+export const zameryMesta = (m: Mesto) => {
+  const k = `${m.slug}:${m.provozovny.length}`;
+  if (!_zamery.has(k)) {
+    _zamery.set(
+      k,
+      ZAMERY.map((z) => {
+        const salony = m.provozovny.filter(z.filtr);
+        return { z, salony, ids: new Set(salony.map((p) => p.id)) };
+      }).filter((x) => x.salony.length >= MIN_ZAMER),
+    );
+  }
+  return _zamery.get(k)!;
+};
 
 const jmena = (s: Provozovna[], n = 4) => {
   const v = s.slice(0, n).map((p) => p.nazev);

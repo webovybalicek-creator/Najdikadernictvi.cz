@@ -33,7 +33,7 @@ jobs:
         if: env.FTP_PASSWORD == ''
         run: echo "::warning::Chybí secret FTP_PASSWORD – web je sestavený, ale nenahrál se na hosting."
 
-      - name: Zabalení a příprava rozbalovače
+      - name: Příprava rozbalovače
         if: env.FTP_PASSWORD != ''
         run: |
           RAND=$(openssl rand -hex 12)
@@ -42,27 +42,41 @@ jobs:
           HASH=$(printf '%s' "$TOKEN" | sha256sum | cut -d' ' -f1)
           ZIP="_site-$RAND.zip"
           PHP="_deploy-$RAND.php"
-          (cd dist && zip -qr -X "../$ZIP" .)
           sed -e "s/__TOKEN_HASH__/$HASH/" -e "s/__ZIP_NAME__/$ZIP/" deploy/deploy.php > "$PHP"
           echo "ZIP=$ZIP" >> "$GITHUB_ENV"
           echo "PHP=$PHP" >> "$GITHUB_ENV"
           echo "DEPLOY_TOKEN=$TOKEN" >> "$GITHUB_ENV"
+          curl -sS --fail --ssl-reqd --insecure --retry 3 --user "$FTP_USERNAME:$FTP_PASSWORD" -T "$PHP" "ftp://$FTP_SERVER/$PHP"
+
+      - name: Porovnání se serverem (jen změněné soubory)
+        if: env.FTP_PASSWORD != ''
+        run: |
+          (cd dist && find . -type f -print0 | sort -z | xargs -0 md5sum | sed -E 's#^([0-9a-f]+)  \./(.*)$#\2\t\1#') > novy-manifest.txt
+          curl -sS --fail --max-time 120 -X POST -H "X-Deploy-Token: $DEPLOY_TOKEN" -d akce=manifest "https://$SITE_HOST/$PHP" > stary-manifest.txt || : > stary-manifest.txt
+          # Starý manifest bez otisků (první přírůstkový deploy) → nahrát vše
+          if grep -qP '\t[0-9a-f]{32}$' stary-manifest.txt; then
+            awk -F'\t' 'NR==FNR { stary[$1]=$2; next } stary[$1] != $2 { print $1 }' stary-manifest.txt novy-manifest.txt > zmenene.txt
+          else
+            cut -f1 novy-manifest.txt > zmenene.txt
+          fi
+          echo "::notice::Změněných souborů: $(wc -l < zmenene.txt) z $(wc -l < novy-manifest.txt)"
+          cp novy-manifest.txt dist/.deploy-manifest-new.txt
+          echo ".deploy-manifest-new.txt" >> zmenene.txt
+          (cd dist && zip -q -X "../$ZIP" -@ < ../zmenene.txt)
           ls -lh "$ZIP"
 
       - name: Nahrání ZIPu (FTPS)
         if: env.FTP_PASSWORD != ''
         run: |
-          for f in "$ZIP" "$PHP"; do
-            curl -sS --fail --ssl-reqd --insecure --retry 3 \
-              --user "$FTP_USERNAME:$FTP_PASSWORD" \
-              -T "$f" "ftp://$FTP_SERVER/$f"
-          done
+          curl -sS --fail --ssl-reqd --insecure --retry 3 \
+            --user "$FTP_USERNAME:$FTP_PASSWORD" \
+            -T "$ZIP" "ftp://$FTP_SERVER/$ZIP"
 
       - name: Rozbalení na serveru
         if: env.FTP_PASSWORD != ''
         run: |
           for scheme in https http; do
-            if out=$(curl -sS --fail --max-time 600 -X POST -H "X-Deploy-Token: $DEPLOY_TOKEN" "$scheme://$SITE_HOST/$PHP" 2>&1); then
+            if out=$(curl -sS --fail --max-time 600 -X POST -H "X-Deploy-Token: $DEPLOY_TOKEN" -d akce=rozbalit "$scheme://$SITE_HOST/$PHP" 2>&1); then
               echo "$out"
               echo "::notice::$out"
               exit 0

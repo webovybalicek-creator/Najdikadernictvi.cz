@@ -383,3 +383,13 @@ export function ctvrti(m: Mesto): Ctvrt[] {
 }
 export const ctvrtUrl = (c: Ctvrt) => `/${c.mesto.slug}/ctvrt/${c.slug}/`;
 export const vsechnyCtvrti = () => mesta().flatMap((m) => ctvrti(m));
+
+let _ctvrtSalonu: Map<string, Ctvrt> | undefined;
+/** Čtvrť, do které salon patří (jen u měst s rozdělením na čtvrti) */
+export function ctvrtSalonu(p: Provozovna): Ctvrt | undefined {
+  if (!_ctvrtSalonu) {
+    _ctvrtSalonu = new Map();
+    for (const c of vsechnyCtvrti()) for (const s of c.provozovny) _ctvrtSalonu.set(s.id, c);
+  }
+  return _ctvrtSalonu.get(p.id);
+}
