@@ -5,7 +5,7 @@ import type { Provozovna } from '../lib/data';
 interface Props {
   p: Provozovna;
   velky?: boolean;
-  /** Načíst „pohled z ulice“ z Mapy.com přes /api/panorama.php */
+  /** Načíst „pohled z ulice“ z Mapy.com přes /api/panorama.php (jen detail salonu, kvůli povinné atribuci) */
   panorama?: boolean;
 }
 const { p, velky = false, panorama = false } = Astro.props;

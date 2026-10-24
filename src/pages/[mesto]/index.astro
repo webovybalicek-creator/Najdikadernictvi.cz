@@ -81,14 +81,16 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
 
     {
       castiMesta.length > 0 && (
-        <nav class="zamery zamery--casti" aria-label="Podle části obce">
-          <span class="zamery__nadpis">Podle čtvrti:</span>
-          {castiMesta.map((c) => (
-            <a href={ctvrtUrl(c)}>
-              {c.nazev} <span>{c.provozovny.length}</span>
-            </a>
-          ))}
-        </nav>
+        <details class="casti-det" open={castiMesta.length <= 8}>
+          <summary>Podle čtvrti <span>{castiMesta.length}</span></summary>
+          <nav class="zamery zamery--casti" aria-label="Podle části obce">
+            {castiMesta.map((c) => (
+              <a href={ctvrtUrl(c)}>
+                {c.nazev} <span>{c.provozovny.length}</span>
+              </a>
+            ))}
+          </nav>
+        </details>
       )
     }
 
@@ -291,10 +293,19 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
     align-items: center;
     margin-top: 0.75rem;
   }
-  .zamery .zamery__nadpis {
-    font-size: 0.85rem;
+  .casti-det {
+    margin-top: 1rem;
+  }
+  .casti-det summary {
+    cursor: pointer;
+    width: fit-content;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  .casti-det summary span {
     color: var(--ink-soft);
-    margin-right: 0.25rem;
+    font-weight: 400;
+    margin-left: 0.25rem;
   }
   .blok {
     margin-top: clamp(40px, 6vw, 64px);

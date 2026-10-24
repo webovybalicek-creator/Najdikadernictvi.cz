@@ -625,3 +625,10 @@ picture {
   color: var(--ink-soft);
   cursor: pointer;
 }
+
+/* Úzké karty na mobilu: u hodnocení stačí hvězdičky */
+@media (max-width: 520px) {
+  .karta .hod-mini__nic {
+    display: none;
+  }
+}
