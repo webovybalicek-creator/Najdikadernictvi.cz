@@ -18,3 +18,5 @@ jobs:
           R=$(curl -s -o /dev/null -w "%{http_code} → %{redirect_url}" http://www.najdikadernictvi.cz/brno/)
           echo "::notice::http://www → $R"
           echo "::notice::počet URL v sitemap: $(curl -s https://najdikadernictvi.cz/sitemap.xml | grep -o '<url>' | wc -l)"
+          echo "::notice::hodnoceni salon: $(curl -s 'https://najdikadernictvi.cz/api/hodnoceni.php?salon=n1')"
+          echo "::notice::hodnoceni souhrn: $(curl -s -o /dev/null -w '%{http_code}' 'https://najdikadernictvi.cz/api/hodnoceni.php?souhrn=1')"

@@ -1,0 +1,292 @@
+---
+// Hodnocení salonu: souhrn, schválené recenze a formulář. Data z /api/hodnoceni.php.
+import { url, type Provozovna } from '../lib/data';
+import { SITE } from '../lib/config';
+
+interface Props {
+  p: Provozovna;
+}
+const { p } = Astro.props;
+---
+
+<section
+  class="hod"
+  id="hodnoceni"
+  data-hodnoceni={p.id}
+  data-url={url(p)}
+  data-nazev={p.nazev}
+  data-typ={p.typ === 'barber' ? 'BarberShop' : 'HairSalon'}
+  data-abs={new URL(url(p), SITE.url).href}
+>
+  <div class="hod__hlava">
+    <h2>Hodnocení</h2>
+    <p class="hod__souhrn" data-souhrn>Zatím bez hodnocení. Buďte první.</p>
+  </div>
+
+  <ul class="hod__recenze" data-recenze></ul>
+
+  <form class="hod__form" data-hod-form novalidate>
+    <fieldset class="hvezdy">
+      <legend>Vaše hodnocení</legend>
+      <div class="hvezdy__radek">
+      {
+        [5, 4, 3, 2, 1].map((n) => (
+          <>
+            <input type="radio" name="hvezdy" value={n} id={`h${n}`} required />
+            <label for={`h${n}`} title={`${n} z 5`}>
+              <span class="sr-only">{n} z 5</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8z" />
+              </svg>
+            </label>
+          </>
+        ))
+      }
+      </div>
+    </fieldset>
+    <label class="pole">
+      <span>Jak jste byli spokojeni? <em>(nepovinné)</em></span>
+      <textarea name="text" rows="3" maxlength="600" placeholder="Co se vám líbilo, nebo nelíbilo…"></textarea>
+    </label>
+    <label class="pole pole--jmeno">
+      <span>Jméno nebo přezdívka <em>(nepovinné)</em></span>
+      <input name="jmeno" type="text" maxlength="40" autocomplete="nickname" />
+    </label>
+    <input type="text" name="web2" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+    <p class="hod__pozn">
+      Hvězdičky se započítají hned, text zveřejníme po kontrole. Hodnoťte jen salony, které jste navštívili.
+    </p>
+    <p class="hod__stav" data-hod-stav role="status" aria-live="polite"></p>
+    <button class="btn" type="submit">Odeslat hodnocení</button>
+  </form>
+</section>
+
+<script>
+  const API = '/api/hodnoceni.php';
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
+  const hvezdy = (n: number) =>
+    `<span class="hv" aria-label="${String(n).replace('.', ',')} z 5" style="--p:${(n / 5) * 100}%"></span>`;
+  const slovo = (n: number) => (n === 1 ? 'hodnocení' : n >= 2 && n <= 4 ? 'hodnocení' : 'hodnocení');
+
+  document.querySelectorAll<HTMLElement>('[data-hodnoceni]').forEach(async (sek) => {
+    const id = sek.dataset.hodnoceni!;
+    const souhrn = sek.querySelector<HTMLElement>('[data-souhrn]')!;
+    const seznam = sek.querySelector<HTMLUListElement>('[data-recenze]')!;
+    const form = sek.querySelector<HTMLFormElement>('[data-hod-form]')!;
+    const stav = sek.querySelector<HTMLElement>('[data-hod-stav]')!;
+    const start = Date.now();
+
+    const nacti = async () => {
+      try {
+        const d = await (await fetch(`${API}?salon=${id}`, { cache: 'no-store' })).json();
+        if (!d.pocet) return;
+        souhrn.innerHTML = `${hvezdy(d.prumer)} <strong>${String(d.prumer).replace('.', ',')}</strong> z 5 · ${d.pocet} ${slovo(d.pocet)}`;
+        seznam.innerHTML = (d.recenze ?? [])
+          .map(
+            (r: { hvezdy: number; text: string; jmeno: string | null; datum: string }) =>
+              `<li>${hvezdy(r.hvezdy)}<p>${esc(r.text)}</p><span class="muted">${esc(r.jmeno || 'Anonym')} · ${new Date(r.datum).toLocaleDateString('cs-CZ')}</span></li>`,
+          )
+          .join('');
+        // Strukturovaná data pro vyhledávače (souhrnné hodnocení)
+        if (!document.getElementById('ld-hodnoceni')) {
+          const ld = document.createElement('script');
+          ld.type = 'application/ld+json';
+          ld.id = 'ld-hodnoceni';
+          ld.textContent = JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': sek.dataset.typ,
+            name: sek.dataset.nazev,
+            url: sek.dataset.abs,
+            aggregateRating: { '@type': 'AggregateRating', ratingValue: d.prumer, ratingCount: d.pocet, bestRating: 5, worstRating: 1 },
+          });
+          document.head.appendChild(ld);
+        }
+      } catch {
+        /* hodnocení nejsou dostupná, stránka funguje i bez nich */
+      }
+    };
+    nacti();
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      if (!fd.get('hvezdy')) {
+        stav.dataset.typ = 'chyba';
+        stav.textContent = 'Vyberte prosím počet hvězdiček.';
+        return;
+      }
+      fd.set('salon', id);
+      fd.set('url', sek.dataset.url!);
+      fd.set('t', String(start));
+      const btn = form.querySelector<HTMLButtonElement>('button')!;
+      btn.disabled = true;
+      stav.dataset.typ = '';
+      stav.textContent = 'Odesílám…';
+      try {
+        const d = await (await fetch(API, { method: 'POST', body: fd })).json();
+        if (d.ok) {
+          form.reset();
+          stav.dataset.typ = 'ok';
+          stav.textContent = d.ceka
+            ? 'Děkujeme! Hvězdičky jsme započítali, text zveřejníme po kontrole.'
+            : 'Děkujeme za hodnocení!';
+          nacti();
+        } else {
+          stav.dataset.typ = 'chyba';
+          stav.textContent = d.chyba ?? 'Odeslání se nepodařilo.';
+        }
+      } catch {
+        stav.dataset.typ = 'chyba';
+        stav.textContent = 'Odeslání se nepodařilo, zkuste to prosím později.';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  });
+</script>
+
+<style>
+  .hod {
+    margin-top: clamp(32px, 5vw, 56px);
+    max-width: 44rem;
+  }
+  .hod__hlava {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .hod h2 {
+    font-size: 1.75rem;
+    margin: 0;
+  }
+  .hod__souhrn {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ink-soft);
+  }
+  .hod__souhrn :global(strong) {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .hod__recenze {
+    list-style: none;
+    margin: 0 0 1.5rem;
+    padding: 0;
+  }
+  .hod__recenze :global(li) {
+    padding: 1rem 0;
+    border-top: 1px solid var(--line);
+  }
+  .hod__recenze :global(li p) {
+    margin: 0.4rem 0;
+  }
+  .hod__recenze :global(.muted) {
+    font-size: 0.85rem;
+  }
+
+  .hod__form {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+  }
+  .hvezdy {
+    border: 0;
+    padding: 0;
+    margin: 0 0 1.1rem;
+  }
+  .hvezdy legend {
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+    padding: 0;
+  }
+  .hvezdy__radek {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    gap: 0.15rem;
+  }
+  .hvezdy input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+  .hvezdy label {
+    cursor: pointer;
+    padding: 0.1rem;
+  }
+  .hvezdy svg {
+    width: 2rem;
+    height: 2rem;
+    fill: transparent;
+    stroke: var(--brass);
+    stroke-width: 1.4;
+    stroke-linejoin: round;
+    transition: fill 0.12s, transform 0.12s;
+  }
+  .hvezdy label:hover svg,
+  .hvezdy label:hover ~ label svg,
+  .hvezdy input:checked ~ label svg {
+    fill: var(--brass);
+  }
+  .hvezdy label:hover svg {
+    transform: scale(1.12);
+  }
+  .hvezdy input:focus-visible + label {
+    outline: 2px solid var(--ink);
+    border-radius: 4px;
+  }
+  .pole {
+    display: block;
+    margin-bottom: 1rem;
+  }
+  .pole span {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.35rem;
+  }
+  .pole em {
+    font-style: normal;
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+  .pole textarea,
+  .pole input {
+    width: 100%;
+    font: inherit;
+    font-size: 0.95rem;
+    padding: 0.7em 0.85em;
+    border: 1px solid #cfc7b9;
+    border-radius: var(--radius);
+    background: #fff;
+    color: var(--ink);
+  }
+  .pole--jmeno {
+    max-width: 20rem;
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+  }
+  .hod__pozn {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    margin: 0 0 0.75rem;
+  }
+  .hod__stav {
+    min-height: 1.4em;
+    font-size: 0.9rem;
+    margin: 0 0 0.75rem;
+  }
+  .hod__stav[data-typ='ok'] {
+    color: var(--open);
+  }
+  .hod__stav[data-typ='chyba'] {
+    color: var(--closed);
+  }
+</style>

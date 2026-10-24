@@ -29,7 +29,7 @@ const t = tyden(p);
   }
   <div class="row__main">
     <h3 class="row__name"><a href={url(p)}>{p.nazev}</a></h3>
-    <p class="row__adr">{adresa(p, sMestem) || p.mesto}</p>
+    <p class="row__adr">{adresa(p, sMestem) || p.mesto} <span class="hod-mini" data-hod-id={p.id}></span></p>
   </div>
   <div class="row__meta">
     <span class:list={['tag', p.typ === 'barber' && 'tag--barber']}>{TYP_NAZEV[p.typ]}</span>

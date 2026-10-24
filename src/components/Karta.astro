@@ -16,6 +16,7 @@ const misto = p.mesto === 'Praha' && p.cast ? `Praha, ${p.cast}` : p.mesto;
     <span class="karta__typ">{TYP_NAZEV[p.typ]}</span>
     <h3 class="karta__nazev">{p.nazev}</h3>
     <p class="karta__adr">{[adr, misto].filter(Boolean).join(', ')}</p>
+    <span class="hod-mini" data-hod-id={p.id}></span>
   </a>
 </li>
 
