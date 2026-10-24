@@ -98,7 +98,23 @@ if ($kod !== 200 || !is_string($obrazek) || !str_starts_with($typ, 'image/')) {
     nenalezeno(404, $kod === 404 || $kod === 204);
 }
 
-header('Content-Type: ' . $typ);
+// Moderní formát: WebP (o třetinu až polovinu menší), pokud ho prohlížeč umí a server ho zvládne vytvořit
+header('Vary: Accept');
 header('Cache-Control: public, max-age=86400');
 header('X-Robots-Tag: noindex');
+if (str_contains($_SERVER['HTTP_ACCEPT'] ?? '', 'image/webp') && function_exists('imagewebp')) {
+    $img = @imagecreatefromstring($obrazek);
+    if ($img) {
+        ob_start();
+        $ok = imagewebp($img, null, 78);
+        $webp = (string)ob_get_clean();
+        imagedestroy($img);
+        if ($ok && $webp !== '') {
+            header('Content-Type: image/webp');
+            echo $webp;
+            exit;
+        }
+    }
+}
+header('Content-Type: ' . $typ);
 echo $obrazek;

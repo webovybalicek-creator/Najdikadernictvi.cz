@@ -1,6 +1,6 @@
 ---
 // Magazínový výpis článků: hlavní článek + sloupec dalších + tmavý pás se záložkami podle kategorií
-import { Image } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import { clanky, clanekUrl, kategorieUrl, casCteni, KATEGORIE, kategorieSlug } from '../lib/blog';
 
 interface Props {
@@ -47,7 +47,7 @@ const zalozky = KATEGORIE.map((k) => ({
         <a href={clanekUrl(hlavni)}>
           <h3 class="lead__nazev">{hlavni.data.title}</h3>
           <div class="lead__img">
-            <Image
+            <Picture formats={['avif', 'webp']}
               src={hlavni.data.obrazek}
               alt={hlavni.data.obrazekAlt}
               widths={[480, 800, 1100]}
@@ -76,7 +76,7 @@ const zalozky = KATEGORIE.map((k) => ({
                   </p>
                 </div>
                 <a class="bocni__img" href={clanekUrl(c)} tabindex="-1" aria-hidden="true">
-                  <Image src={c.data.obrazek} alt="" widths={[240, 420]} sizes="(max-width: 600px) 40vw, 14rem" />
+                  <Picture formats={['avif', 'webp']} src={c.data.obrazek} alt="" widths={[240, 420]} sizes="(max-width: 600px) 40vw, 14rem" />
                 </a>
               </article>
             </li>
@@ -112,7 +112,7 @@ const zalozky = KATEGORIE.map((k) => ({
               <article>
                 <a href={clanekUrl(c)}>
                   <div class="pas__img">
-                    <Image src={c.data.obrazek} alt={c.data.obrazekAlt} widths={[360, 640]} sizes="(max-width: 760px) 100vw, 30vw" />
+                    <Picture formats={['avif', 'webp']} src={c.data.obrazek} alt={c.data.obrazekAlt} widths={[360, 640]} sizes="(max-width: 760px) 100vw, 30vw" />
                   </div>
                   <h4>{c.data.title}</h4>
                 </a>

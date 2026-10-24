@@ -1,6 +1,6 @@
 ---
 import { render } from 'astro:content';
-import { Image, getImage } from 'astro:assets';
+import { Picture, getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import Hledani from '../../components/Hledani.astro';
@@ -53,7 +53,7 @@ const jsonLd = {
     </header>
 
     <figure class="wrap cover">
-      <Image
+      <Picture formats={['avif', 'webp']}
         src={c.data.obrazek}
         alt={c.data.obrazekAlt}
         widths={[640, 1000, 1400, 1800]}

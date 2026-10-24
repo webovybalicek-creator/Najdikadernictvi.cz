@@ -21,7 +21,7 @@ import Logo from './Logo.astro';
             <span class="hdr__obl-pocet" data-pocet-oblibenych hidden></span>
           </a>
         </li>
-        <li><a href="/pridat-provozovnu/" class="btn btn--ghost hdr__cta">Přidat salon</a></li>
+        <li><a href="/pridat-provozovnu/" class="btn btn--ghost hdr__cta" aria-label="Přidat salon"><span class="hdr__cta-txt">Přidat<span class="hdr__cta-cele"> salon</span></span></a></li>
       </ul>
     </nav>
   </div>
@@ -100,6 +100,35 @@ import Logo from './Logo.astro';
   @media (max-width: 760px) {
     .nav-skryt-m {
       display: none;
+    }
+    nav ul {
+      gap: 0.9rem;
+    }
+  }
+  @media (max-width: 400px) {
+    .hdr__logo :global(.logo) {
+      font-size: 1.2rem;
+    }
+    nav ul {
+      gap: 0.6rem;
+    }
+  }
+  @media (max-width: 360px) {
+    .hdr__cta-txt {
+      display: none;
+    }
+    .hdr__cta::before {
+      content: '+';
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+  }
+  @media (max-width: 440px) {
+    .hdr__cta-cele {
+      display: none;
+    }
+    .hdr__cta {
+      padding: 0.6em 0.8em;
     }
   }
 </style>

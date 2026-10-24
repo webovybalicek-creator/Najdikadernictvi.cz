@@ -32,10 +32,12 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
 }
 
 body {
   margin: 0;
+  overflow-x: clip;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--f-text);
@@ -555,4 +557,18 @@ p {
 }
 .viz__foto.ok + .viz__atr {
   opacity: 1;
+}
+
+/* iOS přibližuje stránku při psaní do polí s písmem pod 16 px – na mobilu proto vždy 16 px */
+@media (max-width: 760px) {
+  input:not([type='checkbox']):not([type='radio']),
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* <picture> z astro:assets nesmí měnit rozvržení obrázků */
+picture {
+  display: contents;
 }
