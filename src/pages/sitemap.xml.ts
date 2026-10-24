@@ -8,7 +8,7 @@ import { zameryMesta, zamerUrl } from '../lib/seo-mesto';
 
 // Vlastní sitemap: obsahuje jen stránky, které chceme indexovat (bez detailů salonů jen z rejstříku)
 export const GET: APIRoute = async () => {
-  const cesty = new Set<string>(['/', '/kraje/', '/blog/', '/o-webu/', '/kontakt/', '/pridat-provozovnu/', '/pro-salony/', '/ochrana-osobnich-udaju/', '/podminky-uziti/']);
+  const cesty = new Set<string>(['/', '/kraje/', '/mapa/', '/blog/', '/o-webu/', '/kontakt/', '/pridat-provozovnu/', '/pro-salony/', '/ochrana-osobnich-udaju/', '/podminky-uziti/']);
   for (const k of KRAJE) cesty.add(krajUrl(k.slug));
   for (const m of mesta()) {
     cesty.add(mestoUrl(m.slug));
