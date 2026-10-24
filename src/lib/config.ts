@@ -10,9 +10,9 @@ export const SITE = {
   indexovat: true,
   /** Provozovatel webu (správce osobních údajů) – doplnit jméno/firmu, IČO a sídlo */
   provozovatel: {
-    nazev: '',
-    ico: '',
-    sidlo: '',
+    nazev: 'Vladimír Fischer',
+    ico: '03051820',
+    sidlo: 'Nerudova 765/10, 251 01 Říčany',
   },
   /** Ověření v Google Search Console (obsah meta tagu google-site-verification) */
   googleOvereni: '',
