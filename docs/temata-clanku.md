@@ -4,6 +4,18 @@ Automatická úloha bere témata shora. Hotové téma přesune do sekce „Hotov
 Nová témata přidávej na konec zásobníku. Kategorie: Pro pány | Pro ženy | Péče o vlasy | Rady a návody.
 
 ## Zásobník
+- Kde se dá v Brně ostříhat v neděli a večer | Rady a návody | Data: brno
+- Barbershopy v Ostravě: přehled a otevírací doba | Pro pány | Data: ostrava
+- Kadeřnictví v Praze otevřená v neděli | Rady a návody | Data: praha
+- Dětská kadeřnictví v Brně | Rady a návody | Data: brno
+- Barbershopy v Plzni | Pro pány | Data: plzen
+- Kadeřnictví v Ostravě otevřená v sobotu | Rady a návody | Data: ostrava
+- Barbershopy v Brně: kde a kdy | Pro pány | Data: brno
+- Kadeřnictví v Olomouci otevřená večer a o víkendu | Rady a návody | Data: olomouc
+- Dětská kadeřnictví v Praze | Rady a návody | Data: praha
+- Kadeřnictví v Plzni otevřená v sobotu | Rady a návody | Data: plzen
+- Barbershopy v Praze otevřené v neděli | Pro pány | Data: praha
+- Kadeřnictví v Hradci Králové a Pardubicích o víkendu | Rady a návody | Data: hradec-kralove
 - Mikádo (bob) 2026: druhy a komu sluší | Pro ženy
 - Pixie střih: pro koho je a jak ho udržovat | Pro ženy
 - Jak ostříhat vlasy strojkem doma (pánský střih) | Pro pány
