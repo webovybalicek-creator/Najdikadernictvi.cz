@@ -1,0 +1,10 @@
+200 https://najdikadernictvi.cz/api/panorama.php?lat=49.20219&lon=16.620918&s=maly&v=2
+200 https://najdikadernictvi.cz/api/panorama.php?lat=50.097533&lon=14.397536&s=maly&v=2
+200 https://najdikadernictvi.cz/api/panorama.php?lat=50.108117&lon=14.444411&s=maly&v=2
+200 https://najdikadernictvi.cz/api/panorama.php?lat=50.05562&lon=14.484234&s=maly&v=2
+200 https://najdikadernictvi.cz/api/panorama.php?lat=50.050496&lon=14.543917&s=maly&v=2
+200 https://najdikadernictvi.cz/api/panorama.php?lat=49.832037&lon=18.287051&s=maly&v=2
+200 https://najdikadernictvi.cz/api/panorama.php?lat=49.776249&lon=13.367147&s=maly&v=2
+200 https://najdikadernictvi.cz/api/panorama.php?lat=48.983393&lon=14.469114&s=maly&v=2
+200 https://najdikadernictvi.cz/api/panorama.php?lat=50.026984&lon=15.770602&s=maly&v=2
+200 https://najdikadernictvi.cz/api/panorama.php?lat=49.778671&lon=13.369059&s=maly&v=2
