@@ -7,16 +7,18 @@ jobs:
   diag:
     runs-on: ubuntu-latest
     steps:
-      - name: Kontrola živého webu
+      - name: Kontrola obrázků a hlaviček
         run: |
-          for u in robots.txt ads.txt sitemap.xml; do
-            R=$(curl -s -o /tmp/f -w "%{http_code}" "https://najdikadernictvi.cz/$u")
-            echo "::notice::$u → $R | $(head -c 160 /tmp/f | tr '\n' ' ')"
+          W=https://najdikadernictvi.cz
+          H=$(curl -s $W/blog/)
+          for u in $(echo "$H" | grep -oE '/_astro/[^" ]+\.(avif|webp|jpg)' | sort -u | head -4); do
+            echo "::notice::$u → $(curl -s -o /dev/null -w '%{http_code} %{content_type} %{size_download}B' $W$u) | $(curl -sI $W$u | grep -i 'cache-control' | tr -d '\r')"
           done
-          H=$(curl -s https://najdikadernictvi.cz/)
-          echo "::notice::úvod: robots=$(echo "$H" | grep -o 'name="robots" content="[^"]*"') | adsense=$(echo "$H" | grep -o 'client=ca-pub-[0-9]*' | head -1)"
-          R=$(curl -s -o /dev/null -w "%{http_code} → %{redirect_url}" http://www.najdikadernictvi.cz/brno/)
-          echo "::notice::http://www → $R"
-          echo "::notice::počet URL v sitemap: $(curl -s https://najdikadernictvi.cz/sitemap.xml | grep -o '<url>' | wc -l)"
-          echo "::notice::hodnoceni salon: $(curl -s 'https://najdikadernictvi.cz/api/hodnoceni.php?salon=n1')"
-          echo "::notice::hodnoceni souhrn: $(curl -s -o /dev/null -w '%{http_code}' 'https://najdikadernictvi.cz/api/hodnoceni.php?souhrn=1')"
+          CSS=$(echo "$H" | grep -oE '/_astro/[^"]+\.css' | head -1)
+          echo "::notice::css $CSS → $(curl -s -o /dev/null -w '%{http_code} %{content_type}' $W$CSS)"
+          echo "::notice::blog <picture>: $(echo "$H" | grep -o '<picture' | wc -l), <img: $(echo "$H" | grep -o '<img' | wc -l)"
+          D=$(curl -s $W/brno/afroucesy/)
+          P=$(echo "$D" | grep -oE '/api/panorama\.php\?[^"]+' | head -1 | sed 's/&amp;/\&/g')
+          echo "::notice::panorama $P → $(curl -s -o /tmp/p -w '%{http_code} %{content_type} %{size_download}B' -H 'Accept: image/avif,image/webp,*/*' "$W$P") | $(head -c 120 /tmp/p | tr -dc '[:print:]')"
+          echo "::notice::úvod html → $(curl -sI $W/ | grep -iE 'cache-control|content-type' | tr -d '\r' | tr '\n' ' ')"
+          echo "::notice::og.jpg → $(curl -s -o /dev/null -w '%{http_code} %{content_type}' $W/og.jpg)"
