@@ -535,3 +535,24 @@ p {
 .karta .hod-mini {
   margin-top: 0.4rem;
 }
+
+/* Atribuce Mapy.com přímo na fotce „pohled z ulice“ (jen když se fotka načte) */
+.viz__atr {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: rgb(255 255 255 / 0.78);
+  color: #3a372f;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.viz__foto.ok + .viz__atr {
+  opacity: 1;
+}

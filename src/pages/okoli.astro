@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
 import Hledani from '../components/Hledani.astro';
-import MapyAtribuce from '../components/MapyAtribuce.astro';
 ---
 
 <Base
@@ -25,7 +24,6 @@ import MapyAtribuce from '../components/MapyAtribuce.astro';
 
     <p class="stav-hledani" data-stav aria-live="polite">Zjišťuji vaši polohu…</p>
     <ol class="seznam" data-seznam></ol>
-    <div data-atr hidden><MapyAtribuce /></div>
     <p class="vice" data-vice hidden><button class="btn btn--ghost" type="button">Zobrazit další</button></p>
 
     <div class="nahrada" data-nahrada hidden>
@@ -99,7 +97,6 @@ import MapyAtribuce from '../components/MapyAtribuce.astro';
       return;
     }
     filtr.hidden = false;
-    document.querySelector<HTMLElement>('[data-atr]')!.hidden = false;
     vykresli();
   }
 

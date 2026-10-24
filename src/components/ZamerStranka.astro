@@ -3,7 +3,6 @@ import Base from '../layouts/Base.astro';
 import Breadcrumb from './Breadcrumb.astro';
 import ProvozovnaRadek from './ProvozovnaRadek.astro';
 import MapaSalonu from './MapaSalonu.astro';
-import MapyAtribuce from './MapyAtribuce.astro';
 import { mestoUrl, krajUrl, pocetText, type Mesto, type Provozovna } from '../lib/data';
 import { ZAMERY, zamerUrl, zameryMesta, statistiky, itemListJsonLd, type Zamer } from '../lib/seo-mesto';
 import { hhmm } from '../lib/oteviraci-doba';
@@ -46,7 +45,6 @@ const breadcrumb = [
     <ul class="seznam">
       {salony.map((p, i) => <ProvozovnaRadek p={p} nahled={i < 30} />)}
     </ul>
-    <MapyAtribuce />
 
     <section class="blok">
       <h2>Na mapě</h2>

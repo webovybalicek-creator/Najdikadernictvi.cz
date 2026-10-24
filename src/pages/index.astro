@@ -3,7 +3,6 @@ import Base from '../layouts/Base.astro';
 import Hledani from '../components/Hledani.astro';
 import Karta from '../components/Karta.astro';
 import Magazin from '../components/Magazin.astro';
-import MapyAtribuce from '../components/MapyAtribuce.astro';
 import { KRAJE } from '../lib/kraje';
 import { PROVOZOVNY, nejvetsiMesta, pocetVKraji, krajUrl, mestoUrl, mestaSloucena, pocetText, vyber } from '../lib/data';
 import { SITE } from '../lib/config';
@@ -14,13 +13,28 @@ const barbershopy = vyber(PROVOZOVNY.filter((p) => p.typ === 'barber'), 4);
 const pocetBarberu = PROVOZOVNY.filter((p) => p.typ === 'barber').length;
 const pocetObci = mestaSloucena().length;
 const cislo = (n: number) => n.toLocaleString('cs-CZ');
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: SITE.nazev,
-  url: SITE.url,
-  inLanguage: 'cs',
-};
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE.nazev,
+    url: SITE.url,
+    inLanguage: 'cs',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: { '@type': 'EntryPoint', urlTemplate: `${SITE.url}/hledat/?q={search_term_string}` },
+      'query-input': 'required name=search_term_string',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE.nazev,
+    url: SITE.url,
+    logo: `${SITE.url}/icon-512.png`,
+    email: SITE.email,
+  },
+];
 ---
 
 <Base
@@ -86,7 +100,6 @@ const jsonLd = {
           <ul class="karty">
             {doporucene.map((p) => <Karta p={p} />)}
           </ul>
-          <MapyAtribuce />
         </div>
       </section>
     )
@@ -105,7 +118,6 @@ const jsonLd = {
           <ul class="karty">
             {barbershopy.map((p) => <Karta p={p} />)}
           </ul>
-          <MapyAtribuce />
         </div>
       </section>
     )

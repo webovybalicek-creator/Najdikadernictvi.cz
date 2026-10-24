@@ -3,7 +3,6 @@ import Base from '../../layouts/Base.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import ProvozovnaRadek from '../../components/ProvozovnaRadek.astro';
 import MapaSalonu from '../../components/MapaSalonu.astro';
-import MapyAtribuce from '../../components/MapyAtribuce.astro';
 import Faq from '../../components/Faq.astro';
 import { statistiky, textMesta, faqMesta, faqJsonLd, itemListJsonLd, zameryMesta, zamerUrl } from '../../lib/seo-mesto';
 import { mesta, mestaSloucena, mestoUrl, krajUrl, pocetText, tyden, type Mesto } from '../../lib/data';
@@ -117,7 +116,6 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
     <ul class="seznam" data-seznam>
       {vse.map((p, i) => <ProvozovnaRadek p={p} nahled={i < 30} />)}
     </ul>
-    <MapyAtribuce />
     <p class="prazdno" data-prazdno hidden>Žádný salon neodpovídá filtrům. Zkuste některý filtr vypnout.</p>
 
     {

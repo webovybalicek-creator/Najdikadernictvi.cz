@@ -3,7 +3,6 @@ import Base from '../../layouts/Base.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import Hledani from '../../components/Hledani.astro';
 import Karta from '../../components/Karta.astro';
-import MapyAtribuce from '../../components/MapyAtribuce.astro';
 import ProvozovnaRadek from '../../components/ProvozovnaRadek.astro';
 import { mestaVKraji, mestoUrl, pocetVKraji, pocetText, vyber, PROVOZOVNY } from '../../lib/data';
 
@@ -57,7 +56,6 @@ const pocet = pocetVKraji('praha');
           <ul class="karty">
             {doporucene.map((p) => <Karta p={p} />)}
           </ul>
-          <MapyAtribuce />
         </section>
       )
     }

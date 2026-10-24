@@ -4,7 +4,6 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import ProvozovnaRadek from '../../components/ProvozovnaRadek.astro';
 import Vizual from '../../components/Vizual.astro';
 import Tipy from '../../components/Tipy.astro';
-import MapyAtribuce from '../../components/MapyAtribuce.astro';
 import Hodnoceni from '../../components/Hodnoceni.astro';
 import AkceSalonu from '../../components/AkceSalonu.astro';
 import Overeno from '../../components/Overeno.astro';
@@ -107,7 +106,6 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
     <header class="head">
       <figure class="head__viz">
         <Vizual p={p} velky panorama />
-        <figcaption class="head__popis"><MapyAtribuce text="Pohled z ulice" /></figcaption>
       </figure>
       <div class="head__txt">
       <p class="head__typ">

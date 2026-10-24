@@ -32,8 +32,14 @@ const jsonLd = {
 };
 ---
 
-<Base title={c.data.title} description={c.data.description} jsonLd={jsonLd}>
-  <meta slot="head" property="og:image" content={new URL(og.src, SITE.url).href} />
+<Base
+  title={c.data.title}
+  description={c.data.description}
+  jsonLd={jsonLd}
+  typ="article"
+  publikovano={c.data.datum.toISOString().slice(0, 10)}
+  obrazek={{ src: og.src, alt: c.data.title }}
+>
   <article>
     <header class="wrap hlava">
       <Breadcrumb items={[{ nazev: 'Rady a tipy', href: '/blog/' }, { nazev: c.data.kategorie, href: kategorieUrl(c.data.kategorie) }]} />

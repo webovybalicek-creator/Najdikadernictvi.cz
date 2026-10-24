@@ -2,7 +2,6 @@
 import Base from '../layouts/Base.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import Hledani from '../components/Hledani.astro';
-import MapyAtribuce from '../components/MapyAtribuce.astro';
 ---
 
 <Base title="Moje oblíbené salony" description="Vaše uložená kadeřnictví a barbershopy na jednom místě." noindex>
@@ -15,7 +14,6 @@ import MapyAtribuce from '../components/MapyAtribuce.astro';
     </p>
 
     <ul class="karty" data-oblibene-seznam></ul>
-    <div data-oblibene-atr hidden><MapyAtribuce /></div>
 
     <div class="prazdno" data-oblibene-prazdno hidden>
       <p>
@@ -38,12 +36,10 @@ import MapyAtribuce from '../components/MapyAtribuce.astro';
 
   const seznam = document.querySelector<HTMLElement>('[data-oblibene-seznam]')!;
   const prazdno = document.querySelector<HTMLElement>('[data-oblibene-prazdno]')!;
-  const atr = document.querySelector<HTMLElement>('[data-oblibene-atr]')!;
   const obnov = () => {
     const o = oblibene();
     vykresli(seznam, o);
     prazdno.hidden = o.length > 0;
-    atr.hidden = o.length === 0;
   };
   obnov();
   // po odebrání srdíčkem zmizí karta až po chvilce, ať je vidět, co se stalo
