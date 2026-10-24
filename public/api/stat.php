@@ -40,9 +40,18 @@ function pocty_cesty(PDO $db, string $cesta, int $dni): array
     return $st->fetchAll(PDO::FETCH_KEY_PAIR);
 }
 
+// Vyloučené IP (provozovatel webu): ukládá se jen otisk IP, ne IP samotná
+$vylouceneSoubor = $uloziste . '/stat-vyloucene.json';
+$vyloucene = is_file($vylouceneSoubor) ? (json_decode((string)file_get_contents($vylouceneSoubor), true) ?: []) : [];
+$otiskIp = hash_hmac('sha256', 'stat-ip:' . ($_SERVER['REMOTE_ADDR'] ?? ''), $TAJ);
+
 // ---------------------------------------------------------------- zápis
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Cache-Control: no-store');
+    if (isset($vyloucene[$otiskIp])) {
+        http_response_code(204);
+        exit;
+    }
     $ua = $_SERVER['HTTP_USER_AGENT'] ?? '';
     if ($ua === '' || preg_match('~bot|crawl|spider|slurp|preview|headless|lighthouse|pingdom|monitor~i', $ua)) {
         http_response_code(204);
@@ -91,6 +100,11 @@ if (isset($_GET['admin'])) {
         http_response_code(403);
         exit('Neplatný odkaz.');
     }
+    if (isset($_GET['vyloucit'])) {
+        if ($_GET['vyloucit'] === '1') $vyloucene[$otiskIp] = date('Y-m-d');
+        else unset($vyloucene[$otiskIp]);
+        file_put_contents($vylouceneSoubor, json_encode($vyloucene), LOCK_EX);
+    }
     $dni = max(1, min(400, (int)($_GET['dni'] ?? 30)));
     $od = date('Y-m-d', strtotime("-$dni days"));
     $poDnech = $db->prepare('SELECT den, SUM(pocet) n FROM zobrazeni WHERE den >= ? GROUP BY den ORDER BY den DESC');
@@ -110,6 +124,12 @@ if (isset($_GET['admin'])) {
         . '<body style="font:15px/1.5 system-ui,sans-serif;max-width:60rem;margin:2rem auto;padding:0 1rem;color:#26241f;background:#f6f4ef">'
         . '<h1 style="font-weight:400">Návštěvnost za ' . $dni . ' dní: ' . number_format($celkem, 0, ',', ' ') . ' zobrazení</h1>'
         . '<p>' . implode(' · ', array_map(fn($d) => '<a href="?admin=' . $e($_GET['admin']) . '&dni=' . $d . '">' . $d . ' dní</a>', [7, 30, 90, 365])) . '</p>'
+        . '<p style="background:#fff;border:1px solid #e3ded4;padding:.75rem 1rem">'
+        . (isset($vyloucene[$otiskIp])
+            ? 'Vaše aktuální IP adresa se <strong>nepočítá</strong>. <a href="?admin=' . $e($_GET['admin']) . '&vyloucit=0">Znovu počítat</a>'
+            : 'Vaše aktuální IP adresa se počítá. <a href="?admin=' . $e($_GET['admin']) . '&vyloucit=1">Vyloučit moji IP z měření</a>')
+        . ' · Vyloučených adres: ' . count($vyloucene)
+        . '<br><small>Na mobilu a jiných sítích se IP mění. Spolehlivější je otevřít na každém zařízení <a href="https://najdikadernictvi.cz/nemerit/">najdikadernictvi.cz/nemerit/</a>.</small></p>'
         . '<h2 style="font-weight:400">Po dnech</h2><table style="border-collapse:collapse;width:100%">';
     foreach ($dnyR as $r) {
         $w = round($r['n'] / $max * 100);

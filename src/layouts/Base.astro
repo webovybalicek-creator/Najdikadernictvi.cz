@@ -89,7 +89,13 @@ const fullTitle = title.includes(SITE.nazev) ? title : `${title} | ${SITE.nazev}
       inicializujListuPorovnani();
 
       // Anonymní počítání zobrazení (bez cookies a osobních údajů), jen na produkčním webu
-      if (location.hostname.endsWith('najdikadernictvi.cz') && !navigator.webdriver) {
+      let nemerit = false;
+      try {
+        nemerit = localStorage.getItem('nk-nemerit') === '1';
+      } catch {
+        /* bez úložiště */
+      }
+      if (location.hostname.endsWith('najdikadernictvi.cz') && !navigator.webdriver && !nemerit) {
         let r = '';
         try {
           r = document.referrer ? new URL(document.referrer).hostname : '';

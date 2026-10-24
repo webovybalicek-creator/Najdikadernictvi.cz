@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Vyloučení z měření návštěvnosti" description="Vyloučení tohoto prohlížeče z měření návštěvnosti." noindex>
+  <div class="wrap section" style="max-width:40rem">
+    <h1>Měření návštěvnosti</h1>
+    <p class="lead" data-nemerit-stav>…</p>
+    <p><button class="btn" type="button" data-nemerit-prepni></button></p>
+    <p class="muted">
+      Nastavení platí jen pro tento prohlížeč na tomto zařízení. Slouží provozovateli webu, aby jeho vlastní návštěvy
+      nezkreslovaly statistiku. Otevřete tuto stránku na každém zařízení, kterým web navštěvujete.
+    </p>
+  </div>
+</Base>
+
+<script>
+  const stav = document.querySelector<HTMLElement>('[data-nemerit-stav]')!;
+  const btn = document.querySelector<HTMLButtonElement>('[data-nemerit-prepni]')!;
+  const je = () => {
+    try {
+      return localStorage.getItem('nk-nemerit') === '1';
+    } catch {
+      return false;
+    }
+  };
+  const obnov = () => {
+    stav.textContent = je() ? 'Tento prohlížeč se do návštěvnosti nepočítá.' : 'Tento prohlížeč se do návštěvnosti počítá.';
+    btn.textContent = je() ? 'Znovu počítat' : 'Nepočítat tento prohlížeč';
+  };
+  btn.addEventListener('click', () => {
+    try {
+      if (je()) localStorage.removeItem('nk-nemerit');
+      else localStorage.setItem('nk-nemerit', '1');
+    } catch {
+      stav.textContent = 'Prohlížeč neumožňuje uložit nastavení (soukromý režim?).';
+      return;
+    }
+    obnov();
+  });
+  obnov();
+</script>
