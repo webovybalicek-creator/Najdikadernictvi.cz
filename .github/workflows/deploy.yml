@@ -50,12 +50,16 @@ jobs:
 
       - name: Porovnání se serverem (jen změněné soubory)
         if: env.FTP_PASSWORD != ''
+        shell: bash
         run: |
-          (cd dist && find . -type f -print0 | sort -z | xargs -0 md5sum | sed -E 's#^([0-9a-f]+)  \./(.*)$#\2\t\1#') > novy-manifest.txt
-          curl -sS --fail --max-time 120 -X POST -H "X-Deploy-Token: $DEPLOY_TOKEN" -d akce=manifest "https://$SITE_HOST/$PHP" > stary-manifest.txt || : > stary-manifest.txt
+          set -uo pipefail
+          chyba() { echo "::error::$1"; exit 1; }
+          (cd dist && find . -type f -print0 | sort -z | xargs -0 md5sum | sed -E 's#^([0-9a-f]+)  \./(.*)$#\2\t\1#') > novy-manifest.txt || chyba "výpočet otisků selhal"
+          curl -sS --max-time 120 -X POST -H "X-Deploy-Token: $DEPLOY_TOKEN" -d akce=manifest "https://$SITE_HOST/$PHP" -o stary-manifest.txt || : > stary-manifest.txt
+          echo "::notice::Starý manifest: $(wc -l < stary-manifest.txt) řádků, s otisky: $(grep -cP '\t[0-9a-f]{32}$' stary-manifest.txt || true)"
           # Starý manifest bez otisků (první přírůstkový deploy) → nahrát vše
-          if grep -qP '\t[0-9a-f]{32}$' stary-manifest.txt; then
-            awk -F'\t' 'NR==FNR { stary[$1]=$2; next } stary[$1] != $2 { print $1 }' stary-manifest.txt novy-manifest.txt > zmenene.txt
+          if [ "$(grep -cP '\t[0-9a-f]{32}$' stary-manifest.txt || true)" -gt 100 ]; then
+            awk -F'\t' 'NR==FNR { s[$1]=$2; next } s[$1] != $2 { print $1 }' stary-manifest.txt novy-manifest.txt > zmenene.txt || chyba "porovnání selhalo"
           else
             cut -f1 novy-manifest.txt > zmenene.txt
           fi
@@ -63,6 +67,8 @@ jobs:
           cp novy-manifest.txt dist/.deploy-manifest-new.txt
           echo ".deploy-manifest-new.txt" >> zmenene.txt
           (cd dist && zip -q -X "../$ZIP" -@ < ../zmenene.txt)
+          kod=$?
+          [ $kod -eq 0 ] || chyba "zip skončil s kódem $kod"
           ls -lh "$ZIP"
 
       - name: Nahrání ZIPu (FTPS)
