@@ -37,7 +37,7 @@ const jsonLd = [
   description={`Kadeřnictví a barbershopy v celé ČR na jednom místě: ${pocetText(PROVOZOVNY.length, 'salon', 'salony', 'salonů')} s adresou, telefonem, otevírací dobou a mapou.`}
   jsonLd={jsonLd}
 >
-  <section class="hero">
+  <section class="hero" data-fen>
     <div class="wrap hero__in">
       <h1>Najděte svého <em>kadeřníka</em></h1>
       <p class="hero__sub">Kadeřnictví a barbershopy v celé České republice, i ty bez vlastního webu.</p>
@@ -90,6 +90,12 @@ const jsonLd = [
   </nav>
 </Base>
 
+
+<script>
+  import { fen } from '../scripts/fen';
+  const heroFen = document.querySelector<HTMLElement>('[data-fen]');
+  if (heroFen) fen(heroFen);
+</script>
 
 <style>
   .rychle {
@@ -245,6 +251,16 @@ const jsonLd = [
       radial-gradient(32% 42% at 78% 22%, rgb(255 184 77 / 0.5), transparent 70%),
       radial-gradient(30% 38% at 62% 72%, rgb(255 95 70 / 0.22), transparent 70%);
     filter: blur(30px);
+    transform: translate(var(--fx, 0px), var(--fy, 0px));
+    will-change: transform;
+  }
+  .hero :global(.hero__fen) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
   }
   .hero h1 {
     font-size: clamp(2.3rem, 5.6vw, 3.6rem);
