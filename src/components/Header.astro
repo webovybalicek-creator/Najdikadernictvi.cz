@@ -1,8 +1,10 @@
 ---
 import Logo from './Logo.astro';
+// Na úvodní stránce je hlavička průhledná přes gradient, po posunu stránky dostane bílé pozadí
+const pruhledna = Astro.url.pathname === '/';
 ---
 
-<header class="hdr">
+<header class:list={['hdr', pruhledna && 'hdr--pruhledna']} data-hdr>
   <div class="wrap hdr__in">
     <a href="/" class="hdr__logo" aria-label="Najdi kadeřnictví – úvod"><Logo /></a>
     <nav aria-label="Hlavní menu">
@@ -46,6 +48,12 @@ import Logo from './Logo.astro';
 </header>
 
 <script>
+  const hdr = document.querySelector<HTMLElement>('[data-hdr].hdr--pruhledna');
+  if (hdr) {
+    const obnov = () => hdr.classList.toggle('hdr--posunuta', scrollY > 8);
+    obnov();
+    addEventListener('scroll', obnov, { passive: true });
+  }
   const btn = document.querySelector<HTMLButtonElement>('[data-burger]');
   const menu = document.querySelector<HTMLElement>('[data-mmenu]');
   if (btn && menu) {
@@ -72,6 +80,24 @@ import Logo from './Logo.astro';
     position: sticky;
     top: 0;
     z-index: 40;
+  }
+  /* Úvodní stránka: průhledná hlavička nad gradientem */
+  .hdr--pruhledna {
+    position: fixed;
+    left: 0;
+    right: 0;
+    background: transparent;
+    border-bottom-color: transparent;
+    backdrop-filter: none;
+    transition: background 0.25s, border-color 0.25s, backdrop-filter 0.25s;
+  }
+  .hdr--pruhledna.hdr--posunuta {
+    background: rgb(255 255 255 / 0.85);
+    border-bottom-color: var(--line);
+    backdrop-filter: saturate(1.4) blur(10px);
+  }
+  .hdr--pruhledna .hdr__burger:not([aria-expanded='true']) {
+    background: rgb(255 255 255 / 0.6);
   }
   .nav-jen-m {
     display: none;

@@ -159,7 +159,7 @@ const jsonLd = [
   }
   @media (max-width: 640px) {
     .hero {
-      padding: 28px 0 32px !important;
+      padding: calc(68px + 28px) 0 32px !important;
     }
     .hero h1 {
       font-size: 2.5rem !important;
@@ -227,7 +227,8 @@ const jsonLd = [
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    padding: clamp(56px, 10vw, 120px) 0 clamp(40px, 7vw, 80px);
+    /* + výška průhledné hlavičky, která je nad úvodem */
+    padding: calc(68px + clamp(48px, 9vw, 110px)) 0 clamp(40px, 7vw, 80px);
     text-align: center;
   }
   /* Jemný rozmazaný teplý gradient za úvodem */
@@ -235,7 +236,7 @@ const jsonLd = [
     content: '';
     position: absolute;
     z-index: -1;
-    inset: -30% -10% 0;
+    inset: -10% -10% 0;
     background:
       radial-gradient(38% 45% at 22% 30%, rgb(255 122 50 / 0.42), transparent 70%),
       radial-gradient(32% 42% at 78% 22%, rgb(255 184 77 / 0.5), transparent 70%),
