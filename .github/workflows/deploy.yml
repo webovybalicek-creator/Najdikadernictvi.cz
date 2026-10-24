@@ -66,10 +66,16 @@ jobs:
           echo "::notice::Změněných souborů: $(wc -l < zmenene.txt) z $(wc -l < novy-manifest.txt)"
           cp novy-manifest.txt dist/.deploy-manifest-new.txt
           echo ".deploy-manifest-new.txt" >> zmenene.txt
-          (cd dist && zip -q -X "../$ZIP" -@ < ../zmenene.txt)
-          kod=$?
-          [ $kod -eq 0 ] || chyba "zip skončil s kódem $kod"
-          ls -lh "$ZIP"
+          python3 - "$ZIP" <<'PY' || chyba "vytvoření ZIPu selhalo"
+          import sys, zipfile, os
+          cil = sys.argv[1]
+          with open('zmenene.txt', encoding='utf-8') as f:
+              soubory = [r.rstrip('\n') for r in f if r.strip()]
+          with zipfile.ZipFile(cil, 'w', zipfile.ZIP_DEFLATED, compresslevel=6) as z:
+              for s in soubory:
+                  z.write(os.path.join('dist', s), s)
+          print(f'ZIP: {len(soubory)} souborů, {os.path.getsize(cil) / 1e6:.1f} MB')
+          PY
 
       - name: Nahrání ZIPu (FTPS)
         if: env.FTP_PASSWORD != ''
