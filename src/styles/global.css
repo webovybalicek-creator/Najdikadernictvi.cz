@@ -593,3 +593,11 @@ picture {
     display: none;
   }
 }
+
+/* Mapy: šedobílý podklad, ať vyniknou oranžové značky salonů */
+.leaflet-tile-pane {
+  filter: grayscale(1) brightness(1.06) contrast(0.92);
+}
+.leaflet-container {
+  background: #f2f2f3 !important;
+}

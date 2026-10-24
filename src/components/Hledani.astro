@@ -30,7 +30,7 @@
 
 <script>
   type Mesto = [string, string, number, string]; // název, url, počet, kraj
-  type Salon = [string, string, string]; // název, url, město
+  type Salon = [string, string, string, number, number, string?]; // název, url, město, lat, lon, vlastní fotka
   let index: { m: Mesto[]; s: Salon[] } | null = null;
   const norm = (s: string) =>
     s
@@ -43,10 +43,10 @@
     if (index) return index;
     nacitani ??= fetch('/hledat.json')
       .then((r) => r.json())
-      .then((d: { m: Mesto[]; s: [string, string, number][] }) => ({
+      .then((d: { m: Mesto[]; s: [string, string, number, number, number, string?][] }) => ({
         m: d.m,
-        // rozbalení kompaktního formátu: [název, slug, index města] → [název, url, město]
-        s: d.s.map(([n, slug, i]) => [n, `${d.m[i][1]}${slug}/`, d.m[i][0]] as Salon),
+        // rozbalení kompaktního formátu: [název, slug, index města, …] → [název, url, město, …]
+        s: d.s.map(([n, slug, i, la, lo, f]) => [n, `${d.m[i][1]}${slug}/`, d.m[i][0], la, lo, f] as Salon),
       }));
     index = await nacitani;
     return index;
@@ -98,14 +98,24 @@
           (salony.length
             ? `<p class="srch__h">Salony</p>` +
               salony
-                .map((s) => `<a role="option" href="${s[1]}"><span>${esc(s[0])}</span><small>${esc(s[2])}</small></a>`)
-                .join('')
+                .map((s) => {
+                  const mono = esc(s[0].replace(/^(kadeřnictví|barbershop|barber|salon|studio)\s+/i, '').slice(0, 2).toUpperCase());
+                  const foto = s[5] ?? `/api/panorama.php?lat=${s[3]}&lon=${s[4]}&s=maly&v=2`;
+                  return `<a role="option" class="srch__salon" href="${s[1]}"><span class="srch__th"><b>${mono}</b><img src="${foto}" alt="" loading="lazy" onload="this.classList.add('ok')" onerror="this.remove()"></span><span class="srch__txt"><span>${esc(s[0])}</span><small>${esc(s[2])}</small></span></a>`;
+                })
+                .join('') +
+              `<p class="srch__atr">Náhledy z ulice © Mapy.com</p>`
             : '');
       }
       box.hidden = false;
     };
 
-    input.addEventListener('input', render);
+    // náhledy fotek se načítají až když uživatel chvíli nepíše (šetří kredity Mapy.com)
+    let casovac = 0;
+    input.addEventListener('input', () => {
+      clearTimeout(casovac);
+      casovac = window.setTimeout(render, 220);
+    });
     input.addEventListener('focus', () => {
       nacti();
       if (input.value.trim().length >= 2) render();
@@ -239,6 +249,55 @@
     background: var(--mint);
     color: var(--ink);
     outline: none;
+  }
+  .srch__res :global(.srch__salon) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.75rem;
+  }
+  .srch__res :global(.srch__th) {
+    position: relative;
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--accent-soft);
+    display: grid;
+    place-items: center;
+  }
+  .srch__res :global(.srch__th b) {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #c2410c;
+  }
+  .srch__res :global(.srch__th img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .srch__res :global(.srch__th img.ok) {
+    opacity: 1;
+  }
+  .srch__res :global(.srch__txt) {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .srch__res :global(.srch__txt small) {
+    margin: 0;
+  }
+  .srch__res :global(.srch__atr) {
+    margin: 0.25rem 0.7rem 0.2rem;
+    font-size: 0.68rem;
+    color: var(--ink-soft);
+    text-align: right;
   }
   .srch__res :global(small) {
     color: var(--ink-soft);

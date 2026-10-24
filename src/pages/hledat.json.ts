@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { mesta, mestaSloucena, PROVOZOVNY } from '../lib/data';
 
 // Index pro našeptávač. Salony odkazují na město indexem, ať se neopakuje název a URL obce:
-// m: [název, url, počet, kraj], s: [název salonu, slug, index města v m]
+// m: [název, url, počet, kraj], s: [název salonu, slug, index města v m, lat, lon, vlastní fotka?]
 export const GET: APIRoute = () => {
   const praha = mestaSloucena().find((x) => x.obvody);
   const seznam = mesta().filter((x) => x.slug !== 'praha');
@@ -11,6 +11,13 @@ export const GET: APIRoute = () => {
     ...(praha ? [[praha.nazev, `/${praha.slug}/`, praha.provozovny.length, praha.kraj.nazev]] : []),
   ];
   const poradi = new Map(seznam.map((x, i) => [x.slug, i]));
-  const s = PROVOZOVNY.filter((p) => poradi.has(p.mestoSlug)).map((p) => [p.nazev, p.slug, poradi.get(p.mestoSlug)]);
+  const s = PROVOZOVNY.filter((p) => poradi.has(p.mestoSlug)).map((p) => [
+    p.nazev,
+    p.slug,
+    poradi.get(p.mestoSlug),
+    Math.round(p.lat * 1e4) / 1e4,
+    Math.round(p.lon * 1e4) / 1e4,
+    ...(p.fotky?.[0] ? [p.fotky[0]] : []),
+  ]);
   return new Response(JSON.stringify({ m, s }), { headers: { 'Content-Type': 'application/json' } });
 };
