@@ -3,6 +3,7 @@ import registrRaw from '../data/registr.json';
 import meta from '../data/import-meta.json';
 import vyrazene from '../data/vyrazene.json';
 import overeneRaw from '../data/overene.json';
+import majiteleRaw from '../data/majitele.json';
 import { KRAJE, type Kraj } from './kraje';
 import { parseTyden, type Tyden } from './oteviraci-doba';
 import { slugify } from './slug';
@@ -33,14 +34,18 @@ export interface Provozovna {
   instagram?: string;
   oteviraciDoba?: string;
   bezbarierove?: string;
+  /** Platba kartou: yes | no */
+  platbaKartou?: string;
   /** Datum ověření profilu majitelem (ISO) */
   overeno?: string;
   popis?: string;
   cenik?: { polozka: string; cena: string }[];
   rezervace?: string;
+  /** Fotky od majitele (URL) */
+  fotky?: string[];
 }
 
-type Overeni = Partial<Pick<Provozovna, 'nazev' | 'telefon' | 'email' | 'web' | 'instagram' | 'facebook' | 'rezervace' | 'oteviraciDoba' | 'popis' | 'cenik' | 'zamereni'>> & {
+type Overeni = Partial<Pick<Provozovna, 'nazev' | 'platbaKartou' | 'bezbarierove' | 'telefon' | 'email' | 'web' | 'instagram' | 'facebook' | 'rezervace' | 'oteviraciDoba' | 'popis' | 'cenik' | 'zamereni' | 'fotky'>> & {
   overeno: string;
 };
 
@@ -64,7 +69,7 @@ interface RegistrZaznam {
   lon: number;
 }
 
-const REZERVOVANE = new Set(['blog', 'kraj', 'kraje', 'hledat', 'kontakt', 'o-webu', 'pridat-provozovnu', 'ochrana-osobnich-udaju', 'okoli', 'praha-hub', 'barbershopy', 'detska-kadernictvi', 'otevreno-v-sobotu', 'otevreno-v-nedeli', 'pro-salony', 'podminky-uziti', 'oblibene', 'mapa']);
+const REZERVOVANE = new Set(['blog', 'kraj', 'kraje', 'hledat', 'kontakt', 'o-webu', 'pridat-provozovnu', 'ochrana-osobnich-udaju', 'okoli', 'praha-hub', 'barbershopy', 'detska-kadernictvi', 'otevreno-v-sobotu', 'otevreno-v-nedeli', 'pro-salony', 'podminky-uziti', 'oblibene', 'mapa', 'panska-kadernictvi', 'damska-kadernictvi', 'otevreno-vecer', 'otevreno-rano', 'bezbarierova-kadernictvi', 'kadernictvi-platba-kartou', 'porovnat', 'ceny-kadernictvi', 'sprava']);
 const OBVOD = /^Praha \d+$/;
 const nn = <T,>(v: T | null | undefined) => (v == null || v === '' ? undefined : v);
 
@@ -175,12 +180,14 @@ function sestav(): Provozovna[] {
     used.add(`${p.mestoSlug}/${p.slug}`);
   }
   // Údaje ověřené majitelem (po přidělení slugu, aby se URL neměnila)
-  const overene = overeneRaw.salony as Record<string, Overeni>;
-  for (const p of vse) {
-    const o = overene[p.id];
-    if (!o?.overeno) continue;
-    for (const [k, v] of Object.entries(o)) {
-      if (v !== undefined && v !== null && v !== '') (p as unknown as Record<string, unknown>)[k] = v;
+  // Nejdřív údaje, které majitel upravil sám (/sprava/), pak ruční opravy redakce (mají přednost)
+  for (const zdroj of [majiteleRaw.salony, overeneRaw.salony] as Record<string, Overeni>[]) {
+    for (const p of vse) {
+      const o = zdroj[p.id];
+      if (!o?.overeno) continue;
+      for (const [k, v] of Object.entries(o)) {
+        if (v !== undefined && v !== null && v !== '' && !(Array.isArray(v) && !v.length)) (p as unknown as Record<string, unknown>)[k] = v;
+      }
     }
   }
   // Salony vyřazené na žádost (id nebo URL)
@@ -315,3 +322,64 @@ export const ZAMERENI_NAZEV: Record<string, string> = {
 
 export const pocetText = (n: number, jedna: string, dve: string, pet: string) =>
   `${n.toLocaleString('cs-CZ')} ${n === 1 ? jedna : n >= 2 && n <= 4 ? dve : pet}`;
+
+// ---------------------------------------------------------------- čtvrti (části obcí) velkých měst
+export interface Ctvrt {
+  nazev: string;
+  slug: string;
+  mesto: Mesto;
+  provozovny: Provozovna[];
+}
+const MIN_CTVRT = 3;
+const _ctvrti = new Map<string, Ctvrt[]>();
+
+/** Hezčí název části: „Liberec III-Jeřáb“ → „Jeřáb“ */
+const nazevCasti = (cast: string, mesto: string) =>
+  cast.replace(new RegExp(`^${mesto.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} [IVXL]+-`), '').trim();
+
+/** Části obce s aspoň 3 salony (jen obce s 30+ salony). Salonům bez části se přiřadí nejbližší soused. */
+export function ctvrti(m: Mesto): Ctvrt[] {
+  if (_ctvrti.has(m.slug)) return _ctvrti.get(m.slug)!;
+  let out: Ctvrt[] = [];
+  if (m.provozovny.length >= 30) {
+    const sCasti = m.provozovny.filter((p) => p.cast && p.cast !== m.nazev);
+    const prirazeni = new Map<Provozovna, string>();
+    for (const p of m.provozovny) {
+      if (p.cast && p.cast !== m.nazev) {
+        prirazeni.set(p, p.cast);
+        continue;
+      }
+      let best = Infinity;
+      let cast: string | undefined;
+      for (const o of sCasti) {
+        const d = (o.lat - p.lat) ** 2 + ((o.lon - p.lon) * 0.64) ** 2;
+        if (d < best) {
+          best = d;
+          cast = o.cast;
+        }
+      }
+      if (cast && best < 0.006 ** 2) prirazeni.set(p, cast);
+    }
+    const skup = new Map<string, Provozovna[]>();
+    for (const [p, c] of prirazeni) {
+      if (!skup.has(c)) skup.set(c, []);
+      skup.get(c)!.push(p);
+    }
+    const pouzite = new Set<string>();
+    out = [...skup.entries()]
+      .filter(([, s]) => s.length >= MIN_CTVRT)
+      .map(([c, s]) => {
+        const nazev = nazevCasti(c, m.nazev);
+        let slug = slugify(nazev);
+        if (pouzite.has(slug)) slug = slugify(c);
+        pouzite.add(slug);
+        return { nazev, slug, mesto: m, provozovny: m.provozovny.filter((p) => s.includes(p)) };
+      })
+      .sort((a, b) => a.nazev.localeCompare(b.nazev, 'cs', { numeric: true }));
+    if (out.length < 2) out = [];
+  }
+  _ctvrti.set(m.slug, out);
+  return out;
+}
+export const ctvrtUrl = (c: Ctvrt) => `/${c.mesto.slug}/ctvrt/${c.slug}/`;
+export const vsechnyCtvrti = () => mesta().flatMap((m) => ctvrti(m));

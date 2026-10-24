@@ -1,6 +1,6 @@
 // Vykreslení uložených salonů (oblíbené, historie) jako karet – na klientu, data z localStorage.
 import type { UlozenySalon } from './oblibene';
-import { inicializujSrdicka } from './oblibene';
+import { inicializujSrdicka, inicializujPorovnani } from './oblibene';
 import { doplnHodnoceni } from './hodnoceni-souhrn';
 
 const esc = (s: string) => String(s).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
@@ -24,11 +24,13 @@ export function kartaHtml(s: UlozenySalon): string {
       <p class="karta__adr">${esc(s.a)}</p>
       <span class="hod-mini" data-hod-id="${esc(s.id)}"><span class="hv" style="--p:0%"></span><span class="hod-mini__nic">Zatím bez hodnocení</span></span>
     </a>
+    <button type="button" class="karta__por" data-porovnat="${data}" aria-pressed="false"><span data-porovnat-text>Porovnat</span></button>
   </li>`;
 }
 
 export function vykresli(el: HTMLElement, salony: UlozenySalon[]) {
   el.innerHTML = salony.map(kartaHtml).join('');
   inicializujSrdicka(el);
+  inicializujPorovnani(el);
   doplnHodnoceni(el);
 }

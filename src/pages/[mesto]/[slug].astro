@@ -77,6 +77,7 @@ const jsonLd = {
   sameAs: [p.web, p.facebook, p.instagram].filter(Boolean),
   openingHoursSpecification: t ? schemaSpec(t) : undefined,
   description: p.popis,
+  image: p.fotky?.map((f) => new URL(f, SITE.url).href),
   hasOfferCatalog: p.cenik?.length
     ? {
         '@type': 'OfferCatalog',
@@ -163,6 +164,7 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
             {p.web && (<><dt>Web</dt><dd><a href={p.web} rel="noopener nofollow" target="_blank">{host(p.web)}</a></dd></>)}
             {p.instagram && (<><dt>Instagram</dt><dd><a href={p.instagram} rel="noopener nofollow" target="_blank">{host(p.instagram).replace(/^instagram\.com\//, '@')}</a></dd></>)}
             {p.facebook && (<><dt>Facebook</dt><dd><a href={p.facebook} rel="noopener nofollow" target="_blank">Profil na Facebooku</a></dd></>)}
+            {p.platbaKartou && (<><dt>Platba kartou</dt><dd>{p.platbaKartou === 'yes' ? 'Ano' : 'Ne, jen hotově'}</dd></>)}
             {p.bezbarierove && (<><dt>Bezbariérový přístup</dt><dd>{p.bezbarierove === 'yes' ? 'Ano' : p.bezbarierove === 'limited' ? 'Částečně' : 'Ne'}</dd></>)}
           </dl>
         </section>
@@ -184,6 +186,23 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
               <p class="muted cenik__pozn">Ceny uvádí salon. Konečná cena se může lišit podle délky vlasů a náročnosti.</p>
             </section>
           ) : null
+        }
+
+        {
+          p.fotky && p.fotky.length > 1 && (
+            <section>
+              <h2>Fotky</h2>
+              <ul class="galerie">
+                {p.fotky.map((f, i) => (
+                  <li>
+                    <a href={f} target="_blank" rel="noopener">
+                      <img src={f} alt={`${p.nazev} – fotka ${i + 1}`} loading="lazy" decoding="async" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )
         }
 
         <section>
@@ -211,7 +230,8 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
         <div class="majitel">
           <h2>{p.overeno ? 'Změna údajů?' : 'Je to váš salon?'}</h2>
           <p>{p.overeno ? 'Údaje ověřil majitel. Pokud se něco změnilo, dejte nám vědět.' : 'Ověřte profil a doplňte ceník, popis, rezervace a aktuální otevírací dobu. Je to zdarma.'}</p>
-          <a class="btn" href={`/pridat-provozovnu/?salon=${encodeURIComponent(url(p))}&nazev=${encodeURIComponent(p.nazev)}`}>Upravit údaje</a>
+          <a class="btn" href={`/sprava/?salon=${p.id}&u=${encodeURIComponent(url(p))}`}>Spravovat profil</a>
+          <p class="majitel__alt"><a href={`/pridat-provozovnu/?salon=${encodeURIComponent(url(p))}&nazev=${encodeURIComponent(p.nazev)}`}>Nebo nám pošlete změny formulářem</a></p>
         </div>
       </div>
     </div>
@@ -246,6 +266,27 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
       }
     </p>
     <NahlasitChybu p={p} />
+    <script
+      type="application/json"
+      id="salon-data"
+      set:html={JSON.stringify({
+        id: p.id,
+        nazev: p.nazev,
+        adresa: adr || p.mesto,
+        telefon: p.telefon ?? '',
+        email: p.email ?? '',
+        web: p.web ?? '',
+        instagram: p.instagram ?? '',
+        facebook: p.facebook ?? '',
+        rezervace: p.rezervace ?? '',
+        popis: p.popis ?? '',
+        cenik: p.cenik ?? [],
+        tyden: t,
+        platbaKartou: p.platbaKartou ?? '',
+        bezbarierove: p.bezbarierove ?? '',
+        zamereni: p.zamereni,
+      }).replace(/</g, '\\u003c')}
+    />
   </div>
   <Tipy />
 </Base>
@@ -429,6 +470,25 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
     margin: 0 0 1rem;
     padding: 0;
     border-top: 1px solid var(--line);
+  }
+  .galerie {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+    gap: 0.5rem;
+  }
+  .galerie img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+  .majitel__alt {
+    margin: 0.75rem 0 0;
+    font-size: 0.85rem;
   }
   .head__over {
     margin: -0.25rem 0 0.5rem;

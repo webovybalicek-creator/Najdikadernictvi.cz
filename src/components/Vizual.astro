@@ -9,7 +9,9 @@ interface Props {
   panorama?: boolean;
 }
 const { p, velky = false, panorama = false } = Astro.props;
-const panoUrl = `/api/panorama.php?lat=${p.lat}&lon=${p.lon}&s=${velky ? 'velky' : 'maly'}&v=2`;
+// Vlastní fotka od majitele má přednost před pohledem z ulice
+const vlastni = p.fotky?.[0];
+const panoUrl = vlastni ?? `/api/panorama.php?lat=${p.lat}&lon=${p.lon}&s=${velky ? 'velky' : 'maly'}&v=2`;
 
 // Tlumené přírodní tóny (kámen, písek, šalvěj, jíl)
 const PALETA = [
@@ -53,9 +55,9 @@ const id = `v-${p.id}`;
   </svg>
   <span class="viz__mono">{mono}</span>
   {
-    panorama && (
+    (panorama || vlastni) && (
       <img
-        class="viz__foto"
+        class:list={['viz__foto', vlastni && 'viz__foto--vlastni']}
         src={panoUrl}
         alt=""
         loading="lazy"
@@ -65,7 +67,7 @@ const id = `v-${p.id}`;
       />
     )
   }
-  {panorama && <span class="viz__atr" aria-hidden="true">© Mapy.com</span>}
+  {panorama && !vlastni && <span class="viz__atr" aria-hidden="true">© Mapy.com</span>}
 </div>
 
 <style>
@@ -103,6 +105,9 @@ const id = `v-${p.id}`;
     object-position: center top;
     opacity: 0;
     transition: opacity 0.4s ease;
+  }
+  .viz__foto--vlastni {
+    object-position: center;
   }
   .viz__foto.ok {
     opacity: 1;

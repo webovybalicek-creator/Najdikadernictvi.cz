@@ -2,6 +2,13 @@
 // Druhá řada akcí na detailu salonu: oblíbené, sdílení, připomínka do kalendáře
 import Srdce from './Srdce.astro';
 import { adresa, url, type Provozovna } from '../lib/data';
+
+/** České mobilní číslo (+420 6xx / 7xx) → odkazy na WhatsApp a SMS */
+const mobil = (t?: string) => {
+  const c = (t ?? '').replace(/[^\d+]/g, '').replace(/^00/, '+');
+  const m = c.match(/^(?:\+?420)?([67]\d{8})$/);
+  return m ? `420${m[1]}` : null;
+};
 import { SITE } from '../lib/config';
 
 interface Props {
@@ -9,6 +16,9 @@ interface Props {
 }
 const { p } = Astro.props;
 const abs = new URL(url(p), SITE.url).href;
+const mob = mobil(p.telefon);
+const salonData = JSON.stringify({ id: p.id, u: url(p), n: p.nazev, a: adresa(p, true) || p.mesto, ...(p.typ === 'barber' ? { b: 1 } : {}), la: p.lat, lo: p.lon });
+const zprava = encodeURIComponent(`Dobrý den, rád/a bych se objednal/a na střih. Máte volný termín?`);
 ---
 
 <div
@@ -20,6 +30,24 @@ const abs = new URL(url(p), SITE.url).href;
   data-telefon={p.telefon ?? ''}
 >
   <Srdce p={p} sTextem />
+  {
+    mob && (
+      <>
+        <a class="btn btn--ghost" href={`https://wa.me/${mob}?text=${zprava}`} target="_blank" rel="noopener nofollow">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2a8.8 8.8 0 0 0-7.6 13.2L3.3 20.7l4.4-1.1A8.8 8.8 0 1 0 12 3.2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M9 8.6c.3-.6.6-.6.9-.6h.5c.2 0 .4 0 .6.5l.7 1.7c.1.2 0 .4-.1.6l-.5.6c-.1.2-.2.3 0 .6.6 1 1.4 1.8 2.5 2.3.3.1.4.1.6-.1l.7-.8c.2-.2.3-.2.6-.1l1.6.8c.3.1.4.2.4.4 0 .5-.2 1.1-.6 1.4-.5.4-1.2.6-2 .4-2.4-.6-4.6-2.6-5.6-4.9-.4-1-.3-2.1.3-2.9z" fill="currentColor"></path></svg>
+          WhatsApp
+        </a>
+        <a class="btn btn--ghost" href={`sms:+${mob}?body=${zprava}`}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path></svg>
+          SMS
+        </a>
+      </>
+    )
+  }
+  <button type="button" class="btn btn--ghost" data-porovnat={salonData} aria-pressed="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4v16M16 4v16M4 8h8M12 16h8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>
+    <span data-porovnat-text>Porovnat</span>
+  </button>
   <div class="sdilet">
     <button type="button" class="btn btn--ghost" data-sdilet aria-expanded="false">
       <svg viewBox="0 0 24 24" aria-hidden="true"

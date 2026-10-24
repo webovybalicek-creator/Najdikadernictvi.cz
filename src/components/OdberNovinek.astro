@@ -1,0 +1,105 @@
+---
+// Odběr e-mailového upozornění na nové salony v obci (double opt-in, /api/upozorneni.php)
+interface Props {
+  mesto: string;
+  nazev: string;
+}
+const { mesto, nazev } = Astro.props;
+---
+
+<form class="odber" data-odber data-mesto={mesto} data-nazev={nazev} novalidate>
+  <h2>Hlídat nové salony</h2>
+  <p>Pošleme vám e-mail, až v obci {nazev} přibude nové kadeřnictví nebo barbershop. Nic jiného.</p>
+  <div class="odber__radek">
+    <label class="sr-only" for={`odber-${mesto}`}>E-mail</label>
+    <input id={`odber-${mesto}`} type="email" name="email" placeholder="váš@email.cz" autocomplete="email" required />
+    <button class="btn" type="submit">Hlídat</button>
+  </div>
+  <input type="text" name="web2" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+  <p class="odber__pozn">
+    Odběr potvrdíte v e-mailu a zrušíte jedním kliknutím. <a href="/ochrana-osobnich-udaju/#upozorneni">Jak s e-mailem nakládáme</a>
+  </p>
+  <p class="odber__stav" data-odber-stav role="status" aria-live="polite"></p>
+</form>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-odber]').forEach((f) => {
+    const stav = f.querySelector<HTMLElement>('[data-odber-stav]')!;
+    f.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(f);
+      if (!String(fd.get('email')).includes('@')) {
+        stav.dataset.typ = 'chyba';
+        stav.textContent = 'Zadejte prosím e-mail.';
+        return;
+      }
+      fd.set('akce', 'odber');
+      fd.set('mesto', f.dataset.mesto!);
+      fd.set('nazev', f.dataset.nazev!);
+      stav.dataset.typ = '';
+      stav.textContent = 'Odesílám…';
+      try {
+        const r = await (await fetch('/api/upozorneni.php', { method: 'POST', body: fd })).json();
+        stav.dataset.typ = r.ok ? 'ok' : 'chyba';
+        stav.textContent = r.ok
+          ? r.uz
+            ? 'Tuto obec už hlídáte.'
+            : 'Hotovo! Potvrďte prosím odběr v e-mailu, který jsme vám právě poslali.'
+          : (r.chyba ?? 'Odeslání se nepodařilo.');
+        if (r.ok) f.reset();
+      } catch {
+        stav.dataset.typ = 'chyba';
+        stav.textContent = 'Odeslání se nepodařilo, zkuste to prosím později.';
+      }
+    });
+  });
+</script>
+
+<style>
+  .odber {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+  }
+  .odber h2 {
+    font-size: 1.35rem;
+    margin: 0 0 0.5rem;
+  }
+  .odber p {
+    margin: 0 0 0.9rem;
+  }
+  .odber__radek {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .odber__radek input {
+    flex: 1;
+    min-width: 0;
+    font: inherit;
+    font-size: 0.95rem;
+    padding: 0.6em 0.8em;
+    border: 1px solid #cfc7b9;
+    border-radius: var(--radius);
+    background: #fff;
+  }
+  .odber__pozn {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    margin-top: 0.6rem !important;
+  }
+  .odber__stav {
+    font-size: 0.9rem;
+    margin: 0 !important;
+  }
+  .odber__stav[data-typ='ok'] {
+    color: var(--open);
+  }
+  .odber__stav[data-typ='chyba'] {
+    color: var(--closed);
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+  }
+</style>

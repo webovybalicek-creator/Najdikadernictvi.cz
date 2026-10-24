@@ -21,7 +21,7 @@ const t = tyden(p);
   data-lat={p.lat}
   data-lon={p.lon}
   data-typ={p.typ}
-  data-zamereni={p.zamereni.join(' ')}
+  data-zamereni={[...p.zamereni, (p.bezbarierove === 'yes' || p.bezbarierove === 'limited') && 'bezbarierove', p.platbaKartou === 'yes' && 'karta'].filter(Boolean).join(' ')}
   data-oh={t ? JSON.stringify(t) : undefined}
   data-hledat={`${p.nazev} ${p.ulice ?? ''} ${p.cast ?? ''}`.toLowerCase()}
 >

@@ -1,0 +1,191 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+---
+
+<Base title="Porovnání salonů" description="Porovnejte až 3 kadeřnictví nebo barbershopy vedle sebe: otevírací doba, hodnocení, vzdálenost a služby." noindex>
+  <div class="wrap section">
+    <Breadcrumb items={[{ nazev: 'Porovnání' }]} />
+    <span class="eyebrow">Porovnání</span>
+    <h1>Salony <em>vedle sebe</em></h1>
+    <p class="lead" data-por-uvod>Načítám…</p>
+    <div class="por-wrap" data-por-wrap hidden>
+      <table class="por" data-por-tabulka></table>
+    </div>
+    <p class="por-akce" data-por-akce hidden>
+      <button type="button" class="btn btn--ghost" data-por-poloha>Zobrazit vzdálenost ode mě</button>
+      <a class="btn btn--ghost" href="/oblibene/">Vybrat z oblíbených</a>
+    </p>
+  </div>
+</Base>
+
+<script>
+  import { porovnani, odeberZPorovnani } from '../scripts/oblibene';
+  import { stav } from '../scripts/stav';
+
+  type Z = [number, number, string, string, string, 0 | 1, [number, number][][] | 0, 0 | 1, string, 0 | 1, 0 | 1];
+  const DNY = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
+  const hm = (m: number) => `${Math.floor(m / 60)}:${String(m % 60).padStart(2, '0')}`;
+  const esc = (s: string) => String(s).replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
+  const uvod = document.querySelector<HTMLElement>('[data-por-uvod]')!;
+  const wrap = document.querySelector<HTMLElement>('[data-por-wrap]')!;
+  const tab = document.querySelector<HTMLTableElement>('[data-por-tabulka]')!;
+  const akce = document.querySelector<HTMLElement>('[data-por-akce]')!;
+  let poloha: { lat: number; lon: number } | null = null;
+
+  const km = (a: { lat: number; lon: number }, la: number, lo: number) => {
+    const dy = (la - a.lat) * 111.3;
+    const dx = (lo - a.lon) * 111.3 * Math.cos((a.lat * Math.PI) / 180);
+    const d = Math.hypot(dx, dy);
+    return d < 1 ? `${Math.round(d * 1000)} m` : `${d.toFixed(1).replace('.', ',')} km`;
+  };
+
+  (async () => {
+  const [index, hod] = await Promise.all([
+    fetch('/okoli.json').then((r) => r.json() as Promise<Z[]>),
+    fetch('/api/hodnoceni.php?souhrn=1')
+      .then((r) => (r.ok ? r.json() : {}))
+      .catch(() => ({})) as Promise<Record<string, [number, number]>>,
+  ]);
+  const podleUrl = new Map(index.map((z) => [z[3], z]));
+
+  function vykresli() {
+    const vyber = porovnani();
+    if (!vyber.length) {
+      uvod.innerHTML =
+        'Zatím nemáte nic k porovnání. U salonu klikněte na <strong>Porovnat</strong> (nejvýš 3 salony) nebo je vyberte z <a href="/oblibene/">oblíbených</a>.';
+      wrap.hidden = true;
+      akce.hidden = false;
+      return;
+    }
+    uvod.textContent =
+      vyber.length === 1 ? 'Přidejte ještě jeden nebo dva salony, ať je s čím porovnávat.' : `Porovnáváte ${vyber.length} salony.`;
+    wrap.hidden = false;
+    akce.hidden = false;
+    const z = vyber.map((s) => podleUrl.get(s.u));
+    const radek = (nazev: string, bunky: string[]) =>
+      `<tr><th scope="row">${nazev}</th>${bunky.map((b) => `<td>${b}</td>`).join('')}</tr>`;
+    const ano = (v: unknown) => (v ? 'Ano' : '<span class="muted">neuvedeno</span>');
+    const r: string[] = [];
+    r.push(
+      `<thead><tr><th></th>${vyber
+        .map(
+          (s) =>
+            `<th scope="col"><a href="${esc(s.u)}">${esc(s.n)}</a><button type="button" class="por-x" data-odeber="${esc(s.id)}" aria-label="Odebrat ${esc(s.n)}">×</button></th>`,
+        )
+        .join('')}</tr></thead><tbody>`,
+    );
+    r.push(radek('Adresa', vyber.map((s) => esc(s.a))));
+    r.push(radek('Typ', vyber.map((s) => (s.b ? 'Barbershop' : 'Kadeřnictví'))));
+    r.push(
+      radek(
+        'Hodnocení',
+        vyber.map((s) => {
+          const h = hod[s.id];
+          return h
+            ? `<span class="hv" style="--p:${(h[0] / 5) * 100}%"></span> <strong>${String(h[0]).replace('.', ',')}</strong> (${h[1]})`
+            : '<span class="muted">zatím bez hodnocení</span>';
+        }),
+      ),
+    );
+    r.push(
+      radek(
+        'Teď',
+        z.map((x) => {
+          if (!x || !x[6]) return '<span class="muted">otevírací doba neznámá</span>';
+          const st = stav(x[6]);
+          return `<span class="stav" data-stav="${st.open ? 'open' : 'closed'}">${st.text}</span>`;
+        }),
+      ),
+    );
+    for (let d = 0; d < 7; d++) {
+      r.push(
+        radek(
+          DNY[d],
+          z.map((x) => {
+            if (!x || !x[6]) return '<span class="muted">–</span>';
+            const i = x[6][d];
+            return i.length ? i.map(([a, b]) => `${hm(a)}–${hm(b)}`).join(', ') : '<span class="muted">zavřeno</span>';
+          }),
+        ),
+      );
+    }
+    r.push(radek('Dětské střihy', z.map((x) => ano(x?.[7]))));
+    r.push(radek('Bezbariérové', z.map((x) => ano(x?.[9]))));
+    r.push(radek('Platba kartou', z.map((x) => ano(x?.[10]))));
+    if (poloha) r.push(radek('Vzdálenost', vyber.map((s) => (s.la && s.lo ? km(poloha!, s.la, s.lo) : '–'))));
+    r.push('</tbody>');
+    tab.innerHTML = r.join('');
+    tab.querySelectorAll<HTMLButtonElement>('[data-odeber]').forEach((b) =>
+      b.addEventListener('click', () => {
+        odeberZPorovnani(b.dataset.odeber!);
+        vykresli();
+      }),
+    );
+  }
+  vykresli();
+  window.addEventListener('storage', vykresli);
+  document.querySelector('[data-por-poloha]')!.addEventListener('click', (e) => {
+    const b = e.currentTarget as HTMLButtonElement;
+    b.textContent = 'Zjišťuji polohu…';
+    navigator.geolocation?.getCurrentPosition(
+      (p) => {
+        poloha = { lat: p.coords.latitude, lon: p.coords.longitude };
+        b.hidden = true;
+        vykresli();
+      },
+      () => (b.textContent = 'Polohu se nepodařilo zjistit'),
+      { timeout: 15000, maximumAge: 300000 },
+    );
+  });
+  })();
+</script>
+
+<style>
+  .por-wrap {
+    margin-top: 2rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .por {
+    width: 100%;
+    min-width: 34rem;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+  }
+  .por :global(th),
+  .por :global(td) {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+  }
+  .por :global(thead th) {
+    font-size: 1.05rem;
+    font-weight: 500;
+    border-bottom: 2px solid var(--ink);
+  }
+  .por :global(thead th a) {
+    text-decoration: none;
+  }
+  .por :global(tbody th) {
+    font-weight: 500;
+    color: var(--ink-soft);
+    white-space: nowrap;
+    width: 8rem;
+  }
+  .por :global(.por-x) {
+    margin-left: 0.4rem;
+    border: 0;
+    background: none;
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .por-akce {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+</style>

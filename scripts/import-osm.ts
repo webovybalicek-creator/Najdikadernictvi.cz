@@ -48,10 +48,20 @@ export interface Provozovna {
   instagram?: string;
   oteviraciDoba?: string;
   bezbarierove?: string;
+  /** Platba kartou: yes | no (z tagů payment:*) */
+  platbaKartou?: string;
 }
 
 const gh = (level: 'notice' | 'warning' | 'error', msg: string) =>
   console.log(process.env.GITHUB_ACTIONS ? `::${level}::${msg}` : `[${level}] ${msg}`);
+
+/** Platba kartou z OSM tagů payment:* (yes/no), jinak neznámo */
+function platba(t: Record<string, string>): string | undefined {
+  const k = ['payment:cards', 'payment:credit_cards', 'payment:debit_cards', 'payment:contactless', 'payment:visa', 'payment:mastercard'];
+  if (k.some((x) => t[x] === 'yes')) return 'yes';
+  if (t['payment:cash_only'] === 'yes' || k.filter((x) => t[x]).every((x) => t[x] === 'no') && k.some((x) => t[x])) return 'no';
+  return undefined;
+}
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -200,6 +210,9 @@ out;`;
       const nazev = clean(t.name);
       if (!nazev) continue;
       if (t['disused:shop'] || t['was:shop'] || t.opening_hours === 'closed') continue;
+      // Ukončený provoz (end_date v minulosti) nebo označení „zavřeno natrvalo“
+      if (t.end_date && t.end_date.slice(0, 10) < new Date().toISOString().slice(0, 10)) continue;
+      if (/^(yes|permanently)$/.test(t['closed'] ?? '') || t['abandoned:shop'] || t['demolished:shop']) continue;
       const lat = e.lat ?? e.center?.lat;
       const lon = e.lon ?? e.center?.lon;
       if (lat == null || lon == null) continue;
@@ -239,6 +252,7 @@ out;`;
         instagram: normSocial(t['contact:instagram'] ?? t.instagram, 'https://www.instagram.com'),
         oteviraciDoba: clean(t.opening_hours),
         bezbarierove: clean(t.wheelchair),
+        platbaKartou: platba(t),
       });
     }
     gh('notice', `${kraj.nazev}: ${n} provozoven`);
@@ -253,7 +267,7 @@ out;`;
     mestaKraje.get(s)!.add(p.kraj);
   }
   // Slugy rezervované pro jiné stránky webu
-  const REZERVOVANE = new Set(['blog', 'kraj', 'kraje', 'hledat', 'kontakt', 'o-webu', 'pridat-provozovnu', 'ochrana-osobnich-udaju', 'okoli', 'praha-hub', 'barbershopy', 'detska-kadernictvi', 'otevreno-v-sobotu', 'otevreno-v-nedeli', 'pro-salony', 'podminky-uziti', 'oblibene', 'mapa']);
+  const REZERVOVANE = new Set(['blog', 'kraj', 'kraje', 'hledat', 'kontakt', 'o-webu', 'pridat-provozovnu', 'ochrana-osobnich-udaju', 'okoli', 'praha-hub', 'barbershopy', 'detska-kadernictvi', 'otevreno-v-sobotu', 'otevreno-v-nedeli', 'pro-salony', 'podminky-uziti', 'oblibene', 'mapa', 'panska-kadernictvi', 'damska-kadernictvi', 'otevreno-vecer', 'otevreno-rano', 'bezbarierova-kadernictvi', 'kadernictvi-platba-kartou', 'porovnat', 'ceny-kadernictvi', 'sprava']);
   for (const p of all) {
     const s = slugify(p.mesto);
     p.mestoSlug =

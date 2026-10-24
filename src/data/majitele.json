@@ -1,0 +1,4 @@
+{
+  "_popis": "Profily upravené majiteli přes /sprava/. Soubor přepisuje workflow Synchronizace profilů, ručně neupravovat (ruční opravy patří do overene.json).",
+  "salony": {}
+}

@@ -37,6 +37,42 @@ export const ZAMERY: Zamer[] = [
     popis: 'salony s otevírací dobou v neděli',
     filtr: (p) => !!tyden(p)?.[6]?.length,
   },
+  {
+    slug: 'panska-kadernictvi',
+    nazev: (m) => `Pánská kadeřnictví ${m}`,
+    popis: 'kadeřnictví a holičství, která uvádějí pánské střihy',
+    filtr: (p) => p.typ !== 'barber' && p.zamereni.includes('panske'),
+  },
+  {
+    slug: 'damska-kadernictvi',
+    nazev: (m) => `Dámská kadeřnictví ${m}`,
+    popis: 'salony, které uvádějí dámské střihy a účesy',
+    filtr: (p) => p.zamereni.includes('damske'),
+  },
+  {
+    slug: 'otevreno-vecer',
+    nazev: (m) => `Kadeřnictví otevřená večer: ${m}`,
+    popis: 'salony otevřené aspoň jeden všední den do 19:00 nebo déle',
+    filtr: (p) => !!tyden(p)?.slice(0, 5).some((d) => d.some(([, b]) => b >= 19 * 60)),
+  },
+  {
+    slug: 'otevreno-rano',
+    nazev: (m) => `Kadeřnictví otevřená brzy ráno: ${m}`,
+    popis: 'salony, které aspoň jeden všední den otevírají v 7:30 nebo dříve',
+    filtr: (p) => !!tyden(p)?.slice(0, 5).some((d) => d.some(([a]) => a <= 7 * 60 + 30)),
+  },
+  {
+    slug: 'bezbarierova-kadernictvi',
+    nazev: (m) => `Bezbariérová kadeřnictví ${m}`,
+    popis: 'salony s bezbariérovým nebo částečně bezbariérovým přístupem',
+    filtr: (p) => p.bezbarierove === 'yes' || p.bezbarierove === 'limited',
+  },
+  {
+    slug: 'kadernictvi-platba-kartou',
+    nazev: (m) => `Kadeřnictví s platbou kartou: ${m}`,
+    popis: 'salony, které uvádějí možnost platby kartou',
+    filtr: (p) => p.platbaKartou === 'yes',
+  },
 ];
 
 /** Cílené podstránky vznikají jen tam, kde mají aspoň tolik výsledků */

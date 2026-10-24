@@ -80,11 +80,25 @@ const fullTitle = title.includes(SITE.nazev) ? title : `${title} | ${SITE.nazev}
     <script>
       import { nuzkyNaTlacitka } from '../scripts/nuzky';
       import { doplnHodnoceni } from '../scripts/hodnoceni-souhrn';
-      import { inicializujSrdicka, inicializujPocitadlo } from '../scripts/oblibene';
+      import { inicializujSrdicka, inicializujPocitadlo, inicializujPorovnani, inicializujListuPorovnani } from '../scripts/oblibene';
       nuzkyNaTlacitka();
       doplnHodnoceni();
       inicializujSrdicka();
       inicializujPocitadlo();
+      inicializujPorovnani();
+      inicializujListuPorovnani();
+
+      // Anonymní počítání zobrazení (bez cookies a osobních údajů), jen na produkčním webu
+      if (location.hostname.endsWith('najdikadernictvi.cz') && !navigator.webdriver) {
+        let r = '';
+        try {
+          r = document.referrer ? new URL(document.referrer).hostname : '';
+        } catch {
+          /* neplatný referrer */
+        }
+        const d = new URLSearchParams({ p: location.pathname, r });
+        navigator.sendBeacon?.('/api/stat.php', d) || fetch('/api/stat.php', { method: 'POST', body: d, keepalive: true }).catch(() => {});
+      }
     </script>
   </body>
 </html>

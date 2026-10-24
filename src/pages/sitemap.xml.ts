@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { KRAJE } from '../lib/kraje';
-import { PROVOZOVNY, mesta, url, mestoUrl, krajUrl, indexovatDetail } from '../lib/data';
+import { PROVOZOVNY, mesta, url, mestoUrl, krajUrl, indexovatDetail, vsechnyCtvrti, ctvrtUrl } from '../lib/data';
 import { SITE } from '../lib/config';
 import { KATEGORIE, kategorieUrl } from '../lib/blog';
 import { zameryMesta, zamerUrl } from '../lib/seo-mesto';
@@ -14,6 +14,7 @@ export const GET: APIRoute = async () => {
     cesty.add(mestoUrl(m.slug));
     for (const { z } of zameryMesta(m)) cesty.add(zamerUrl(z, m.slug));
   }
+  for (const c of vsechnyCtvrti()) cesty.add(ctvrtUrl(c));
   for (const p of PROVOZOVNY) if (indexovatDetail(p)) cesty.add(url(p));
   for (const c of await getCollection('blog')) cesty.add(`/blog/${c.id}/`);
   for (const k of KATEGORIE) cesty.add(kategorieUrl(k));

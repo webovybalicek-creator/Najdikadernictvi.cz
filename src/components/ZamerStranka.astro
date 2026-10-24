@@ -22,7 +22,9 @@ const vety: string[] = [
   `${m.nazev}: ${pocetText(salony.length, 'salon', 'salony', 'salonů')} z celkem ${m.provozovny.length} v katalogu (${z.popis}).`,
 ];
 if (st.sTelefonem) vety.push(`Telefon uvádí ${pocetText(st.sTelefonem, 'salon', 'salony', 'salonů')}, objednat se tak můžete přímo.`);
-if (st.nejdrive && den < 0) vety.push(`Ve všední dny nejdříve otevírá ${st.nejdrive.p.nazev} (od ${hhmm(st.nejdrive.od)}).`);
+if (z.slug === 'otevreno-vecer' && st.nejdele) vety.push(`Nejdéle ve všední dny otevírá ${st.nejdele.p.nazev} (do ${hhmm(st.nejdele.do)}).`);
+if (z.slug === 'bezbarierova-kadernictvi') vety.push('Údaje o bezbariérovosti pochází z OpenStreetMap. „Částečně“ obvykle znamená jeden schod nebo užší dveře, před návštěvou je dobré se zeptat.');
+if (st.nejdrive && den < 0 && z.slug !== 'otevreno-vecer') vety.push(`Ve všední dny nejdříve otevírá ${st.nejdrive.p.nazev} (od ${hhmm(st.nejdrive.od)}).`);
 if (den >= 0) vety.push('Otevírací dobu přebíráme z veřejných zdrojů a o svátcích se může lišit. Před návštěvou ji raději ověřte telefonicky.');
 
 const breadcrumb = [

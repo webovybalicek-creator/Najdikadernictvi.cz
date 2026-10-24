@@ -98,3 +98,81 @@ export function inicializujPocitadlo() {
   window.addEventListener('nk-oblibene', obnov);
   window.addEventListener('storage', obnov);
 }
+
+// ---------------------------------------------------------------- porovnání (max. 3 salony)
+const KLIC_POROVNAT = 'nk-porovnat';
+export const MAX_POROVNAT = 3;
+export const porovnani = () => nacti(KLIC_POROVNAT);
+export const jeVPorovnani = (id: string) => porovnani().some((s) => s.id === id);
+
+/** Vrací true = přidáno, false = odebráno, null = plno */
+export function prepniPorovnani(s: UlozenySalon): boolean | null {
+  const vse = porovnani();
+  const i = vse.findIndex((x) => x.id === s.id);
+  if (i >= 0) vse.splice(i, 1);
+  else if (vse.length >= MAX_POROVNAT) return null;
+  else vse.push({ ...s, c: Date.now() });
+  uloz(KLIC_POROVNAT, vse);
+  window.dispatchEvent(new CustomEvent('nk-porovnat'));
+  return i < 0;
+}
+export function odeberZPorovnani(id: string) {
+  uloz(
+    KLIC_POROVNAT,
+    porovnani().filter((s) => s.id !== id),
+  );
+  window.dispatchEvent(new CustomEvent('nk-porovnat'));
+}
+
+/** Tlačítka <button data-porovnat='{"id":…}'> */
+export function inicializujPorovnani(root: ParentNode = document) {
+  const nastav = (btn: HTMLButtonElement, on: boolean) => {
+    btn.setAttribute('aria-pressed', String(on));
+    const t = btn.querySelector('[data-porovnat-text]');
+    if (t) t.textContent = on ? 'V porovnání' : 'Porovnat';
+  };
+  root.querySelectorAll<HTMLButtonElement>('[data-porovnat]').forEach((btn) => {
+    if (btn.dataset.initP) return;
+    btn.dataset.initP = '1';
+    const s = JSON.parse(btn.dataset.porovnat!) as UlozenySalon;
+    nastav(btn, jeVPorovnani(s.id));
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const r = prepniPorovnani(s);
+      if (r === null) {
+        const t = btn.querySelector('[data-porovnat-text]');
+        if (t) {
+          t.textContent = `Max. ${MAX_POROVNAT} salony`;
+          setTimeout(() => nastav(btn, jeVPorovnani(s.id)), 1600);
+        }
+        return;
+      }
+      nastav(btn, r);
+    });
+    window.addEventListener('nk-porovnat', () => nastav(btn, jeVPorovnani(s.id)));
+  });
+}
+
+/** Plovoucí lišta „Porovnat (n)“ */
+export function inicializujListuPorovnani() {
+  if (location.pathname.startsWith('/porovnat')) return;
+  const lista = document.createElement('div');
+  lista.className = 'por-lista';
+  lista.hidden = true;
+  lista.innerHTML = `<span data-por-text></span><a class="btn" href="/porovnat/">Porovnat</a><button type="button" class="por-lista__x" aria-label="Zrušit porovnání">×</button>`;
+  document.body.appendChild(lista);
+  const obnov = () => {
+    const n = porovnani().length;
+    lista.hidden = n === 0;
+    lista.querySelector('[data-por-text]')!.textContent =
+      n === 1 ? '1 salon k porovnání, přidejte další' : `${n} salony k porovnání`;
+  };
+  lista.querySelector('.por-lista__x')!.addEventListener('click', () => {
+    uloz(KLIC_POROVNAT, []);
+    window.dispatchEvent(new CustomEvent('nk-porovnat'));
+  });
+  obnov();
+  window.addEventListener('nk-porovnat', obnov);
+  window.addEventListener('storage', obnov);
+}

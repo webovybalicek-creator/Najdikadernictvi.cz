@@ -4,8 +4,9 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import ProvozovnaRadek from '../../components/ProvozovnaRadek.astro';
 import MapaSalonu from '../../components/MapaSalonu.astro';
 import Faq from '../../components/Faq.astro';
+import OdberNovinek from '../../components/OdberNovinek.astro';
 import { statistiky, textMesta, faqMesta, faqJsonLd, itemListJsonLd, zameryMesta, zamerUrl } from '../../lib/seo-mesto';
-import { mesta, mestaSloucena, mestoUrl, krajUrl, pocetText, tyden, type Mesto } from '../../lib/data';
+import { mesta, mestaSloucena, mestoUrl, krajUrl, pocetText, tyden, ctvrti, ctvrtUrl, type Mesto } from '../../lib/data';
 
 export function getStaticPaths() {
   // /praha/ má vlastní rozcestník (src/pages/praha/index.astro)
@@ -19,8 +20,13 @@ const vse = m.provozovny;
 const barberu = vse.filter((p) => p.typ === 'barber').length;
 const sDobou = vse.filter((p) => tyden(p)).length;
 const casti = [...new Set(vse.map((p) => p.cast).filter(Boolean) as string[])].sort((a, b) => a.localeCompare(b, 'cs'));
-const zamereni = ['panske', 'damske', 'detske'].filter((z) => vse.some((p) => p.zamereni.includes(z)));
-const ZN: Record<string, string> = { panske: 'Pánské', damske: 'Dámské', detske: 'Dětské' };
+const vlastnosti = (p: (typeof vse)[number]) => [
+  ...p.zamereni,
+  ...(p.bezbarierove === 'yes' || p.bezbarierove === 'limited' ? ['bezbarierove'] : []),
+  ...(p.platbaKartou === 'yes' ? ['karta'] : []),
+];
+const zamereni = ['panske', 'damske', 'detske', 'bezbarierove', 'karta'].filter((z) => vse.filter((p) => vlastnosti(p).includes(z)).length >= 2);
+const ZN: Record<string, string> = { panske: 'Pánské', damske: 'Dámské', detske: 'Dětské', bezbarierove: 'Bezbariérové', karta: 'Platba kartou' };
 
 // Okolní obce: nejbližší střed obce
 const stred = (x: Mesto) => ({
@@ -46,6 +52,7 @@ const st = statistiky(vse);
 const uvod = textMesta(m, st);
 const faq = faqMesta(m, st);
 const zamery = zameryMesta(m);
+const castiMesta = ctvrti(m);
 const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length > 1 ? [faqJsonLd(faq)] : [])];
 ---
 
@@ -66,6 +73,19 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
           {zamery.map(({ z, salony }) => (
             <a href={zamerUrl(z, m.slug)}>
               {z.nazev(m.nazev).replace(`: ${m.nazev}`, '').replace(` ${m.nazev}`, '')} <span>{salony.length}</span>
+            </a>
+          ))}
+        </nav>
+      )
+    }
+
+    {
+      castiMesta.length > 0 && (
+        <nav class="zamery zamery--casti" aria-label="Podle části obce">
+          <span class="zamery__nadpis">Podle čtvrti:</span>
+          {castiMesta.map((c) => (
+            <a href={ctvrtUrl(c)}>
+              {c.nazev} <span>{c.provozovny.length}</span>
             </a>
           ))}
         </nav>
@@ -141,6 +161,7 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
         <p>Pokud znáte kadeřnictví {m.nazev}, které tu chybí, nebo je některý údaj špatně, dejte nám vědět.</p>
         <a class="btn btn--ghost" href="/pridat-provozovnu/">Přidat salon</a>
       </div>
+      <OdberNovinek mesto={m.slug} nazev={m.nazev} />
     </aside>
   </div>
 </Base>
@@ -266,6 +287,15 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
   .zamery span {
     color: var(--ink-soft);
   }
+  .zamery--casti {
+    align-items: center;
+    margin-top: 0.75rem;
+  }
+  .zamery .zamery__nadpis {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    margin-right: 0.25rem;
+  }
   .blok {
     margin-top: clamp(40px, 6vw, 64px);
   }
@@ -372,6 +402,12 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
     gap: 2rem 4rem;
     margin-top: clamp(40px, 6vw, 64px);
   }
+  .dalsi > div:first-child {
+    grid-row: span 2;
+  }
+  .dalsi > :global(.odber) {
+    grid-column: 2;
+  }
   .dalsi h2 {
     font-size: 1.75rem;
   }
@@ -400,6 +436,12 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
   @media (max-width: 760px) {
     .dalsi {
       grid-template-columns: 1fr;
+    }
+    .dalsi > div:first-child {
+      grid-row: auto;
+    }
+    .dalsi > :global(.odber) {
+      grid-column: auto;
     }
   }
 </style>

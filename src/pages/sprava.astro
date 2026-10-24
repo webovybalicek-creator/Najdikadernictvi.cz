@@ -1,0 +1,596 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+---
+
+<Base title="Správa profilu salonu" description="Upravte údaje, ceník, otevírací dobu a fotky svého salonu na Najdi kadeřnictví. Zdarma." noindex>
+  <div class="wrap section sprava">
+    <Breadcrumb items={[{ nazev: 'Pro salony', href: '/pro-salony/' }, { nazev: 'Správa profilu' }]} />
+    <span class="eyebrow">Pro majitele</span>
+    <h1>Správa <em>profilu</em></h1>
+    <p class="lead" data-sp-salon>Načítám…</p>
+
+    <!-- Krok 1: žádost o přihlašovací odkaz -->
+    <form class="karta-form" data-sp-zadost hidden novalidate>
+      <p>
+        Pošleme vám přihlašovací odkaz e-mailem. Pokud zadáte <strong>e-mail salonu</strong>, který u něj už evidujeme,
+        odkaz přijde hned. Jinak vás nejdřív krátce ověříme (obvykle telefonátem do salonu) a odkaz pošleme do dvou
+        pracovních dnů.
+      </p>
+      <label class="pole"><span>Váš e-mail</span><input type="email" name="email" required autocomplete="email" /></label>
+      <div class="dva">
+        <label class="pole"><span>Jméno <em>(nepovinné)</em></span><input type="text" name="jmeno" maxlength="80" autocomplete="name" /></label>
+        <label class="pole"><span>Telefon pro ověření <em>(nepovinné)</em></span><input type="tel" name="telefon" maxlength="30" autocomplete="tel" /></label>
+      </div>
+      <input type="text" name="web2" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <p class="stav-zprava" data-sp-stav1 role="status" aria-live="polite"></p>
+      <button class="btn" type="submit">Poslat přihlašovací odkaz</button>
+    </form>
+
+    <!-- Krok 2: editor -->
+    <div data-sp-editor hidden>
+      <section class="navst" data-sp-navst hidden>
+        <h2>Návštěvnost profilu</h2>
+        <p class="muted" data-sp-navst-text></p>
+        <div class="graf" data-sp-graf></div>
+      </section>
+
+      <form class="karta-form" data-sp-form novalidate>
+        <h2>Kontakt</h2>
+        <div class="dva">
+          <label class="pole"><span>Telefon</span><input name="telefon" type="tel" maxlength="30" /></label>
+          <label class="pole"><span>E-mail salonu</span><input name="email" type="email" maxlength="120" /></label>
+        </div>
+        <div class="dva">
+          <label class="pole"><span>Web</span><input name="web" type="url" maxlength="300" placeholder="https://" /></label>
+          <label class="pole"><span>Online rezervace</span><input name="rezervace" type="url" maxlength="300" placeholder="https://" /></label>
+        </div>
+        <div class="dva">
+          <label class="pole"><span>Instagram</span><input name="instagram" type="url" maxlength="300" placeholder="https://www.instagram.com/…" /></label>
+          <label class="pole"><span>Facebook</span><input name="facebook" type="url" maxlength="300" placeholder="https://www.facebook.com/…" /></label>
+        </div>
+
+        <h2>Otevírací doba</h2>
+        <table class="doba-ed" data-sp-doba></table>
+        <p class="muted mala">Polední pauzu zadáte jako druhý čas (např. 9:00–12:00 a 13:00–18:00).</p>
+
+        <h2>O salonu</h2>
+        <label class="pole"><span>Krátký popis <em>(max. 1000 znaků, bez odkazů)</em></span><textarea name="popis" rows="4" maxlength="1000"></textarea></label>
+        <fieldset class="pole volby">
+          <legend>Zaměření</legend>
+          <label><input type="checkbox" name="zamereni" value="damske" /> Dámské</label>
+          <label><input type="checkbox" name="zamereni" value="panske" /> Pánské</label>
+          <label><input type="checkbox" name="zamereni" value="detske" /> Dětské</label>
+        </fieldset>
+        <div class="dva">
+          <label class="pole"><span>Platba kartou</span>
+            <select name="platbaKartou"><option value="">Neuvádět</option><option value="yes">Ano</option><option value="no">Ne, jen hotově</option></select>
+          </label>
+          <label class="pole"><span>Bezbariérový přístup</span>
+            <select name="bezbarierove"><option value="">Neuvádět</option><option value="yes">Ano</option><option value="limited">Částečně</option><option value="no">Ne</option></select>
+          </label>
+        </div>
+
+        <h2>Ceník</h2>
+        <ul class="cenik-ed" data-sp-cenik></ul>
+        <button type="button" class="btn btn--ghost mala-btn" data-sp-pridat-cenu>+ Přidat položku</button>
+
+        <p class="stav-zprava" data-sp-stav2 role="status" aria-live="polite"></p>
+        <div class="ulozit">
+          <button class="btn" type="submit">Uložit změny</button>
+          <span class="muted mala">Změny se na webu objeví do 24 hodin.</span>
+        </div>
+      </form>
+
+      <section class="karta-form">
+        <h2>Fotky</h2>
+        <p class="muted mala">Max. 6 fotek, první se zobrazí jako hlavní. Nahrávejte jen vlastní fotky salonu. Pokud jsou na nich lidé, musíte mít jejich souhlas.</p>
+        <ul class="fotky-ed" data-sp-fotky></ul>
+        <label class="btn btn--ghost mala-btn foto-nahrat">
+          <input type="file" accept="image/jpeg,image/png,image/webp" data-sp-foto-input />
+          + Nahrát fotku
+        </label>
+        <p class="stav-zprava" data-sp-stav3 role="status" aria-live="polite"></p>
+      </section>
+    </div>
+  </div>
+</Base>
+
+<script>
+  const API = '/api/sprava.php';
+  const q = new URLSearchParams(location.search);
+  const $ = <T extends Element = HTMLElement>(s: string) => document.querySelector<T>(s)!;
+  const esc = (s: string) => String(s).replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
+  const salonEl = $('[data-sp-salon]');
+  const DNY = ['Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota', 'Neděle'];
+  const OSM = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+
+  type Interval = [number, number];
+  interface SalonData {
+    id: string;
+    nazev: string;
+    adresa: string;
+    telefon: string;
+    email: string;
+    web: string;
+    instagram: string;
+    facebook: string;
+    rezervace: string;
+    popis: string;
+    cenik: { polozka: string; cena: string }[];
+    tyden: Interval[][] | null;
+    platbaKartou: string;
+    bezbarierove: string;
+    zamereni: string[];
+    oteviraciDoba?: string;
+  }
+
+  const salonId = q.get('s') ?? q.get('salon') ?? '';
+  const salonUrl = q.get('u') ?? '';
+
+  async function nactiSalon(): Promise<SalonData | null> {
+    if (!/^\/[a-z0-9\-/]+\/$/.test(salonUrl)) return null;
+    try {
+      const html = await (await fetch(salonUrl)).text();
+      const el = new DOMParser().parseFromString(html, 'text/html').getElementById('salon-data');
+      return el ? JSON.parse(el.textContent!) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  const hm = (m: number) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+  const naMin = (v: string) => {
+    const m = v.match(/^(\d{1,2}):(\d{2})$/);
+    return m ? Number(m[1]) * 60 + Number(m[2]) : null;
+  };
+  /** Náš vlastní formát „Mo-Fr 09:00-18:00; Sa 09:00-12:00“ → týden */
+  function zOsm(s: string): Interval[][] {
+    const t: Interval[][] = [[], [], [], [], [], [], []];
+    for (const cast of s.split(';')) {
+      const m = cast.trim().match(/^([A-Za-z,\- ]+)\s+([\d:,\- ]+)$/);
+      if (!m) continue;
+      const casy = m[2].split(',').map((x) => x.trim().split('-').map(naMin)).filter((x) => x[0] != null && x[1] != null) as Interval[];
+      for (const r of m[1].split(',')) {
+        const [a, b] = r.trim().split('-').map((d) => OSM.indexOf(d.trim()));
+        if (a < 0) continue;
+        for (let i = a; i <= (b >= 0 ? b : a); i++) t[i] = casy;
+      }
+    }
+    return t;
+  }
+  function doOsm(t: Interval[][]): string {
+    const klic = t.map((d) => d.map(([a, b]) => `${hm(a)}-${hm(b)}`).join(','));
+    const casti: string[] = [];
+    let i = 0;
+    while (i < 7) {
+      let j = i;
+      while (j + 1 < 7 && klic[j + 1] === klic[i]) j++;
+      if (klic[i]) casti.push(`${OSM[i]}${j > i ? `-${OSM[j]}` : ''} ${klic[i]}`);
+      i = j + 1;
+    }
+    return casti.join('; ');
+  }
+
+  // ---------------------------------------------------------------- krok 1
+  async function zadost(d: SalonData | null) {
+    const form = $<HTMLFormElement>('[data-sp-zadost]');
+    form.hidden = false;
+    const stav = $('[data-sp-stav1]');
+    const start = Date.now();
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      if (!String(fd.get('email')).includes('@')) {
+        stav.dataset.typ = 'chyba';
+        stav.textContent = 'Zadejte prosím e-mail.';
+        return;
+      }
+      fd.set('akce', 'zadost');
+      fd.set('salon', salonId);
+      fd.set('url', salonUrl);
+      fd.set('t', String(start));
+      stav.dataset.typ = '';
+      stav.textContent = 'Odesílám…';
+      try {
+        const r = await (await fetch(API, { method: 'POST', body: fd })).json();
+        if (!r.ok) throw new Error(r.chyba);
+        form.querySelector('button')!.hidden = true;
+        stav.dataset.typ = 'ok';
+        stav.textContent =
+          r.rezim === 'odkaz'
+            ? 'Hotovo! Přihlašovací odkaz jsme poslali na váš e-mail. Zkontrolujte i složku spam.'
+            : 'Děkujeme! Žádost ověříme a přihlašovací odkaz vám pošleme e-mailem, obvykle do dvou pracovních dnů.';
+      } catch (err) {
+        stav.dataset.typ = 'chyba';
+        stav.textContent = (err as Error).message || 'Odeslání se nepodařilo.';
+      }
+    });
+    if (!d) salonEl.textContent = 'Salon se nepodařilo najít. Otevřete správu z detailu svého salonu.';
+  }
+
+  // ---------------------------------------------------------------- krok 2
+  async function editor(d: SalonData) {
+    const auth = { s: salonId, e: q.get('e')!, x: q.get('x')!, t: q.get('t')! };
+    const r = await (await fetch(`${API}?${new URLSearchParams({ akce: 'nacti', ...auth, u: salonUrl })}`)).json();
+    if (!r.ok) {
+      salonEl.textContent = r.chyba ?? 'Odkaz je neplatný.';
+      return zadost(d);
+    }
+    $('[data-sp-editor]').hidden = false;
+    const ulozene = r.data as Partial<SalonData> | null;
+    const v: SalonData = { ...d, ...(ulozene ?? {}) };
+    if (ulozene?.oteviraciDoba) v.tyden = zOsm(ulozene.oteviraciDoba);
+    salonEl.innerHTML = `<strong>${esc(d.nazev)}</strong>, ${esc(d.adresa)} · přihlášeni jako ${esc(r.email)}${
+      r.upraveno ? ` · naposledy uloženo ${new Date(r.upraveno).toLocaleDateString('cs-CZ')}` : ''
+    }`;
+
+    // návštěvnost
+    const nav = r.navstevy as Record<string, number>;
+    const dny = Object.keys(nav);
+    if (dny.length) {
+      $('[data-sp-navst]').hidden = false;
+      const celkem = dny.reduce((s, k) => s + nav[k], 0);
+      const posl30 = dny.filter((k) => k >= new Date(Date.now() - 30 * 864e5).toISOString().slice(0, 10)).reduce((s, k) => s + nav[k], 0);
+      $('[data-sp-navst-text]').textContent = `Za posledních 30 dní si profil prohlédlo ${posl30}×, za 90 dní ${celkem}×.`;
+      const max = Math.max(...dny.map((k) => nav[k]));
+      $('[data-sp-graf]').innerHTML = dny
+        .slice(-60)
+        .map((k) => `<span title="${k}: ${nav[k]}" style="height:${Math.max(4, (nav[k] / max) * 100)}%"></span>`)
+        .join('');
+    }
+
+    // formulář
+    const form = $<HTMLFormElement>('[data-sp-form]');
+    for (const k of ['telefon', 'email', 'web', 'rezervace', 'instagram', 'facebook', 'popis', 'platbaKartou', 'bezbarierove'] as const) {
+      (form.elements.namedItem(k) as HTMLInputElement).value = (v[k] as string) ?? '';
+    }
+    form.querySelectorAll<HTMLInputElement>('[name=zamereni]').forEach((c) => (c.checked = (v.zamereni ?? []).includes(c.value)));
+
+    const doba = $<HTMLTableElement>('[data-sp-doba]');
+    doba.innerHTML = DNY.map((den, i) => {
+      const d0 = v.tyden?.[i] ?? [];
+      const c = (n: number, j: 0 | 1) => (d0[n] ? hm(d0[n][j]) : '');
+      return `<tr data-den="${i}"><th>${den}</th>
+        <td><label class="zav"><input type="checkbox" data-zavreno ${d0.length ? '' : 'checked'}> zavřeno</label></td>
+        <td class="casy"><input type="time" value="${c(0, 0)}" aria-label="${den} od"> – <input type="time" value="${c(0, 1)}" aria-label="${den} do">
+        <span class="pauza"><input type="time" value="${c(1, 0)}" aria-label="${den} od (po pauze)"> – <input type="time" value="${c(1, 1)}" aria-label="${den} do (po pauze)"></span></td></tr>`;
+    }).join('');
+    const prepniDen = (tr: HTMLTableRowElement) => {
+      const z = tr.querySelector<HTMLInputElement>('[data-zavreno]')!.checked;
+      tr.querySelectorAll<HTMLInputElement>('input[type=time]').forEach((i) => (i.disabled = z));
+    };
+    doba.querySelectorAll('tr').forEach((tr) => {
+      prepniDen(tr);
+      tr.querySelector('[data-zavreno]')!.addEventListener('change', () => prepniDen(tr));
+    });
+    const prectiDobu = (): Interval[][] | null => {
+      const t: Interval[][] = [];
+      for (const tr of doba.querySelectorAll('tr')) {
+        if (tr.querySelector<HTMLInputElement>('[data-zavreno]')!.checked) {
+          t.push([]);
+          continue;
+        }
+        const c = [...tr.querySelectorAll<HTMLInputElement>('input[type=time]')].map((i) => naMin(i.value));
+        const den: Interval[] = [];
+        for (const k of [0, 2]) if (c[k] != null && c[k + 1] != null && c[k]! < c[k + 1]!) den.push([c[k]!, c[k + 1]!]);
+        t.push(den);
+      }
+      return t.some((d) => d.length) ? t : null;
+    };
+
+    const cenikEl = $<HTMLUListElement>('[data-sp-cenik]');
+    const radekCeniku = (pol = '', cena = '') => {
+      const li = document.createElement('li');
+      li.innerHTML = `<input type="text" maxlength="80" placeholder="Např. Pánský střih" value="${esc(pol)}" aria-label="Služba">
+        <input type="text" maxlength="40" placeholder="350 Kč" value="${esc(cena)}" aria-label="Cena">
+        <button type="button" aria-label="Odebrat položku">×</button>`;
+      li.querySelector('button')!.addEventListener('click', () => li.remove());
+      cenikEl.appendChild(li);
+    };
+    (v.cenik?.length ? v.cenik : [{ polozka: '', cena: '' }]).forEach((c) => radekCeniku(c.polozka, c.cena));
+    $('[data-sp-pridat-cenu]').addEventListener('click', () => radekCeniku());
+
+    const stav2 = $('[data-sp-stav2]');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const data: Record<string, unknown> = {};
+      for (const k of ['telefon', 'email', 'web', 'rezervace', 'instagram', 'facebook', 'popis', 'platbaKartou', 'bezbarierove']) data[k] = String(fd.get(k) ?? '').trim();
+      data.zamereni = fd.getAll('zamereni');
+      const t = prectiDobu();
+      data.oteviraciDoba = t ? doOsm(t) : '';
+      data.cenik = [...cenikEl.querySelectorAll('li')]
+        .map((li) => {
+          const [a, b] = li.querySelectorAll('input');
+          return { polozka: a.value.trim(), cena: b.value.trim() };
+        })
+        .filter((c) => c.polozka && c.cena);
+      const body = new FormData();
+      Object.entries({ akce: 'uloz', ...auth, u: salonUrl, data: JSON.stringify(data) }).forEach(([k, val]) => body.set(k, val));
+      const btn = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+      btn.disabled = true;
+      stav2.dataset.typ = '';
+      stav2.textContent = 'Ukládám…';
+      try {
+        const r2 = await (await fetch(API, { method: 'POST', body })).json();
+        stav2.dataset.typ = r2.ok ? 'ok' : 'chyba';
+        stav2.textContent = r2.ok ? 'Uloženo. Na webu se změny objeví do 24 hodin.' : r2.chyba ?? 'Uložení se nepodařilo.';
+      } catch {
+        stav2.dataset.typ = 'chyba';
+        stav2.textContent = 'Uložení se nepodařilo, zkuste to prosím znovu.';
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    // fotky
+    const fotkyEl = $<HTMLUListElement>('[data-sp-fotky]');
+    const stav3 = $('[data-sp-stav3]');
+    const vykresliFotky = (f: string[]) => {
+      fotkyEl.innerHTML = f
+        .map((u) => `<li><img src="${esc(u)}" alt=""><button type="button" data-n="${new URL(u, location.href).searchParams.get('n')}" aria-label="Smazat fotku">×</button></li>`)
+        .join('');
+      fotkyEl.querySelectorAll<HTMLButtonElement>('button').forEach((b) =>
+        b.addEventListener('click', async () => {
+          const body = new FormData();
+          Object.entries({ akce: 'smazfoto', ...auth, n: b.dataset.n! }).forEach(([k, val]) => body.set(k, val));
+          const r3 = await (await fetch(API, { method: 'POST', body })).json();
+          if (r3.ok) vykresliFotky(r3.fotky);
+        }),
+      );
+    };
+    vykresliFotky(r.fotky ?? []);
+    $<HTMLInputElement>('[data-sp-foto-input]').addEventListener('change', async (e) => {
+      const inp = e.currentTarget as HTMLInputElement;
+      const f = inp.files?.[0];
+      if (!f) return;
+      const body = new FormData();
+      Object.entries({ akce: 'foto', ...auth }).forEach(([k, val]) => body.set(k, val));
+      body.set('foto', f);
+      stav3.dataset.typ = '';
+      stav3.textContent = 'Nahrávám…';
+      try {
+        const r3 = await (await fetch(API, { method: 'POST', body })).json();
+        stav3.dataset.typ = r3.ok ? 'ok' : 'chyba';
+        stav3.textContent = r3.ok ? 'Fotka nahrána. Na webu se objeví do 24 hodin.' : r3.chyba;
+        if (r3.ok) vykresliFotky(r3.fotky);
+      } catch {
+        stav3.dataset.typ = 'chyba';
+        stav3.textContent = 'Nahrání se nepodařilo.';
+      }
+      inp.value = '';
+    });
+  }
+
+  (async () => {
+    const d = await nactiSalon();
+    if (d) salonEl.innerHTML = `<strong>${esc(d.nazev)}</strong>, ${esc(d.adresa)}`;
+    if (q.get('t') && d) editor(d);
+    else zadost(d);
+  })();
+</script>
+
+<style>
+  .sprava h2 {
+    font-size: 1.35rem;
+    margin: 2rem 0 0.9rem;
+  }
+  .karta-form {
+    margin-top: 1.5rem;
+    max-width: 46rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: clamp(1.25rem, 3vw, 2rem);
+  }
+  .karta-form > h2:first-child {
+    margin-top: 0;
+  }
+  .pole {
+    display: block;
+    margin-bottom: 1rem;
+  }
+  .pole > span,
+  .pole legend {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.35rem;
+  }
+  .pole em {
+    font-style: normal;
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+  .pole input,
+  .pole textarea,
+  .pole select,
+  .cenik-ed input {
+    width: 100%;
+    font: inherit;
+    font-size: 0.95rem;
+    padding: 0.65em 0.8em;
+    border: 1px solid #cfc7b9;
+    border-radius: var(--radius);
+    background: #fff;
+    color: var(--ink);
+  }
+  .pole input[type='checkbox'] {
+    width: auto;
+    padding: 0;
+  }
+  .volby label {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+  }
+  .dva {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 1rem;
+  }
+  .volby {
+    border: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+  }
+  .volby legend {
+    width: 100%;
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+  }
+  .mala {
+    font-size: 0.82rem;
+  }
+  .mala-btn {
+    padding: 0.5em 0.9em;
+    font-size: 0.82rem;
+  }
+  .doba-ed {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.9rem;
+  }
+  .doba-ed :global(th) {
+    text-align: left;
+    font-weight: 500;
+    padding: 0.35rem 0.75rem 0.35rem 0;
+    width: 6rem;
+  }
+  .doba-ed :global(td) {
+    padding: 0.35rem 0.5rem 0.35rem 0;
+  }
+  .doba-ed :global(input[type='time']) {
+    width: 6.6rem;
+    font: inherit;
+    padding: 0.3em 0.4em;
+    border: 1px solid #cfc7b9;
+    border-radius: var(--radius);
+    background: #fff;
+  }
+  .doba-ed :global(input:disabled) {
+    opacity: 0.35;
+  }
+  .doba-ed :global(.pauza) {
+    margin-left: 0.75rem;
+    white-space: nowrap;
+  }
+  .doba-ed :global(.zav) {
+    white-space: nowrap;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .cenik-ed {
+    list-style: none;
+    margin: 0 0 0.75rem;
+    padding: 0;
+  }
+  .cenik-ed :global(li) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 8rem) auto;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .cenik-ed :global(button),
+  .fotky-ed :global(button) {
+    border: 0;
+    background: none;
+    font-size: 1.3rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .ulozit {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+  }
+  .stav-zprava {
+    min-height: 1.3em;
+    margin: 1rem 0 0.75rem;
+  }
+  .stav-zprava[data-typ='ok'] {
+    color: var(--open);
+  }
+  .stav-zprava[data-typ='chyba'] {
+    color: var(--closed);
+  }
+  .fotky-ed {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+    gap: 0.5rem;
+  }
+  .fotky-ed :global(li) {
+    position: relative;
+  }
+  .fotky-ed :global(img) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+  .fotky-ed :global(button) {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.9);
+    line-height: 1;
+  }
+  .foto-nahrat {
+    position: relative;
+    cursor: pointer;
+  }
+  .foto-nahrat input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+  .navst {
+    max-width: 46rem;
+  }
+  .graf {
+    display: flex;
+    align-items: end;
+    gap: 2px;
+    height: 70px;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .graf :global(span) {
+    flex: 1;
+    background: var(--bottle);
+    border-radius: 2px 2px 0 0;
+    min-width: 2px;
+  }
+  @media (max-width: 640px) {
+    .dva {
+      grid-template-columns: 1fr;
+    }
+    .doba-ed :global(tr) {
+      display: grid;
+      grid-template-columns: 6rem 1fr;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .doba-ed :global(.casy) {
+      grid-column: 1 / -1;
+    }
+    .doba-ed :global(.pauza) {
+      display: block;
+      margin: 0.4rem 0 0;
+    }
+  }
+</style>

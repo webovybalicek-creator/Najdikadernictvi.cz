@@ -1,0 +1,17 @@
+---
+import ZamerStranka from '../../components/ZamerStranka.astro';
+import { mesta, type Mesto, type Provozovna } from '../../lib/data';
+import { ZAMERY, MIN_ZAMER, type Zamer } from '../../lib/seo-mesto';
+
+export function getStaticPaths() {
+  const z = ZAMERY.find((x) => x.slug === 'otevreno-vecer')!;
+  return mesta()
+    .map((m) => ({ m, salony: m.provozovny.filter(z.filtr) }))
+    .filter((x) => x.salony.length >= MIN_ZAMER)
+    .map(({ m, salony }) => ({ params: { mesto: m.slug }, props: { z, m, salony } }));
+}
+
+const { z, m, salony } = Astro.props as { z: Zamer; m: Mesto; salony: Provozovna[] };
+---
+
+<ZamerStranka z={z} m={m} salony={salony} />

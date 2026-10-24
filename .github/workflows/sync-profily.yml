@@ -1,0 +1,53 @@
+name: Synchronizace profilů od majitelů
+
+# Stáhne údaje, které majitelé upravili přes /sprava/, do src/data/majitele.json a při změně spustí deploy.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '41 3 * * *'
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: import
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Stažení profilů
+        run: |
+          curl -sSf --retry 3 -A "najdikadernictvi-sync" "https://najdikadernictvi.cz/api/sprava.php?export=1" -o /tmp/export.json
+          jq -e '.salony | type == "object"' /tmp/export.json > /dev/null
+          jq --sort-keys '{ "_popis": "Profily upravené majiteli přes /sprava/. Soubor přepisuje workflow Synchronizace profilů, ručně neupravovat (ruční opravy patří do overene.json).", salony: .salony }' /tmp/export.json > src/data/majitele.json
+          echo "::notice::Profilů od majitelů: $(jq '.salony | length' src/data/majitele.json)"
+
+      - name: Commit
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/majitele.json
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Profily od majitelů"
+            git pull --rebase origin main
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Spuštění deploye
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main
+
+      - name: Upozornění na nové salony
+        if: always()
+        run: curl -sS --retry 2 -A "najdikadernictvi-sync" "https://najdikadernictvi.cz/api/upozorneni.php?akce=rozeslat" || true
