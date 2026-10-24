@@ -1,6 +1,6 @@
 import { getCollection } from 'astro:content';
 import { KRAJE } from './kraje';
-import { PROVOZOVNY, IMPORT_META, mesta, url, mestoUrl, krajUrl, indexovatDetail, vsechnyCtvrti, ctvrtUrl } from './data';
+import { PROVOZOVNY, IMPORT_META, mesta, url, mestoUrl, krajUrl, indexovatDetail, indexovatMesto, vsechnyCtvrti, ctvrtUrl } from './data';
 import { SITE } from './config';
 import { KATEGORIE, kategorieUrl } from './blog';
 import { zameryMesta, zamerUrl } from './seo-mesto';
@@ -29,6 +29,7 @@ export async function polozky(cast: Cast): Promise<Polozka[]> {
   if (cast === 'mesta') {
     const out: Polozka[] = [];
     for (const m of mesta()) {
+      if (!indexovatMesto(m)) continue;
       out.push({ loc: mestoUrl(m.slug), lastmod: dataZmena });
       for (const { z } of zameryMesta(m)) out.push({ loc: zamerUrl(z, m.slug), lastmod: dataZmena });
     }

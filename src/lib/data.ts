@@ -218,6 +218,9 @@ export const IMPORT_META = meta as { zdroj: string; importovano: string; pocet: 
 
 /** Detail salonu jen z rejstříku je pro Google příliš chudý – neindexujeme ho, dokud nemá víc údajů */
 export const indexovatDetail = (p: Provozovna) => p.zdroj === 'osm' || !!p.overeno;
+/** Stránka obce jde do vyhledávačů, jen když má skutečný obsah: aspoň jeden salon s ověřenými údaji
+ *  (OSM / majitel) nebo aspoň 3 salony. Obce s 1–2 záznamy z rejstříku zůstávají dostupné, ale noindex. */
+export const indexovatMesto = (m: { provozovny: Provozovna[] }) => m.provozovny.length >= 3 || m.provozovny.some(indexovatDetail);
 
 export const url = (p: Provozovna) => `/${p.mestoSlug}/${p.slug}/`;
 export const mestoUrl = (slug: string) => `/${slug}/`;

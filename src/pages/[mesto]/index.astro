@@ -7,7 +7,7 @@ import Faq from '../../components/Faq.astro';
 import OdberNovinek from '../../components/OdberNovinek.astro';
 import { metaMesta } from '../../lib/meta';
 import { statistiky, textMesta, faqMesta, faqJsonLd, itemListJsonLd, zameryMesta, zamerUrl } from '../../lib/seo-mesto';
-import { mesta, mestaSloucena, mestoUrl, krajUrl, pocetText, tyden, ctvrti, ctvrtUrl, type Mesto } from '../../lib/data';
+import { mesta, mestaSloucena, mestoUrl, indexovatMesto, krajUrl, pocetText, tyden, ctvrti, ctvrtUrl, type Mesto } from '../../lib/data';
 
 export function getStaticPaths() {
   // /praha/ má vlastní rozcestník (src/pages/praha/index.astro)
@@ -63,6 +63,7 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
 <Base
   title={meta.title}
   description={meta.description}
+  noindex={!indexovatMesto(m)}
   jsonLd={jsonLd}
 >
   <div class="wrap section">
