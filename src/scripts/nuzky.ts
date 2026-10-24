@@ -1,10 +1,5 @@
-// Tematická animace tlačítek: při najetí myší nůžky přestřihnou čárkovanou linku
-// pod tlačítkem a na konci jemně spadne pár ustřižených vlasů.
-
-const NUZKY = `<svg viewBox="0 0 18 18" aria-hidden="true">
-  <g class="cepel cepel--a"><circle cx="3.2" cy="4.2" r="2.4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5.1 5.6 17 11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></g>
-  <g class="cepel cepel--b"><circle cx="3.2" cy="13.8" r="2.4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5.1 12.4 17 7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></g>
-</svg>`;
+// Tematická animace tlačítek: při najetí myší kolem tlačítka objede přerušovaná čára
+// a na konci jemně spadne pár ustřižených vlasů.
 
 const VLASY = [
   'M1 1 C 4 5, 2 9, 6 13',
@@ -22,7 +17,7 @@ function spadniVlasy(btn: HTMLElement) {
     v.className = 'vlas';
     v.setAttribute('aria-hidden', 'true');
     v.innerHTML = `<svg viewBox="0 0 10 14"><path d="${VLASY[i % VLASY.length]}" fill="none" stroke="currentColor" stroke-width="0.9" stroke-linecap="round"/></svg>`;
-    const x = btn.offsetWidth - 10 - Math.random() * Math.min(60, btn.offsetWidth * 0.5);
+    const x = 8 + Math.random() * Math.max(10, btn.offsetWidth - 16);
     v.style.left = `${x}px`;
     v.style.top = `${btn.offsetHeight + 2}px`;
     btn.appendChild(v);
@@ -39,33 +34,50 @@ function spadniVlasy(btn: HTMLElement) {
   }
 }
 
+let pocitadlo = 0;
+const SVG = 'http://www.w3.org/2000/svg';
+
 function priprav(btn: HTMLElement) {
   if (btn.dataset.nuzky) return;
   btn.dataset.nuzky = '1';
-  const cut = document.createElement('span');
-  cut.className = 'btn__cut';
-  cut.setAttribute('aria-hidden', 'true');
-  const nuzky = document.createElement('span');
-  nuzky.className = 'btn__nuzky';
-  nuzky.setAttribute('aria-hidden', 'true');
-  nuzky.innerHTML = NUZKY;
-  btn.append(cut, nuzky);
+  // Přerušovaná čára kolem tlačítka: čárkovaný obrys odkrývaný maskou, která se „dokreslí“ dokola
+  const id = `obrys-${++pocitadlo}`;
+  const svg = document.createElementNS(SVG, 'svg');
+  svg.setAttribute('class', 'btn__obrys');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.innerHTML = `<defs><mask id="${id}"><rect class="btn__maska" pathLength="100" fill="none" stroke="#fff" stroke-width="4"/></mask></defs><rect class="btn__cara" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="4 4" mask="url(#${id})"/>`;
+  btn.append(svg);
+
+  const rozmer = () => {
+    const w = btn.offsetWidth + 10;
+    const h = btn.offsetHeight + 10;
+    const r = parseFloat(getComputedStyle(btn).borderTopLeftRadius) || 0;
+    const rx = Math.min(h / 2, r + 5);
+    svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    svg.querySelectorAll('rect').forEach((el) => {
+      el.setAttribute('x', '0.5');
+      el.setAttribute('y', '0.5');
+      el.setAttribute('width', String(w - 1));
+      el.setAttribute('height', String(h - 1));
+      el.setAttribute('rx', String(rx));
+    });
+  };
 
   let bezi = false;
   btn.addEventListener('mouseenter', () => {
     if (bezi) return;
     bezi = true;
-    btn.style.setProperty('--sirka', `${btn.offsetWidth}px`);
-    btn.classList.remove('is-strih');
+    rozmer();
+    btn.classList.remove('is-obrys');
     void btn.offsetWidth; // restart animace
-    btn.classList.add('is-strih');
-    setTimeout(() => spadniVlasy(btn), 520);
-    setTimeout(() => (bezi = false), 900);
+    btn.classList.add('is-obrys');
+    setTimeout(() => spadniVlasy(btn), 620);
+    setTimeout(() => (bezi = false), 1000);
   });
   btn.addEventListener('mouseleave', () => {
     setTimeout(() => {
-      if (!btn.matches(':hover')) btn.classList.remove('is-strih');
-    }, 700);
+      if (!btn.matches(':hover')) btn.classList.remove('is-obrys');
+    }, 600);
   });
 }
 
