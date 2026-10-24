@@ -203,7 +203,9 @@ export function mesta(): Mesto[] {
     }
     m.provozovny.push(p);
   }
-  for (const m of map.values()) m.provozovny.sort((a, b) => a.nazev.localeCompare(b.nazev, 'cs'));
+  // Nejdřív salony s víc údaji (telefon, otevírací doba, web), pak abecedně
+  for (const m of map.values())
+    m.provozovny.sort((a, b) => uplnost(b) - uplnost(a) || a.nazev.localeCompare(b.nazev, 'cs'));
   _mesta = [...map.values()].sort((a, b) => a.nazev.localeCompare(b.nazev, 'cs'));
   return _mesta;
 }

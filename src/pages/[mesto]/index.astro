@@ -105,7 +105,7 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
     }
 
     <ul class="seznam" data-seznam>
-      {vse.map((p) => <ProvozovnaRadek p={p} nahled />)}
+      {vse.map((p, i) => <ProvozovnaRadek p={p} nahled={i < 30} />)}
     </ul>
     <MapyAtribuce />
     <p class="prazdno" data-prazdno hidden>Žádný salon neodpovídá filtrům. Zkuste některý filtr vypnout.</p>

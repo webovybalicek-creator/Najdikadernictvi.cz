@@ -7,7 +7,7 @@ export const SITE = {
    * Dokud je false, všechny stránky mají noindex a robots.txt blokuje roboty.
    * Přepnout na true po dokončení importu z rejstříku.
    */
-  indexovat: false,
+  indexovat: true,
   /** Provozovatel webu (správce osobních údajů) – doplnit jméno/firmu, IČO a sídlo */
   provozovatel: {
     nazev: '',
@@ -24,5 +24,5 @@ export const SITE = {
    * Souhlas s cookies (GDPR, IAB TCF) zajišťuje certifikovaný CMP Googlu:
    * AdSense → Ochrana soukromí a zprávy → Evropské předpisy (GDPR) – vytvořit a publikovat zprávu.
    */
-  adsense: '',
+  adsense: 'ca-pub-4136470374910853',
 };
