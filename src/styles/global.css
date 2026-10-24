@@ -402,15 +402,22 @@ p {
 
 /* Malé hodnocení ve výpisech (doplní src/scripts/hodnoceni-souhrn.ts) */
 .hod-mini {
-  display: inline-flex;
+  display: flex;
+  width: fit-content;
   align-items: center;
   gap: 0.3em;
   font-size: 0.8rem;
   color: var(--ink-soft);
   white-space: nowrap;
 }
-.hod-mini:empty {
-  display: none;
+.hod-mini__nic {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+.row__adr .hod-mini {
+  display: inline-flex;
+  margin-left: 0.4rem;
+  vertical-align: middle;
 }
 .hod-mini strong {
   color: var(--ink);

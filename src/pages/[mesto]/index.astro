@@ -6,7 +6,7 @@ import MapaSalonu from '../../components/MapaSalonu.astro';
 import MapyAtribuce from '../../components/MapyAtribuce.astro';
 import Faq from '../../components/Faq.astro';
 import { statistiky, textMesta, faqMesta, faqJsonLd, itemListJsonLd, zameryMesta, zamerUrl } from '../../lib/seo-mesto';
-import { mesta, mestoUrl, krajUrl, pocetText, tyden, type Mesto } from '../../lib/data';
+import { mesta, mestaSloucena, mestoUrl, krajUrl, pocetText, tyden, type Mesto } from '../../lib/data';
 
 export function getStaticPaths() {
   // /praha/ má vlastní rozcestník (src/pages/praha/index.astro)
@@ -29,7 +29,7 @@ const stred = (x: Mesto) => ({
   lon: x.provozovny.reduce((s, p) => s + p.lon, 0) / x.provozovny.length,
 });
 const c = stred(m);
-const okoli = mesta()
+const okoli = (m.kraj.slug === 'praha' ? mesta() : mestaSloucena())
   .filter((o) => o.slug !== m.slug)
   .map((o) => {
     const s = stred(o);

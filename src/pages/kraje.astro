@@ -13,7 +13,7 @@ import { krajUrl, pocetVKraji, mestaVKraji, pocetText } from '../lib/data';
           <li>
             <a href={krajUrl(k.slug)}>{k.nazev}</a>
             <span class="muted">
-              {pocetText(pocetVKraji(k.slug), 'salon', 'salony', 'salonů')} v {pocetText(mestaVKraji(k.slug).length, 'obci', 'obcích', 'obcích')}
+              {pocetText(pocetVKraji(k.slug), 'salon', 'salony', 'salonů')} v {k.slug === 'praha' ? `${mestaVKraji(k.slug).filter((m) => m.slug !== 'praha').length} obvodech` : pocetText(mestaVKraji(k.slug).length, 'obci', 'obcích', 'obcích')}
             </span>
           </li>
         ))

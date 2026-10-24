@@ -213,8 +213,32 @@ export function mesta(): Mesto[] {
 export const mestaVKraji = (krajSlug: string) => mesta().filter((m) => m.kraj.slug === krajSlug);
 export const pocetVKraji = (krajSlug: string) => PROVOZOVNY.filter((p) => p.kraj === krajSlug).length;
 
-export function nejvetsiMesta(n: number): Mesto[] {
-  return [...mesta()].sort((a, b) => b.provozovny.length - a.provozovny.length).slice(0, n);
+export interface MestoVypis extends Mesto {
+  /** U Prahy: jednotlivé obvody (Praha 1–10) pro rozbalení */
+  obvody?: Mesto[];
+}
+
+/** Města pro přehledy: pražské obvody sloučené do jedné položky „Praha“ s rozbalením */
+export function mestaSloucena(): MestoVypis[] {
+  const vse = mesta();
+  const prazske = vse.filter((m) => m.kraj.slug === 'praha');
+  const ostatni = vse.filter((m) => m.kraj.slug !== 'praha');
+  if (!prazske.length) return ostatni;
+  const obvody = prazske
+    .filter((m) => m.slug !== 'praha')
+    .sort((a, b) => a.nazev.localeCompare(b.nazev, 'cs', { numeric: true }));
+  const praha: MestoVypis = {
+    nazev: 'Praha',
+    slug: 'praha',
+    kraj: prazske[0].kraj,
+    provozovny: prazske.flatMap((m) => m.provozovny),
+    obvody,
+  };
+  return [praha, ...ostatni];
+}
+
+export function nejvetsiMesta(n: number): MestoVypis[] {
+  return [...mestaSloucena()].sort((a, b) => b.provozovny.length - a.provozovny.length).slice(0, n);
 }
 
 function vzdalenostKm(a: Provozovna, b: Provozovna) {

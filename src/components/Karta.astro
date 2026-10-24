@@ -16,7 +16,7 @@ const misto = p.mesto === 'Praha' && p.cast ? `Praha, ${p.cast}` : p.mesto;
     <span class="karta__typ">{TYP_NAZEV[p.typ]}</span>
     <h3 class="karta__nazev">{p.nazev}</h3>
     <p class="karta__adr">{[adr, misto].filter(Boolean).join(', ')}</p>
-    <span class="hod-mini" data-hod-id={p.id}></span>
+    <span class="hod-mini" data-hod-id={p.id}><span class="hv" style="--p:0%"></span><span class="hod-mini__nic">Zatím bez hodnocení</span></span>
   </a>
 </li>
 
@@ -44,6 +44,9 @@ const misto = p.mesto === 'Praha' && p.cast ? `Praha, ${p.cast}` : p.mesto;
   }
   .karta a:hover .karta__nazev {
     text-decoration: underline;
+  }
+  .karta .hod-mini {
+    margin-top: 0.4rem;
   }
   .karta__adr {
     margin: 0;

@@ -1,6 +1,6 @@
 ---
 import Text from '../layouts/Text.astro';
-import { PROVOZOVNY, IMPORT_META, mesta, pocetText } from '../lib/data';
+import { PROVOZOVNY, IMPORT_META, mestaSloucena, pocetText } from '../lib/data';
 import { SITE } from '../lib/config';
 const aktualizace = new Date(IMPORT_META.importovano).toLocaleDateString('cs-CZ');
 const zOsm = PROVOZOVNY.filter((p) => p.zdroj === 'osm').length;
@@ -13,7 +13,7 @@ const zRzp = PROVOZOVNY.length - zOsm;
     staré katalogy. Tady je najdete na jednom místě.
   </p>
   <p>
-    Aktuálně evidujeme {pocetText(PROVOZOVNY.length, 'salon', 'salony', 'salonů')} v {pocetText(mesta().length, 'obci', 'obcích', 'obcích')}. U každého ukazujeme adresu,
+    Aktuálně evidujeme {pocetText(PROVOZOVNY.length, 'salon', 'salony', 'salonů')} v {pocetText(mestaSloucena().length, 'obci', 'obcích', 'obcích')}. U každého ukazujeme adresu,
     kontakt, otevírací dobu, mapu a další salony v okolí. Katalog je pro návštěvníky i salony zdarma.
   </p>
 

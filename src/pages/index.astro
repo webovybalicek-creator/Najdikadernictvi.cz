@@ -5,14 +5,14 @@ import Karta from '../components/Karta.astro';
 import Magazin from '../components/Magazin.astro';
 import MapyAtribuce from '../components/MapyAtribuce.astro';
 import { KRAJE } from '../lib/kraje';
-import { PROVOZOVNY, nejvetsiMesta, pocetVKraji, krajUrl, mestoUrl, mesta, pocetText, vyber } from '../lib/data';
+import { PROVOZOVNY, nejvetsiMesta, pocetVKraji, krajUrl, mestoUrl, mestaSloucena, pocetText, vyber } from '../lib/data';
 import { SITE } from '../lib/config';
 
 const top = nejvetsiMesta(24);
 const doporucene = vyber(PROVOZOVNY.filter((p) => p.typ === 'kadernictvi'), 8);
 const barbershopy = vyber(PROVOZOVNY.filter((p) => p.typ === 'barber'), 4);
 const pocetBarberu = PROVOZOVNY.filter((p) => p.typ === 'barber').length;
-const pocetObci = mesta().length;
+const pocetObci = mestaSloucena().length;
 const cislo = (n: number) => n.toLocaleString('cs-CZ');
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -105,14 +105,40 @@ const jsonLd = {
         <h2>Největší města</h2>
         <ul class="mesta">
           {
-            top.map((m) => (
-              <li>
-                <a href={mestoUrl(m.slug)}>
-                  <span>{m.nazev}</span>
-                  <span class="muted">{m.provozovny.length}</span>
-                </a>
-              </li>
-            ))
+            top.map((m) =>
+              m.obvody ? (
+                <li class="mesta__praha">
+                  <details>
+                    <summary>
+                      <span>{m.nazev}</span>
+                      <span class="muted">{m.provozovny.length}</span>
+                    </summary>
+                    <ul>
+                      <li>
+                        <a href={mestoUrl(m.slug)}>
+                          <span>Celá Praha</span>
+                        </a>
+                      </li>
+                      {m.obvody.map((o) => (
+                        <li>
+                          <a href={mestoUrl(o.slug)}>
+                            <span>{o.nazev}</span>
+                            <span class="muted">{o.provozovny.length}</span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                </li>
+              ) : (
+                <li>
+                  <a href={mestoUrl(m.slug)}>
+                    <span>{m.nazev}</span>
+                    <span class="muted">{m.provozovny.length}</span>
+                  </a>
+                </li>
+              ),
+            )
           }
         </ul>
       </div>
@@ -261,6 +287,43 @@ const jsonLd = {
   }
   .mesta a:hover span:first-child {
     text-decoration: underline;
+  }
+  .mesta__praha summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.95rem;
+    cursor: pointer;
+    list-style: none;
+  }
+  .mesta__praha summary::-webkit-details-marker {
+    display: none;
+  }
+  .mesta__praha summary span:first-child::after {
+    content: '';
+    display: inline-block;
+    width: 0.4em;
+    height: 0.4em;
+    margin-left: 0.55em;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-0.2em) rotate(45deg);
+    transition: transform 0.2s;
+  }
+  .mesta__praha details[open] summary span:first-child::after {
+    transform: translateY(0.05em) rotate(-135deg);
+  }
+  .mesta__praha ul {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 0.9rem;
+    border-left: 1px solid var(--line);
+  }
+  .mesta__praha ul a {
+    padding: 0.45rem 0;
+    font-size: 0.88rem;
   }
   .kraje {
     list-style: none;
