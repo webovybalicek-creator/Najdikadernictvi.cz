@@ -1,7 +1,7 @@
 ---
 // Magazínový výpis článků: hlavní článek + sloupec dalších + tmavý pás se záložkami podle kategorií
-import { Picture } from 'astro:assets';
-import { clanky, clanekUrl, kategorieUrl, casCteni, KATEGORIE, kategorieSlug } from '../lib/blog';
+import { Picture, getImage } from 'astro:assets';
+import { clanky, clanekUrl, kategorieUrl, casCteni, KATEGORIE, kategorieSlug, type Clanek } from '../lib/blog';
 
 interface Props {
   /** Zobrazit nadpis sekce (na úvodu webu ano, na blogu ne) */
@@ -22,9 +22,34 @@ const zalozky = KATEGORIE.map((k) => ({
     ...vse.filter((c) => c.data.kategorie === k && nahore.has(c.id)),
   ].slice(0, 3),
 })).filter((z) => z.clanky.length > 0);
+
+// Data všech článků pro náhodné pořadí v prohlížeči (server vykreslí výchozí výběr kvůli vyhledávačům)
+const obr = async (src: Clanek['data']['obrazek'], w: number, h: number) => {
+  const [a, b] = await Promise.all([
+    getImage({ src, width: w, height: h, fit: 'cover', format: 'avif' }),
+    getImage({ src, width: w, height: h, fit: 'cover', format: 'webp' }),
+  ]);
+  return [a.src, b.src];
+};
+const pool = await Promise.all(
+  vse.map(async (c) => ({
+    u: clanekUrl(c),
+    t: c.data.title,
+    p: c.data.perex,
+    k: c.data.kategorie,
+    ku: kategorieUrl(c.data.kategorie),
+    ks: kategorieSlug(c.data.kategorie),
+    m: casCteni(c),
+    alt: c.data.obrazekAlt,
+    l: await obr(c.data.obrazek, 1000, 625),
+    b: await obr(c.data.obrazek, 420, 315),
+    s: await obr(c.data.obrazek, 640, 400),
+  })),
+);
 ---
 
-<section class="mag">
+<section class="mag" data-mag>
+  <script type="application/json" data-mag-pool set:html={JSON.stringify(pool)} />
   <div class="wrap">
     {
       nadpis && (
@@ -43,7 +68,7 @@ const zalozky = KATEGORIE.map((k) => ({
     }
 
     <div class="mag__top">
-      <article class="lead">
+      <article class="lead" data-mag-lead>
         <a href={clanekUrl(hlavni)}>
           <h3 class="lead__nazev">{hlavni.data.title}</h3>
           <div class="lead__img">
@@ -62,7 +87,7 @@ const zalozky = KATEGORIE.map((k) => ({
         </p>
       </article>
 
-      <ul class="bocni">
+      <ul class="bocni" data-mag-bocni>
         {
           bocni.map((c) => (
             <li>
@@ -107,7 +132,7 @@ const zalozky = KATEGORIE.map((k) => ({
       </div>
       {
         zalozky.map((z, i) => (
-          <div class="pas__panel" role="tabpanel" id={`panel-${z.slug}`} aria-labelledby={`tab-${z.slug}`} hidden={i !== 0}>
+          <div class="pas__panel" data-kat={z.slug} data-kat-nazev={z.k} data-kat-url={kategorieUrl(z.k)} role="tabpanel" id={`panel-${z.slug}`} aria-labelledby={`tab-${z.slug}`} hidden={i !== 0}>
             {z.clanky.map((c) => (
               <article>
                 <a href={clanekUrl(c)}>
@@ -126,13 +151,68 @@ const zalozky = KATEGORIE.map((k) => ({
         ))
       }
       <p class="pas__vice">
-        <a class="btn" href="/blog/">Další články <span aria-hidden="true">→</span></a>
+        <a class="btn" href={zalozky[0] ? kategorieUrl(zalozky[0].k) : '/blog/'} data-mag-vice>
+          Další články: <span data-mag-vice-k>{zalozky[0]?.k}</span> <span aria-hidden="true">→</span>
+        </a>
       </p>
     </div>
   </div>
 </section>
 
 <script>
+  // Náhodný výběr článků při každém načtení
+  type P = { u: string; t: string; p: string; k: string; ku: string; ks: string; m: number; alt: string; l: string[]; b: string[]; s: string[] };
+  const esc = (x: string) => String(x).replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
+  const pic = (src: string[], alt: string, eager = false) =>
+    `<picture><source type="image/avif" srcset="${src[0]}"><img src="${src[1]}" alt="${esc(alt)}" ${eager ? '' : 'loading="lazy" '}decoding="async"></picture>`;
+  const zamichej = <T,>(a: T[]) => {
+    const b = [...a];
+    for (let i = b.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [b[i], b[j]] = [b[j], b[i]];
+    }
+    return b;
+  };
+  document.querySelectorAll<HTMLElement>('[data-mag]').forEach((mag) => {
+    const el = mag.querySelector('[data-mag-pool]');
+    if (!el) return;
+    const pool = zamichej(JSON.parse(el.textContent!) as P[]);
+    // scoped styly Astra: nové prvky dostanou stejný atribut data-astro-cid-* jako sekce
+    const cid = [...mag.attributes].map((a) => a.name).find((n) => n.startsWith('data-astro-cid-'));
+    const oznac = (root: Element) => cid && root.querySelectorAll('*').forEach((x) => x.setAttribute(cid, ''));
+    if (pool.length < 5) return;
+    const [hl, ...zbytek] = pool;
+    const lead = mag.querySelector<HTMLElement>('[data-mag-lead]');
+    if (lead) {
+      lead.innerHTML = `<a href="${hl.u}"><h3 class="lead__nazev">${esc(hl.t)}</h3><div class="lead__img">${pic(hl.l, hl.alt, true)}</div><p class="lead__perex">${esc(hl.p)}</p></a>
+        <p class="meta"><a href="${hl.ku}">${esc(hl.k)}</a><span>${hl.m} min čtení</span></p>`;
+      oznac(lead);
+    }
+    const bocni = zbytek.slice(0, 4);
+    const ul = mag.querySelector<HTMLElement>('[data-mag-bocni]');
+    if (ul) {
+      ul.innerHTML = bocni
+        .map(
+          (c) => `<li><article><div class="bocni__txt"><h3><a href="${c.u}">${esc(c.t)}</a></h3><p class="meta"><a href="${c.ku}">${esc(c.k)}</a></p></div>
+          <a class="bocni__img" href="${c.u}" tabindex="-1" aria-hidden="true">${pic(c.b, '')}</a></article></li>`,
+        )
+        .join('');
+      oznac(ul);
+    }
+    const nahore = new Set([hl.u, ...bocni.map((c) => c.u)]);
+    mag.querySelectorAll<HTMLElement>('[data-kat]').forEach((panel) => {
+      const v = pool.filter((c) => c.ks === panel.dataset.kat);
+      const vyber = [...v.filter((c) => !nahore.has(c.u)), ...v.filter((c) => nahore.has(c.u))].slice(0, 3);
+      panel.innerHTML = vyber
+        .map(
+          (c) => `<article><a href="${c.u}"><div class="pas__img">${pic(c.s, c.alt)}</div><h4>${esc(c.t)}</h4></a>
+          <p class="meta"><span>${c.m} min čtení</span><a href="${c.ku}">${esc(c.k)}</a></p></article>`,
+        )
+        .join('');
+      oznac(panel);
+    });
+  });
+
   document.querySelectorAll<HTMLElement>('[data-pas]').forEach((pas) => {
     const tabs = [...pas.querySelectorAll<HTMLButtonElement>('[role=tab]')];
     const vyber = (t: HTMLButtonElement) => {
@@ -140,7 +220,15 @@ const zalozky = KATEGORIE.map((k) => ({
         const on = x === t;
         x.setAttribute('aria-selected', String(on));
         x.tabIndex = on ? 0 : -1;
-        pas.querySelector<HTMLElement>(`#${x.getAttribute('aria-controls')}`)!.hidden = !on;
+        const panel = pas.querySelector<HTMLElement>(`#${x.getAttribute('aria-controls')}`)!;
+        panel.hidden = !on;
+        if (on) {
+          const vice = pas.querySelector<HTMLAnchorElement>('[data-mag-vice]');
+          if (vice) {
+            vice.href = panel.dataset.katUrl!;
+            vice.querySelector('[data-mag-vice-k]')!.textContent = panel.dataset.katNazev!;
+          }
+        }
       });
     };
     tabs.forEach((t, i) => {

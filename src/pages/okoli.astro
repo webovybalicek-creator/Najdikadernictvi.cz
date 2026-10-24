@@ -69,7 +69,7 @@ import Hledani from '../components/Hledani.astro';
         const s = z[6] ? stav(z[6]) : null;
         const init = z[2].replace(/^(kadeřnictví|barbershop|barber|salon|studio)\s+/i, '').slice(0, 2).toUpperCase();
         return `<li class="row">
-          <a class="row__img" href="${z[3]}" tabindex="-1" aria-hidden="true"><span>${esc(init)}</span></a>
+          <a class="row__img" href="${z[3]}" tabindex="-1" aria-hidden="true"><span>${esc(init)}</span><img src="/api/panorama.php?lat=${z[0]}&lon=${z[1]}&s=maly&v=2" alt="" loading="lazy" onload="this.classList.add('ok')" onerror="this.remove()"><i class="atr">© Mapy.com</i></a>
           <div><h2 class="row__name"><a href="${z[3]}">${esc(z[2])}</a></h2><p class="row__adr">${esc(z[4])}</p></div>
           <div class="row__meta">
             <span class="tag${z[5] ? ' tag--barber' : ''}">${z[5] ? 'Barbershop' : 'Kadeřnictví'}</span>
@@ -222,6 +222,21 @@ import Hledani from '../components/Hledani.astro';
     object-position: center top;
     opacity: 0;
     transition: opacity 0.4s ease;
+  }
+  .seznam :global(.row__img .atr) {
+    position: absolute;
+    right: 4px;
+    bottom: 2px;
+    font-style: normal;
+    font-size: 8px;
+    font-weight: 500;
+    color: rgb(255 255 255 / 0.82);
+    text-shadow: 0 0 3px rgb(0 0 0 / 0.55);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .seznam :global(.row__img img.ok + .atr) {
+    opacity: 1;
   }
   .seznam :global(.row__img img.ok) {
     opacity: 1;

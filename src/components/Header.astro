@@ -7,7 +7,7 @@ import Logo from './Logo.astro';
     <a href="/" class="hdr__logo" aria-label="Najdi kadeřnictví – úvod"><Logo /></a>
     <nav aria-label="Hlavní menu">
       <ul>
-        <li><a href="/mapa/">Mapa</a></li>
+        <li class="nav-skryt-m"><a href="/mapa/">Mapa</a></li>
         <li class="nav-skryt-m"><a href="/kraje/">Kraje</a></li>
         <li class="nav-skryt-m"><a href="/blog/">Rady a tipy</a></li>
         <li class="nav-skryt-m"><a href="/o-webu/">O webu</a></li>
@@ -21,15 +21,112 @@ import Logo from './Logo.astro';
             <span class="hdr__obl-pocet" data-pocet-oblibenych hidden></span>
           </a>
         </li>
-        <li><a href="/pridat-provozovnu/" class="btn btn--ghost hdr__cta" aria-label="Přidat salon"><span class="hdr__cta-txt">Přidat<span class="hdr__cta-cele"> salon</span></span></a></li>
+        <li class="nav-skryt-m"><a href="/pridat-provozovnu/" class="btn btn--ghost hdr__cta">Přidat salon</a></li>
+        <li class="nav-jen-m">
+          <button type="button" class="hdr__burger" aria-expanded="false" aria-controls="mobilni-menu" data-burger>
+            <span class="sr-only">Menu</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+          </button>
+        </li>
       </ul>
     </nav>
+    <div class="mmenu" id="mobilni-menu" data-mmenu hidden>
+      <ul>
+        <li><a href="/mapa/">Mapa salonů</a></li>
+        <li><a href="/okoli/">V mém okolí</a></li>
+        <li><a href="/kraje/">Kraje a města</a></li>
+        <li><a href="/blog/">Rady a tipy</a></li>
+        <li><a href="/oblibene/">Oblíbené</a></li>
+        <li><a href="/naposledy-prohlizene/">Naposledy prohlížené</a></li>
+        <li><a href="/o-webu/">O webu</a></li>
+      </ul>
+      <a class="btn" href="/pridat-provozovnu/">Přidat salon</a>
+    </div>
   </div>
 </header>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('[data-burger]');
+  const menu = document.querySelector<HTMLElement>('[data-mmenu]');
+  if (btn && menu) {
+    const nastav = (on: boolean) => {
+      menu.hidden = !on;
+      btn.setAttribute('aria-expanded', String(on));
+    };
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      nastav(menu.hidden);
+    });
+    document.addEventListener('click', (e) => {
+      if (!menu.hidden && !menu.contains(e.target as Node)) nastav(false);
+    });
+    document.addEventListener('keydown', (e) => e.key === 'Escape' && nastav(false));
+  }
+</script>
 
 <style>
   .hdr {
     background: var(--paper);
+    position: relative;
+    z-index: 40;
+  }
+  .nav-jen-m {
+    display: none;
+  }
+  .hdr__burger {
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .hdr__burger svg {
+    width: 1.3rem;
+    height: 1.3rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+  }
+  .hdr__burger[aria-expanded='true'] {
+    background: var(--bottle);
+    border-color: var(--bottle);
+    color: var(--bottle-ink);
+  }
+  .mmenu {
+    position: absolute;
+    top: 100%;
+    left: 16px;
+    right: 16px;
+    padding: 0.5rem 1.25rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 16px 40px rgb(38 36 31 / 0.16);
+  }
+  .mmenu[hidden] {
+    display: none;
+  }
+  .mmenu ul {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+  }
+  .mmenu li a {
+    display: block;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 1.05rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .mmenu .btn {
+    display: block;
+    text-align: center;
   }
   .hdr__in {
     display: flex;
@@ -100,6 +197,9 @@ import Logo from './Logo.astro';
   @media (max-width: 760px) {
     .nav-skryt-m {
       display: none;
+    }
+    .nav-jen-m {
+      display: list-item;
     }
     nav ul {
       gap: 0.9rem;

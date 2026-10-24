@@ -5,7 +5,7 @@ import Base from '../../layouts/Base.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import Hledani from '../../components/Hledani.astro';
 import BlogKarta from '../../components/BlogKarta.astro';
-import { clanky, kategorieUrl, casCteni, datumText, souvisejici, type Clanek } from '../../lib/blog';
+import { clanky, clanekUrl, kategorieUrl, casCteni, datumText, souvisejici, type Clanek } from '../../lib/blog';
 import { SITE } from '../../lib/config';
 import { nejvetsiMesta, mestoUrl } from '../../lib/data';
 
@@ -17,7 +17,9 @@ export async function getStaticPaths() {
 const { c, vse } = Astro.props as { c: Clanek; vse: Clanek[] };
 const { Content, headings } = await render(c);
 const obsah = headings.filter((h) => h.depth === 2);
-const dalsi = souvisejici(vse, c, 3);
+const souvis = souvisejici(vse, c, 9);
+const ctete = souvis.slice(0, 3);
+const dalsi = souvis.slice(3, 9);
 const og = await getImage({ src: c.data.obrazek, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
 
 const jsonLd = {
@@ -67,6 +69,7 @@ const jsonLd = {
 
     <div class="wrap telo">
       <aside class="bok">
+        <div class="bok__in">
         {
           obsah.length > 2 && (
             <nav class="toc" aria-label="Obsah článku">
@@ -81,9 +84,30 @@ const jsonLd = {
             </nav>
           )
         }
+        <nav class="ctete" aria-label="Čtěte také">
+          <p class="toc__h">Čtěte také</p>
+          <ul>
+            {ctete.map((x) => (
+              <li>
+                <a href={clanekUrl(x)}>{x.data.title}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        </div>
       </aside>
       <div class="text">
         <Content />
+        <aside class="ctete-text">
+          <p class="toc__h">Čtěte také</p>
+          <ul>
+            {ctete.map((x) => (
+              <li>
+                <a href={clanekUrl(x)}>{x.data.title}</a>
+              </li>
+            ))}
+          </ul>
+        </aside>
         <aside class="cta">
           <p class="cta__h">Najděte salon ve svém okolí</p>
           <Hledani />
@@ -171,9 +195,12 @@ const jsonLd = {
   .bok {
     position: relative;
   }
-  .toc {
+  .bok__in {
     position: sticky;
     top: 1.5rem;
+  }
+  .toc,
+  .ctete {
     font-size: 0.85rem;
   }
   .toc__h {
@@ -267,6 +294,42 @@ const jsonLd = {
     margin: 0 0 1.25rem;
   }
 
+  .ctete {
+    margin-top: 2rem;
+  }
+  .ctete ul,
+  .ctete-text ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .ctete li {
+    padding: 0.45rem 0;
+    border-top: 1px solid var(--line);
+    font-size: 0.9rem;
+    line-height: 1.35;
+  }
+  .ctete-text {
+    margin: 2.5rem 0 0;
+    padding: 1.25rem 1.5rem;
+    border-left: 3px solid var(--bottle);
+    background: var(--surface);
+  }
+  .ctete-text li {
+    padding: 0.3rem 0;
+  }
+  @media (min-width: 961px) {
+    .ctete-text {
+      display: none;
+    }
+  }
+  .ctete a {
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  .ctete a:hover {
+    color: var(--ink);
+  }
   .cta__mesta {
     list-style: none;
     padding: 0;

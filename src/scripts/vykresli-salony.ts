@@ -11,8 +11,10 @@ const mono = (n: string) => {
 
 export function kartaHtml(s: UlozenySalon): string {
   const data = esc(JSON.stringify(s));
-  // Fotky z ulice (Mapy.com) jen v detailu salonu, ve výpisech monogram
-  const foto = '';
+  const foto =
+    s.la && s.lo
+      ? `<img class="viz__foto" src="/api/panorama.php?lat=${s.la}&lon=${s.lo}&s=maly&v=2" alt="" loading="lazy" onload="this.classList.add('ok')" onerror="this.remove()"><span class="viz__atr" aria-hidden="true">© Mapy.com</span>`
+      : '';
   return `<li class="karta">
     <button type="button" class="srdce srdce--ikona" data-oblibene="${data}" aria-pressed="false" title="Přidat do oblíbených"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.4C1.4 7.6 3.6 4 7.2 4c2 0 3.6 1.1 4.8 2.8C13.2 5.1 14.8 4 16.8 4c3.6 0 5.8 3.6 4.5 7.1-1.8 4.8-9.3 9.4-9.3 9.4z"/></svg><span class="sr-only">Do oblíbených</span></button>
     <a href="${esc(s.u)}">
