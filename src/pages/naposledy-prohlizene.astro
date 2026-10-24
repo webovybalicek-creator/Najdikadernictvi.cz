@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import Hledani from '../components/Hledani.astro';
+---
+
+<Base title="Naposledy prohlížené salony" description="Salony, které jste si na webu naposledy prohlíželi." noindex>
+  <div class="wrap section">
+    <Breadcrumb items={[{ nazev: 'Naposledy prohlížené' }]} />
+    <span class="eyebrow">Jen pro vás</span>
+    <h1>Naposledy <em>prohlížené</em></h1>
+    <p class="lead">Posledních 8 salonů, které jste si otevřeli. Ukládá se jen ve vašem prohlížeči.</p>
+
+    <ul class="karty" data-historie-seznam></ul>
+
+    <div class="prazdno" data-historie-prazdno hidden>
+      <p>Zatím jste si neprohlédli žádný salon.</p>
+      <Hledani />
+    </div>
+    <p class="akce-h" data-historie-akce hidden>
+      <a class="btn btn--ghost" href="/oblibene/">Moje oblíbené</a>
+      <button type="button" class="btn btn--ghost" data-historie-smazat>Vymazat historii</button>
+    </p>
+  </div>
+</Base>
+
+<script>
+  import { historie, vymazHistorii } from '../scripts/oblibene';
+  import { vykresli } from '../scripts/vykresli-salony';
+  const seznam = document.querySelector<HTMLElement>('[data-historie-seznam]')!;
+  const obnov = () => {
+    const h = historie();
+    vykresli(seznam, h);
+    document.querySelector<HTMLElement>('[data-historie-prazdno]')!.hidden = h.length > 0;
+    document.querySelector<HTMLElement>('[data-historie-akce]')!.hidden = h.length === 0;
+  };
+  obnov();
+  document.querySelector('[data-historie-smazat]')!.addEventListener('click', () => {
+    vymazHistorii();
+    obnov();
+  });
+</script>
+
+<style>
+  .karty {
+    margin-top: 2rem;
+  }
+  .prazdno {
+    margin-top: 2rem;
+    max-width: 40rem;
+  }
+  .akce-h {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 2rem;
+  }
+</style>

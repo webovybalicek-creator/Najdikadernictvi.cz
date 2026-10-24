@@ -23,15 +23,12 @@ import Hledani from '../components/Hledani.astro';
       <Hledani />
     </div>
 
-    <section class="hist" data-historie-sekce hidden>
-      <h2>Naposledy prohlížené</h2>
-      <ul class="karty" data-historie-seznam></ul>
-    </section>
+    <p class="odkaz-hist"><a href="/naposledy-prohlizene/">Naposledy prohlížené salony →</a></p>
   </div>
 </Base>
 
 <script>
-  import { oblibene, historie } from '../scripts/oblibene';
+  import { oblibene } from '../scripts/oblibene';
   import { vykresli } from '../scripts/vykresli-salony';
 
   const seznam = document.querySelector<HTMLElement>('[data-oblibene-seznam]')!;
@@ -45,14 +42,12 @@ import Hledani from '../components/Hledani.astro';
   // po odebrání srdíčkem zmizí karta až po chvilce, ať je vidět, co se stalo
   window.addEventListener('nk-oblibene', () => setTimeout(obnov, 400));
 
-  const h = historie().filter((x) => !oblibene().some((o) => o.id === x.id));
-  if (h.length) {
-    document.querySelector<HTMLElement>('[data-historie-sekce]')!.hidden = false;
-    vykresli(document.querySelector<HTMLElement>('[data-historie-seznam]')!, h);
-  }
 </script>
 
 <style>
+  .odkaz-hist {
+    margin-top: 2.5rem;
+  }
   .karty {
     margin-top: 2rem;
   }

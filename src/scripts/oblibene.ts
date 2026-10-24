@@ -53,6 +53,10 @@ export function odeberOblibeny(id: string) {
   window.dispatchEvent(new CustomEvent('nk-oblibene'));
 }
 
+export function vymazHistorii() {
+  uloz(KLIC_HISTORIE, []);
+}
+
 export function zapisHistorii(s: UlozenySalon) {
   const vse = historie().filter((x) => x.id !== s.id);
   vse.unshift({ ...s, c: Date.now() });
