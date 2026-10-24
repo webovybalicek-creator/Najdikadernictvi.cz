@@ -16,7 +16,7 @@ interface Props {
 const { z, m, salony } = Astro.props;
 const nazev = z.nazev(m.nazev);
 const st = statistiky(salony);
-const meta = metaZameru(nazev, m.nazev, z.popis, salony, st);
+const meta = metaZameru(z.slug, nazev, m.nazev, z.popis, salony, st);
 const ostatni = zameryMesta(m).filter((x) => x.z.slug !== z.slug);
 const den = z.slug === 'otevreno-v-nedeli' ? 6 : z.slug === 'otevreno-v-sobotu' ? 5 : -1;
 
