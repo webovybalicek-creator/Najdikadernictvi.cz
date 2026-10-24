@@ -8,6 +8,9 @@
  */
 declare(strict_types=1);
 
+/** Veřejný souhrn pro stránku /navstenost/ (true = zapnuto). Vypnutím se stránka skryje. */
+const VEREJNE = true;
+
 header('X-Robots-Tag: noindex');
 
 $uloziste = dirname($_SERVER['DOCUMENT_ROOT'] ?: __DIR__ . '/..') . '/najdikadernictvi-data';
@@ -91,6 +94,39 @@ if (isset($_GET['cesta'], $_GET['t'])) {
     header('Content-Type: application/json; charset=utf-8');
     header('Cache-Control: no-store');
     echo json_encode(['cesta' => $cesta, 'dny' => pocty_cesty($db, $cesta, 90)]);
+    exit;
+}
+
+// ---------------------------------------------------------------- veřejný souhrn (jen agregované počty)
+if (isset($_GET['verejne'])) {
+    header('Content-Type: application/json; charset=utf-8');
+    if (!VEREJNE) {
+        http_response_code(404);
+        echo '{"ok":false}';
+        exit;
+    }
+    header('Cache-Control: public, max-age=300');
+    $dni = max(1, min(365, (int)($_GET['dni'] ?? 30)));
+    $od = date('Y-m-d', strtotime("-$dni days"));
+    $q = function (string $sql) use ($db, $od) {
+        $st = $db->prepare($sql);
+        $st->execute([$od]);
+        return $st->fetchAll(PDO::FETCH_NUM);
+    };
+    echo json_encode([
+        'ok' => true,
+        'dni' => $dni,
+        'poDnech' => $q('SELECT den, SUM(pocet) FROM zobrazeni WHERE den >= ? GROUP BY den ORDER BY den'),
+        'stranky' => $q('SELECT cesta, SUM(pocet) n FROM zobrazeni WHERE den >= ? GROUP BY cesta ORDER BY n DESC LIMIT 30'),
+        'zdroje' => $q('SELECT zdroj, SUM(pocet) n FROM zdroje WHERE den >= ? GROUP BY zdroj ORDER BY n DESC LIMIT 15'),
+        'typy' => $q("SELECT CASE
+            WHEN cesta = '/' THEN 'Úvodní stránka'
+            WHEN cesta LIKE '/blog/%' THEN 'Články'
+            WHEN cesta LIKE '%/ctvrt/%' THEN 'Čtvrti'
+            WHEN cesta IN ('/mapa/', '/okoli/', '/kraje/') OR cesta LIKE '/kraj/%' THEN 'Mapa a přehledy'
+            WHEN length(cesta) - length(replace(cesta, '/', '')) >= 3 THEN 'Detaily salonů'
+            ELSE 'Města a výběry' END t, SUM(pocet) n FROM zobrazeni WHERE den >= ? GROUP BY t ORDER BY n DESC"),
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
 }
 

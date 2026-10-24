@@ -1,0 +1,231 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+---
+
+<Base title="Návštěvnost webu" description="Přehled návštěvnosti webu Najdi kadeřnictví." noindex>
+  <div class="wrap section nav">
+    <Breadcrumb items={[{ nazev: 'Návštěvnost' }]} />
+    <span class="eyebrow">Statistika</span>
+    <h1>Návštěvnost <em>webu</em></h1>
+    <p class="lead">Zobrazení stránek bez cookies a bez osobních údajů. Roboti a vyhledávače se nepočítají.</p>
+
+    <div class="obdobi" role="group" aria-label="Období" data-obdobi>
+      {[7, 30, 90, 365].map((d) => <button type="button" class="chip" data-dni={d} aria-pressed={d === 30 ? 'true' : 'false'}>{d === 365 ? 'Rok' : `${d} dní`}</button>)}
+    </div>
+
+    <div class="cisla">
+      <div><span data-c="celkem">–</span><small>zobrazení celkem</small></div>
+      <div><span data-c="prumer">–</span><small>průměrně za den</small></div>
+      <div><span data-c="dnes">–</span><small>dnes</small></div>
+      <div><span data-c="vcera">–</span><small>včera</small></div>
+    </div>
+
+    <section>
+      <h2>Po dnech</h2>
+      <div class="graf" data-graf aria-label="Zobrazení po dnech"></div>
+      <p class="osa" data-osa></p>
+    </section>
+
+    <div class="dva">
+      <section>
+        <h2>Typy stránek</h2>
+        <ul class="pruhy" data-typy></ul>
+      </section>
+      <section>
+        <h2>Odkud lidé přišli</h2>
+        <ul class="pruhy" data-zdroje></ul>
+        <p class="muted mala">Bez odkazu (přímá návštěva, aplikace) se nepočítá.</p>
+      </section>
+    </div>
+
+    <section>
+      <h2>Nejnavštěvovanější stránky</h2>
+      <ol class="pruhy" data-stranky></ol>
+    </section>
+
+    <p class="muted mala">Vlastní návštěvy můžete vyloučit na stránce <a href="/nemerit/">Neměřit tento prohlížeč</a>.</p>
+  </div>
+</Base>
+
+<script>
+  type Data = { ok: boolean; dni: number; poDnech: [string, number][]; stranky: [string, number][]; zdroje: [string, number][]; typy: [string, number][] };
+  const $ = (s: string) => document.querySelector<HTMLElement>(s)!;
+  const esc = (s: string) => String(s).replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
+  const cis = (n: number) => Math.round(n).toLocaleString('cs-CZ');
+  const den = (d: Date) => d.toISOString().slice(0, 10);
+
+  const pruhy = (el: HTMLElement, data: [string, number][], odkaz = false) => {
+    const max = Math.max(1, ...data.map((d) => Number(d[1])));
+    el.innerHTML = data.length
+      ? data
+          .map(
+            ([k, n]) =>
+              `<li><span class="pruh" style="--w:${(Number(n) / max) * 100}%"></span><span class="pk">${
+                odkaz ? `<a href="${esc(k)}">${esc(k)}</a>` : esc(k)
+              }</span><span class="pn">${cis(Number(n))}</span></li>`,
+          )
+          .join('')
+      : '<li class="muted">Zatím žádná data.</li>';
+  };
+
+  async function nacti(dni: number) {
+    let d: Data;
+    try {
+      d = await (await fetch(`/api/stat.php?verejne=1&dni=${dni}`)).json();
+    } catch {
+      $('.lead').textContent = 'Statistiku se nepodařilo načíst.';
+      return;
+    }
+    if (!d.ok) {
+      $('.lead').textContent = 'Statistika není veřejně dostupná.';
+      return;
+    }
+    // doplnit dny bez návštěv
+    const mapa = new Map(d.poDnech.map(([k, n]) => [k, Number(n)]));
+    const dny: [string, number][] = [];
+    for (let i = dni - 1; i >= 0; i--) {
+      const k = den(new Date(Date.now() - i * 864e5));
+      dny.push([k, mapa.get(k) ?? 0]);
+    }
+    const celkem = dny.reduce((s, x) => s + x[1], 0);
+    $('[data-c=celkem]').textContent = cis(celkem);
+    $('[data-c=prumer]').textContent = cis(celkem / dni);
+    $('[data-c=dnes]').textContent = cis(dny[dny.length - 1][1]);
+    $('[data-c=vcera]').textContent = cis(dny[dny.length - 2]?.[1] ?? 0);
+    const max = Math.max(1, ...dny.map((x) => x[1]));
+    $('[data-graf]').innerHTML = dny
+      .map(([k, n]) => `<span title="${new Date(k).toLocaleDateString('cs-CZ')}: ${cis(n)}" style="height:${Math.max(n ? 3 : 0.5, (n / max) * 100)}%"></span>`)
+      .join('');
+    $('[data-osa]').textContent = `${new Date(dny[0][0]).toLocaleDateString('cs-CZ')} – ${new Date(dny[dny.length - 1][0]).toLocaleDateString('cs-CZ')} · maximum ${cis(max)} za den`;
+    pruhy($('[data-typy]'), d.typy);
+    pruhy($('[data-zdroje]'), d.zdroje);
+    pruhy($('[data-stranky]'), d.stranky, true);
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('[data-dni]').forEach((b) =>
+    b.addEventListener('click', () => {
+      document.querySelectorAll('[data-dni]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      nacti(Number(b.dataset.dni));
+    }),
+  );
+  nacti(30);
+</script>
+
+<style>
+  .nav h2 {
+    font-size: 1.3rem;
+    margin: 2.5rem 0 1rem;
+  }
+  .obdobi {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 1.5rem 0;
+  }
+  .chip {
+    font: inherit;
+    font-size: 0.85rem;
+    padding: 0.4em 0.9em;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .chip[aria-pressed='true'] {
+    background: var(--bottle);
+    border-color: var(--bottle);
+    color: var(--bottle-ink);
+  }
+  .cisla {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .cisla div {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+  }
+  .cisla span {
+    display: block;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 500;
+    line-height: 1.1;
+  }
+  .cisla small {
+    color: var(--ink-soft);
+    font-size: 0.8rem;
+  }
+  .graf {
+    display: flex;
+    align-items: end;
+    gap: 2px;
+    height: 180px;
+    border-bottom: 1px solid var(--line);
+  }
+  .graf :global(span) {
+    flex: 1;
+    min-width: 1px;
+    background: var(--bottle);
+    border-radius: 2px 2px 0 0;
+  }
+  .graf :global(span:hover) {
+    background: var(--ink);
+  }
+  .osa {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    margin-top: 0.5rem;
+  }
+  .dva {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 3rem;
+  }
+  .pruhy {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .pruhy :global(li) {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.45rem 0.6rem;
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .pruhy :global(.pruh) {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: var(--w);
+    background: var(--mint);
+    z-index: 0;
+  }
+  .pruhy :global(.pk),
+  .pruhy :global(.pn) {
+    position: relative;
+    z-index: 1;
+    overflow-wrap: anywhere;
+  }
+  .pruhy :global(.pn) {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .mala {
+    font-size: 0.82rem;
+    margin-top: 1.5rem;
+  }
+  @media (max-width: 760px) {
+    .cisla {
+      grid-template-columns: 1fr 1fr;
+    }
+    .dva {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
