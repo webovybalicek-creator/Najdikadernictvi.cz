@@ -1,23 +1,30 @@
 ---
 import Vizual from './Vizual.astro';
 import Srdce from './Srdce.astro';
-import { adresa, url, TYP_NAZEV, type Provozovna } from '../lib/data';
+import { adresa, url, tyden, TYP_NAZEV, type Provozovna } from '../lib/data';
 
 interface Props {
   p: Provozovna;
+  /** Zobrazit „Otevřeno do …“ podle otevírací doby */
+  stav?: boolean;
+  /** Skrytá karta (vybírá se až v prohlížeči) */
+  skryta?: boolean;
+  mesto?: string;
 }
-const { p } = Astro.props;
+const { p, stav = false, skryta = false, mesto } = Astro.props;
+const t = stav ? tyden(p) : null;
 const adr = adresa(p, false);
 const misto = p.mesto === 'Praha' && p.cast ? `Praha, ${p.cast}` : p.mesto;
 ---
 
-<li class="karta">
+<li class="karta" hidden={skryta} data-mesto={mesto}>
   <Srdce p={p} />
   <a href={url(p)}>
     <Vizual p={p} panorama />
     <span class="karta__typ">{TYP_NAZEV[p.typ]}</span>
     <h3 class="karta__nazev">{p.nazev}</h3>
     <p class="karta__adr">{[adr, misto].filter(Boolean).join(', ')}</p>
+    {t && <p class="karta__stav" data-oh={JSON.stringify(t)}><span class="stav"></span></p>}
     <span class="hod-mini" data-hod-id={p.id}><span class="hv" style="--p:0%"></span><span class="hod-mini__nic">Zatím bez hodnocení</span></span>
   </a>
 </li>
@@ -25,6 +32,13 @@ const misto = p.mesto === 'Praha' && p.cast ? `Praha, ${p.cast}` : p.mesto;
 <style>
   .karta {
     position: relative;
+  }
+  .karta[hidden] {
+    display: none;
+  }
+  .karta__stav {
+    margin: 0.2rem 0 0;
+    font-size: 0.85rem;
   }
   .karta a {
     display: block;

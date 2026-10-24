@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Hledani from '../components/Hledani.astro';
 import Magazin from '../components/Magazin.astro';
+import Vybrane from '../components/Vybrane.astro';
 import { KRAJE } from '../lib/kraje';
 import { PROVOZOVNY, nejvetsiMesta, krajUrl, mestoUrl, pocetText } from '../lib/data';
 import { SITE } from '../lib/config';
@@ -46,6 +47,8 @@ const jsonLd = [
       </ul>
     </div>
   </section>
+
+  <Vybrane />
 
   <section class="rychle" aria-labelledby="rychle-h">
     <div class="wrap">

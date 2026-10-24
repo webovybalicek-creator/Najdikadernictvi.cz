@@ -1,0 +1,173 @@
+---
+// Vybrané salony z velkých měst (kompletní profily) – v prohlížeči se při každém načtení zamíchají
+import Karta from './Karta.astro';
+import { nejvetsiMesta, tyden, uplnost, type Provozovna } from '../lib/data';
+
+const NA_MESTO = 4;
+const mesta = nejvetsiMesta(10);
+const pool: { p: Provozovna; m: string }[] = [];
+for (const m of mesta) {
+  const vybrane = m.provozovny
+    .filter((p) => p.zdroj === 'osm' && tyden(p) && (p.telefon || p.web))
+    .sort((a, b) => uplnost(b) - uplnost(a) || a.id.localeCompare(b.id))
+    .slice(0, NA_MESTO);
+  for (const p of vybrane) pool.push({ p, m: m.slug });
+}
+const ZOBRAZIT = 8;
+const mestaSVyberem = mesta.filter((m) => pool.some((x) => x.m === m.slug));
+---
+
+<section class="vyb" data-vyb data-zobrazit={ZOBRAZIT}>
+  <div class="wrap">
+    <div class="vyb__hlava">
+      <h2>Vybrané salony</h2>
+      <div class="vyb__sipky">
+        <button type="button" class="vyb__sipka" data-vyb-posun="-1" aria-label="Předchozí">‹</button>
+        <button type="button" class="vyb__sipka" data-vyb-posun="1" aria-label="Další">›</button>
+      </div>
+    </div>
+    <div class="vyb__mesta" role="tablist" aria-label="Město">
+      <button type="button" role="tab" aria-selected="true" data-vyb-mesto="">Všechna města</button>
+      {mestaSVyberem.map((m) => <button type="button" role="tab" aria-selected="false" data-vyb-mesto={m.slug}>{m.nazev}</button>)}
+    </div>
+    <ul class="vyb__pas" data-vyb-pas>
+      {pool.map(({ p, m }, i) => <Karta p={p} stav skryta={i >= ZOBRAZIT} mesto={m} />)}
+    </ul>
+    <p class="vyb__vice" data-vyb-vice hidden><a href="/" data-vyb-vice-odkaz>Všechna kadeřnictví</a></p>
+  </div>
+</section>
+
+<script>
+  import { aplikujStav } from '../scripts/stav';
+  document.querySelectorAll<HTMLElement>('[data-vyb]').forEach((sek) => {
+    const pas = sek.querySelector<HTMLElement>('[data-vyb-pas]')!;
+    const karty = [...pas.querySelectorAll<HTMLElement>(':scope > li')];
+    const n = Number(sek.dataset.zobrazit) || 8;
+    const vice = sek.querySelector<HTMLElement>('[data-vyb-vice]')!;
+    const zamichej = <T,>(a: T[]) => {
+      const b = [...a];
+      for (let i = b.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [b[i], b[j]] = [b[j], b[i]];
+      }
+      return b;
+    };
+    const ukaz = (mesto: string) => {
+      const kandidati = mesto ? karty.filter((k) => k.dataset.mesto === mesto) : karty;
+      const vybrane = new Set(zamichej(kandidati).slice(0, n));
+      karty.forEach((k) => (k.hidden = !vybrane.has(k)));
+      // pořadí podle zamíchání
+      [...vybrane].forEach((k) => pas.appendChild(k));
+      pas.scrollLeft = 0;
+      if (mesto) {
+        vice.hidden = false;
+        const a = vice.querySelector<HTMLAnchorElement>('[data-vyb-vice-odkaz]')!;
+        a.href = `/${mesto}/`;
+        a.textContent = `Všechna kadeřnictví: ${sek.querySelector(`[data-vyb-mesto="${mesto}"]`)!.textContent} →`;
+      } else vice.hidden = true;
+    };
+    sek.querySelectorAll<HTMLButtonElement>('[data-vyb-mesto]').forEach((b) =>
+      b.addEventListener('click', () => {
+        sek.querySelectorAll('[data-vyb-mesto]').forEach((x) => x.setAttribute('aria-selected', String(x === b)));
+        ukaz(b.dataset.vybMesto!);
+      }),
+    );
+    sek.querySelectorAll<HTMLButtonElement>('[data-vyb-posun]').forEach((b) =>
+      b.addEventListener('click', () => pas.scrollBy({ left: Number(b.dataset.vybPosun) * pas.clientWidth * 0.8, behavior: 'smooth' })),
+    );
+    ukaz('');
+    aplikujStav(sek);
+  });
+</script>
+
+<style>
+  .vyb {
+    padding: clamp(32px, 5vw, 56px) 0 0;
+  }
+  .vyb__hlava {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .vyb__hlava h2 {
+    margin: 0;
+  }
+  .vyb__sipky {
+    display: flex;
+    gap: 0.4rem;
+  }
+  .vyb__sipka {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: #fff;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--ink);
+  }
+  .vyb__sipka:hover {
+    border-color: var(--ink);
+  }
+  .vyb__mesta {
+    display: flex;
+    gap: 0.4rem;
+    margin: 1rem 0 1.25rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .vyb__mesta button {
+    flex: none;
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 500;
+    padding: 0.45em 1em;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .vyb__mesta button[aria-selected='true'] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: #fff;
+  }
+  .vyb__pas {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0.5rem;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - 3 * 1.25rem) / 4);
+    gap: 1.25rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .vyb__pas :global(.karta) {
+    scroll-snap-align: start;
+  }
+  .vyb__pas :global(.viz) {
+    border-radius: 16px;
+  }
+  .vyb__vice {
+    margin: 1rem 0 0;
+    font-weight: 500;
+  }
+  @media (max-width: 860px) {
+    .vyb__pas {
+      grid-auto-columns: 46%;
+    }
+  }
+  @media (max-width: 520px) {
+    .vyb__pas {
+      grid-auto-columns: 78%;
+    }
+    .vyb__sipky {
+      display: none;
+    }
+  }
+</style>
