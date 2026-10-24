@@ -7,6 +7,9 @@
  * POST salon, hvezdy, text, jmeno  → uložení hodnocení (hvězdy platí hned, text po schválení)
  * GET  ?akce=schvalit|zamitnout&id=<id>&t=<podpis>  → moderace z e-mailu
  * GET  ?admin=<podpis>             → seznam hodnocení čekajících na schválení
+ * GET  ?foto=<id>                  → fotka u schváleného hodnocení (náhled pro moderaci s &t=<podpis>)
+ *
+ * Fotky: max. 8 MB, přeuloží se přes GD do JPEG (max. 1400 px), tím zmizí EXIF včetně polohy.
  *
  * Data: SQLite mimo veřejnou složku webu. Ukládá se jen anonymní otisk IP (HMAC), ne IP.
  */
@@ -17,6 +20,8 @@ const WEB = 'https://najdikadernictvi.cz';
 const LIMIT_ZA_HODINU = 10;
 const MAX_TEXT = 600;
 const MAX_JMENO = 40;
+const MAX_FOTO = 8 * 1024 * 1024;
+const FOTO_PX = 1400;
 
 header('X-Robots-Tag: noindex');
 
@@ -73,6 +78,9 @@ $db->exec('CREATE TABLE IF NOT EXISTS hodnoceni (
     otisk_ip TEXT NOT NULL,                   -- HMAC(IP + hodina): limit odeslání
     vytvoreno TEXT NOT NULL
 )');
+$sloupce = array_column($db->query('PRAGMA table_info(hodnoceni)')->fetchAll(), 'name');
+if (!in_array('foto', $sloupce, true)) $db->exec('ALTER TABLE hodnoceni ADD COLUMN foto INTEGER NOT NULL DEFAULT 0');
+$fotky = $uloziste . '/fotky';
 $db->exec('CREATE UNIQUE INDEX IF NOT EXISTS u_otisk ON hodnoceni(otisk)');
 $db->exec('CREATE INDEX IF NOT EXISTS i_salon ON hodnoceni(salon)');
 
@@ -88,6 +96,51 @@ function obnov_souhrn(PDO $db, string $soubor): void
 
 $platneId = fn($s): bool => is_string($s) && preg_match('/^[nwr]\d{1,12}$/', $s) === 1;
 
+// ---------------------------------------------------------------- fotky
+if (isset($_GET['foto'])) {
+    $id = (int)$_GET['foto'];
+    $nahled = isset($_GET['t']) && hash_equals($podpis("foto:$id"), (string)$_GET['t']);
+    $st = $db->prepare('SELECT stav, foto FROM hodnoceni WHERE id = ?');
+    $st->execute([$id]);
+    $r = $st->fetch();
+    $soubor = "$fotky/$id.jpg";
+    if (!$r || !(int)$r['foto'] || !is_file($soubor) || ($r['stav'] !== 'ok' && !$nahled)) {
+        http_response_code(404);
+        exit;
+    }
+    header('Content-Type: image/jpeg');
+    header('Cache-Control: ' . ($nahled ? 'no-store' : 'public, max-age=604800'));
+    header('Content-Length: ' . filesize($soubor));
+    readfile($soubor);
+    exit;
+}
+
+/** Načte nahraný obrázek, zmenší a přeuloží jako JPEG bez metadat. Vrací GD obrázek nebo chybovou hlášku. */
+function zpracuj_fotku(array $f)
+{
+    if (($f['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) return null;
+    if ($f['error'] !== UPLOAD_ERR_OK || $f['size'] > MAX_FOTO) return 'Fotku se nepodařilo nahrát (max. 8 MB).';
+    if (!function_exists('imagecreatefromstring')) return 'Nahrávání fotek teď není dostupné.';
+    $info = @getimagesize($f['tmp_name']);
+    if (!$info || !in_array($info[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_WEBP], true)) return 'Podporujeme jen fotky JPG, PNG nebo WebP.';
+    if ($info[0] * $info[1] > 50_000_000) return 'Fotka je moc velká.';
+    $img = @imagecreatefromstring((string)file_get_contents($f['tmp_name']));
+    if (!$img) return 'Fotku se nepodařilo přečíst.';
+    // Otočení podle EXIF (fotky z mobilu), samotná metadata se neukládají
+    if ($info[2] === IMAGETYPE_JPEG && function_exists('exif_read_data')) {
+        $o = (int)(@exif_read_data($f['tmp_name'])['Orientation'] ?? 1);
+        $uhel = [3 => 180, 6 => -90, 8 => 90][$o] ?? 0;
+        if ($uhel) $img = imagerotate($img, $uhel, 0);
+    }
+    $w = imagesx($img);
+    $h = imagesy($img);
+    $k = min(1, FOTO_PX / max($w, $h));
+    if ($k < 1) {
+        $img = imagescale($img, (int)round($w * $k), (int)round($h * $k), IMG_BICUBIC);
+    }
+    return $img;
+}
+
 // ---------------------------------------------------------------- moderace
 if (isset($_GET['akce'], $_GET['id'], $_GET['t'])) {
     $id = (int)$_GET['id'];
@@ -100,7 +153,7 @@ if (isset($_GET['akce'], $_GET['id'], $_GET['t'])) {
     $r = $db->query('SELECT url FROM hodnoceni WHERE id = ' . $id)->fetch();
     html_out(
         $akce === 'schvalit' ? 'Hodnocení schváleno' : 'Text hodnocení zamítnut',
-        '<p>' . ($akce === 'schvalit' ? 'Text je teď na webu vidět.' : 'Text se nezobrazí, hvězdičky zůstávají započítané.') . '</p>'
+        '<p>' . ($akce === 'schvalit' ? 'Text je teď na webu vidět.' : 'Text ani fotka se nezobrazí, hvězdičky zůstávají započítané.') . '</p>'
         . ($r && $r['url'] ? '<p><a href="' . htmlspecialchars(WEB . $r['url']) . '">Zobrazit salon</a></p>' : '')
         . '<p><a href="?admin=' . $podpis('admin') . '">Další hodnocení ke schválení</a></p>'
     );
@@ -110,13 +163,14 @@ if (isset($_GET['admin'])) {
     if (!hash_equals($podpis('admin'), (string)$_GET['admin'])) {
         html_out('Neplatný odkaz', '<p>Odkaz je neplatný.</p>');
     }
-    $rows = $db->query("SELECT * FROM hodnoceni WHERE stav = 'ceka' ORDER BY id DESC LIMIT 200")->fetchAll();
+    $rows = $db->query("SELECT * FROM hodnoceni WHERE stav = 'ceka' ORDER BY id DESC LIMIT 100")->fetchAll();
     $h = $rows ? '' : '<p>Nic nečeká na schválení.</p>';
     foreach ($rows as $r) {
         $h .= '<div style="background:#fff;border:1px solid #e3ded4;padding:1rem;margin:0 0 1rem">'
             . '<p style="margin:0 0 .4rem"><strong>' . str_repeat('★', (int)$r['hvezdy']) . str_repeat('☆', 5 - (int)$r['hvezdy']) . '</strong> · '
             . htmlspecialchars($r['jmeno'] ?: 'Anonym') . ' · <a href="' . htmlspecialchars(WEB . $r['url']) . '">' . htmlspecialchars($r['url']) . '</a></p>'
             . '<p style="white-space:pre-wrap;margin:0 0 .6rem">' . htmlspecialchars((string)$r['text']) . '</p>'
+            . ((int)$r['foto'] ? '<p><img src="?foto=' . $r['id'] . '&t=' . $podpis('foto:' . $r['id']) . '" style="max-width:100%;max-height:22rem" alt=""></p>' : '')
             . '<a href="?akce=schvalit&id=' . $r['id'] . '&t=' . $podpis('schvalit:' . $r['id']) . '">Schválit</a> · '
             . '<a href="?akce=zamitnout&id=' . $r['id'] . '&t=' . $podpis('zamitnout:' . $r['id']) . '">Zamítnout text</a></div>';
     }
@@ -137,10 +191,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $st = $db->prepare('SELECT ROUND(AVG(hvezdy), 1) p, COUNT(*) n FROM hodnoceni WHERE salon = ?');
     $st->execute([$salon]);
     $s = $st->fetch();
-    $st = $db->prepare("SELECT hvezdy, text, jmeno, substr(vytvoreno, 1, 10) datum FROM hodnoceni
-        WHERE salon = ? AND stav = 'ok' AND text IS NOT NULL AND text != '' ORDER BY id DESC LIMIT 50");
+    $st = $db->prepare("SELECT id, hvezdy, text, jmeno, foto, substr(vytvoreno, 1, 10) datum FROM hodnoceni
+        WHERE salon = ? AND stav = 'ok' AND ((text IS NOT NULL AND text != '') OR foto = 1) ORDER BY id DESC LIMIT 50");
     $st->execute([$salon]);
-    json_out(200, ['prumer' => (float)$s['p'], 'pocet' => (int)$s['n'], 'recenze' => $st->fetchAll()], 60);
+    $recenze = array_map(function ($r) {
+        $r['foto'] = (int)$r['foto'] ? '/api/hodnoceni.php?foto=' . $r['id'] : null;
+        unset($r['id']);
+        return $r;
+    }, $st->fetchAll());
+    json_out(200, ['prumer' => (float)$s['p'], 'pocet' => (int)$s['n'], 'recenze' => $recenze], 60);
 }
 
 // ---------------------------------------------------------------- zápis
@@ -164,6 +223,9 @@ if ($hvezdy < 1 || $hvezdy > 5) json_out(422, ['ok' => false, 'chyba' => 'Vybert
 if ($text !== '' && mb_strlen($text) < 10) json_out(422, ['ok' => false, 'chyba' => 'Text je moc krátký (aspoň 10 znaků), nebo ho nechte prázdný.']);
 if (preg_match('~https?://|www\.~i', $text)) json_out(422, ['ok' => false, 'chyba' => 'Text nesmí obsahovat odkazy.']);
 
+$foto = zpracuj_fotku($_FILES['foto'] ?? []);
+if (is_string($foto)) json_out(422, ['ok' => false, 'chyba' => $foto]);
+
 $ip = $_SERVER['REMOTE_ADDR'] ?? '';
 $otisk = $podpis("salon:$salon:$ip");
 $otiskIp = $podpis('ip:' . $ip . ':' . date('YmdH'));
@@ -171,14 +233,21 @@ $st = $db->prepare('SELECT COUNT(*) FROM hodnoceni WHERE otisk_ip = ?');
 $st->execute([$otiskIp]);
 if ((int)$st->fetchColumn() >= LIMIT_ZA_HODINU) json_out(429, ['ok' => false, 'chyba' => 'Příliš mnoho hodnocení. Zkuste to prosím později.']);
 
-$stav = $text === '' ? 'ok' : 'ceka';
+$stav = ($text === '' && !$foto) ? 'ok' : 'ceka';
 try {
-    $st = $db->prepare('INSERT INTO hodnoceni (salon, url, hvezdy, text, jmeno, stav, otisk, otisk_ip, vytvoreno) VALUES (?,?,?,?,?,?,?,?,?)');
-    $st->execute([$salon, $url, $hvezdy, $text ?: null, $jmeno ?: null, $stav, $otisk, $otiskIp, date('c')]);
+    $st = $db->prepare('INSERT INTO hodnoceni (salon, url, hvezdy, text, jmeno, stav, otisk, otisk_ip, vytvoreno, foto) VALUES (?,?,?,?,?,?,?,?,?,?)');
+    $st->execute([$salon, $url, $hvezdy, $text ?: null, $jmeno ?: null, $stav, $otisk, $otiskIp, date('c'), $foto ? 1 : 0]);
 } catch (PDOException $e) {
     json_out(409, ['ok' => false, 'chyba' => 'Tento salon jste už hodnotili. Děkujeme!']);
 }
 $id = (int)$db->lastInsertId();
+if ($foto) {
+    if (!is_dir($fotky)) @mkdir($fotky, 0700, true);
+    if (!@imagejpeg($foto, "$fotky/$id.jpg", 82)) {
+        $db->prepare('UPDATE hodnoceni SET foto = 0 WHERE id = ?')->execute([$id]);
+    }
+    imagedestroy($foto);
+}
 obnov_souhrn($db, $souhrnSoubor);
 
 if ($stav === 'ceka') {
@@ -187,8 +256,9 @@ if ($stav === 'ceka') {
         . 'Salon: ' . WEB . $url . "\n"
         . 'Jméno: ' . ($jmeno ?: 'neuvedeno') . "\n\n"
         . $text . "\n\n"
+        . ($foto ? "Fotka: $base?foto=$id&t=" . $podpis("foto:$id") . "\n\n" : '')
         . "Schválit: $base?akce=schvalit&id=$id&t=" . $podpis("schvalit:$id") . "\n"
-        . "Zamítnout text: $base?akce=zamitnout&id=$id&t=" . $podpis("zamitnout:$id") . "\n\n"
+        . "Zamítnout text a fotku: $base?akce=zamitnout&id=$id&t=" . $podpis("zamitnout:$id") . "\n\n"
         . "Vše ke schválení: $base?admin=" . $podpis('admin') . "\n";
     @mail(
         PRIJEMCE,

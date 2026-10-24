@@ -7,9 +7,20 @@ import Logo from './Logo.astro';
     <a href="/" class="hdr__logo" aria-label="Najdi kadeřnictví – úvod"><Logo /></a>
     <nav aria-label="Hlavní menu">
       <ul>
-        <li><a href="/kraje/">Kraje</a></li>
-        <li><a href="/blog/">Rady a tipy</a></li>
-        <li><a href="/o-webu/">O webu</a></li>
+        <li><a href="/mapa/">Mapa</a></li>
+        <li class="nav-skryt-m"><a href="/kraje/">Kraje</a></li>
+        <li class="nav-skryt-m"><a href="/blog/">Rady a tipy</a></li>
+        <li class="nav-skryt-m"><a href="/o-webu/">O webu</a></li>
+        <li>
+          <a href="/oblibene/" class="hdr__obl" aria-label="Oblíbené salony">
+            <svg viewBox="0 0 24 24" aria-hidden="true"
+              ><path
+                d="M12 20.5s-7.5-4.6-9.3-9.4C1.4 7.6 3.6 4 7.2 4c2 0 3.6 1.1 4.8 2.8C13.2 5.1 14.8 4 16.8 4c3.6 0 5.8 3.6 4.5 7.1-1.8 4.8-9.3 9.4-9.3 9.4z"
+              ></path></svg
+            >
+            <span class="hdr__obl-pocet" data-pocet-oblibenych hidden></span>
+          </a>
+        </li>
         <li><a href="/pridat-provozovnu/" class="btn btn--ghost hdr__cta">Přidat salon</a></li>
       </ul>
     </nav>
@@ -50,19 +61,44 @@ import Logo from './Logo.astro';
   nav a:not(.btn):hover {
     text-decoration: underline;
   }
+  .hdr__obl {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+  }
+  .hdr__obl svg {
+    width: 1.3rem;
+    height: 1.3rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linejoin: round;
+  }
+  .hdr__obl-pocet {
+    position: absolute;
+    top: -0.1rem;
+    right: -0.25rem;
+    min-width: 1.05rem;
+    height: 1.05rem;
+    padding: 0 0.25rem;
+    border-radius: 999px;
+    background: #b0574a;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 600;
+    line-height: 1.05rem;
+    text-align: center;
+    letter-spacing: 0;
+  }
   .hdr__cta {
     padding: 0.6em 1.1em;
     font-size: 0.75rem;
     letter-spacing: 0.06em;
   }
-  @media (max-width: 640px) {
-    nav li:nth-child(1),
-    nav li:nth-child(3) {
-      display: none;
-    }
-  }
-  @media (max-width: 420px) {
-    nav li:nth-child(2) {
+  @media (max-width: 760px) {
+    .nav-skryt-m {
       display: none;
     }
   }

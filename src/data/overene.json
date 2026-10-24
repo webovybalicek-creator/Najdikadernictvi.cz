@@ -1,0 +1,4 @@
+{
+  "_popis": "Profily ověřené majitelem. Klíč = id salonu (např. n123456, w789, r21927171). Údaje přepíší importovaná data; URL salonu se nemění. Pole: overeno (datum ověření, povinné), nazev, telefon, email, web, instagram, facebook, rezervace (URL online rezervace), oteviraciDoba (formát OSM, např. \"Mo-Fr 09:00-18:00; Sa 09:00-12:00\"), popis (text od majitele), cenik ([{\"polozka\": \"Pánský střih\", \"cena\": \"350 Kč\"}]), zamereni ([\"panske\",\"damske\",\"detske\",\"unisex\"]).",
+  "salony": {}
+}

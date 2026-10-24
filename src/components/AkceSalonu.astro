@@ -1,0 +1,184 @@
+---
+// Druhá řada akcí na detailu salonu: oblíbené, sdílení, připomínka do kalendáře
+import Srdce from './Srdce.astro';
+import { adresa, url, type Provozovna } from '../lib/data';
+import { SITE } from '../lib/config';
+
+interface Props {
+  p: Provozovna;
+}
+const { p } = Astro.props;
+const abs = new URL(url(p), SITE.url).href;
+---
+
+<div
+  class="akce2"
+  data-akce-salonu
+  data-nazev={p.nazev}
+  data-url={abs}
+  data-adresa={adresa(p, true) || p.mesto}
+  data-telefon={p.telefon ?? ''}
+>
+  <Srdce p={p} sTextem />
+  <div class="sdilet">
+    <button type="button" class="btn btn--ghost" data-sdilet aria-expanded="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"
+        ><path d="M12 3v12M7.5 7.5 12 3l4.5 4.5M5 13v6.5h14V13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg
+      >
+      Sdílet
+    </button>
+    <div class="sdilet__menu" data-sdilet-menu hidden>
+      <a data-kanal="whatsapp" target="_blank" rel="noopener">WhatsApp</a>
+      <a data-kanal="facebook" target="_blank" rel="noopener">Facebook</a>
+      <a data-kanal="email">E-mail</a>
+      <button type="button" data-kopirovat-odkaz>Kopírovat odkaz</button>
+    </div>
+  </div>
+  <button type="button" class="btn btn--ghost" data-pripominka title="Uloží do kalendáře připomínku za 6 týdnů">
+    <svg viewBox="0 0 24 24" aria-hidden="true"
+      ><rect x="3.5" y="5" width="17" height="15.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"></rect><path d="M3.5 9.5h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg
+    >
+    Připomenout za 6 týdnů
+  </button>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-akce-salonu]').forEach((box) => {
+    const { nazev, url, adresa, telefon } = box.dataset as Record<string, string>;
+    const text = `${nazev}, ${adresa}`;
+
+    // Sdílení: na mobilu nativní menu, jinak vlastní nabídka
+    const btn = box.querySelector<HTMLButtonElement>('[data-sdilet]')!;
+    const menu = box.querySelector<HTMLElement>('[data-sdilet-menu]')!;
+    const odkazy: Record<string, string> = {
+      whatsapp: `https://wa.me/?text=${encodeURIComponent(`${text}\n${url}`)}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+      email: `mailto:?subject=${encodeURIComponent(nazev)}&body=${encodeURIComponent(`${text}\n${url}`)}`,
+    };
+    menu.querySelectorAll<HTMLAnchorElement>('[data-kanal]').forEach((a) => (a.href = odkazy[a.dataset.kanal!]));
+    const zavri = () => {
+      menu.hidden = true;
+      btn.setAttribute('aria-expanded', 'false');
+    };
+    btn.addEventListener('click', async () => {
+      if (navigator.share && matchMedia('(pointer: coarse)').matches) {
+        try {
+          await navigator.share({ title: nazev, text, url });
+        } catch {
+          /* uživatel sdílení zrušil */
+        }
+        return;
+      }
+      menu.hidden = !menu.hidden;
+      btn.setAttribute('aria-expanded', String(!menu.hidden));
+    });
+    document.addEventListener('click', (e) => {
+      if (!box.querySelector('.sdilet')!.contains(e.target as Node)) zavri();
+    });
+    menu.querySelector('[data-kopirovat-odkaz]')!.addEventListener('click', async (e) => {
+      const b = e.currentTarget as HTMLButtonElement;
+      try {
+        await navigator.clipboard.writeText(url);
+        b.textContent = 'Odkaz zkopírován';
+      } catch {
+        prompt('Zkopírujte odkaz:', url);
+      }
+      setTimeout(() => {
+        b.textContent = 'Kopírovat odkaz';
+        zavri();
+      }, 1200);
+    });
+
+    // Připomínka: soubor .ics s celodenní událostí za 6 týdnů a upozorněním
+    box.querySelector('[data-pripominka]')!.addEventListener('click', () => {
+      const d = new Date();
+      d.setDate(d.getDate() + 42);
+      const ymd = (x: Date) => `${x.getFullYear()}${String(x.getMonth() + 1).padStart(2, '0')}${String(x.getDate()).padStart(2, '0')}`;
+      const dalsi = new Date(d);
+      dalsi.setDate(d.getDate() + 1);
+      const esc = (s: string) => s.replace(/([,;\\])/g, '\\$1').replace(/\n/g, '\\n');
+      const popis = [`Objednat se: ${nazev}`, adresa, telefon && `Telefon: ${telefon}`, url].filter(Boolean).join('\n');
+      const ics = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//najdikadernictvi.cz//CS',
+        'BEGIN:VEVENT',
+        `UID:${Date.now()}@najdikadernictvi.cz`,
+        `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '')}`,
+        `DTSTART;VALUE=DATE:${ymd(d)}`,
+        `DTEND;VALUE=DATE:${ymd(dalsi)}`,
+        `SUMMARY:${esc(`Objednat se ke kadeřníkovi – ${nazev}`)}`,
+        `DESCRIPTION:${esc(popis)}`,
+        `LOCATION:${esc(adresa)}`,
+        `URL:${url}`,
+        'BEGIN:VALARM',
+        'ACTION:DISPLAY',
+        `DESCRIPTION:${esc(`Objednat se: ${nazev}`)}`,
+        'TRIGGER:PT9H',
+        'END:VALARM',
+        'END:VEVENT',
+        'END:VCALENDAR',
+      ].join('\r\n');
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' }));
+      a.download = 'pripominka-kadernictvi.ics';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        URL.revokeObjectURL(a.href);
+        a.remove();
+      }, 1000);
+    });
+  });
+</script>
+
+<style>
+  .akce2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.6rem;
+  }
+  .akce2 :global(.btn) {
+    padding: 0.55em 0.95em;
+    font-size: 0.82rem;
+  }
+  .akce2 svg {
+    width: 1.1em;
+    height: 1.1em;
+  }
+  .sdilet {
+    position: relative;
+  }
+  .sdilet__menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 30;
+    min-width: 12rem;
+    padding: 0.35rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 12px 32px rgb(38 36 31 / 0.14);
+  }
+  .sdilet__menu a,
+  .sdilet__menu button {
+    display: block;
+    width: 100%;
+    padding: 0.55rem 0.75rem;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 0.9rem;
+    text-align: left;
+    text-decoration: none;
+    color: var(--ink);
+    cursor: pointer;
+    border-radius: 3px;
+  }
+  .sdilet__menu a:hover,
+  .sdilet__menu button:hover {
+    background: var(--mint);
+  }
+</style>

@@ -57,6 +57,19 @@ const jsonLd = {
     </div>
   </section>
 
+  <section class="section posledni" data-posledni hidden>
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="eyebrow">Pro vás</span>
+          <h2>Naposledy prohlížené</h2>
+        </div>
+        <a class="btn btn--ghost" href="/oblibene/">Moje oblíbené</a>
+      </div>
+      <ul class="karty" data-posledni-seznam></ul>
+    </div>
+  </section>
+
   <Magazin />
 
   {
@@ -174,7 +187,20 @@ const jsonLd = {
   </section>
 </Base>
 
+<script>
+  import { historie } from '../scripts/oblibene';
+  import { vykresli } from '../scripts/vykresli-salony';
+  const h = historie().slice(0, 4);
+  if (h.length) {
+    document.querySelector<HTMLElement>('[data-posledni]')!.hidden = false;
+    vykresli(document.querySelector<HTMLElement>('[data-posledni-seznam]')!, h);
+  }
+</script>
+
 <style>
+  .posledni {
+    padding-bottom: 0;
+  }
   .hero {
     padding: clamp(56px, 11vw, 140px) 0 clamp(56px, 9vw, 112px);
     text-align: center;

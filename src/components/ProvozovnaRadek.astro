@@ -1,4 +1,5 @@
 ---
+import Overeno from './Overeno.astro';
 import Vizual from './Vizual.astro';
 import { adresa, tyden, url, TYP_NAZEV, ZAMERENI_NAZEV, type Provozovna } from '../lib/data';
 
@@ -15,6 +16,10 @@ const t = tyden(p);
 
 <li
   class:list={['row', nahled && 'row--nahled']}
+  data-id={p.id}
+  data-nazev={p.nazev}
+  data-lat={p.lat}
+  data-lon={p.lon}
   data-typ={p.typ}
   data-zamereni={p.zamereni.join(' ')}
   data-oh={t ? JSON.stringify(t) : undefined}
@@ -28,7 +33,7 @@ const t = tyden(p);
     )
   }
   <div class="row__main">
-    <h3 class="row__name"><a href={url(p)}>{p.nazev}</a></h3>
+    <h3 class="row__name"><a href={url(p)}>{p.nazev}</a>{p.overeno && <Overeno mini />}</h3>
     <p class="row__adr">{adresa(p, sMestem) || p.mesto} <span class="hod-mini" data-hod-id={p.id}><span class="hv" style="--p:0%"></span></span></p>
   </div>
   <div class="row__meta">

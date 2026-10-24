@@ -45,11 +45,24 @@ const p = SITE.provozovatel;
 
   <h2>Hodnocení salonů</h2>
   <p>
-    Pokud ohodnotíte salon, uložíme počet hvězdiček, případný text a jméno nebo přezdívku, pokud je vyplníte. Text i
-    jméno zveřejníme u salonu po kontrole. Abychom zabránili opakovanému nebo podvodnému hodnocení, ukládáme místo IP
+    Pokud ohodnotíte salon, uložíme počet hvězdiček, případný text, fotku a jméno nebo přezdívku, pokud je vyplníte.
+    Text, fotku i jméno zveřejníme u salonu po kontrole. Fotku před uložením zmenšíme a odstraníme z ní metadata
+    (EXIF), včetně údajů o poloze a zařízení. Abychom zabránili opakovanému nebo podvodnému hodnocení, ukládáme místo IP
     adresy jen její jednosměrný kryptografický otisk, ze kterého IP adresu nelze zpětně zjistit. Hodnocení uchováváme
     po dobu provozu webu. O jeho odstranění můžete požádat e-mailem. Právním základem je náš oprávněný zájem na
     poskytování spolehlivých hodnocení.
+  </p>
+
+  <h2>Nahlášení chyby</h2>
+  <p>
+    Když nahlásíte chybu v údajích salonu, pošle se nám typ chyby, případná poznámka a adresa stránky. Pro ochranu před
+    zneužitím krátkodobě (nejdéle 24 hodin) uchováváme jen otisk IP adresy, ne IP adresu samotnou.
+  </p>
+
+  <h2>Oblíbené a naposledy prohlížené salony</h2>
+  <p>
+    Seznam oblíbených a naposledy prohlížených salonů se ukládá jen ve vašem prohlížeči (localStorage). Na náš server
+    se neodesílá a smažete ho vymazáním dat webu v prohlížeči.
   </p>
 
   <h2>Vaše práva</h2>

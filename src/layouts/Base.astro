@@ -61,8 +61,11 @@ const fullTitle = title.includes(SITE.nazev) ? title : `${title} | ${SITE.nazev}
     <script>
       import { nuzkyNaTlacitka } from '../scripts/nuzky';
       import { doplnHodnoceni } from '../scripts/hodnoceni-souhrn';
+      import { inicializujSrdicka, inicializujPocitadlo } from '../scripts/oblibene';
       nuzkyNaTlacitka();
       doplnHodnoceni();
+      inicializujSrdicka();
+      inicializujPocitadlo();
     </script>
   </body>
 </html>

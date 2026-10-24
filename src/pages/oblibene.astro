@@ -1,0 +1,70 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import Hledani from '../components/Hledani.astro';
+import MapyAtribuce from '../components/MapyAtribuce.astro';
+---
+
+<Base title="Moje oblíbené salony" description="Vaše uložená kadeřnictví a barbershopy na jednom místě." noindex>
+  <div class="wrap section">
+    <Breadcrumb items={[{ nazev: 'Oblíbené' }]} />
+    <span class="eyebrow">Jen pro vás</span>
+    <h1>Moje <em>oblíbené</em></h1>
+    <p class="lead">
+      Salony, které jste si uložili srdíčkem. Seznam se ukládá jen ve vašem prohlížeči, bez registrace.
+    </p>
+
+    <ul class="karty" data-oblibene-seznam></ul>
+    <div data-oblibene-atr hidden><MapyAtribuce /></div>
+
+    <div class="prazdno" data-oblibene-prazdno hidden>
+      <p>
+        Zatím tu nic není. U salonu klikněte na <strong>♥ Do oblíbených</strong> a najdete ho tu příště na jedno
+        kliknutí.
+      </p>
+      <Hledani />
+    </div>
+
+    <section class="hist" data-historie-sekce hidden>
+      <h2>Naposledy prohlížené</h2>
+      <ul class="karty" data-historie-seznam></ul>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import { oblibene, historie } from '../scripts/oblibene';
+  import { vykresli } from '../scripts/vykresli-salony';
+
+  const seznam = document.querySelector<HTMLElement>('[data-oblibene-seznam]')!;
+  const prazdno = document.querySelector<HTMLElement>('[data-oblibene-prazdno]')!;
+  const atr = document.querySelector<HTMLElement>('[data-oblibene-atr]')!;
+  const obnov = () => {
+    const o = oblibene();
+    vykresli(seznam, o);
+    prazdno.hidden = o.length > 0;
+    atr.hidden = o.length === 0;
+  };
+  obnov();
+  // po odebrání srdíčkem zmizí karta až po chvilce, ať je vidět, co se stalo
+  window.addEventListener('nk-oblibene', () => setTimeout(obnov, 400));
+
+  const h = historie().filter((x) => !oblibene().some((o) => o.id === x.id));
+  if (h.length) {
+    document.querySelector<HTMLElement>('[data-historie-sekce]')!.hidden = false;
+    vykresli(document.querySelector<HTMLElement>('[data-historie-seznam]')!, h);
+  }
+</script>
+
+<style>
+  .karty {
+    margin-top: 2rem;
+  }
+  .prazdno {
+    margin-top: 2rem;
+    max-width: 40rem;
+  }
+  .hist {
+    margin-top: clamp(48px, 7vw, 80px);
+  }
+</style>

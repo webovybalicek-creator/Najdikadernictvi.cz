@@ -1,0 +1,261 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Mapa kadeřnictví a barbershopů"
+  description="Všechna kadeřnictví a barbershopy v České republice na mapě. Filtrujte podle typu, otevírací doby a dětských střihů."
+>
+  <div class="mapa-stranka">
+    <div class="wrap mapa-hlava">
+      <div>
+        <span class="eyebrow">Mapa</span>
+        <h1>Salony na <em>mapě</em></h1>
+      </div>
+      <form class="mf" data-mf>
+        <fieldset class="seg">
+          <legend class="sr-only">Typ</legend>
+          <label><input type="radio" name="typ" value="" checked /><span>Vše</span></label>
+          <label><input type="radio" name="typ" value="0" /><span>Kadeřnictví</span></label>
+          <label><input type="radio" name="typ" value="1" /><span>Barbershopy</span></label>
+        </fieldset>
+        <label class="chk"><input type="checkbox" name="ted" /> Otevřeno teď</label>
+        <label class="chk"><input type="checkbox" name="sobota" /> V sobotu</label>
+        <label class="chk"><input type="checkbox" name="nedele" /> V neděli</label>
+        <label class="chk"><input type="checkbox" name="detske" /> Dětské</label>
+        <button type="button" class="btn btn--ghost" data-poloha>Moje poloha</button>
+      </form>
+    </div>
+
+    <div class="mapa-telo">
+      <div class="mapa-plocha" data-mapa-plocha role="region" aria-label="Mapa salonů"></div>
+      <aside class="mapa-seznam">
+        <p class="mapa-pocet" data-mapa-pocet aria-live="polite">Načítám salony…</p>
+        <ol data-mapa-seznam></ol>
+      </aside>
+    </div>
+  </div>
+</Base>
+
+<script>
+  import 'leaflet/dist/leaflet.css';
+  import { stav } from '../scripts/stav';
+
+  type Z = [number, number, string, string, string, 0 | 1, [number, number][][] | 0, 0 | 1, string];
+  const el = document.querySelector<HTMLElement>('[data-mapa-plocha]')!;
+  const form = document.querySelector<HTMLFormElement>('[data-mf]')!;
+  const pocet = document.querySelector<HTMLElement>('[data-mapa-pocet]')!;
+  const seznam = document.querySelector<HTMLOListElement>('[data-mapa-seznam]')!;
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
+
+  (async () => {
+    const L = (await import('leaflet')).default;
+    const data: Z[] = await (await fetch('/okoli.json')).json();
+
+    const q = new URLSearchParams(location.search);
+    const map = L.map(el, { preferCanvas: true, zoomControl: true }).setView(
+      [Number(q.get('lat')) || 49.8, Number(q.get('lon')) || 15.5],
+      Number(q.get('z')) || 7,
+    );
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(map);
+    const renderer = L.canvas({ padding: 0.3 });
+    const vrstva = L.layerGroup().addTo(map);
+
+    const filtr = (z: Z) => {
+      const fd = new FormData(form);
+      const typ = String(fd.get('typ') ?? '');
+      if (typ !== '' && String(z[5]) !== typ) return false;
+      if (fd.get('detske') && !z[7]) return false;
+      if (fd.get('sobota') && !(z[6] && z[6][5].length)) return false;
+      if (fd.get('nedele') && !(z[6] && z[6][6].length)) return false;
+      if (fd.get('ted') && !(z[6] && stav(z[6]).open)) return false;
+      return true;
+    };
+
+    const polomer = () => (map.getZoom() < 9 ? 2.5 : map.getZoom() < 12 ? 4 : 6);
+    let vybrane: Z[] = [];
+    function vykresliBody() {
+      vybrane = data.filter(filtr);
+      vrstva.clearLayers();
+      for (const z of vybrane) {
+        L.circleMarker([z[0], z[1]], {
+          renderer,
+          radius: polomer(),
+          weight: polomer() < 3 ? 0.5 : 1.5,
+          color: '#ffffff',
+          fillColor: z[5] ? '#26241f' : '#786b5c',
+          fillOpacity: 1,
+        })
+          .bindPopup(`<a href="${z[3]}"><strong>${esc(z[2])}</strong></a><br>${esc(z[4])}`)
+          .addTo(vrstva);
+      }
+      vykresliSeznam();
+    }
+
+    function vykresliSeznam() {
+      const b = map.getBounds();
+      const c = map.getCenter();
+      const vVyrezu = vybrane.filter((z) => b.contains([z[0], z[1]]));
+      pocet.textContent = vVyrezu.length
+        ? `${vVyrezu.length.toLocaleString('cs-CZ')} salonů ve výřezu mapy${vVyrezu.length > 40 ? ' · nejbližší ke středu:' : ''}`
+        : 'Ve výřezu mapy nic není. Posuňte nebo oddalte mapu, případně upravte filtry.';
+      const d = (z: Z) => (z[0] - c.lat) ** 2 + ((z[1] - c.lng) * 0.64) ** 2;
+      seznam.innerHTML = vVyrezu
+        .sort((a, b2) => d(a) - d(b2))
+        .slice(0, 40)
+        .map((z) => {
+          const s = z[6] ? stav(z[6]) : null;
+          return `<li><a href="${z[3]}">${esc(z[2])}</a><span>${esc(z[4])}</span>${s ? `<span class="stav" data-stav="${s.open ? 'open' : 'closed'}">${s.text}</span>` : ''}</li>`;
+        })
+        .join('');
+    }
+
+    form.addEventListener('input', vykresliBody);
+    let posledniPolomer = polomer();
+    map.on('zoomend', () => {
+      if (polomer() !== posledniPolomer) {
+        posledniPolomer = polomer();
+        vykresliBody();
+      }
+    });
+    map.on('moveend', () => {
+      vykresliSeznam();
+      const c = map.getCenter();
+      history.replaceState(null, '', `?lat=${c.lat.toFixed(4)}&lon=${c.lng.toFixed(4)}&z=${map.getZoom()}`);
+    });
+    document.querySelector('[data-poloha]')!.addEventListener('click', () => {
+      navigator.geolocation?.getCurrentPosition(
+        (p) => map.setView([p.coords.latitude, p.coords.longitude], 14),
+        () => (pocet.textContent = 'Polohu se nepodařilo zjistit.'),
+        { timeout: 15000, maximumAge: 300000 },
+      );
+    });
+    vykresliBody();
+  })();
+</script>
+
+<style>
+  .mapa-hlava {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    padding-top: clamp(24px, 4vw, 40px);
+    padding-bottom: 1.25rem;
+  }
+  .mapa-hlava h1 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+  }
+  .mf {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 1rem;
+  }
+  .mf .btn {
+    padding: 0.5em 0.9em;
+    font-size: 0.82rem;
+  }
+  .seg {
+    display: inline-flex;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    background: #fff;
+  }
+  .seg label {
+    position: relative;
+  }
+  .seg input {
+    position: absolute;
+    opacity: 0;
+  }
+  .seg span {
+    display: block;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .seg input:checked + span {
+    background: var(--bottle);
+    color: var(--bottle-ink);
+  }
+  .chk {
+    display: inline-flex;
+    gap: 0.35rem;
+    align-items: center;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+  .chk input {
+    accent-color: var(--bottle);
+  }
+  .mapa-telo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 22rem;
+    border-top: 1px solid var(--line);
+    height: min(76vh, 52rem);
+  }
+  .mapa-plocha {
+    height: 100%;
+    z-index: 0;
+    background: var(--mint);
+  }
+  .mapa-seznam {
+    overflow: auto;
+    padding: 1rem 1.25rem;
+    border-left: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .mapa-pocet {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    margin: 0 0 0.75rem;
+  }
+  .mapa-seznam ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .mapa-seznam :global(li) {
+    display: grid;
+    gap: 0.1rem;
+    padding: 0.7rem 0;
+    border-top: 1px solid var(--line);
+    font-size: 0.85rem;
+  }
+  .mapa-seznam :global(li a) {
+    font-size: 1rem;
+    text-decoration: none;
+  }
+  .mapa-seznam :global(li a:hover) {
+    text-decoration: underline;
+  }
+  .mapa-seznam :global(li span:not(.stav)) {
+    color: var(--ink-soft);
+  }
+  .mapa-seznam :global(.stav) {
+    font-size: 0.8rem;
+  }
+  @media (max-width: 860px) {
+    .mapa-telo {
+      grid-template-columns: 1fr;
+      height: auto;
+    }
+    .mapa-plocha {
+      height: 62vh;
+    }
+    .mapa-seznam {
+      border-left: 0;
+      border-top: 1px solid var(--line);
+      max-height: none;
+    }
+  }
+</style>

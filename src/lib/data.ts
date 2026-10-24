@@ -2,6 +2,7 @@ import osmRaw from '../data/provozovny.json';
 import registrRaw from '../data/registr.json';
 import meta from '../data/import-meta.json';
 import vyrazene from '../data/vyrazene.json';
+import overeneRaw from '../data/overene.json';
 import { KRAJE, type Kraj } from './kraje';
 import { parseTyden, type Tyden } from './oteviraci-doba';
 import { slugify } from './slug';
@@ -32,7 +33,16 @@ export interface Provozovna {
   instagram?: string;
   oteviraciDoba?: string;
   bezbarierove?: string;
+  /** Datum ověření profilu majitelem (ISO) */
+  overeno?: string;
+  popis?: string;
+  cenik?: { polozka: string; cena: string }[];
+  rezervace?: string;
 }
+
+type Overeni = Partial<Pick<Provozovna, 'nazev' | 'telefon' | 'email' | 'web' | 'instagram' | 'facebook' | 'rezervace' | 'oteviraciDoba' | 'popis' | 'cenik' | 'zamereni'>> & {
+  overeno: string;
+};
 
 export interface Mesto {
   nazev: string;
@@ -54,7 +64,7 @@ interface RegistrZaznam {
   lon: number;
 }
 
-const REZERVOVANE = new Set(['blog', 'kraj', 'kraje', 'hledat', 'kontakt', 'o-webu', 'pridat-provozovnu', 'ochrana-osobnich-udaju', 'okoli', 'praha-hub', 'barbershopy', 'detska-kadernictvi', 'otevreno-v-sobotu', 'otevreno-v-nedeli', 'pro-salony', 'podminky-uziti']);
+const REZERVOVANE = new Set(['blog', 'kraj', 'kraje', 'hledat', 'kontakt', 'o-webu', 'pridat-provozovnu', 'ochrana-osobnich-udaju', 'okoli', 'praha-hub', 'barbershopy', 'detska-kadernictvi', 'otevreno-v-sobotu', 'otevreno-v-nedeli', 'pro-salony', 'podminky-uziti', 'oblibene', 'mapa']);
 const OBVOD = /^Praha \d+$/;
 const nn = <T,>(v: T | null | undefined) => (v == null || v === '' ? undefined : v);
 
@@ -164,6 +174,15 @@ function sestav(): Provozovna[] {
     p.slug = kandidati.find((c) => c && !used.has(`${p.mestoSlug}/${c}`)) ?? slugify(p.id);
     used.add(`${p.mestoSlug}/${p.slug}`);
   }
+  // Údaje ověřené majitelem (po přidělení slugu, aby se URL neměnila)
+  const overene = overeneRaw.salony as Record<string, Overeni>;
+  for (const p of vse) {
+    const o = overene[p.id];
+    if (!o?.overeno) continue;
+    for (const [k, v] of Object.entries(o)) {
+      if (v !== undefined && v !== null && v !== '') (p as unknown as Record<string, unknown>)[k] = v;
+    }
+  }
   // Salony vyřazené na žádost (id nebo URL)
   const blok = new Set<string>(vyrazene.polozky);
   return blok.size ? vse.filter((p) => !blok.has(p.id) && !blok.has(`/${p.mestoSlug}/${p.slug}/`)) : vse;
@@ -173,7 +192,7 @@ export const PROVOZOVNY = sestav();
 export const IMPORT_META = meta as { zdroj: string; importovano: string; pocet: number };
 
 /** Detail salonu jen z rejstříku je pro Google příliš chudý – neindexujeme ho, dokud nemá víc údajů */
-export const indexovatDetail = (p: Provozovna) => p.zdroj === 'osm';
+export const indexovatDetail = (p: Provozovna) => p.zdroj === 'osm' || !!p.overeno;
 
 export const url = (p: Provozovna) => `/${p.mestoSlug}/${p.slug}/`;
 export const mestoUrl = (slug: string) => `/${slug}/`;
@@ -267,7 +286,8 @@ export function uplnost(p: Provozovna): number {
     (p.ulice && p.cisloDomu ? 1 : 0) +
     (p.instagram || p.facebook ? 1 : 0) +
     (p.email ? 1 : 0) +
-    (p.zamereni.length ? 1 : 0)
+    (p.zamereni.length ? 1 : 0) +
+    (p.overeno ? 2 : 0)
   );
 }
 

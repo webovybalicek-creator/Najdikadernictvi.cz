@@ -1,0 +1,186 @@
+---
+// Nahlášení chyby v údajích salonu jedním klikem
+import { url, type Provozovna } from '../lib/data';
+interface Props {
+  p: Provozovna;
+}
+const { p } = Astro.props;
+const volby: [string, string][] = [
+  ['zavreno', 'Zavřeno natrvalo'],
+  ['telefon', 'Špatný telefon'],
+  ['doba', 'Jiná otevírací doba'],
+  ['adresa', 'Špatná adresa / mapa'],
+  ['nazev', 'Jiný název'],
+  ['jine', 'Něco jiného…'],
+];
+---
+
+<details class="chyba" data-chyba data-salon={p.id} data-url={url(p)}>
+  <summary>Nahlásit chybu v údajích</summary>
+  <div class="chyba__telo">
+    <p class="chyba__q">Co je špatně? Stačí kliknout.</p>
+    <div class="chyba__volby">
+      {volby.map(([k, t]) => <button type="button" class="chip" data-typ={k}>{t}</button>)}
+    </div>
+    <form class="chyba__pozn" data-chyba-form hidden>
+      <label>
+        <span>Upřesnění <em>(nepovinné u ostatních voleb)</em></span>
+        <textarea name="poznamka" rows="2" maxlength="500" placeholder="Např. správné číslo nebo nová otevírací doba"></textarea>
+      </label>
+      <input type="text" name="web2" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <button class="btn btn--ghost" type="submit">Odeslat upřesnění</button>
+    </form>
+    <p class="chyba__stav" data-chyba-stav role="status" aria-live="polite"></p>
+  </div>
+</details>
+
+<script>
+  document.querySelectorAll<HTMLDetailsElement>('[data-chyba]').forEach((box) => {
+    const start = Date.now();
+    const form = box.querySelector<HTMLFormElement>('[data-chyba-form]')!;
+    const stav = box.querySelector<HTMLElement>('[data-chyba-stav]')!;
+    let typ = '';
+
+    const posli = async (poznamka = '') => {
+      const fd = new FormData();
+      fd.set('salon', box.dataset.salon!);
+      fd.set('url', box.dataset.url!);
+      fd.set('typ', typ);
+      fd.set('poznamka', poznamka);
+      fd.set('web2', (form.elements.namedItem('web2') as HTMLInputElement).value);
+      fd.set('t', String(start));
+      stav.dataset.typ = '';
+      stav.textContent = 'Odesílám…';
+      try {
+        const d = await (await fetch('/api/nahlasit.php', { method: 'POST', body: fd })).json();
+        stav.dataset.typ = d.ok ? 'ok' : 'chyba';
+        stav.textContent = d.ok
+          ? poznamka
+            ? 'Děkujeme, upřesnění jsme dostali.'
+            : 'Děkujeme! Údaje prověříme. Pokud chcete, napište nám i správnou informaci.'
+          : (d.chyba ?? 'Odeslání se nepodařilo.');
+        return d.ok;
+      } catch {
+        stav.dataset.typ = 'chyba';
+        stav.textContent = 'Odeslání se nepodařilo, zkuste to prosím později.';
+        return false;
+      }
+    };
+
+    box.querySelectorAll<HTMLButtonElement>('[data-typ]').forEach((b) =>
+      b.addEventListener('click', async () => {
+        box.querySelectorAll('[data-typ]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        typ = b.dataset.typ!;
+        form.hidden = false;
+        if (typ === 'jine') {
+          stav.textContent = '';
+          form.querySelector('textarea')!.focus();
+          return;
+        }
+        await posli();
+      }),
+    );
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const t = form.querySelector('textarea')!;
+      if (await posli(t.value.trim())) t.value = '';
+    });
+  });
+</script>
+
+<style>
+  .chyba {
+    margin-top: 1rem;
+    max-width: 44rem;
+    font-size: 0.9rem;
+  }
+  .chyba summary {
+    cursor: pointer;
+    color: var(--ink-soft);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    width: fit-content;
+  }
+  .chyba summary:hover {
+    color: var(--ink);
+  }
+  .chyba__telo {
+    margin-top: 0.75rem;
+    padding: 1rem 1.15rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .chyba__q {
+    margin: 0 0 0.6rem;
+    font-weight: 500;
+  }
+  .chyba__volby {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .chip {
+    font: inherit;
+    font-size: 0.85rem;
+    padding: 0.4em 0.8em;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .chip:hover {
+    border-color: var(--ink);
+  }
+  .chip[aria-pressed='true'] {
+    background: var(--bottle);
+    border-color: var(--bottle);
+    color: var(--bottle-ink);
+  }
+  .chyba__pozn {
+    margin-top: 0.85rem;
+  }
+  .chyba__pozn span {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+  }
+  .chyba__pozn em {
+    font-style: normal;
+    font-weight: 400;
+    color: var(--ink-soft);
+  }
+  .chyba__pozn textarea {
+    width: 100%;
+    font: inherit;
+    font-size: 0.95rem;
+    padding: 0.6em 0.8em;
+    border: 1px solid #cfc7b9;
+    border-radius: var(--radius);
+    background: #fff;
+    margin-bottom: 0.6rem;
+  }
+  .chyba__pozn .btn {
+    padding: 0.5em 0.9em;
+    font-size: 0.82rem;
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+  }
+  .chyba__stav {
+    margin: 0.6rem 0 0;
+    min-height: 1.2em;
+  }
+  .chyba__stav:empty {
+    display: none;
+  }
+  .chyba__stav[data-typ='ok'] {
+    color: var(--open);
+  }
+  .chyba__stav[data-typ='chyba'] {
+    color: var(--closed);
+  }
+</style>

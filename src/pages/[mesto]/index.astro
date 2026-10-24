@@ -99,6 +99,16 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
             <label class="chk"><input type="checkbox" name="zamereni" value={z} /> {ZN[z]}</label>
           ))}
           {sDobou > 0 && <label class="chk"><input type="checkbox" name="open" value="1" /> Otevřeno teď</label>}
+          <label class="razeni">
+            <span>Řadit:</span>
+            <select name="razeni">
+              <option value="">Doporučené</option>
+              <option value="hodnoceni">Nejlépe hodnocené</option>
+              <option value="otevreno">Otevřeno teď</option>
+              <option value="abeceda">Abecedně</option>
+              <option value="blizko">Nejblíž mně</option>
+            </select>
+          </label>
           <p class="filtry__pocet" aria-live="polite" data-pocet></p>
         </form>
       )
@@ -173,6 +183,57 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
     if (pocet) pocet.textContent = n === rows.length ? '' : `Zobrazeno ${n} z ${rows.length}`;
     if (prazdno) prazdno.hidden = n > 0;
   }
+  // Řazení výpisu
+  const seznamEl = document.querySelector<HTMLElement>('[data-seznam]');
+  rows.forEach((r, i) => (r.dataset.poradi = String(i)));
+  let souhrnHod: Record<string, [number, number]> | null = null;
+  let poloha: { lat: number; lon: number } | null = null;
+  const km = (a: { lat: number; lon: number }, r: HTMLElement) => {
+    const dy = (Number(r.dataset.lat) - a.lat) * 111.3;
+    const dx = (Number(r.dataset.lon) - a.lon) * 111.3 * Math.cos((a.lat * Math.PI) / 180);
+    return Math.hypot(dx, dy);
+  };
+  async function serad(zpusob: string) {
+    let klic: (r: HTMLElement) => number | string;
+    if (zpusob === 'hodnoceni') {
+      souhrnHod ??= await fetch('/api/hodnoceni.php?souhrn=1').then((r) => (r.ok ? r.json() : {})).catch(() => ({}));
+      klic = (r) => {
+        const h = souhrnHod![r.dataset.id!];
+        return h ? -(h[0] * 1000 + h[1]) : 0;
+      };
+    } else if (zpusob === 'otevreno') {
+      klic = (r) => (r.dataset.open === '1' ? 0 : r.dataset.oh ? 1 : 2);
+    } else if (zpusob === 'abeceda') {
+      klic = (r) => r.dataset.nazev ?? '';
+    } else if (zpusob === 'blizko') {
+      if (!poloha) {
+        try {
+          const pos = await new Promise<GeolocationPosition>((ok, ko) =>
+            navigator.geolocation.getCurrentPosition(ok, ko, { timeout: 15000, maximumAge: 300000 }),
+          );
+          poloha = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+        } catch {
+          if (pocet) pocet.textContent = 'Polohu se nepodařilo zjistit.';
+          return;
+        }
+      }
+      klic = (r) => km(poloha!, r);
+    } else {
+      klic = (r) => Number(r.dataset.poradi);
+    }
+    const serazene = [...rows].sort((a, b) => {
+      const x = klic(a);
+      const y = klic(b);
+      const c = typeof x === 'string' ? x.localeCompare(String(y), 'cs') : x - (y as number);
+      return c || Number(a.dataset.poradi) - Number(b.dataset.poradi);
+    });
+    seznamEl?.append(...serazene);
+  }
+  form?.querySelector('select[name=razeni]')?.addEventListener('change', (e) => {
+    e.stopPropagation();
+    serad((e.target as HTMLSelectElement).value);
+  });
+
   form?.addEventListener('input', filtruj);
   form?.addEventListener('submit', (e) => e.preventDefault());
 </script>
@@ -278,6 +339,16 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
     accent-color: var(--bottle);
     width: 1.05rem;
     height: 1.05rem;
+  }
+  .razeni {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    margin-left: auto;
+  }
+  .razeni span {
+    color: var(--ink-soft);
   }
   .filtry__pocet {
     margin: 0;

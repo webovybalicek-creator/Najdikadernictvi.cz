@@ -1,5 +1,6 @@
 ---
 import Vizual from './Vizual.astro';
+import Srdce from './Srdce.astro';
 import { adresa, url, TYP_NAZEV, type Provozovna } from '../lib/data';
 
 interface Props {
@@ -11,6 +12,7 @@ const misto = p.mesto === 'Praha' && p.cast ? `Praha, ${p.cast}` : p.mesto;
 ---
 
 <li class="karta">
+  <Srdce p={p} />
   <a href={url(p)}>
     <Vizual p={p} panorama />
     <span class="karta__typ">{TYP_NAZEV[p.typ]}</span>
@@ -21,6 +23,9 @@ const misto = p.mesto === 'Praha' && p.cast ? `Praha, ${p.cast}` : p.mesto;
 </li>
 
 <style>
+  .karta {
+    position: relative;
+  }
   .karta a {
     display: block;
     text-decoration: none;

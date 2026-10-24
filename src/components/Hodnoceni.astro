@@ -48,13 +48,23 @@ const { p } = Astro.props;
       <span>Jak jste byli spokojeni? <em>(nepovinné)</em></span>
       <textarea name="text" rows="3" maxlength="600" placeholder="Co se vám líbilo, nebo nelíbilo…"></textarea>
     </label>
+    <div class="pole">
+      <span>Fotka účesu <em>(nepovinné, JPG/PNG, max. 8 MB)</em></span>
+      <label class="foto-volba">
+        <input type="file" name="foto" accept="image/jpeg,image/png,image/webp" data-foto-input />
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5h3l1.6-2.5h6.8L17 7.5h3v11H4z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><circle cx="12" cy="12.8" r="3.3" fill="none" stroke="currentColor" stroke-width="1.6"></circle></svg>
+        <span data-foto-popis>Přidat fotku</span>
+      </label>
+      <img class="foto-nahled" data-foto-nahled alt="" hidden />
+    </div>
     <label class="pole pole--jmeno">
       <span>Jméno nebo přezdívka <em>(nepovinné)</em></span>
       <input name="jmeno" type="text" maxlength="40" autocomplete="nickname" />
     </label>
     <input type="text" name="web2" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
     <p class="hod__pozn">
-      Hvězdičky se započítají hned, text zveřejníme po kontrole. Hodnoťte jen salony, které jste navštívili.
+      Hvězdičky se započítají hned, text a fotku zveřejníme po kontrole. Nahrávejte jen vlastní fotky, na kterých
+      nejsou poznat cizí lidé bez jejich souhlasu. Údaje o poloze z fotky odstraňujeme. Hodnoťte jen salony, které jste navštívili.
     </p>
     <p class="hod__stav" data-hod-stav role="status" aria-live="polite"></p>
     <button class="btn" type="submit">Odeslat hodnocení</button>
@@ -76,6 +86,30 @@ const { p } = Astro.props;
     const stav = sek.querySelector<HTMLElement>('[data-hod-stav]')!;
     const start = Date.now();
 
+    const fotoIn = form.querySelector<HTMLInputElement>('[data-foto-input]')!;
+    const fotoNahled = form.querySelector<HTMLImageElement>('[data-foto-nahled]')!;
+    const fotoPopis = form.querySelector<HTMLElement>('[data-foto-popis]')!;
+    const zrusFoto = () => {
+      if (fotoNahled.src) URL.revokeObjectURL(fotoNahled.src);
+      fotoNahled.hidden = true;
+      fotoNahled.removeAttribute('src');
+      fotoPopis.textContent = 'Přidat fotku';
+    };
+    fotoIn.addEventListener('change', () => {
+      const f = fotoIn.files?.[0];
+      zrusFoto();
+      if (!f) return;
+      if (f.size > 8 * 1024 * 1024) {
+        fotoIn.value = '';
+        stav.dataset.typ = 'chyba';
+        stav.textContent = 'Fotka je větší než 8 MB.';
+        return;
+      }
+      fotoNahled.src = URL.createObjectURL(f);
+      fotoNahled.hidden = false;
+      fotoPopis.textContent = 'Změnit fotku';
+    });
+
     const nacti = async () => {
       try {
         const d = await (await fetch(`${API}?salon=${id}`, { cache: 'no-store' })).json();
@@ -83,8 +117,10 @@ const { p } = Astro.props;
         souhrn.innerHTML = `${hvezdy(d.prumer)} <strong>${String(d.prumer).replace('.', ',')}</strong> z 5 · ${d.pocet} ${slovo(d.pocet)}`;
         seznam.innerHTML = (d.recenze ?? [])
           .map(
-            (r: { hvezdy: number; text: string; jmeno: string | null; datum: string }) =>
-              `<li>${hvezdy(r.hvezdy)}<p>${esc(r.text)}</p><span class="muted">${esc(r.jmeno || 'Anonym')} · ${new Date(r.datum).toLocaleDateString('cs-CZ')}</span></li>`,
+            (r: { hvezdy: number; text: string | null; jmeno: string | null; datum: string; foto: string | null }) =>
+              `<li>${hvezdy(r.hvezdy)}${r.text ? `<p>${esc(r.text)}</p>` : ''}${
+                r.foto ? `<a class="hod__foto" href="${r.foto}" target="_blank" rel="noopener"><img src="${r.foto}" alt="Fotka od zákazníka" loading="lazy" /></a>` : ''
+              }<span class="muted">${esc(r.jmeno || 'Anonym')} · ${new Date(r.datum).toLocaleDateString('cs-CZ')}</span></li>`,
           )
           .join('');
         // Strukturovaná data pro vyhledávače (souhrnné hodnocení)
@@ -126,9 +162,10 @@ const { p } = Astro.props;
         const d = await (await fetch(API, { method: 'POST', body: fd })).json();
         if (d.ok) {
           form.reset();
+          zrusFoto();
           stav.dataset.typ = 'ok';
           stav.textContent = d.ceka
-            ? 'Děkujeme! Hvězdičky jsme započítali, text zveřejníme po kontrole.'
+            ? 'Děkujeme! Hvězdičky jsme započítali, text a fotku zveřejníme po kontrole.'
             : 'Děkujeme za hodnocení!';
           nacti();
         } else {
@@ -265,6 +302,60 @@ const { p } = Astro.props;
     border-radius: var(--radius);
     background: #fff;
     color: var(--ink);
+  }
+  .foto-volba {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55em 0.95em;
+    border: 1px dashed #cfc7b9;
+    border-radius: var(--radius);
+    background: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  .foto-volba:hover {
+    border-color: var(--ink);
+  }
+  .foto-volba:focus-within {
+    outline: 2px solid var(--ink);
+  }
+  .foto-volba input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+  .foto-volba svg {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+  .pole .foto-volba span {
+    display: inline;
+    margin: 0;
+    font-weight: 400;
+  }
+  .foto-nahled {
+    display: block;
+    margin-top: 0.6rem;
+    max-width: 10rem;
+    max-height: 10rem;
+    border-radius: var(--radius);
+    object-fit: cover;
+  }
+  .foto-nahled[hidden] {
+    display: none;
+  }
+  .hod__recenze :global(.hod__foto) {
+    display: inline-block;
+    margin: 0.3rem 0 0.5rem;
+  }
+  .hod__recenze :global(.hod__foto img) {
+    display: block;
+    width: 9rem;
+    height: 9rem;
+    object-fit: cover;
+    border-radius: var(--radius);
   }
   .pole--jmeno {
     max-width: 20rem;

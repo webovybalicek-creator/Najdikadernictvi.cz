@@ -423,3 +423,115 @@ p {
   color: var(--ink);
   font-weight: 600;
 }
+
+/* Srdíčko „Do oblíbených“ */
+.srdce svg {
+  width: 1.15em;
+  height: 1.15em;
+  fill: transparent;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linejoin: round;
+  transition: fill 0.15s, stroke 0.15s;
+}
+.srdce[aria-pressed='true'] svg {
+  fill: #b0574a;
+  stroke: #b0574a;
+}
+.srdce.pulz svg {
+  animation: srdce-pulz 0.45s ease;
+}
+@keyframes srdce-pulz {
+  30% {
+    transform: scale(1.35);
+  }
+  60% {
+    transform: scale(0.9);
+  }
+}
+.srdce--ikona {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.3rem;
+  height: 2.3rem;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(252 251 248 / 0.92);
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.12);
+}
+.srdce--ikona:hover {
+  background: #fff;
+}
+.srdce--ikona svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+/* Karty vykreslené na klientu (oblíbené, historie) */
+.karta {
+  position: relative;
+}
+.karta > a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+.viz-mini {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--mint);
+  display: grid;
+  place-items: center;
+  font-weight: 200;
+  font-size: clamp(2.2rem, 6vw, 3.4rem);
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+.viz-mini .viz__foto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.viz-mini .viz__foto.ok {
+  opacity: 1;
+}
+.karta__typ {
+  display: block;
+  margin-top: 0.9rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.karta__nazev {
+  font-size: 1.1rem;
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0.25rem 0 0.2rem;
+  letter-spacing: 0;
+}
+.karta > a:hover .karta__nazev {
+  text-decoration: underline;
+}
+.karta__adr {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+.karta .hod-mini {
+  margin-top: 0.4rem;
+}

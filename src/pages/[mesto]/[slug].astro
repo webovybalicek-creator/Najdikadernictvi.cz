@@ -6,6 +6,9 @@ import Vizual from '../../components/Vizual.astro';
 import Tipy from '../../components/Tipy.astro';
 import MapyAtribuce from '../../components/MapyAtribuce.astro';
 import Hodnoceni from '../../components/Hodnoceni.astro';
+import AkceSalonu from '../../components/AkceSalonu.astro';
+import Overeno from '../../components/Overeno.astro';
+import NahlasitChybu from '../../components/NahlasitChybu.astro';
 import {
   PROVOZOVNY,
   adresa,
@@ -74,6 +77,14 @@ const jsonLd = {
   email: p.email,
   sameAs: [p.web, p.facebook, p.instagram].filter(Boolean),
   openingHoursSpecification: t ? schemaSpec(t) : undefined,
+  description: p.popis,
+  hasOfferCatalog: p.cenik?.length
+    ? {
+        '@type': 'OfferCatalog',
+        name: 'Ceník',
+        itemListElement: p.cenik.map((c) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: c.polozka }, description: c.cena })),
+      }
+    : undefined,
 };
 
 const breadcrumb = [
@@ -104,14 +115,17 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
         {p.zamereni.filter((z) => z !== 'unisex').map((z) => <span class="tag">{ZAMERENI_NAZEV[z]}</span>)}
       </p>
       <h1>{p.nazev}</h1>
+      {p.overeno && <p class="head__over"><Overeno datum={p.overeno} /></p>}
       <p class="head__adr">{adr || p.mesto}</p>
       <a class="hod-mini head__hod" href="#hodnoceni" data-hod-id={p.id}><span class="hv" style="--p:0%"></span><span class="hod-mini__nic">Ohodnotit salon</span></a>
       {t && <p class="head__stav" data-oh={JSON.stringify(t)}><span class="stav"></span></p>}
       <div class="akce">
-        {p.telefon && <a class="btn" href={`tel:${p.telefon.replace(/\s/g, '')}`}>Zavolat {p.telefon}</a>}
-        <a class:list={['btn', p.telefon && 'btn--ghost']} href={navigace.google} rel="noopener" target="_blank">Navigovat</a>
+        {p.rezervace && <a class="btn" href={p.rezervace} rel="noopener nofollow" target="_blank">Rezervovat online</a>}
+        {p.telefon && <a class:list={['btn', p.rezervace && 'btn--ghost']} href={`tel:${p.telefon.replace(/\s/g, '')}`}>Zavolat {p.telefon}</a>}
+        <a class:list={['btn', (p.telefon || p.rezervace) && 'btn--ghost']} href={navigace.google} rel="noopener" target="_blank">Navigovat</a>
         {p.web && <a class="btn btn--ghost" href={p.web} rel="noopener nofollow" target="_blank">Web salonu</a>}
       </div>
+      <AkceSalonu p={p} />
       </div>
     </header>
 
@@ -155,8 +169,28 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
           </dl>
         </section>
 
+        {
+          p.cenik?.length ? (
+            <section>
+              <h2>Ceník</h2>
+              <table class="cenik">
+                <tbody>
+                  {p.cenik.map((c) => (
+                    <tr>
+                      <th scope="row">{c.polozka}</th>
+                      <td>{c.cena}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p class="muted cenik__pozn">Ceny uvádí salon. Konečná cena se může lišit podle délky vlasů a náročnosti.</p>
+            </section>
+          ) : null
+        }
+
         <section>
           <h2>O salonu</h2>
+          {p.popis && <p class="popis-majitel">{p.popis}</p>}
           {vety.map((v) => <p>{v}</p>)}
         </section>
       </div>
@@ -177,8 +211,8 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
         </p>
 
         <div class="majitel">
-          <h2>Je to váš salon?</h2>
-          <p>Doplňte ceník, fotky a aktuální otevírací dobu. Je to zdarma.</p>
+          <h2>{p.overeno ? 'Změna údajů?' : 'Je to váš salon?'}</h2>
+          <p>{p.overeno ? 'Údaje ověřil majitel. Pokud se něco změnilo, dejte nám vědět.' : 'Ověřte profil a doplňte ceník, popis, rezervace a aktuální otevírací dobu. Je to zdarma.'}</p>
           <a class="btn" href={`/pridat-provozovnu/?salon=${encodeURIComponent(url(p))}&nazev=${encodeURIComponent(p.nazev)}`}>Upravit údaje</a>
         </div>
       </div>
@@ -204,17 +238,25 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
 
     <p class="zdroj muted">
       {
-        p.zdroj === 'osm' ? (
+        p.overeno ? (
+          <>Údaje ověřil majitel salonu {new Date(p.overeno).toLocaleDateString('cs-CZ')}.</>
+        ) : p.zdroj === 'osm' ? (
           <>Údaje pochází z <a href={p.osm} rel="noopener" target="_blank">OpenStreetMap</a> a nemusí být aktuální.</>
         ) : (
           <>Adresa pochází z veřejného živnostenského rejstříku (provozovna s živností Holičství, kadeřnictví). Salon nemusí být v provozu.</>
         )
       }
-      Vidíte chybu? <a href={`/pridat-provozovnu/?salon=${encodeURIComponent(url(p))}&nazev=${encodeURIComponent(p.nazev)}`}>Nahlaste ji</a>.
     </p>
+    <NahlasitChybu p={p} />
   </div>
   <Tipy />
 </Base>
+
+<script>
+  import { zapisHistorii } from '../../scripts/oblibene';
+  const srd = document.querySelector<HTMLElement>('.akce2 [data-oblibene]');
+  if (srd) zapisHistorii(JSON.parse(srd.dataset.oblibene!));
+</script>
 
 <script>
   import 'leaflet/dist/leaflet.css';
@@ -389,6 +431,33 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
     margin: 0 0 1rem;
     padding: 0;
     border-top: 1px solid var(--line);
+  }
+  .head__over {
+    margin: -0.25rem 0 0.5rem;
+  }
+  .cenik {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+  .cenik th,
+  .cenik td {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    font-weight: 400;
+  }
+  .cenik td {
+    text-align: right;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+  .cenik__pozn {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+  }
+  .popis-majitel {
+    font-size: 1.05rem;
   }
   .zdroj {
     margin-top: 2.5rem;
