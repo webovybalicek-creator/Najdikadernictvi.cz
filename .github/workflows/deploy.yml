@@ -97,3 +97,19 @@ jobs:
           done
           echo "::error::Rozbalení na serveru selhalo"
           exit 1
+
+      - name: Oznámení změn vyhledávačům (IndexNow – Seznam, Bing)
+        if: env.FTP_PASSWORD != ''
+        continue-on-error: true
+        run: |
+          KEY=46d564eebf61cc0e9b8e08f03a218cae
+          # jen změněné stránky, které jsou v sitemapě (indexované)
+          cat dist/sitemap-*.xml | grep -o '<loc>[^<]*' | sed 's/<loc>//' | sort -u > indexovane.txt
+          grep -E '(^|/)index\.html$' zmenene.txt | sed -E -e 's#index\.html$##' -e 's#^#https://najdikadernictvi.cz/#' | sort -u > zmenene-url.txt
+          comm -12 indexovane.txt zmenene-url.txt | head -10000 > oznamit.txt
+          N=$(wc -l < oznamit.txt)
+          if [ "$N" -eq 0 ]; then echo "::notice::IndexNow: nic k oznámení"; exit 0; fi
+          jq -R . oznamit.txt | jq -s --arg k "$KEY" '{host: "najdikadernictvi.cz", key: $k, keyLocation: ("https://najdikadernictvi.cz/" + $k + ".txt"), urlList: .}' > indexnow.json
+          for api in https://search.seznam.cz/indexnow https://api.indexnow.org/indexnow; do
+            echo "::notice::IndexNow $api: $N URL → $(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json; charset=utf-8' --data @indexnow.json $api)"
+          done
