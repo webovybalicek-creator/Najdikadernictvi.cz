@@ -6,6 +6,7 @@ import MapaSalonu from './MapaSalonu.astro';
 import { mestoUrl, krajUrl, pocetText, type Mesto, type Provozovna } from '../lib/data';
 import { ZAMERY, zamerUrl, zameryMesta, statistiky, itemListJsonLd, type Zamer } from '../lib/seo-mesto';
 import { hhmm } from '../lib/oteviraci-doba';
+import { metaZameru } from '../lib/meta';
 
 interface Props {
   z: Zamer;
@@ -15,6 +16,7 @@ interface Props {
 const { z, m, salony } = Astro.props;
 const nazev = z.nazev(m.nazev);
 const st = statistiky(salony);
+const meta = metaZameru(nazev, m.nazev, z.popis, salony, st);
 const ostatni = zameryMesta(m).filter((x) => x.z.slug !== z.slug);
 const den = z.slug === 'otevreno-v-nedeli' ? 6 : z.slug === 'otevreno-v-sobotu' ? 5 : -1;
 
@@ -35,8 +37,8 @@ const breadcrumb = [
 ---
 
 <Base
-  title={`${nazev} (${pocetText(salony.length, 'salon', 'salony', 'salonů')})`}
-  description={`${nazev}: ${pocetText(salony.length, 'salon', 'salony', 'salonů')} s adresou, telefonem a otevírací dobou. Aktuální přehled na jednom místě.`}
+  title={meta.title}
+  description={meta.description}
   jsonLd={itemListJsonLd(nazev, salony)}
 >
   <div class="wrap section">

@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import { KRAJE, type Kraj } from '../../lib/kraje';
+import { metaKraje } from '../../lib/meta';
 import { mestaVKraji, mestoUrl, pocetVKraji, pocetText } from '../../lib/data';
 
 export function getStaticPaths() {
@@ -26,8 +27,8 @@ const breadcrumb = [{ nazev: 'Kraje', href: '/kraje/' }, { nazev: k.nazev }];
 ---
 
 <Base
-  title={`Kadeřnictví a barbershopy ${k.vNazev}`}
-  description={`Kadeřnictví a barbershopy ${k.vNazev}: ${pocetText(pocet, 'salon', 'salony', 'salonů')} v ${pocetText(seznam.length, 'obci', 'obcích', 'obcích')}. Adresy, telefony a otevírací doba.`}
+  title={metaKraje(k.vNazev, pocet, seznam.length, nejvetsi.map((x) => x.nazev)).title}
+  description={metaKraje(k.vNazev, pocet, seznam.length, nejvetsi.map((x) => x.nazev)).description}
 >
   <div class="wrap section">
     <Breadcrumb items={breadcrumb} />

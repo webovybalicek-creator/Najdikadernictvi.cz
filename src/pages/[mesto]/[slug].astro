@@ -30,6 +30,7 @@ import { zameryMesta, zamerUrl } from '../../lib/seo-mesto';
 import { KRAJE } from '../../lib/kraje';
 import { DNY, denText, souhrn, schemaSpec } from '../../lib/oteviraci-doba';
 import { SITE } from '../../lib/config';
+import { metaSalonu } from '../../lib/meta';
 
 export function getStaticPaths() {
   return PROVOZOVNY.map((p) => ({ params: { mesto: p.mestoSlug, slug: p.slug }, props: { p } }));
@@ -100,12 +101,13 @@ const breadcrumb = [
 const mestoObj = mesta().find((x) => x.slug === p.mestoSlug)!; // (mesta() je cachované)
 const ctvrt = ctvrtSalonu(p);
 const vybery = zameryMesta(mestoObj).filter(({ ids }) => ids.has(p.id));
+const meta = metaSalonu(p, okoli.length);
 const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
 ---
 
 <Base
-  title={`${p.nazev}, ${p.mesto}: ${typ.toLowerCase()}${t ? ', otevírací doba' : ''}`}
-  description={`${p.nazev} – ${typ.toLowerCase()} ${adr ? `na adrese ${adr}` : `v obci ${p.mesto}`}. ${t ? 'Otevírací doba, ' : ''}${p.telefon ? 'telefon, ' : ''}mapa a další salony v okolí.`}
+  title={meta.title}
+  description={meta.description}
   jsonLd={jsonLd}
   noindex={!indexovatDetail(p)}
 >

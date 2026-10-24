@@ -5,6 +5,7 @@ import ProvozovnaRadek from '../../components/ProvozovnaRadek.astro';
 import MapaSalonu from '../../components/MapaSalonu.astro';
 import Faq from '../../components/Faq.astro';
 import OdberNovinek from '../../components/OdberNovinek.astro';
+import { metaMesta } from '../../lib/meta';
 import { statistiky, textMesta, faqMesta, faqJsonLd, itemListJsonLd, zameryMesta, zamerUrl } from '../../lib/seo-mesto';
 import { mesta, mestaSloucena, mestoUrl, krajUrl, pocetText, tyden, ctvrti, ctvrtUrl, type Mesto } from '../../lib/data';
 
@@ -50,6 +51,7 @@ const breadcrumb = [
 ];
 const st = statistiky(vse);
 const uvod = textMesta(m, st);
+const meta = metaMesta(m.nazev, vse, st, m.kraj.nazev !== m.nazev ? m.kraj.nazev : undefined);
 const faq = faqMesta(m, st);
 const zamery = zameryMesta(m);
 const castiMesta = ctvrti(m);
@@ -59,8 +61,8 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
 ---
 
 <Base
-  title={`Kadeřnictví ${m.nazev}: ${pocetText(vse.length, 'salon', 'salony', 'salonů')}`}
-  description={`Kadeřnictví a barbershopy ${m.nazev} (${m.kraj.nazev}): ${pocetText(vse.length, 'salon', 'salony', 'salonů')} s adresou, telefonem a otevírací dobou. Zjistěte, kdo má právě otevřeno.`}
+  title={meta.title}
+  description={meta.description}
   jsonLd={jsonLd}
 >
   <div class="wrap section">
