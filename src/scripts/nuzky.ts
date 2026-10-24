@@ -49,16 +49,18 @@ function priprav(btn: HTMLElement) {
   btn.append(svg);
 
   const rozmer = () => {
-    const w = btn.offsetWidth + 10;
-    const h = btn.offsetHeight + 10;
+    // Čára vede uvnitř tlačítka (odsazená o 3 px) – nikdy se neořízne o okolní prvky a kopíruje tvar přesně
+    const w = btn.offsetWidth;
+    const h = btn.offsetHeight;
+    const o = 3.5;
     const r = parseFloat(getComputedStyle(btn).borderTopLeftRadius) || 0;
-    const rx = Math.min(h / 2, r + 5);
+    const rx = Math.max(0, Math.min(h / 2 - o, r - o));
     svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
     svg.querySelectorAll('rect').forEach((el) => {
-      el.setAttribute('x', '0.5');
-      el.setAttribute('y', '0.5');
-      el.setAttribute('width', String(w - 1));
-      el.setAttribute('height', String(h - 1));
+      el.setAttribute('x', String(o));
+      el.setAttribute('y', String(o));
+      el.setAttribute('width', String(w - 2 * o));
+      el.setAttribute('height', String(h - 2 * o));
       el.setAttribute('rx', String(rx));
     });
   };

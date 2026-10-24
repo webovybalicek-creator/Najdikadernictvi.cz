@@ -50,6 +50,14 @@ import Breadcrumb from '../components/Breadcrumb.astro';
           <label class="pole"><span>Facebook</span><input name="facebook" type="url" maxlength="300" placeholder="https://www.facebook.com/…" /></label>
         </div>
 
+        <h2>Hodnocení na Googlu</h2>
+        <p class="muted mala">Nepovinné. Na webu se zobrazí jako „Google 4,8 ★ (230 recenzí)“ s datem, odděleně od hodnocení návštěvníků našeho webu. Opište prosím aktuální údaje ze své karty na Googlu.</p>
+        <div class="dva">
+          <label class="pole"><span>Hodnocení (1–5)</span><input name="googleH" type="number" min="1" max="5" step="0.1" inputmode="decimal" placeholder="4,8" /></label>
+          <label class="pole"><span>Počet recenzí</span><input name="googleN" type="number" min="1" max="100000" step="1" inputmode="numeric" placeholder="230" /></label>
+        </div>
+        <label class="pole"><span>Odkaz na kartu v Google Mapách <em>(nepovinné)</em></span><input name="googleUrl" type="url" maxlength="300" placeholder="https://maps.app.goo.gl/…" /></label>
+
         <h2>Otevírací doba</h2>
         <table class="doba-ed" data-sp-doba></table>
         <p class="muted mala">Polední pauzu zadáte jako druhý čas (např. 9:00–12:00 a 13:00–18:00).</p>
@@ -123,6 +131,7 @@ import Breadcrumb from '../components/Breadcrumb.astro';
     bezbarierove: string;
     zamereni: string[];
     oteviraciDoba?: string;
+    google?: { h: number; n: number; datum: string; url?: string };
   }
 
   const salonId = q.get('s') ?? q.get('salon') ?? '';
@@ -246,6 +255,9 @@ import Breadcrumb from '../components/Breadcrumb.astro';
       (form.elements.namedItem(k) as HTMLInputElement).value = (v[k] as string) ?? '';
     }
     form.querySelectorAll<HTMLInputElement>('[name=zamereni]').forEach((c) => (c.checked = (v.zamereni ?? []).includes(c.value)));
+    (form.elements.namedItem('googleH') as HTMLInputElement).value = v.google ? String(v.google.h) : '';
+    (form.elements.namedItem('googleN') as HTMLInputElement).value = v.google ? String(v.google.n) : '';
+    (form.elements.namedItem('googleUrl') as HTMLInputElement).value = v.google?.url ?? '';
 
     const doba = $<HTMLTableElement>('[data-sp-doba]');
     doba.innerHTML = DNY.map((den, i) => {
@@ -298,6 +310,7 @@ import Breadcrumb from '../components/Breadcrumb.astro';
       const data: Record<string, unknown> = {};
       for (const k of ['telefon', 'email', 'web', 'rezervace', 'instagram', 'facebook', 'popis', 'platbaKartou', 'bezbarierove']) data[k] = String(fd.get(k) ?? '').trim();
       data.zamereni = fd.getAll('zamereni');
+      data.google = { h: String(fd.get('googleH') ?? '').replace(',', '.'), n: String(fd.get('googleN') ?? ''), url: String(fd.get('googleUrl') ?? '').trim() };
       const t = prectiDobu();
       data.oteviraciDoba = t ? doOsm(t) : '';
       data.cenik = [...cenikEl.querySelectorAll('li')]

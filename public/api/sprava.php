@@ -321,12 +321,29 @@ if ($akce === 'uloz' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($pol !== '' && $cena !== '') $cenik[] = ['polozka' => $pol, 'cena' => $cena];
     }
     if ($cenik) $d['cenik'] = $cenik;
+    $g = (array)($vstup['google'] ?? []);
+    $gh = trim((string)($g['h'] ?? ''));
+    $gn = trim((string)($g['n'] ?? ''));
+    if ($gh !== '' || $gn !== '') {
+        $h = (float)str_replace(',', '.', $gh);
+        $n = (int)$gn;
+        if ($h < 1 || $h > 5 || $n < 1 || $n > 100000) $chyby[] = 'Hodnocení na Googlu: zadejte hodnocení 1–5 i počet recenzí.';
+        else {
+            $d['google'] = ['h' => round($h, 1), 'n' => $n, 'datum' => date('Y-m-d')];
+            $gu = $odkaz($g['url'] ?? '');
+            if ($gu === null || ($gu !== '' && !preg_match('~^https://(www\.)?(google\.[a-z.]+/maps|maps\.google\.[a-z.]+|maps\.app\.goo\.gl|goo\.gl/maps|g\.page)/~i', $gu))) $chyby[] = 'Odkaz na Google Mapy je neplatný.';
+            elseif ($gu !== '') $d['google']['url'] = $gu;
+        }
+    }
     if ($chyby) json_out(422, ['ok' => false, 'chyba' => implode(' ', $chyby)]);
 
     $ted = date('c');
     $st = $db->prepare('SELECT data FROM profily WHERE salon = ?');
     $st->execute([$salon]);
     $predtim = $st->fetchColumn();
+    // datum Google hodnocení se mění jen při změně čísel
+    $pg = $predtim ? (json_decode((string)$predtim, true)['google'] ?? null) : null;
+    if (isset($d['google'], $pg['h'], $pg['n'], $pg['datum']) && $pg['h'] == $d['google']['h'] && $pg['n'] == $d['google']['n']) $d['google']['datum'] = $pg['datum'];
     $db->prepare('INSERT INTO profily (salon, url, email, data, stav, overeno, upraveno) VALUES (?,?,?,?,?,?,?)
         ON CONFLICT(salon) DO UPDATE SET url = excluded.url, email = excluded.email, data = excluded.data, upraveno = excluded.upraveno')
         ->execute([$salon, $url, $email, json_encode($d, JSON_UNESCAPED_UNICODE), 'ok', $ted, $ted]);

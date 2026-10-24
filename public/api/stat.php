@@ -35,6 +35,15 @@ $db->exec('PRAGMA busy_timeout=3000');
 $db->exec('CREATE TABLE IF NOT EXISTS zobrazeni (den TEXT NOT NULL, cesta TEXT NOT NULL, pocet INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (den, cesta))');
 $db->exec('CREATE TABLE IF NOT EXISTS zdroje (den TEXT NOT NULL, zdroj TEXT NOT NULL, pocet INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (den, zdroj))');
 
+// Vynulování statistik: změna hodnoty STAT_RESET (a nasazení) jednorázově smaže všechna dosavadní data
+const STAT_RESET = '2026-10-24';
+$resetSoubor = $uloziste . '/statistika-reset.txt';
+if (!is_file($resetSoubor) || trim((string)file_get_contents($resetSoubor)) !== STAT_RESET) {
+    $db->exec('DELETE FROM zobrazeni');
+    $db->exec('DELETE FROM zdroje');
+    file_put_contents($resetSoubor, STAT_RESET, LOCK_EX);
+}
+
 /** Počty zobrazení stránky za posledních N dní (pro správu profilu i pro admin) */
 function pocty_cesty(PDO $db, string $cesta, int $dni): array
 {

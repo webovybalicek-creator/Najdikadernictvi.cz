@@ -1,0 +1,4 @@
+{
+  "_popis": "Hodnocení salonů na Googlu, jak je poslali/schválili majitelé. Klíč = id salonu nebo URL (/mesto/slug/). Pole: h (hodnocení 1–5), n (počet recenzí), datum (YYYY-MM-DD, ke kterému dni údaj platí), url (volitelně odkaz na kartu v Google Mapách). Na webu se zobrazuje odděleně od našich hodnocení jako „Google 4,8 ★ (230)“.",
+  "salony": {}
+}

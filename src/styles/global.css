@@ -293,11 +293,12 @@ p {
 
 .btn__obrys {
   position: absolute;
-  inset: -5px;
-  width: calc(100% + 10px);
-  height: calc(100% + 10px);
+  inset: 0;
+  width: 100%;
+  height: 100%;
   overflow: visible;
-  color: var(--nuzky);
+  /* čára vede uvnitř tlačítka → barva podle textu tlačítka (bílá na tmavém, tmavá na světlém) */
+  color: inherit;
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.4s ease;

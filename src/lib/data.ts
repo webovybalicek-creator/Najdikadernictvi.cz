@@ -4,6 +4,7 @@ import meta from '../data/import-meta.json';
 import vyrazene from '../data/vyrazene.json';
 import overeneRaw from '../data/overene.json';
 import majiteleRaw from '../data/majitele.json';
+import googleRaw from '../data/google-hodnoceni.json';
 import { KRAJE, type Kraj } from './kraje';
 import { parseTyden, type Tyden } from './oteviraci-doba';
 import { slugify } from './slug';
@@ -43,9 +44,18 @@ export interface Provozovna {
   rezervace?: string;
   /** Fotky od majitele (URL) */
   fotky?: string[];
+  /** Hodnocení na Googlu od majitele (zobrazuje se odděleně od našich hodnocení) */
+  google?: GoogleHodnoceni;
 }
 
-type Overeni = Partial<Pick<Provozovna, 'nazev' | 'platbaKartou' | 'bezbarierove' | 'telefon' | 'email' | 'web' | 'instagram' | 'facebook' | 'rezervace' | 'oteviraciDoba' | 'popis' | 'cenik' | 'zamereni' | 'fotky'>> & {
+export interface GoogleHodnoceni {
+  h: number;
+  n: number;
+  datum: string;
+  url?: string;
+}
+
+type Overeni = Partial<Pick<Provozovna, 'nazev' | 'platbaKartou' | 'bezbarierove' | 'telefon' | 'email' | 'web' | 'instagram' | 'facebook' | 'rezervace' | 'oteviraciDoba' | 'popis' | 'cenik' | 'zamereni' | 'fotky' | 'google'>> & {
   overeno: string;
 };
 
@@ -188,6 +198,14 @@ function sestav(): Provozovna[] {
       for (const [k, v] of Object.entries(o)) {
         if (v !== undefined && v !== null && v !== '' && !(Array.isArray(v) && !v.length)) (p as unknown as Record<string, unknown>)[k] = v;
       }
+    }
+  }
+  // Hodnocení na Googlu zadané redakcí (podle id nebo URL salonu)
+  const g = (googleRaw as { salony: Record<string, GoogleHodnoceni> }).salony;
+  if (Object.keys(g).length) {
+    for (const p of vse) {
+      const z = g[p.id] ?? g[`/${p.mestoSlug}/${p.slug}/`];
+      if (z && z.h >= 1 && z.h <= 5 && z.n > 0) p.google = z;
     }
   }
   // Salony vyřazené na žádost (id nebo URL)
