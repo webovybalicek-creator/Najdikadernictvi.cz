@@ -76,10 +76,10 @@ const rok = new Date().getFullYear();
   }
   .ftr :global(.logo) {
     color: var(--slate-ink);
-    --nuzky-logo: #b8a78d;
+    --nuzky-logo: var(--accent);
   }
   .ftr a:hover {
-    color: #fff;
+    color: var(--accent);
   }
   .ftr__grid {
     display: grid;
@@ -96,10 +96,13 @@ const rok = new Date().getFullYear();
   .ftr .btn {
     background: transparent;
     color: var(--slate-ink);
-    border-color: rgb(255 255 255 / 0.35);
+    border-color: var(--line);
+    background: #fff;
   }
   .ftr .btn:hover {
-    background: rgb(255 255 255 / 0.08);
+    background: #fff;
+    border-color: var(--ink);
+    color: var(--ink);
   }
   .ftr__h {
     font-family: var(--f-text);
@@ -126,7 +129,7 @@ const rok = new Date().getFullYear();
     column-gap: 1.5rem;
   }
   .ftr__bottom {
-    border-top: 1px solid rgb(255 255 255 / 0.12);
+    border-top: 1px solid var(--line);
     padding-top: 20px;
     padding-bottom: 28px;
     font-size: 0.78rem;
