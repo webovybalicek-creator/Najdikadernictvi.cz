@@ -278,9 +278,13 @@ const pool = await Promise.all(
     text-decoration: none;
     color: inherit;
   }
+  article.lead {
+    color: var(--ink);
+    font-size: 1rem;
+  }
   .lead__nazev {
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
-    font-weight: 400;
+    font-size: clamp(1.5rem, 2.8vw, 2rem);
+    font-weight: 600;
     line-height: 1.2;
     margin: 0 0 1.25rem;
   }
@@ -334,8 +338,8 @@ const pool = await Promise.all(
     align-items: start;
   }
   .bocni h3 {
-    font-size: 1.12rem;
-    font-weight: 400;
+    font-size: 1.08rem;
+    font-weight: 500;
     line-height: 1.35;
     margin: 0;
     letter-spacing: 0;
@@ -357,8 +361,8 @@ const pool = await Promise.all(
   /* Tmavý pás */
   .pas {
     margin-top: clamp(3rem, 7vw, 5rem);
-    background: var(--slate);
-    color: var(--slate-ink);
+    background: #17171a;
+    color: #fff;
     padding: clamp(1.5rem, 4vw, 2.75rem);
     border-radius: var(--radius);
   }
@@ -390,7 +394,7 @@ const pool = await Promise.all(
   }
   .pas__tabs button[aria-selected='true'] {
     color: #fff;
-    border-bottom-color: var(--brass);
+    border-bottom-color: var(--accent);
   }
   .pas__tabs button:focus-visible {
     outline: 2px solid #fff;
@@ -428,7 +432,7 @@ const pool = await Promise.all(
     color: rgb(255 255 255 / 0.55);
   }
   .pas .meta a {
-    color: var(--brass);
+    color: var(--accent-2);
   }
   .pas__vice {
     text-align: center;
@@ -436,12 +440,12 @@ const pool = await Promise.all(
     margin: 2rem 0 0;
   }
   .pas__vice .btn {
-    background: var(--brass);
-    border-color: var(--brass);
-    color: #1f1b16;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    border-color: transparent;
+    color: #fff;
   }
   .pas__vice .btn:hover {
-    background: #b39f84;
+    background: linear-gradient(135deg, #f25a1b, #ffa424);
   }
 
   @media (max-width: 900px) {

@@ -1,26 +1,29 @@
 
 :root {
-  /* Světlá, teplá paleta: krémový papír, tlumená béžová, tmavá břidlicová patička */
-  --paper: #f6f4ef;
-  --surface: #fcfbf8;
-  --ink: #26241f;
-  --ink-soft: #77716a;
-  --line: #e3ded4;
-  --bottle: #786b5c;
+  /* Čistá bílá paleta s teplým oranžovým akcentem (inspirace: moderní rezervační weby) */
+  --paper: #ffffff;
+  --surface: #ffffff;
+  --ink: #141414;
+  --ink-soft: #6b6b70;
+  --line: #ebebee;
+  --bottle: #141414;
   --bottle-ink: #ffffff;
-  --mint: #eeeae2;
-  --brass: #9c8a72;
-  --slate: #1f2826;
-  --slate-ink: #e9e6df;
-  --open: #4d7a5a;
-  --closed: #a0584a;
+  --mint: #f4f4f6;
+  --brass: #f5a524;
+  --slate: #f6f6f8;
+  --slate-ink: #141414;
+  --open: #15803d;
+  --closed: #c0392b;
+  --accent: #ff6a2b;
+  --accent-2: #ffb340;
+  --accent-soft: #fff1e8;
 
   --f-display: 'Outfit Variable', system-ui, sans-serif;
   --f-text: 'Outfit Variable', system-ui, sans-serif;
 
-  --wrap: 68rem;
+  --wrap: 70rem;
   --gutter: clamp(16px, 4vw, 40px);
-  --radius: 2px;
+  --radius: 14px;
   color-scheme: light;
 }
 
@@ -42,8 +45,8 @@ body {
   color: var(--ink);
   font-family: var(--f-text);
   font-size: 1rem;
-  font-weight: 330;
-  line-height: 1.65;
+  font-weight: 400;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -60,7 +63,7 @@ a {
 }
 
 a:hover {
-  color: var(--bottle);
+  color: var(--accent);
 }
 
 strong,
@@ -69,7 +72,7 @@ b {
 }
 
 :focus-visible {
-  outline: 2px solid var(--bottle);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -78,9 +81,9 @@ h1,
 h2,
 h3 {
   font-family: var(--f-display);
-  font-weight: 300;
+  font-weight: 600;
   line-height: 1.1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   margin: 0 0 0.5em;
   text-wrap: balance;
 }
@@ -90,19 +93,19 @@ h1 em,
 h2 em,
 p em {
   font-style: normal;
-  font-weight: 500;
+  font-weight: inherit;
 }
 
 h1 {
-  font-size: clamp(2.4rem, 5.5vw, 3.6rem);
+  font-size: clamp(2.1rem, 4.6vw, 3.1rem);
 }
 
 h2 {
-  font-size: clamp(1.7rem, 3.2vw, 2.2rem);
+  font-size: clamp(1.45rem, 2.6vw, 1.85rem);
 }
 
 h3 {
-  font-size: 1.35rem;
+  font-size: 1.2rem;
 }
 
 p {
@@ -133,12 +136,12 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
-  padding: 0.75em 1.3em;
-  border-radius: var(--radius);
+  padding: 0.75em 1.35em;
+  border-radius: 999px;
   border: 1px solid var(--bottle);
   background: var(--bottle);
   color: var(--bottle-ink);
-  font: 500 0.9rem/1.2 var(--f-text);
+  font: 600 0.92rem/1.2 var(--f-text);
   letter-spacing: 0.01em;
   text-decoration: none;
   cursor: pointer;
@@ -147,17 +150,25 @@ p {
 
 .btn:hover {
   color: var(--bottle-ink);
-  background: #5f5448;
+  background: #333336;
 }
 
 .btn--ghost {
-  background: transparent;
-  color: var(--bottle);
+  background: #fff;
+  color: var(--ink);
+  border-color: var(--line);
 }
 
 .btn--ghost:hover {
   color: var(--ink);
-  background: var(--mint);
+  background: #fff;
+  border-color: var(--ink);
+}
+
+.btn--akcent {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-color: transparent;
+  color: #fff;
 }
 
 .tag {
@@ -229,7 +240,7 @@ p {
 
 /* Malý nadpis nad sekcí („NAŠE TIPY“) */
 .eyebrow {
-  display: inline-flex;
+  display: none;
   align-items: center;
   gap: 0.5em;
   margin-bottom: 0.9rem;
@@ -492,7 +503,7 @@ p {
   background: var(--mint);
   display: grid;
   place-items: center;
-  font-weight: 200;
+  font-weight: 500;
   font-size: clamp(2.2rem, 6vw, 3.4rem);
   letter-spacing: 0.06em;
   color: var(--ink-soft);
@@ -603,7 +614,7 @@ picture {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 999px;
-  box-shadow: 0 10px 30px rgb(38 36 31 / 0.16);
+  box-shadow: 0 10px 30px rgb(20 20 20 / 0.16);
   font-size: 0.88rem;
 }
 .por-lista[hidden] {

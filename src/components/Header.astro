@@ -66,8 +66,11 @@ import Logo from './Logo.astro';
 
 <style>
   .hdr {
-    background: var(--paper);
-    position: relative;
+    background: rgb(255 255 255 / 0.85);
+    backdrop-filter: saturate(1.4) blur(10px);
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
     z-index: 40;
   }
   .nav-jen-m {
@@ -106,7 +109,7 @@ import Logo from './Logo.astro';
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    box-shadow: 0 16px 40px rgb(38 36 31 / 0.16);
+    box-shadow: 0 16px 40px rgb(20 20 20 / 0.16);
   }
   .mmenu[hidden] {
     display: none;
@@ -133,7 +136,7 @@ import Logo from './Logo.astro';
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    min-height: 76px;
+    min-height: 68px;
   }
   .hdr__logo {
     text-decoration: none;
@@ -146,10 +149,8 @@ import Logo from './Logo.astro';
     display: flex;
     gap: clamp(1rem, 3vw, 2.25rem);
     align-items: center;
-    font-size: 0.8rem;
+    font-size: 0.92rem;
     font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
   }
   nav a {
     text-decoration: none;
@@ -190,9 +191,8 @@ import Logo from './Logo.astro';
     letter-spacing: 0;
   }
   .hdr__cta {
-    padding: 0.6em 1.1em;
-    font-size: 0.75rem;
-    letter-spacing: 0.06em;
+    padding: 0.6em 1.15em;
+    font-size: 0.88rem;
   }
   @media (max-width: 760px) {
     .nav-skryt-m {

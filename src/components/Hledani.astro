@@ -142,59 +142,65 @@
 
 <style>
   .srch {
-    --srch-h: 3.25rem;
+    --srch-h: 3.1rem;
     position: relative;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.35rem;
     max-width: 40rem;
+    padding: 0.4rem;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    box-shadow: 0 10px 40px rgb(20 20 20 / 0.08);
+  }
+  .srch:focus-within {
+    border-color: #c9c9ce;
   }
   input {
     flex: 1;
     min-width: 0;
     height: var(--srch-h);
-    font: 400 1.05rem/1.2 var(--f-text);
-    padding: 0 1.2em;
-    border-radius: var(--radius);
-    border: 1px solid #cfc7b9;
-    background: #fff;
+    font: 400 1.02rem/1.2 var(--f-text);
+    padding: 0 1em 0 1.1em;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
     color: var(--ink);
-    box-shadow: 0 1px 2px rgb(38 36 31 / 0.04);
   }
   input::placeholder {
-    color: #a39d94;
+    color: #8e8e94;
   }
   input:focus-visible {
-    outline: 1px solid var(--ink);
-    outline-offset: 0;
-    border-color: var(--ink);
+    outline: none;
   }
   .btn {
     height: var(--srch-h);
-    padding: 0 1.8em;
+    padding: 0 1.6em;
     justify-content: center;
   }
   .srch__geo {
     display: inline-flex;
     align-items: center;
     gap: 0.4em;
-    padding: 0 1em;
+    padding: 0 1.1em;
     height: var(--srch-h);
-    border: 1px solid #cfc7b9;
-    border-radius: var(--radius);
-    background: #fff;
-    font-size: 0.85rem;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    font-size: 0.88rem;
+    font-weight: 600;
     white-space: nowrap;
     text-decoration: none;
-    color: var(--ink);
+    color: #c2410c;
   }
   .srch__geo:hover {
-    border-color: var(--ink);
-    color: var(--ink);
+    background: #ffe3d1;
+    color: #c2410c;
   }
   @media (max-width: 560px) {
     .srch {
       flex-wrap: wrap;
+      border-radius: 22px;
     }
     input {
       flex-basis: 100%;
@@ -215,7 +221,7 @@
     color: var(--ink);
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    box-shadow: 0 16px 40px rgb(38 36 31 / 0.12);
+    box-shadow: 0 16px 40px rgb(20 20 20 / 0.12);
     padding: 0.4rem;
     max-height: 70vh;
     overflow: auto;

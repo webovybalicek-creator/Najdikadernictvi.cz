@@ -15,12 +15,12 @@ const panoUrl = vlastni ?? `/api/panorama.php?lat=${p.lat}&lon=${p.lon}&s=${velk
 
 // Tlumené přírodní tóny (kámen, písek, šalvěj, jíl)
 const PALETA = [
-  ['#e7e1d6', '#6f6355'],
-  ['#ddd6ca', '#5c5246'],
-  ['#d9dcd3', '#4e5a4f'],
-  ['#e4d9cf', '#7a5f4e'],
-  ['#d6d3cd', '#4a4743'],
-  ['#ebe5dc', '#857563'],
+  ['#fff1e8', '#c2410c'],
+  ['#f3f3f6', '#3f3f46'],
+  ['#ffe9d6', '#9a3412'],
+  ['#fdf0e6', '#b45309'],
+  ['#f0f0f3', '#52525b'],
+  ['#ffeadf', '#ea580c'],
 ];
 let h = 0;
 for (const ch of p.id + p.nazev) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
@@ -91,8 +91,8 @@ const id = `v-${p.id}`;
     display: grid;
     place-items: center;
     font-family: var(--f-display);
-    font-weight: 200;
-    font-size: clamp(2.4rem, 6.5vw, 3.8rem);
+    font-weight: 500;
+    font-size: clamp(2.2rem, 6vw, 3.4rem);
     letter-spacing: 0.06em;
     line-height: 1;
   }

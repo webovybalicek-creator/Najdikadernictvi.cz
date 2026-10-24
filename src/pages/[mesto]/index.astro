@@ -67,7 +67,7 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
     <Breadcrumb items={breadcrumb} />
     <h1>Kadeřnictví {m.nazev}</h1>
     <div class="uvod">
-      {uvod.map((t, i) => <p class:list={[i === 0 && 'lead']}>{t}</p>)}
+      <p class="lead">{uvod[0]}</p>
     </div>
     {
       zamery.length > 0 && (
@@ -156,6 +156,15 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
         <section class="blok">
           <h2>Mapa salonů</h2>
           <MapaSalonu salony={vse} popis={`Mapa kadeřnictví: ${m.nazev}`} />
+        </section>
+      )
+    }
+
+    {
+      uvod.length > 1 && (
+        <section class="blok o-meste">
+          <h2>Kadeřnictví {m.nazev} v číslech</h2>
+          {uvod.slice(1).map((t) => <p>{t}</p>)}
         </section>
       )
     }
@@ -284,6 +293,9 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
     margin-bottom: 0.6rem;
   }
   .uvod p:not(.lead) {
+    color: var(--ink-soft);
+  }
+  .o-meste p {
     color: var(--ink-soft);
   }
   .zamery {
@@ -475,6 +487,19 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
     background: var(--mint);
     padding: 1.5rem;
     border-radius: var(--radius);
+  }
+  @media (max-width: 640px) {
+    /* výběry jako vodorovně posuvný pás, ať seznam salonů začíná výš */
+    .zamery:not(.zamery--casti) {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      margin-inline: calc(-1 * var(--gutter));
+      padding: 0 var(--gutter) 0.25rem;
+      scrollbar-width: none;
+    }
+    .zamery:not(.zamery--casti) a {
+      flex: none;
+    }
   }
   @media (max-width: 760px) {
     .dalsi {
