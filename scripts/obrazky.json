@@ -125,11 +125,6 @@
     "autor": "Guilherme Petri"
   },
   {
-    "soubor": "fenovani-zrcadlo.jpg",
-    "id": "1699038116453-0667bbf3f002",
-    "autor": "Viktor Zhulin"
-  },
-  {
     "soubor": "strih-salon-klientka.jpg",
     "id": "1647462741351-4e7a5e7317c7",
     "autor": "Gabriela"
@@ -138,5 +133,10 @@
     "soubor": "kudrny-blond.jpg",
     "id": "1544610195-8db0cf3703a9",
     "autor": "Andrey Zvyagintsev"
+  },
+  {
+    "soubor": "fenovani-doma.jpg",
+    "id": "1712641966810-611ff1503c6d",
+    "autor": "TYMO Beauty"
   }
 ]
