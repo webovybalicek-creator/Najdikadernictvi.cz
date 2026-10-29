@@ -4,9 +4,9 @@ description: 'Moderní trvalá už nejsou drobné kudrny z osmdesátek. Druhy tr
 perex: 'Trvalá se vrací, jen v jiné podobě: volné vlny, objem u kořínků a přirozeně působící kudrliny. Co od ní čekat?'
 datum: 2026-10-24
 kategorie: 'Pro ženy'
-obrazek: '../../assets/blog/trvala.jpg'
-obrazekAlt: 'Žena s objemnými kudrnatými vlasy'
-obrazekAutor: 'Michael Starkie'
+obrazek: '../../assets/blog/kudrny-blond.jpg'
+obrazekAlt: 'Žena s vlnitými blond vlasy'
+obrazekAutor: 'Andrey Zvyagintsev'
 ---
 
 Trvalá změní strukturu vlasu chemicky: přípravek naruší vazby uvnitř vlasu, vlasy se natočí na natáčky a fixáž vazby znovu „zamkne“ v novém tvaru. Výsledek vydrží, dokud vlasy neodrostou nebo se neostříhají.

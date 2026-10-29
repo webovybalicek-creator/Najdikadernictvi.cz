@@ -24,6 +24,7 @@ Web nesmí působit jako farma generovaných článků. Každý článek musí �
    Workflow „Stažení obrázků (Unsplash)“ fotku stáhne a commitne do `src/assets/blog/` (cca 1 min).
    Počkej na dokončení (`gh run list --workflow obrazky.yml`), `git pull` a ověř, že soubor existuje a fotka sedí k tématu (prohlédni si ji).
    Když se stažení nepovede, použij některou nepoužitou fotku z `src/assets/blog/`.
+   Fotky mají působit lokálně (Česko): nepoužívej fotky s afroamerickými modely. Nevhodnou fotku nahraď.
 4. Napiš článek do `src/content/blog/<slug>.md` (slug bez diakritiky, výstižný, pro SEO).
 5. Sestav web (`npm run build`, Node ≥ 22) a zkontroluj interní odkazy (každý odkaz `/…/` musí v `dist/` existovat).
 6. Přesuň témata do „Hotovo“ v `docs/temata-clanku.md`. Když v zásobníku zbývá méně než 10 témat, doplň nová:

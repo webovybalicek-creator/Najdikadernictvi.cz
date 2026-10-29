@@ -4,9 +4,9 @@ description: 'Co udělat před návštěvou kadeřnictví nebo barbershopu, aby 
 perex: 'Pár minut přípravy rozhodne o tom, jestli odejdete spokojení. Tady je, na co myslet před návštěvou salonu.'
 datum: 2026-10-15
 kategorie: 'Rady a návody'
-obrazek: '../../assets/blog/plastenka.jpg'
-obrazekAlt: 'Kadeřnice zakrývá klientku pláštěnkou'
-obrazekAutor: "Land O'Lakes, Inc."
+obrazek: '../../assets/blog/strih-salon-klientka.jpg'
+obrazekAlt: 'Kadeřnice stříhá klientku v pláštěnce'
+obrazekAutor: 'Gabriela'
 ---
 
 Návštěva kadeřnictví nemusí být loterie. Když si předem ujasníte pár věcí, kadeřník nebo barber přesně ví, co od něj čekáte.

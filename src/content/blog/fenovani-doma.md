@@ -4,9 +4,9 @@ description: 'Praktický návod na foukanou doma: příprava vlasů, termoochran
 perex: 'Proč účes ze salonu vypadá vždycky lépe než doma? Často jde jen o pár drobností při fénování. Tady je návod krok za krokem.'
 datum: 2026-10-20
 kategorie: 'Péče o vlasy'
-obrazek: '../../assets/blog/fenovani-doma.jpg'
-obrazekAlt: 'Žena si fénuje vlasy'
-obrazekAutor: 'TYMO Beauty'
+obrazek: '../../assets/blog/fenovani-zrcadlo.jpg'
+obrazekAlt: 'Žena s lehkými rozfoukanými blond vlasy'
+obrazekAutor: 'Viktor Zhulin'
 ---
 
 Kadeřnice nemá kouzelný fén. Má jen techniku a trpělivost. Obojí se dá naučit.
