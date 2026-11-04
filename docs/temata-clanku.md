@@ -4,7 +4,6 @@ Automatická úloha bere témata shora. Hotové téma přesune do sekce „Hotov
 Nová témata přidávej na konec zásobníku. Kategorie: Pro pány | Pro ženy | Péče o vlasy | Rady a návody.
 
 ## Zásobník
-- Barbershopy v Plzni | Pro pány | Data: plzen
 - Kadeřnictví v Ostravě otevřená v sobotu | Rady a návody | Data: ostrava
 - Kadeřnictví v Olomouci otevřená večer a o víkendu | Rady a návody | Data: olomouc
 - Kadeřnictví v Plzni otevřená v sobotu | Rady a návody | Data: plzen
@@ -63,3 +62,4 @@ Nová témata přidávej na konec zásobníku. Kategorie: Pro pány | Pro ženy 
 - Barbershopy v Brně: kde a kdy → barbershopy-brno.md (2026-10-30)
 - Dětská kadeřnictví v Brně → přeskočeno (2026-10-30): v katalogu žádné brněnské salony označené jako dětské
 - Dětská kadeřnictví v Praze → přeskočeno (2026-10-30): v katalogu žádné pražské salony označené jako dětské
+- Barbershopy v Plzni → barbershopy-plzen.md (2026-11-04)
