@@ -161,15 +161,33 @@ const zprava = encodeURIComponent(`Dobrý den, rád/a bych se objednal/a na stř
 </script>
 
 <style>
+  /* Vedlejší akce: tiché, bez rámečku, ať vyniknou Zavolat a Navigovat */
   .akce2 {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 0.6rem;
+    gap: 0.15rem 0.25rem;
+    margin: 0.75rem 0 0 -0.6rem;
   }
-  .akce2 :global(.btn) {
-    padding: 0.55em 0.95em;
-    font-size: 0.82rem;
+  .akce2 :global(.btn),
+  .akce2 :global(.btn.btn--ghost) {
+    padding: 0.45em 0.6em;
+    font-size: 0.84rem;
+    font-weight: 500;
+    background: transparent;
+    border-color: transparent;
+    color: var(--ink-soft);
+  }
+  @media (hover: hover) {
+    .akce2 :global(.btn:hover),
+    .akce2 :global(.btn.btn--ghost:hover) {
+      background: var(--mint);
+      border-color: transparent;
+      color: var(--ink);
+    }
+  }
+  .akce2 :global(.btn[aria-pressed='true']) {
+    background: var(--mint);
+    color: var(--ink);
   }
   .akce2 svg {
     width: 1.1em;
@@ -188,7 +206,15 @@ const zprava = encodeURIComponent(`Dobrý den, rád/a bych se objednal/a na stř
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    box-shadow: 0 12px 32px rgb(20 20 20 / 0.14);
+    box-shadow: 0 12px 32px rgb(17 17 19 / 0.12);
+    transform-origin: top left;
+    animation: sdilet-in 160ms var(--ease-out);
+  }
+  @keyframes sdilet-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px) scale(0.98);
+    }
   }
   .sdilet__menu a,
   .sdilet__menu button {
@@ -203,10 +229,11 @@ const zprava = encodeURIComponent(`Dobrý den, rád/a bych se objednal/a na stř
     text-decoration: none;
     color: var(--ink);
     cursor: pointer;
-    border-radius: 3px;
+    border-radius: 6px;
   }
   .sdilet__menu a:hover,
   .sdilet__menu button:hover {
     background: var(--mint);
+    color: var(--ink);
   }
 </style>

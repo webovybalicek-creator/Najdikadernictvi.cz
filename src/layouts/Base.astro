@@ -1,5 +1,5 @@
 ---
-import '@fontsource-variable/outfit';
+import '@fontsource-variable/geist';
 import '../styles/global.css';
 import { SITE } from '../lib/config';
 import Header from '../components/Header.astro';
@@ -46,7 +46,7 @@ const fullTitle = title.includes(SITE.nazev) || title.length > 42 ? title : `${t
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <meta name="theme-color" content="#f6f4ef" />
+    <meta name="theme-color" content="#ffffff" />
     <meta property="og:type" content={typ} />
     <meta property="og:locale" content="cs_CZ" />
     <meta property="og:site_name" content={SITE.nazev} />
@@ -81,10 +81,8 @@ const fullTitle = title.includes(SITE.nazev) || title.length > 42 ? title : `${t
     </main>
     <Footer reklamy={reklamy} />
     <script>
-      import { nuzkyNaTlacitka } from '../scripts/nuzky';
       import { doplnHodnoceni } from '../scripts/hodnoceni-souhrn';
       import { inicializujSrdicka, inicializujPocitadlo, inicializujPorovnani, inicializujListuPorovnani } from '../scripts/oblibene';
-      nuzkyNaTlacitka();
       doplnHodnoceni();
       inicializujSrdicka();
       inicializujPocitadlo();

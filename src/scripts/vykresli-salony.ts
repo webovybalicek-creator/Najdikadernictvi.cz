@@ -23,7 +23,7 @@ export function kartaHtml(s: UlozenySalon): string {
       <span class="karta__typ">${s.b ? 'Barbershop' : 'Kadeřnictví'}</span>
       <h3 class="karta__nazev">${esc(s.n)}</h3>
       <p class="karta__adr">${esc(s.a)}</p>
-      <span class="hod-mini" data-hod-id="${esc(s.id)}"><span class="hv" style="--p:0%"></span><span class="hod-mini__nic">Zatím bez hodnocení</span></span>
+      <span class="hod-mini" data-hod-id="${esc(s.id)}"></span>
     </a>
     <button type="button" class="karta__por" data-porovnat="${data}" aria-pressed="false"><span data-porovnat-text>Porovnat</span></button>
   </li>`;

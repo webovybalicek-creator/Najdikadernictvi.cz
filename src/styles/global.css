@@ -1,29 +1,31 @@
 
 :root {
-  /* Čistá bílá paleta s teplým oranžovým akcentem (inspirace: moderní rezervační weby) */
+  /* Neutrální základ, jeden plný akcent jen pro hlavní akce a značky na mapě. Žádné gradienty. */
   --paper: #ffffff;
   --surface: #ffffff;
-  --ink: #141414;
-  --ink-soft: #6b6b70;
-  --line: #ebebee;
-  --bottle: #141414;
+  --ink: #111113;
+  --ink-soft: #5f6168;
+  --line: #e7e7ea;
+  --bottle: #111113;
   --bottle-ink: #ffffff;
-  --mint: #f4f4f6;
-  --brass: #f5a524;
-  --slate: #f6f6f8;
-  --slate-ink: #141414;
-  --open: #15803d;
-  --closed: #c0392b;
-  --accent: #ff6a2b;
-  --accent-2: #ffb340;
-  --accent-soft: #fff1e8;
+  --mint: #f5f5f6;
+  --brass: #e8a317;
+  --slate: #f5f5f6;
+  --slate-ink: #111113;
+  --open: #157a3c;
+  --closed: #b9382c;
+  --accent: #e2541c;
+  --accent-2: #e2541c;
+  --accent-soft: #fdf1ea;
 
-  --f-display: 'Outfit Variable', system-ui, sans-serif;
-  --f-text: 'Outfit Variable', system-ui, sans-serif;
+  --f-display: 'Geist Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-text: 'Geist Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
-  --wrap: 70rem;
+  --wrap: 72rem;
   --gutter: clamp(16px, 4vw, 40px);
-  --radius: 14px;
+  --radius: 10px;
+  --radius-sm: 8px;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   color-scheme: light;
 }
 
@@ -62,8 +64,10 @@ a {
   text-underline-offset: 0.2em;
 }
 
-a:hover {
-  color: var(--accent);
+@media (hover: hover) {
+  a:hover {
+    color: var(--ink);
+  }
 }
 
 strong,
@@ -72,7 +76,7 @@ b {
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--ink);
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -82,13 +86,13 @@ h2,
 h3 {
   font-family: var(--f-display);
   font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
+  line-height: 1.12;
+  letter-spacing: -0.022em;
   margin: 0 0 0.5em;
   text-wrap: balance;
 }
 
-/* Akcent v nadpisu: tučnější slovo (Outfit nemá kurzívu) */
+/* Zvýrazněná slova v nadpisech vypadají šablonovitě: <em> zůstává bez efektu */
 h1 em,
 h2 em,
 p em {
@@ -135,22 +139,33 @@ p {
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5em;
-  padding: 0.75em 1.35em;
-  border-radius: 999px;
+  padding: 0.72em 1.2em;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--bottle);
   background: var(--bottle);
   color: var(--bottle-ink);
-  font: 600 0.92rem/1.2 var(--f-text);
-  letter-spacing: 0.01em;
+  font: 500 0.92rem/1.2 var(--f-text);
   text-decoration: none;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 150ms var(--ease-out),
+    border-color 150ms var(--ease-out),
+    transform 160ms var(--ease-out);
 }
 
-.btn:hover {
-  color: var(--bottle-ink);
-  background: #333336;
+.btn:active {
+  transform: scale(0.97);
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    color: var(--bottle-ink);
+    background: #2b2b30;
+    border-color: #2b2b30;
+  }
 }
 
 .btn--ghost {
@@ -159,24 +174,33 @@ p {
   border-color: var(--line);
 }
 
-.btn--ghost:hover {
-  color: var(--ink);
-  background: #fff;
-  border-color: var(--ink);
+@media (hover: hover) {
+  .btn--ghost:hover {
+    color: var(--ink);
+    background: var(--mint);
+    border-color: #d4d4d8;
+  }
 }
 
 .btn--akcent {
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  border-color: transparent;
+  background: var(--accent);
+  border-color: var(--accent);
   color: #fff;
+}
+
+@media (hover: hover) {
+  .btn--akcent:hover {
+    background: #c94812;
+    border-color: #c94812;
+  }
 }
 
 .tag {
   display: inline-block;
-  padding: 0.2em 0.6em;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: transparent;
+  padding: 0.2em 0.55em;
+  border-radius: 6px;
+  border: 0;
+  background: var(--mint);
   color: var(--ink-soft);
   font-size: 0.75rem;
   font-weight: 500;
@@ -184,8 +208,8 @@ p {
 }
 
 .tag--barber {
-  border-color: var(--ink);
-  color: var(--ink);
+  background: var(--ink);
+  color: #fff;
 }
 
 .stav {
@@ -232,10 +256,17 @@ p {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
-    transition: none !important;
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
     animation: none !important;
   }
+}
+
+/* Jemné vyblednutí fotky po načtení, bez skoků */
+.viz-mini .viz__foto {
+  transition: opacity 0.3s var(--ease-out);
 }
 
 /* Malý nadpis nad sekcí („NAŠE TIPY“) */
@@ -281,79 +312,6 @@ p {
   gap: 2rem clamp(0.75rem, 2vw, 1.5rem);
 }
 
-/* ------------------------------------------------------------------
-   Tlačítka: kolem tlačítka objede přerušovaná čára, pak spadne pár vlasů.
-   SVG .btn__obrys vkládá src/scripts/nuzky.ts. Barvu určuje --nuzky
-   (tmavá na světlém pozadí, bílá na tmavém).
-------------------------------------------------------------------- */
-.btn {
-  position: relative;
-  --nuzky: var(--ink);
-}
-
-.btn__obrys {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  /* čára vede uvnitř tlačítka → barva podle textu tlačítka (bílá na tmavém, tmavá na světlém) */
-  color: inherit;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.btn__cara {
-  opacity: 0.55;
-}
-
-.btn__maska {
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-}
-
-.btn.is-obrys .btn__obrys {
-  opacity: 1;
-  transition: opacity 0.1s ease;
-}
-
-.btn.is-obrys .btn__maska {
-  stroke-dashoffset: 0;
-  transition: stroke-dashoffset 0.65s cubic-bezier(0.45, 0, 0.25, 1);
-}
-
-/* Ustřižené vlasy */
-.vlas {
-  position: absolute;
-  width: 10px;
-  height: 14px;
-  color: var(--nuzky);
-  pointer-events: none;
-  opacity: 0.7;
-}
-
-.vlas svg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-/* Verze pro tmavé pozadí: bílá čára a vlasy */
-.tmave .btn,
-.pas .btn,
-.majitel .btn,
-.btn--svetle {
-  --nuzky: #fff;
-}
-
-@media (prefers-reduced-motion: reduce), (hover: none) {
-  .btn__obrys,
-  .vlas {
-    display: none;
-  }
-}
-
 /* Zobrazení hodnocení hvězdičkami: <span class="hv" style="--p:80%"> */
 .hv {
   display: inline-block;
@@ -375,6 +333,9 @@ p {
   font-size: 0.8rem;
   color: var(--ink-soft);
   white-space: nowrap;
+}
+.hod-mini:empty {
+  display: none;
 }
 .hod-mini__nic {
   font-size: 0.78rem;
@@ -426,13 +387,19 @@ p {
   height: 2.3rem;
   border: 0;
   border-radius: 50%;
-  background: rgb(252 251 248 / 0.92);
+  background: rgb(255 255 255 / 0.94);
+  transition: transform 160ms var(--ease-out);
   color: var(--ink);
   cursor: pointer;
   box-shadow: 0 1px 4px rgb(0 0 0 / 0.12);
 }
-.srdce--ikona:hover {
-  background: #fff;
+@media (hover: hover) {
+  .srdce--ikona:hover {
+    background: #fff;
+  }
+}
+.srdce--ikona:active {
+  transform: scale(0.92);
 }
 .srdce--ikona svg {
   width: 1.2rem;
@@ -477,21 +444,22 @@ p {
 .karta__typ {
   display: block;
   margin-top: 0.9rem;
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--ink-soft);
 }
 .karta__nazev {
-  font-size: 1.1rem;
-  font-weight: 400;
-  line-height: 1.2;
+  font-size: 1.02rem;
+  font-weight: 600;
+  line-height: 1.25;
   margin: 0.25rem 0 0.2rem;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
 }
-.karta > a:hover .karta__nazev {
-  text-decoration: underline;
+@media (hover: hover) {
+  .karta > a:hover .karta__nazev {
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
 }
 .karta__adr {
   margin: 0;
@@ -548,7 +516,7 @@ picture {
   font-size: 0.8rem;
   padding: 0.3em 0.8em;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: 6px;
   background: var(--surface);
   color: var(--ink);
   cursor: pointer;
@@ -566,7 +534,7 @@ picture {
   padding: 0.5rem 0.5rem 0.5rem 1rem;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: 12px;
   box-shadow: 0 10px 30px rgb(20 20 20 / 0.16);
   font-size: 0.88rem;
 }
@@ -576,7 +544,7 @@ picture {
 .por-lista .btn {
   padding: 0.5em 1em;
   font-size: 0.82rem;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
 }
 .por-lista__x {
   border: 0;
@@ -595,7 +563,7 @@ picture {
   }
 }
 
-/* Mapy: šedobílý podklad, ať vyniknou oranžové značky salonů */
+/* Mapy: šedobílý podklad, ať vyniknou značky salonů */
 .leaflet-tile-pane {
   filter: grayscale(1) brightness(1.06) contrast(0.92);
 }

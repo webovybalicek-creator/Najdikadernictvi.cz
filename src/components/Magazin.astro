@@ -57,7 +57,7 @@ const pool = await Promise.all(
           <div>
             <span class="eyebrow">Magazín</span>
             <h2>
-              Rady a <em>inspirace</em>
+              Rady a inspirace
             </h2>
           </div>
           <a class="btn btn--ghost" href="/blog/">
@@ -151,7 +151,7 @@ const pool = await Promise.all(
         ))
       }
       <p class="pas__vice">
-        <a class="btn" href={zalozky[0] ? kategorieUrl(zalozky[0].k) : '/blog/'} data-mag-vice>
+        <a class="btn btn--ghost" href={zalozky[0] ? kategorieUrl(zalozky[0].k) : '/blog/'} data-mag-vice>
           Další články: <span data-mag-vice-k>{zalozky[0]?.k}</span> <span aria-hidden="true">→</span>
         </a>
       </p>
@@ -253,18 +253,18 @@ const pool = await Promise.all(
     flex-wrap: wrap;
     gap: 0.3rem 1rem;
     margin: 0.6rem 0 0;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
     color: var(--ink-soft);
   }
   .meta a {
-    color: var(--bottle);
+    color: var(--ink);
     text-decoration: none;
   }
-  .meta a:hover {
-    text-decoration: underline;
+  @media (hover: hover) {
+    .meta a:hover {
+      text-decoration: underline;
+    }
   }
 
   /* Horní část */
@@ -306,11 +306,13 @@ const pool = await Promise.all(
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease;
+    transition: transform 0.5s var(--ease-out);
   }
-  .lead > a:hover :global(img),
-  .pas article a:hover :global(img) {
-    transform: scale(1.03);
+  @media (hover: hover) {
+    .lead > a:hover :global(img),
+    .pas article a:hover :global(img) {
+      transform: scale(1.025);
+    }
   }
   .lead__perex {
     max-width: none;
@@ -338,8 +340,9 @@ const pool = await Promise.all(
     align-items: start;
   }
   .bocni h3 {
-    font-size: 1.08rem;
-    font-weight: 500;
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
     line-height: 1.35;
     margin: 0;
     letter-spacing: 0;
@@ -358,24 +361,22 @@ const pool = await Promise.all(
     background: var(--mint);
   }
 
-  /* Tmavý pás */
+  /* Pás podle témat: světlý, oddělený linkou */
   .pas {
     margin-top: clamp(3rem, 7vw, 5rem);
-    background: #17171a;
-    color: #fff;
-    padding: clamp(1.5rem, 4vw, 2.75rem);
-    border-radius: var(--radius);
+    padding-top: clamp(1.5rem, 3vw, 2rem);
+    border-top: 1px solid var(--line);
   }
   .pas__h {
-    font-size: 1.6rem;
-    font-weight: 400;
-    margin: 0 0 1.1rem;
+    font-size: 1.35rem;
+    font-weight: 600;
+    margin: 0 0 0.9rem;
   }
   .pas__tabs {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.25rem 1.75rem;
-    border-bottom: 1px solid rgb(255 255 255 / 0.15);
+    gap: 0.25rem 1.5rem;
+    border-bottom: 1px solid var(--line);
     margin-bottom: 1.75rem;
   }
   .pas__tabs button {
@@ -386,19 +387,20 @@ const pool = await Promise.all(
     padding: 0.6rem 0;
     margin-bottom: -1px;
     font: 500 0.95rem/1.2 var(--f-text);
-    color: rgb(255 255 255 / 0.65);
+    color: var(--ink-soft);
     cursor: pointer;
+    transition:
+      color 150ms var(--ease-out),
+      border-color 150ms var(--ease-out);
   }
-  .pas__tabs button:hover {
-    color: #fff;
+  @media (hover: hover) {
+    .pas__tabs button:hover {
+      color: var(--ink);
+    }
   }
   .pas__tabs button[aria-selected='true'] {
-    color: #fff;
-    border-bottom-color: var(--accent);
-  }
-  .pas__tabs button:focus-visible {
-    outline: 2px solid #fff;
-    outline-offset: 2px;
+    color: var(--ink);
+    border-bottom-color: var(--ink);
   }
   .pas__panel {
     display: grid;
@@ -417,35 +419,24 @@ const pool = await Promise.all(
     aspect-ratio: 16 / 10;
     overflow: hidden;
     border-radius: var(--radius);
-    background: rgb(255 255 255 / 0.06);
+    background: var(--mint);
   }
   .pas h4 {
-    font-size: 1.15rem;
-    font-weight: 500;
+    font-size: 1.08rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
     line-height: 1.3;
-    margin: 1rem 0 0;
+    margin: 0.9rem 0 0;
   }
-  .pas article > a:hover h4 {
-    text-decoration: underline;
-  }
-  .pas .meta {
-    color: rgb(255 255 255 / 0.55);
-  }
-  .pas .meta a {
-    color: var(--accent-2);
+  @media (hover: hover) {
+    .pas article > a:hover h4 {
+      text-decoration: underline;
+      text-underline-offset: 0.18em;
+    }
   }
   .pas__vice {
-    text-align: center;
     max-width: none;
     margin: 2rem 0 0;
-  }
-  .pas__vice .btn {
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    border-color: transparent;
-    color: #fff;
-  }
-  .pas__vice .btn:hover {
-    background: linear-gradient(135deg, #f25a1b, #ffa424);
   }
 
   @media (max-width: 900px) {
@@ -459,7 +450,7 @@ const pool = await Promise.all(
     }
     .pas__panel article + article {
       padding-top: 1.5rem;
-      border-top: 1px solid rgb(255 255 255 / 0.12);
+      border-top: 1px solid var(--line);
     }
   }
 </style>

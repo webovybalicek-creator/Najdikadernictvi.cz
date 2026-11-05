@@ -4,23 +4,21 @@ import Hledani from '../components/Hledani.astro';
 import Magazin from '../components/Magazin.astro';
 import Vybrane from '../components/Vybrane.astro';
 import { KRAJE } from '../lib/kraje';
-import { Picture } from 'astro:assets';
 import { PROVOZOVNY, nejvetsiMesta, krajUrl, mestoUrl, pocetText, tyden } from '../lib/data';
-import fotoOtevreno from '../assets/blog/salon-cihly.jpg';
-import fotoBarber from '../assets/blog/barbershop-interier.jpg';
-import fotoSobota from '../assets/blog/barber-kreslo-slunce.jpg';
-import fotoVecer from '../assets/blog/barbershop-noc.jpg';
 import { SITE } from '../lib/config';
 
 const top = nejvetsiMesta(24);
 // Karty „Nejbližší salon, který…“: čísla z katalogu, „otevřeno teď“ se dopočítá v prohlížeči
 const tydny = PROVOZOVNY.map((p) => tyden(p)).filter((t) => !!t);
 const cislo = (n: number) => n.toLocaleString('cs-CZ');
+const pocetBarber = PROVOZOVNY.filter((p) => p.typ === 'barber').length;
+const pocetSobota = tydny.filter((t) => t[5]?.length).length;
+const pocetVecer = tydny.filter((t) => t.slice(0, 5).some((d) => d.some(([, k]) => k >= 19 * 60))).length;
 const karty = [
-  { href: '/okoli/?open=1', foto: fotoOtevreno, titul: 'má otevřeno teď', popis: 'Ostříhat se ještě dnes', stitek: `${cislo(tydny.length)} salonů se známou otevírací dobou`, zive: true },
-  { href: '/okoli/?typ=1', foto: fotoBarber, titul: 'je barbershop', popis: 'Fade, vousy a holení břitvou', stitek: `${cislo(PROVOZOVNY.filter((p) => p.typ === 'barber').length)} barbershopů` },
-  { href: '/okoli/?sobota=1', foto: fotoSobota, titul: 'má otevřeno v sobotu', popis: 'Když přes týden nestíháte', stitek: `${cislo(tydny.filter((t) => t[5]?.length).length)} salonů v sobotu` },
-  { href: '/okoli/?vecer=1', foto: fotoVecer, titul: 'má otevřeno večer', popis: 'Po práci, do 19:00 i déle', stitek: `${cislo(tydny.filter((t) => t.slice(0, 5).some((d) => d.some(([, k]) => k >= 19 * 60))).length)} salonů večer` },
+  { href: '/okoli/?open=1', cislo: 'Podle aktuálního času', titul: 'Otevřeno teď', popis: 'Salony, kam můžete zajít ještě dnes', zive: true },
+  { href: '/okoli/?typ=1', cislo: `${cislo(pocetBarber)} salonů`, titul: 'Barbershopy', popis: 'Fade, úprava vousů, holení břitvou' },
+  { href: '/okoli/?sobota=1', cislo: `${cislo(pocetSobota)} salonů`, titul: 'Otevřeno v sobotu', popis: 'Když přes týden nestíháte' },
+  { href: '/okoli/?vecer=1', cislo: `${cislo(pocetVecer)} salonů`, titul: 'Otevřeno večer', popis: 'Po práci, do 19:00 i déle' },
 ];
 const jsonLd = [
   {
@@ -51,52 +49,52 @@ const jsonLd = [
   description={`Najděte kadeřnictví nebo barbershop kousek od vás: ${pocetText(PROVOZOVNY.length, 'salon', 'salony', 'salonů')} v celé ČR. Hned uvidíte, kdo má otevřeno, telefon i cestu. Bez registrace.`}
   jsonLd={jsonLd}
 >
-  <section class="hero" data-fen>
+  <section class="hero">
     <div class="wrap hero__in">
-      <h1>Najděte svého <em>kadeřníka</em></h1>
-      <p class="hero__sub">Kadeřnictví a barbershopy v celé České republice, i ty bez vlastního webu.</p>
+      <h1>Kadeřnictví a barbershopy ve vašem okolí</h1>
+      <p class="hero__sub">
+        {pocetText(PROVOZOVNY.length, 'salon', 'salony', 'salonů')} v celé ČR s otevírací dobou, telefonem a cestou. Včetně salonů, které nemají vlastní web.
+      </p>
       <div class="hero__srch"><Hledani /></div>
-      <ul class="hero__mesta" aria-label="Nejčastěji hledaná města">
-        {top.slice(0, 8).map((m) => <li><a href={mestoUrl(m.slug)}>{m.nazev}</a></li>)}
-      </ul>
+      <p class="hero__mesta">
+        <span>Často hledané:</span>
+        {top.slice(0, 8).map((m) => <a href={mestoUrl(m.slug)}>{m.nazev}</a>)}
+      </p>
     </div>
   </section>
 
-  <Vybrane />
-
   <section class="rychle" aria-labelledby="rychle-h">
     <div class="wrap">
-      <h2 id="rychle-h" class="rychle__h">Nejbližší salon, který…</h2>
+      <h2 id="rychle-h" class="sr-only">Rychlé hledání v okolí</h2>
       <ul class="rychle__list">
         {
           karty.map((k) => (
             <li>
               <a href={k.href} class="rk">
-                <Picture src={k.foto} alt="" widths={[360, 560, 720]} sizes="(max-width: 640px) 80vw, (max-width: 1000px) 45vw, 270px" formats={['avif', 'webp']} loading="lazy" class="rk__foto" />
-                <span class="rk__stitek" data-zive={k.zive ? '' : undefined}>{k.stitek}</span>
-                <span class="rk__text">
-                  <strong>{k.titul}</strong>
-                  <span>{k.popis}</span>
-                </span>
-                <i class="rk__sipka" aria-hidden="true">→</i>
+                <span class="rk__cislo" data-zive={k.zive ? '' : undefined}>{k.cislo}</span>
+                <strong class="rk__titul">{k.titul}</strong>
+                <span class="rk__popis">{k.popis}</span>
+                <span class="rk__sipka" aria-hidden="true">→</span>
               </a>
             </li>
           ))
         }
       </ul>
       <script type="application/json" id="rychle-tydny" set:html={JSON.stringify(tydny)} />
-      <p class="rychle__pozn">Použijeme vaši polohu jen v prohlížeči, nikam ji neukládáme.</p>
+      <p class="rychle__pozn">Hledání v okolí použije vaši polohu jen v prohlížeči, nikam ji neukládáme.</p>
     </div>
   </section>
 
+  <Vybrane />
 
   <Magazin />
 
   <section class="section majitel">
     <div class="wrap">
-      <p class="majitel__citat">
-        Máte salon? Doplňte <em>ceník, fotky</em> a aktuální otevírací dobu. Zákazníci vás najdou i bez vlastního webu.
-      </p>
+      <div>
+        <h2 class="majitel__h">Máte salon?</h2>
+        <p class="majitel__text">Doplňte ceník, fotky a aktuální otevírací dobu. Profil je zdarma a zákazníci vás najdou i bez vlastního webu.</p>
+      </div>
       <a class="btn" href="/pridat-provozovnu/">Přidat nebo upravit salon</a>
     </div>
   </section>
@@ -120,30 +118,75 @@ const jsonLd = [
   import { stav } from '../scripts/stav';
   // Živý počet salonů, které mají právě otevřeno
   try {
-    const el = document.querySelector<HTMLElement>('.rk__stitek[data-zive]');
+    const el = document.querySelector<HTMLElement>('.rk__cislo[data-zive]');
     const data = document.getElementById('rychle-tydny')?.textContent;
     if (el && data) {
       const n = (JSON.parse(data) as [number, number][][][]).filter((t) => stav(t).open).length;
-      el.textContent = n ? `${n.toLocaleString('cs-CZ')} má teď otevřeno` : 'Teď je většina zavřená, ukážeme kdy otevírají';
+      if (n) el.textContent = `${n.toLocaleString('cs-CZ')} má otevřeno`;
     }
   } catch {
     /* bez živého počtu zůstane statický štítek */
   }
 </script>
 
-<script>
-  import { fen } from '../scripts/fen';
-  const heroFen = document.querySelector<HTMLElement>('[data-fen]');
-  if (heroFen) fen(heroFen);
-</script>
 
 <style>
-  .rychle {
-    padding: clamp(32px, 5vw, 56px) 0 0;
+  .hero {
+    position: relative;
+    z-index: 5;
+    padding: calc(68px + clamp(40px, 7vw, 96px)) 0 clamp(28px, 4vw, 44px);
+    background: var(--paper);
   }
-  .rychle__h {
-    font-size: clamp(1.4rem, 3vw, 1.9rem);
+  .hero__in {
+    max-width: var(--wrap);
+  }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    line-height: 1.04;
+    letter-spacing: -0.035em;
     margin: 0 0 1rem;
+    max-width: 18ch;
+  }
+  .hero__sub {
+    margin: 0 0 2rem;
+    color: var(--ink-soft);
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+    line-height: 1.55;
+    max-width: 52ch;
+  }
+  .hero__srch {
+    max-width: 46rem;
+  }
+  .hero__srch :global(.srch) {
+    max-width: none;
+  }
+  .hero__mesta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 1rem;
+    margin: 1.1rem 0 0;
+    max-width: 46rem;
+    font-size: 0.9rem;
+  }
+  .hero__mesta span {
+    color: var(--ink-soft);
+  }
+  .hero__mesta a {
+    color: var(--ink);
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    text-underline-offset: 0.25em;
+    transition: text-decoration-color 150ms var(--ease-out);
+  }
+  @media (hover: hover) {
+    .hero__mesta a:hover {
+      text-decoration-color: var(--ink);
+    }
+  }
+
+  .rychle {
+    padding: 0;
   }
   .rychle__list {
     list-style: none;
@@ -151,98 +194,75 @@ const jsonLd = [
     padding: 0;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .rychle__list li + li {
+    border-left: 1px solid var(--line);
   }
   .rk {
     position: relative;
-    display: block;
-    aspect-ratio: 4 / 5;
-    border-radius: 20px;
-    overflow: hidden;
-    color: #fff;
-    text-decoration: none;
-    isolation: isolate;
-    background: #222;
-  }
-  .rk :global(.rk__foto),
-  .rk :global(img) {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: -2;
-    transition: transform 0.5s ease;
-  }
-  .rk::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 30%, rgba(0, 0, 0, 0.78) 100%);
-  }
-  .rk:hover :global(img) {
-    transform: scale(1.06);
-  }
-  .rk__stitek {
-    position: absolute;
-    top: 0.85rem;
-    left: 0.85rem;
-    right: 0.85rem;
-    width: fit-content;
-    padding: 0.3rem 0.7rem;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.92);
-    color: var(--ink);
-    font-size: 0.78rem;
-    font-weight: 500;
-    line-height: 1.3;
-  }
-  .rk__stitek[data-zive]::before {
-    content: '';
-    display: inline-block;
-    width: 0.5rem;
-    height: 0.5rem;
-    margin-right: 0.4rem;
-    border-radius: 50%;
-    background: var(--open);
-    vertical-align: 0.05em;
-  }
-  .rk__text {
-    position: absolute;
-    left: 1.1rem;
-    right: 3.2rem;
-    bottom: 1.1rem;
     display: grid;
     gap: 0.2rem;
+    height: 100%;
+    padding: 1.25rem 2.75rem 1.3rem 1.25rem;
+    color: var(--ink);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 150ms var(--ease-out);
   }
-  .rk__text strong {
-    font-size: 1.25rem;
+  .rk:active {
+    background: var(--mint);
+  }
+  @media (hover: hover) {
+    .rk:hover {
+      background: var(--mint);
+      color: var(--ink);
+    }
+    .rk:hover .rk__sipka {
+      transform: translateX(3px);
+      color: var(--ink);
+    }
+  }
+  .rk__cislo {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .rk__cislo[data-zive]::before {
+    content: '';
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--open);
+  }
+  .rk__titul {
+    font-size: 1.05rem;
     font-weight: 600;
-    line-height: 1.15;
+    letter-spacing: -0.01em;
   }
-  .rk__text span {
+  .rk__popis {
     font-size: 0.85rem;
-    opacity: 0.85;
+    color: var(--ink-soft);
+    line-height: 1.4;
   }
   .rk__sipka {
     position: absolute;
-    right: 1rem;
-    bottom: 1.1rem;
-    display: grid;
-    place-items: center;
-    width: 2.2rem;
-    height: 2.2rem;
-    border-radius: 50%;
-    background: var(--accent);
-    font-style: normal;
-    transition: transform 0.2s;
-  }
-  .rk:hover .rk__sipka {
-    transform: translateX(3px);
+    right: 1.1rem;
+    top: 50%;
+    margin-top: -0.6em;
+    color: var(--ink-soft);
+    transition:
+      transform 200ms var(--ease-out),
+      color 150ms var(--ease-out);
   }
   .rychle__pozn {
-    margin: 0.75rem 0 0;
+    margin: 0.65rem 0 0;
     font-size: 0.78rem;
     color: var(--ink-soft);
   }
@@ -250,44 +270,61 @@ const jsonLd = [
     .rychle__list {
       grid-template-columns: 1fr 1fr;
     }
+    .rychle__list li:nth-child(3) {
+      border-left: 0;
+    }
+    .rychle__list li:nth-child(n + 3) {
+      border-top: 1px solid var(--line);
+    }
   }
   @media (max-width: 640px) {
     .hero {
-      padding: calc(68px + 28px) 0 12px !important;
+      padding: calc(68px + 32px) 0 24px;
     }
     .hero h1 {
-      font-size: 2.5rem !important;
-      margin-top: 40px !important;
-      margin-bottom: 1.1rem !important;
+      font-size: 2.15rem;
     }
     .hero__sub {
-      font-size: 0.95rem !important;
-      margin-bottom: 1.25rem !important;
+      margin-bottom: 1.5rem;
     }
-    .hero__mesta li:nth-child(n + 7) {
+    .hero__mesta a:nth-of-type(n + 7) {
       display: none;
     }
-    .rychle {
-      padding-top: 24px;
-    }
-    .rychle__list {
-      grid-template-columns: none !important;
-      grid-auto-flow: column;
-      grid-auto-columns: 72%;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none;
-      margin: 0 calc(-1 * var(--gutter));
-      padding: 0 var(--gutter) 4px;
-      gap: 0.6rem;
-    }
-    .rychle__list li {
-      scroll-snap-align: start;
-    }
     .rk {
-      aspect-ratio: 3 / 4;
+      padding: 1rem 2.25rem 1.05rem 1rem;
+    }
+    .rk__popis {
+      display: none;
     }
   }
+
+  .majitel {
+    padding-block: clamp(48px, 7vw, 88px) clamp(32px, 5vw, 56px);
+  }
+  .majitel .wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem 2rem;
+  }
+  .majitel .wrap > div {
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+    flex: 1 1 28rem;
+  }
+  .majitel .btn {
+    margin-top: 2rem;
+  }
+  .majitel__h {
+    margin: 0 0 0.4rem;
+  }
+  .majitel__text {
+    margin: 0;
+    color: var(--ink-soft);
+    max-width: 56ch;
+  }
+
   .rozcestnik {
     padding: 2rem 0 2.5rem;
     border-top: 1px solid var(--line);
@@ -295,11 +332,9 @@ const jsonLd = [
   }
   .rozcestnik__h {
     margin: 0 0 0.4rem;
-    font-size: 0.72rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
+    color: var(--ink);
   }
   .rozcestnik ul {
     list-style: none;
@@ -316,252 +351,10 @@ const jsonLd = [
     color: var(--ink-soft);
     text-decoration: none;
   }
-  .rozcestnik a:hover {
-    color: var(--ink);
-    text-decoration: underline;
-  }
-  .hero {
-    position: relative;
-    z-index: 5;
-    isolation: isolate;
-    /* + výška průhledné hlavičky, která je nad úvodem */
-    padding: calc(68px + clamp(48px, 9vw, 110px)) 0 clamp(16px, 2.5vw, 28px);
-    text-align: center;
-  }
-  /* Jemný rozmazaný teplý gradient za úvodem */
-  .hero::before {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    inset: -10% -10% 0;
-    background:
-      radial-gradient(38% 45% at 22% 30%, rgb(255 122 50 / 0.42), transparent 70%),
-      radial-gradient(32% 42% at 78% 22%, rgb(255 184 77 / 0.5), transparent 70%),
-      radial-gradient(30% 38% at 62% 72%, rgb(255 95 70 / 0.22), transparent 70%);
-    filter: blur(30px);
-    transform: translate(var(--fx, 0px), var(--fy, 0px));
-    will-change: transform;
-  }
-  .hero :global(.hero__fen) {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    pointer-events: none;
-  }
-  .hero h1 {
-    font-size: clamp(2.3rem, 5.6vw, 3.6rem);
-    line-height: 1.05;
-    margin: 100px auto 1.6rem;
-    max-width: 16ch;
-  }
-  .hero__sub {
-    margin: 0 auto 2.25rem;
-    color: var(--ink-soft);
-    font-size: 1.1rem;
-  }
-  .hero__srch {
-    max-width: 44rem;
-    margin: 0 auto;
-    text-align: left;
-  }
-  .hero__srch :global(.srch) {
-    max-width: none;
-  }
-  .hero__mesta {
-    list-style: none;
-    margin: 1.5rem 0 0;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.5rem;
-    font-size: 0.85rem;
-  }
-  .hero__mesta a {
-    display: inline-block;
-    padding: 0.4em 1em;
-    border: 1px solid rgb(20 20 20 / 0.08);
-    border-radius: 999px;
-    background: rgb(255 255 255 / 0.7);
-    text-decoration: none;
-    color: var(--ink);
-    font-weight: 500;
-  }
-  .hero__mesta a:hover {
-    border-color: var(--ink);
-    color: var(--ink);
-  }
-
-  .o-webu {
-    background: var(--mint);
-  }
-  .dva,
-  .o-webu__in {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
-    gap: 1.5rem 3rem;
-    align-items: start;
-  }
-  .dva > .eyebrow,
-  .o-webu__in > .eyebrow {
-    margin-top: 0.6rem;
-  }
-  .o-webu__text {
-    font-family: var(--f-display);
-    font-size: clamp(1.4rem, 2.6vw, 1.85rem);
-    line-height: 1.3;
-    max-width: 34ch;
-    margin-bottom: 2.5rem;
-  }
-  .cisla {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-    margin: 0;
-  }
-  .cisla div {
-    border-left: 1px solid var(--line);
-    padding-left: 1rem;
-  }
-  .cisla dt {
-    font-family: var(--f-display);
-    font-size: 1.8rem;
-    line-height: 1.1;
-  }
-  .cisla dd {
-    margin: 0.3rem 0 0;
-    font-size: 0.8rem;
-    color: var(--ink-soft);
-  }
-
-  .alt {
-    background: var(--surface);
-    border-block: 1px solid var(--line);
-  }
-
-  .mesta {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
-    column-gap: 2rem;
-  }
-  .mesta a {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.65rem 0;
-    border-bottom: 1px solid var(--line);
-    text-decoration: none;
-    font-size: 0.95rem;
-  }
-  .mesta a:hover span:first-child {
-    text-decoration: underline;
-  }
-  .mesta__praha summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.65rem 0;
-    border-bottom: 1px solid var(--line);
-    font-size: 0.95rem;
-    cursor: pointer;
-    list-style: none;
-  }
-  .mesta__praha summary::-webkit-details-marker {
-    display: none;
-  }
-  .mesta__praha summary span:first-child::after {
-    content: '';
-    display: inline-block;
-    width: 0.4em;
-    height: 0.4em;
-    margin-left: 0.55em;
-    border-right: 1.5px solid currentColor;
-    border-bottom: 1.5px solid currentColor;
-    transform: translateY(-0.2em) rotate(45deg);
-    transition: transform 0.2s;
-  }
-  .mesta__praha details[open] summary span:first-child::after {
-    transform: translateY(0.05em) rotate(-135deg);
-  }
-  .mesta__praha ul {
-    list-style: none;
-    margin: 0;
-    padding: 0 0 0 0.9rem;
-    border-left: 1px solid var(--line);
-  }
-  .mesta__praha ul a {
-    padding: 0.45rem 0;
-    font-size: 0.88rem;
-  }
-  .kraje {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    columns: 2;
-    column-gap: 2.5rem;
-  }
-  .kraje li {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.65rem 0;
-    border-bottom: 1px solid var(--line);
-    break-inside: avoid;
-    font-size: 0.95rem;
-  }
-  .kraje a {
-    text-decoration: none;
-  }
-  .kraje a:hover {
-    text-decoration: underline;
-  }
-
-  .majitel .wrap {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.25rem 2rem;
-    padding: clamp(1.75rem, 4vw, 2.75rem) clamp(1.5rem, 4vw, 3rem);
-    background: #17171a;
-    color: #fff;
-    border-radius: 24px;
-    width: calc(100% - 2 * var(--gutter));
-    max-width: calc(var(--wrap) - 2 * var(--gutter));
-  }
-  .majitel__citat {
-    font-family: var(--f-display);
-    font-size: clamp(1.3rem, 2.6vw, 1.75rem);
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 1.25;
-    max-width: 30ch;
-    margin: 0;
-  }
-  .majitel__citat em {
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  .majitel .btn {
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    border-color: transparent;
-  }
-
-  @media (max-width: 760px) {
-    .dva,
-    .o-webu__in {
-      grid-template-columns: 1fr;
-    }
-    .cisla {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    .kraje {
-      columns: 1;
+  @media (hover: hover) {
+    .rozcestnik a:hover {
+      color: var(--ink);
+      text-decoration: underline;
     }
   }
 </style>

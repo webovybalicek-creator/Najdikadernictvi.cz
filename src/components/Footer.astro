@@ -86,8 +86,10 @@ const p = SITE.provozovatel;
     color: var(--slate-ink);
     --nuzky-logo: var(--accent);
   }
-  .ftr a:hover {
-    color: var(--accent);
+  @media (hover: hover) {
+    .ftr a:hover {
+      color: var(--ink);
+    }
   }
   .ftr__grid {
     display: grid;

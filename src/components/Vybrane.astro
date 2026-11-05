@@ -20,11 +20,8 @@ const mestaSVyberem = mesta.filter((m) => pool.some((x) => x.m === m.slug));
 <section class="vyb" data-vyb data-zobrazit={ZOBRAZIT}>
   <div class="wrap">
     <div class="vyb__hlava">
-      <h2>Vybrané salony</h2>
-      <div class="vyb__sipky">
-        <button type="button" class="vyb__sipka" data-vyb-posun="-1" aria-label="Předchozí">‹</button>
-        <button type="button" class="vyb__sipka" data-vyb-posun="1" aria-label="Další">›</button>
-      </div>
+      <h2>Salony s kompletním profilem</h2>
+      <p class="vyb__pod">Otevírací doba, telefon a adresa ověřené z veřejných zdrojů.</p>
     </div>
     <div class="vyb__mesta" role="tablist" aria-label="Město">
       <button type="button" role="tab" aria-selected="true" data-vyb-mesto="">Všechna města</button>
@@ -58,7 +55,6 @@ const mestaSVyberem = mesta.filter((m) => pool.some((x) => x.m === m.slug));
       karty.forEach((k) => (k.hidden = !vybrane.has(k)));
       // pořadí podle zamíchání
       [...vybrane].forEach((k) => pas.appendChild(k));
-      pas.scrollLeft = 0;
       if (mesto) {
         vice.hidden = false;
         const a = vice.querySelector<HTMLAnchorElement>('[data-vyb-vice-odkaz]')!;
@@ -72,9 +68,6 @@ const mestaSVyberem = mesta.filter((m) => pool.some((x) => x.m === m.slug));
         ukaz(b.dataset.vybMesto!);
       }),
     );
-    sek.querySelectorAll<HTMLButtonElement>('[data-vyb-posun]').forEach((b) =>
-      b.addEventListener('click', () => pas.scrollBy({ left: Number(b.dataset.vybPosun) * pas.clientWidth * 0.8, behavior: 'smooth' })),
-    );
     ukaz('');
     aplikujStav(sek);
   });
@@ -84,54 +77,48 @@ const mestaSVyberem = mesta.filter((m) => pool.some((x) => x.m === m.slug));
   .vyb {
     position: relative;
     z-index: 1;
-    isolation: isolate;
-    padding: clamp(12px, 2vw, 24px) 0 0;
-  }
-  .vyb__hlava {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
+    padding: clamp(40px, 6vw, 72px) 0 0;
   }
   .vyb__hlava h2 {
+    margin: 0 0 0.35rem;
+  }
+  .vyb__pod {
     margin: 0;
-  }
-  .vyb__sipky {
-    display: flex;
-    gap: 0.4rem;
-  }
-  .vyb__sipka {
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    border: 1px solid var(--line);
-    background: #fff;
-    font-size: 1.4rem;
-    line-height: 1;
-    cursor: pointer;
-    color: var(--ink);
-  }
-  .vyb__sipka:hover {
-    border-color: var(--ink);
+    color: var(--ink-soft);
+    font-size: 0.95rem;
   }
   .vyb__mesta {
     display: flex;
-    gap: 0.4rem;
-    margin: 1rem 0 1.25rem;
+    gap: 0.35rem;
+    margin: 1.25rem 0 1.5rem;
     overflow-x: auto;
     scrollbar-width: none;
+    -webkit-tap-highlight-color: transparent;
   }
   .vyb__mesta button {
     flex: none;
     font: inherit;
     font-size: 0.88rem;
     font-weight: 500;
-    padding: 0.45em 1em;
+    padding: 0.42em 0.85em;
     border: 1px solid var(--line);
-    border-radius: 999px;
+    border-radius: var(--radius-sm);
     background: #fff;
-    color: var(--ink);
+    color: var(--ink-soft);
     cursor: pointer;
+    transition:
+      background-color 150ms var(--ease-out),
+      color 150ms var(--ease-out),
+      transform 160ms var(--ease-out);
+  }
+  .vyb__mesta button:active {
+    transform: scale(0.97);
+  }
+  @media (hover: hover) {
+    .vyb__mesta button:hover {
+      color: var(--ink);
+      border-color: #d4d4d8;
+    }
   }
   .vyb__mesta button[aria-selected='true'] {
     background: var(--ink);
@@ -141,36 +128,26 @@ const mestaSVyberem = mesta.filter((m) => pool.some((x) => x.m === m.slug));
   .vyb__pas {
     list-style: none;
     margin: 0;
-    padding: 0 0 0.5rem;
+    padding: 0;
     display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: calc((100% - 3 * 1.25rem) / 4);
-    gap: 1.25rem;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-  }
-  .vyb__pas :global(.karta) {
-    scroll-snap-align: start;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2rem 1.25rem;
   }
   .vyb__pas :global(.viz) {
-    border-radius: 16px;
+    border-radius: var(--radius);
   }
   .vyb__vice {
-    margin: 1rem 0 0;
+    margin: 1.5rem 0 0;
     font-weight: 500;
   }
-  @media (max-width: 860px) {
+  @media (max-width: 960px) {
     .vyb__pas {
-      grid-auto-columns: 46%;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
-  @media (max-width: 520px) {
+  @media (max-width: 400px) {
     .vyb__pas {
-      grid-auto-columns: 78%;
-    }
-    .vyb__sipky {
-      display: none;
+      gap: 1.5rem 0.75rem;
     }
   }
 </style>

@@ -79,7 +79,7 @@ const pruhledna = Astro.url.pathname === '/';
     top: 0;
     z-index: 40;
   }
-  /* Úvodní stránka: průhledná hlavička nad gradientem */
+  /* Úvodní stránka: hlavička bez linky, po posunu dostane bílé pozadí */
   .hdr--pruhledna {
     position: fixed;
     left: 0;
@@ -106,10 +106,15 @@ const pruhledna = Astro.url.pathname === '/';
     width: 2.6rem;
     height: 2.6rem;
     border: 1px solid var(--line);
-    border-radius: var(--radius);
+    border-radius: var(--radius-sm);
     background: var(--surface);
     color: var(--ink);
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 160ms var(--ease-out);
+  }
+  .hdr__burger:active {
+    transform: scale(0.95);
   }
   .hdr__burger svg {
     width: 1.3rem;
@@ -133,7 +138,15 @@ const pruhledna = Astro.url.pathname === '/';
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    box-shadow: 0 16px 40px rgb(20 20 20 / 0.16);
+    box-shadow: 0 16px 40px rgb(17 17 19 / 0.14);
+    transform-origin: top right;
+    animation: mmenu-in 180ms var(--ease-out);
+  }
+  @keyframes mmenu-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px) scale(0.98);
+    }
   }
   .mmenu[hidden] {
     display: none;
@@ -180,8 +193,11 @@ const pruhledna = Astro.url.pathname === '/';
     text-decoration: none;
     white-space: nowrap;
   }
-  nav a:not(.btn):hover {
-    text-decoration: underline;
+  @media (hover: hover) {
+    nav a:not(.btn):hover {
+      text-decoration: underline;
+      text-underline-offset: 0.25em;
+    }
   }
   .hdr__obl {
     position: relative;
