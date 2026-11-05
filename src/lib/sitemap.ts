@@ -3,7 +3,7 @@ import { KRAJE } from './kraje';
 import { PROVOZOVNY, IMPORT_META, mesta, url, mestoUrl, krajUrl, indexovatDetail, indexovatMesto, vsechnyCtvrti, ctvrtUrl } from './data';
 import { SITE } from './config';
 import { KATEGORIE, kategorieUrl } from './blog';
-import { zameryMesta, zamerUrl } from './seo-mesto';
+import { zameryMesta, zamerUrl, MIN_ZAMER } from './seo-mesto';
 
 export type Polozka = { loc: string; lastmod?: string };
 const den = (d: string | Date) => new Date(d).toISOString().slice(0, 10);
@@ -31,7 +31,7 @@ export async function polozky(cast: Cast): Promise<Polozka[]> {
     for (const m of mesta()) {
       if (!indexovatMesto(m)) continue;
       out.push({ loc: mestoUrl(m.slug), lastmod: dataZmena });
-      for (const { z } of zameryMesta(m)) out.push({ loc: zamerUrl(z, m.slug), lastmod: dataZmena });
+      for (const { z, salony } of zameryMesta(m)) if (salony.filter(indexovatDetail).length >= MIN_ZAMER) out.push({ loc: zamerUrl(z, m.slug), lastmod: dataZmena });
     }
     return out;
   }

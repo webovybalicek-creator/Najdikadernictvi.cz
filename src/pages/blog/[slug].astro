@@ -5,6 +5,7 @@ import Base from '../../layouts/Base.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import Hledani from '../../components/Hledani.astro';
 import BlogKarta from '../../components/BlogKarta.astro';
+import KatalogVClanku from '../../components/KatalogVClanku.astro';
 import { clanky, clanekUrl, kategorieUrl, casCteni, datumText, souvisejici, type Clanek } from '../../lib/blog';
 import { SITE } from '../../lib/config';
 import { nejvetsiMesta, mestoUrl } from '../../lib/data';
@@ -17,6 +18,9 @@ export async function getStaticPaths() {
 const { c, vse } = Astro.props as { c: Clanek; vse: Clanek[] };
 const { Content, headings } = await render(c);
 const obsah = headings.filter((h) => h.depth === 2);
+// Obecné články (málo odkazů do katalogu) dostanou blok s daty z katalogu k tématu
+const odkazuNaKatalog = (c.body?.match(/\]\(\/(?!blog\/)[a-z0-9-]+\/[^)]*\)/g) ?? []).length;
+const obecny = odkazuNaKatalog < 3;
 const souvis = souvisejici(vse, c, 9);
 const ctete = souvis.slice(0, 3);
 const dalsi = souvis.slice(3, 9);
@@ -100,6 +104,7 @@ const jsonLd = {
       </aside>
       <div class="text">
         <Content />
+        {obecny && <KatalogVClanku kategorie={c.data.kategorie} />}
         <aside class="ctete-text">
           <p class="toc__h">Čtěte také</p>
           <ul>

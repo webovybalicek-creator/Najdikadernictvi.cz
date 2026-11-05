@@ -1,0 +1,116 @@
+---
+// Blok „V našem katalogu“ pod obecnými články: skutečná data z katalogu k tématu článku
+// (kolik salonů, ve kterých městech), aby článek nebyl jen obecná rada.
+import { PROVOZOVNY, mesta, mestoUrl, indexovatDetail, indexovatMesto, pocetText } from '../lib/data';
+import { ZAMERY, zameryMesta, zamerUrl, MIN_ZAMER } from '../lib/seo-mesto';
+
+interface Props {
+  kategorie: string;
+}
+const { kategorie } = Astro.props;
+
+// Téma článku → výběr z katalogu
+const slug =
+  kategorie === 'Pro pány' ? 'barbershopy' : kategorie === 'Pro ženy' ? 'damska-kadernictvi' : null;
+const z = slug ? ZAMERY.find((x) => x.slug === slug) : undefined;
+
+type Odkaz = { nazev: string; href: string; pocet: number };
+let odkazy: Odkaz[] = [];
+let celkem = 0;
+let nadpis = '';
+let veta = '';
+
+if (z) {
+  const vse = PROVOZOVNY.filter(z.filtr);
+  celkem = vse.length;
+  odkazy = mesta()
+    .filter(indexovatMesto)
+    .flatMap((m) =>
+      zameryMesta(m)
+        .filter((x) => x.z.slug === z.slug && x.salony.filter(indexovatDetail).length >= MIN_ZAMER)
+        .map((x) => ({ nazev: m.nazev, href: zamerUrl(z, m.slug), pocet: x.salony.length })),
+    )
+    .sort((a, b) => b.pocet - a.pocet)
+    .slice(0, 8);
+  nadpis =
+    slug === 'barbershopy' ? 'Barbershopy v katalogu' : slug === 'damska-kadernictvi' ? 'Dámská kadeřnictví v katalogu' : 'Salony otevřené v sobotu';
+  veta =
+    slug === 'barbershopy'
+      ? `V katalogu evidujeme ${pocetText(celkem, 'barbershop', 'barbershopy', 'barbershopů')}. Nejvíc jich je v těchto městech:`
+      : slug === 'damska-kadernictvi'
+        ? `Dámské střihy podle údajů salonů nabízí ${pocetText(celkem, 'salon', 'salony', 'salonů')}. Nejvíc jich je v těchto městech:`
+        : `V sobotu má podle známé otevírací doby otevřeno ${pocetText(celkem, 'salon', 'salony', 'salonů')}. Nejvíc jich je v těchto městech:`;
+}
+if (!odkazy.length) {
+  const sObsahem = PROVOZOVNY.filter(indexovatDetail).length;
+  nadpis = 'Najděte salon v katalogu';
+  veta = `U ${pocetText(sObsahem, 'salonu', 'salonů', 'salonů')} známe otevírací dobu nebo kontakt. Nejvíc jich je v těchto městech:`;
+  odkazy = mesta()
+    .filter(indexovatMesto)
+    .map((m) => ({ nazev: m.nazev, href: mestoUrl(m.slug), pocet: m.provozovny.filter(indexovatDetail).length }))
+    .sort((a, b) => b.pocet - a.pocet)
+    .slice(0, 8);
+}
+---
+
+{
+  odkazy.length > 0 && (
+    <aside class="kvc" aria-label={nadpis}>
+      <p class="kvc__h">{nadpis}</p>
+      <p class="kvc__veta">{veta}</p>
+      <ul>
+        {odkazy.map((o) => (
+          <li>
+            <a href={o.href}>
+              {o.nazev} <span>{o.pocet}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  )
+}
+
+<style>
+  .kvc {
+    margin: 2rem 0;
+    padding: 1.25rem 1.4rem;
+    border-radius: 18px;
+    background: var(--accent-soft);
+  }
+  .kvc__h {
+    margin: 0 0 0.35rem;
+    font-weight: 600;
+    font-size: 1.05rem;
+  }
+  .kvc__veta {
+    margin: 0 0 0.9rem;
+    font-size: 0.95rem;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid var(--line);
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+  a:hover {
+    border-color: var(--ink);
+  }
+  a span {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+</style>

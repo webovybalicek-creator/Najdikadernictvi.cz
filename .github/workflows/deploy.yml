@@ -29,6 +29,9 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+      - name: Kontrola tenkých stránek (jen varování)
+        run: npm run kontrola || true
+
       - name: Kontrola přístupových údajů
         if: env.FTP_PASSWORD == ''
         run: echo "::warning::Chybí secret FTP_PASSWORD – web je sestavený, ale nenahrál se na hosting."

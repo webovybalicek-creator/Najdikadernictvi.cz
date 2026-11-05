@@ -31,6 +31,7 @@ import { KRAJE } from '../../lib/kraje';
 import { DNY, denText, souhrn, schemaSpec } from '../../lib/oteviraci-doba';
 import { SITE } from '../../lib/config';
 import { metaSalonu } from '../../lib/meta';
+import { srovnani } from '../../lib/srovnani';
 
 export function getStaticPaths() {
   return PROVOZOVNY.map((p) => ({ params: { mesto: p.mestoSlug, slug: p.slug }, props: { p } }));
@@ -102,6 +103,8 @@ const mestoObj = mesta().find((x) => x.slug === p.mestoSlug)!; // (mesta() je ca
 const ctvrt = ctvrtSalonu(p);
 const vybery = zameryMesta(mestoObj).filter(({ ids }) => ids.has(p.id));
 const meta = metaSalonu(p, okoli.length);
+// Srovnání s okolím jen u salonů s obsahem (ostatní jsou noindex, ušetří čas buildu)
+const sr = indexovatDetail(p) ? srovnani(p) : null;
 const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
 ---
 
@@ -221,6 +224,32 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
           {p.popis && <p class="popis-majitel">{p.popis}</p>}
           {vety.map((v) => <p>{v}</p>)}
         </section>
+
+        {
+          sr && (sr.fakta.length > 0 || sr.alternativy.length > 0) && (
+            <section class="srov">
+              <h2>Srovnání s okolím</h2>
+              {sr.fakta.length > 0 && <ul class="srov__fakta">{sr.fakta.map((f) => <li>{f}</li>)}</ul>}
+              {
+                sr.alternativy.length > 0 && (
+                  <>
+                    <h3 class="srov__h">Když tady nepochodíte</h3>
+                    <ul class="srov__alt">
+                      {sr.alternativy.map((a) => (
+                        <li>
+                          <span class="srov__popis">{a.popis}</span>
+                          <a href={a.href}>{a.nazev}</a>
+                          <span class="srov__km">{a.vzdalenost}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )
+              }
+              <p class="muted srov__pozn">Spočítáno z otevíracích dob salonů v našem katalogu. Údaje se můžou lišit, před návštěvou je ověřte.</p>
+            </section>
+          )
+        }
       </div>
 
       <div class="mapa-wrap">
@@ -545,6 +574,70 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
   @media (max-width: 860px) {
     .grid {
       grid-template-columns: 1fr;
+    }
+  }
+  .srov__fakta {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .srov__fakta li {
+    position: relative;
+    padding-left: 1.4rem;
+  }
+  .srov__fakta li::before {
+    content: '';
+    position: absolute;
+    left: 0.2rem;
+    top: 0.55em;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .srov__h {
+    font-size: 1rem;
+    margin: 1.4rem 0 0.6rem;
+  }
+  .srov__alt {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .srov__alt li {
+    display: grid;
+    grid-template-columns: 11rem 1fr auto;
+    gap: 0.75rem;
+    align-items: baseline;
+    padding: 0.7rem 1rem;
+  }
+  .srov__alt li + li {
+    border-top: 1px solid var(--line);
+  }
+  .srov__popis {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+  }
+  .srov__km {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .srov__pozn {
+    font-size: 0.78rem;
+    margin-top: 0.75rem;
+  }
+  @media (max-width: 560px) {
+    .srov__alt li {
+      grid-template-columns: 1fr auto;
+    }
+    .srov__popis {
+      grid-column: 1 / -1;
     }
   }
 </style>

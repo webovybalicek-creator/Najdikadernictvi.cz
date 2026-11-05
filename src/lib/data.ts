@@ -221,9 +221,10 @@ export const IMPORT_META = meta as { zdroj: string; importovano: string; pocet: 
 export const maObsah = (p: Provozovna) =>
   !!(p.overeno || p.oteviraciDoba || p.telefon || p.web || p.facebook || p.instagram || p.popis || p.cenik?.length || p.fotky?.length);
 export const indexovatDetail = (p: Provozovna) => maObsah(p);
-/** Stránka obce / čtvrti jde do vyhledávačů, jen když má aspoň jeden salon s obsahem.
- *  Výpis samotných adres z rejstříku je pro čtenáře i Google málo hodnotný. */
-export const indexovatMesto = (m: { provozovny: Provozovna[] }) => m.provozovny.some(indexovatDetail);
+/** Stránka obce / čtvrti jde do vyhledávačů, jen když má aspoň 3 salony s obsahem (otevírací doba, kontakt…).
+ *  Obec s jedním salonem nic nepřidá oproti jeho detailu a výpis samotných adres z rejstříku je málo hodnotný. */
+export const MIN_MESTO = 3;
+export const indexovatMesto = (m: { provozovny: Provozovna[] }) => m.provozovny.filter(indexovatDetail).length >= MIN_MESTO;
 
 export const url = (p: Provozovna) => `/${p.mestoSlug}/${p.slug}/`;
 export const mestoUrl = (slug: string) => `/${slug}/`;
@@ -291,7 +292,7 @@ export function nejvetsiMesta(n: number): MestoVypis[] {
   return [...mestaSloucena()].sort((a, b) => b.provozovny.length - a.provozovny.length).slice(0, n);
 }
 
-function vzdalenostKm(a: Provozovna, b: Provozovna) {
+export function vzdalenostKm(a: Provozovna, b: Provozovna) {
   const R = 6371;
   const dLat = ((b.lat - a.lat) * Math.PI) / 180;
   const dLon = ((b.lon - a.lon) * Math.PI) / 180;

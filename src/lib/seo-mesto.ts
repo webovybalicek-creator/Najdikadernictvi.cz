@@ -76,7 +76,8 @@ export const ZAMERY: Zamer[] = [
 ];
 
 /** Cílené podstránky vznikají jen tam, kde mají aspoň tolik výsledků */
-export const MIN_ZAMER = 3;
+/** Výběr (barbershopy, otevřeno v sobotu…) se generuje až od 5 salonů, menší výpis je tenká stránka */
+export const MIN_ZAMER = 5;
 export const zamerUrl = (z: Zamer, mestoSlug: string) => `/${z.slug}/${mestoSlug}/`;
 const _zamery = new Map<string, { z: Zamer; salony: Provozovna[]; ids: Set<string> }[]>();
 export const zameryMesta = (m: Mesto) => {

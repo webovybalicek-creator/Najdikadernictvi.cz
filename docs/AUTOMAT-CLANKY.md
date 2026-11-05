@@ -10,6 +10,10 @@ Web nesmí působit jako farma generovaných článků. Každý článek musí �
   Datový článek bez dostatku dat (např. méně než 3 salony v hlavní kategorii) nepiš, vezmi další téma.
 - **Obecná témata** (péče o vlasy, střihy) piš jen tehdy, když k nim máš konkrétní, ověřitelný a praktický obsah.
   Žádné obecné rady, které by mohly být kdekoli.
+- **Obecný článek má aspoň 600 slov** a aspoň 3 odkazy do katalogu (město, výběr typu /barbershopy/brno/ nebo konkrétní salon).
+  Pod článek s méně odkazy web sám vloží blok s daty z katalogu, ale ten nenahradí vlastní odkazy v textu.
+- Krátké obecné články (pod 400 slov) z dřívějška postupně rozšiřuj o praktické rady a odkazy do katalogu,
+  ideálně jeden při každém běhu, kdy v zásobníku není silné datové téma.
 - Raději žádný článek než slabý článek. Když nic nesplní laťku, běh skonči bez publikace a napiš proč.
 
 ## Postup jednoho běhu

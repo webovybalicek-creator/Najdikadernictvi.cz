@@ -3,8 +3,8 @@ import Base from '../layouts/Base.astro';
 import Breadcrumb from './Breadcrumb.astro';
 import ProvozovnaRadek from './ProvozovnaRadek.astro';
 import MapaSalonu from './MapaSalonu.astro';
-import { mestoUrl, krajUrl, pocetText, type Mesto, type Provozovna } from '../lib/data';
-import { ZAMERY, zamerUrl, zameryMesta, statistiky, itemListJsonLd, type Zamer } from '../lib/seo-mesto';
+import { mestoUrl, krajUrl, pocetText, indexovatDetail, type Mesto, type Provozovna } from '../lib/data';
+import { ZAMERY, zamerUrl, zameryMesta, statistiky, itemListJsonLd, MIN_ZAMER, type Zamer } from '../lib/seo-mesto';
 import { hhmm } from '../lib/oteviraci-doba';
 import { metaZameru } from '../lib/meta';
 
@@ -37,6 +37,7 @@ const breadcrumb = [
 ---
 
 <Base
+  noindex={salony.filter(indexovatDetail).length < MIN_ZAMER}
   title={meta.title}
   description={meta.description}
   jsonLd={itemListJsonLd(nazev, salony)}
