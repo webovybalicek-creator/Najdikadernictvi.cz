@@ -11,8 +11,9 @@ const mono = (n: string) => {
 
 export function kartaHtml(s: UlozenySalon): string {
   const data = esc(JSON.stringify(s));
-  const foto =
-    s.la && s.lo
+  const foto = s.f
+    ? `<img class="viz__foto" src="${esc(s.f)}" alt="" loading="lazy" onload="this.classList.add('ok')" onerror="this.remove()">`
+    : s.la && s.lo
       ? `<img class="viz__foto" src="/api/panorama.php?lat=${s.la}&lon=${s.lo}&s=maly&v=2" alt="" loading="lazy" onload="this.classList.add('ok')" onerror="this.remove()"><span class="viz__atr" aria-hidden="true">© Mapy.com</span>`
       : '';
   return `<li class="karta">

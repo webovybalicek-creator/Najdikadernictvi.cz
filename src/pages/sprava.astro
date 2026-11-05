@@ -13,9 +13,9 @@ import Breadcrumb from '../components/Breadcrumb.astro';
     <!-- Krok 1: žádost o přihlašovací odkaz -->
     <form class="karta-form" data-sp-zadost hidden novalidate>
       <p>
-        Pošleme vám přihlašovací odkaz e-mailem. Pokud zadáte <strong>e-mail salonu</strong>, který u něj už evidujeme,
-        odkaz přijde hned. Jinak vás nejdřív krátce ověříme (obvykle telefonátem do salonu) a odkaz pošleme do dvou
-        pracovních dnů.
+        Pošleme vám přihlašovací odkaz e-mailem. Přijde hned, když zadáte <strong>e-mail salonu</strong>: ten, který u něj
+        evidujeme, e-mail na doméně webu salonu (např. info@vas-salon.cz), nebo e-mail uvedený na webu salonu. Jinak vás
+        nejdřív krátce ověříme (obvykle telefonátem do salonu) a odkaz pošleme do dvou pracovních dnů.
       </p>
       <label class="pole"><span>Váš e-mail</span><input type="email" name="email" required autocomplete="email" /></label>
       <div class="dva">
@@ -86,13 +86,13 @@ import Breadcrumb from '../components/Breadcrumb.astro';
         <p class="stav-zprava" data-sp-stav2 role="status" aria-live="polite"></p>
         <div class="ulozit">
           <button class="btn" type="submit">Uložit změny</button>
-          <span class="muted mala">Změny se na webu objeví do 24 hodin.</span>
+          <span class="muted mala">Změny se na webu objeví během několika hodin.</span>
         </div>
       </form>
 
       <section class="karta-form">
         <h2>Fotky</h2>
-        <p class="muted mala">Max. 6 fotek, první se zobrazí jako hlavní. Nahrávejte jen vlastní fotky salonu. Pokud jsou na nich lidé, musíte mít jejich souhlas.</p>
+        <p class="muted mala">Max. 6 fotek, první se zobrazí jako hlavní místo pohledu z ulice (v detailu, výpisech i ve vyhledávání). Nahrávejte jen vlastní fotky salonu. Pokud jsou na nich lidé, musíte mít jejich souhlas.</p>
         <ul class="fotky-ed" data-sp-fotky></ul>
         <label class="btn btn--ghost mala-btn foto-nahrat">
           <input type="file" accept="image/jpeg,image/png,image/webp" data-sp-foto-input />
@@ -328,7 +328,7 @@ import Breadcrumb from '../components/Breadcrumb.astro';
       try {
         const r2 = await (await fetch(API, { method: 'POST', body })).json();
         stav2.dataset.typ = r2.ok ? 'ok' : 'chyba';
-        stav2.textContent = r2.ok ? 'Uloženo. Na webu se změny objeví do 24 hodin.' : r2.chyba ?? 'Uložení se nepodařilo.';
+        stav2.textContent = r2.ok ? 'Uloženo. Na webu se změny objeví během několika hodin.' : r2.chyba ?? 'Uložení se nepodařilo.';
       } catch {
         stav2.dataset.typ = 'chyba';
         stav2.textContent = 'Uložení se nepodařilo, zkuste to prosím znovu.';
@@ -366,7 +366,7 @@ import Breadcrumb from '../components/Breadcrumb.astro';
       try {
         const r3 = await (await fetch(API, { method: 'POST', body })).json();
         stav3.dataset.typ = r3.ok ? 'ok' : 'chyba';
-        stav3.textContent = r3.ok ? 'Fotka nahrána. Na webu se objeví do 24 hodin.' : r3.chyba;
+        stav3.textContent = r3.ok ? 'Fotka nahrána. Na webu nahradí pohled z ulice během několika hodin.' : r3.chyba;
         if (r3.ok) vykresliFotky(r3.fotky);
       } catch {
         stav3.dataset.typ = 'chyba';

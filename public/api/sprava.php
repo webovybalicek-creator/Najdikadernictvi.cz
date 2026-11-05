@@ -3,7 +3,9 @@
  * Samoobslužná správa profilu salonu majitelem.
  *
  * POST akce=zadost   salon, url, email, jmeno, telefon      → přihlašovací odkaz e-mailem
- *      (shoduje-li se e-mail s e-mailem salonu v katalogu, odkaz odejde hned; jinak po ručním ověření provozovatelem)
+ *      Odkaz odejde hned, když e-mail prokazatelně patří salonu: je to e-mail salonu v katalogu, je na doméně webu
+ *      salonu, nebo je uvedený přímo na webu salonu (úvodní stránka a kontakty). Jinak žádost čeká na ruční ověření.
+ * GET  akce=blokovat&s=<salon>&e=<email>&t=<podpis>          → „Nejsem to já“: zablokuje e-mail a smaže jeho úpravy a fotky
  * GET  akce=nacti    s, e, x, t                              → uložené údaje, fotky a návštěvnost profilu
  * POST akce=uloz     s, e, x, t, u, data (JSON)              → uložení údajů (na web se dostanou při další synchronizaci)
  * POST akce=foto     s, e, x, t, foto (soubor)               → přidání fotky (max. 6)
@@ -21,6 +23,9 @@ const WEB = 'https://najdikadernictvi.cz';
 const PLATNOST_DNI = 30;
 const MAX_FOTEK = 6;
 const MAX_FOTO = 10 * 1024 * 1024;
+const MAX_ZADOSTI_SALON = 3; // žádostí o přístup k jednomu salonu za 24 h
+// Domény, které salonu „nepatří“ (sociální sítě, freemaily, stavebnice webů, rezervační systémy)
+const SDILENE = '~(^|\.)(facebook|instagram|tiktok|google|goo|youtube|wix|wixsite|webnode|estranky|blogspot|wordpress|squarespace|weebly|webflow|gmail|googlemail|seznam|email|centrum|atlas|volny|post|tiscali|quick|outlook|hotmail|live|icloud|me|yahoo|proton|protonmail|linktr|linktree|business\.site|sites|reservio|noona|booksy|fresha|treatwell|mojeobjednavka|bookio|firmy|najisto|zlatestranky)\.~';
 
 header('X-Robots-Tag: noindex');
 
@@ -75,12 +80,70 @@ $db->exec('CREATE TABLE IF NOT EXISTS profily (
 $db->exec('CREATE TABLE IF NOT EXISTS zadosti (
     id INTEGER PRIMARY KEY AUTOINCREMENT, salon TEXT NOT NULL, url TEXT NOT NULL, email TEXT NOT NULL,
     jmeno TEXT, telefon TEXT, stav TEXT NOT NULL DEFAULT "ceka", vytvoreno TEXT NOT NULL, otisk_ip TEXT NOT NULL)');
+$db->exec('CREATE TABLE IF NOT EXISTS blokace (salon TEXT NOT NULL, email TEXT NOT NULL, vytvoreno TEXT NOT NULL, PRIMARY KEY (salon, email))');
 $db->exec('CREATE TABLE IF NOT EXISTS fotky (salon TEXT NOT NULL, n INTEGER NOT NULL, verze INTEGER NOT NULL, PRIMARY KEY (salon, n))');
+foreach (['zadosti' => 'overeni', 'fotky' => 'email'] as $tab => $sloupec) {
+    try { $db->exec("ALTER TABLE $tab ADD COLUMN $sloupec TEXT"); } catch (Throwable $e) { /* sloupec už existuje */ }
+}
 
 $platneId = fn($s): bool => is_string($s) && preg_match('/^[nwr]\d{1,12}$/', $s) === 1;
 $platnaUrl = fn($u): bool => is_string($u) && preg_match('~^/[a-z0-9\-/]{3,200}/$~', $u) === 1;
 $b64 = fn(string $s): string => rtrim(strtr(base64_encode($s), '+/', '-_'), '=');
 $unb64 = fn(string $s): string => (string)base64_decode(strtr($s, '-_', '+/'));
+
+/** Host z URL bez www */
+function domena(string $url): string
+{
+    $h = strtolower((string)parse_url(preg_match('~^https?://~i', $url) ? $url : "https://$url", PHP_URL_HOST));
+    return preg_replace('/^www\./', '', $h);
+}
+/** Registrovatelná doména (salon.cz z rezervace.salon.cz) */
+function koren(string $d): string
+{
+    $c = explode('.', $d);
+    return implode('.', array_slice($c, -2));
+}
+/** Je e-mail uvedený na webu salonu? Kontroluje úvodní stránku a obvyklé stránky s kontakty. */
+function emailNaWebu(string $email, string $web): bool
+{
+    if (!preg_match('~^https?://~i', $web)) $web = "https://$web";
+    $p = parse_url($web);
+    if (empty($p['host'])) return false;
+    $zaklad = ($p['scheme'] ?? 'https') . '://' . $p['host'] . (isset($p['port']) ? ':' . $p['port'] : '');
+    $ctx = stream_context_create([
+        'http' => ['timeout' => 6, 'follow_location' => 1, 'max_redirects' => 4, 'ignore_errors' => true,
+            'user_agent' => 'najdikadernictvi.cz-overeni/1.0 (+https://najdikadernictvi.cz)'],
+        'ssl' => ['verify_peer' => true, 'verify_peer_name' => true],
+    ]);
+    $cesty = array_unique([rtrim($p['path'] ?? '', '/'), '', '/kontakt', '/kontakty', '/kontakt/', '/contact', '/o-nas']);
+    $zacatek = microtime(true);
+    foreach ($cesty as $cesta) {
+        if (microtime(true) - $zacatek > 15) break;
+        $html = @file_get_contents($zaklad . $cesta, false, $ctx, 0, 1_500_000);
+        if (!$html) continue;
+        $text = strtolower(html_entity_decode(urldecode($html), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        $text = str_replace(['[at]', '(at)', ' @ ', '&#64;', '[zavináč]', '(zavináč)'], '@', $text);
+        if (preg_match('~(?<![a-z0-9._%+\-])' . preg_quote($email, '~') . '(?![a-z0-9\-])~', $text)) return true;
+    }
+    return false;
+}
+/**
+ * Automatické ověření, že e-mail patří salonu. Vrací popis způsobu, nebo null.
+ * $k = záznam z /sprava-overeni.json: ['e' => otisk e-mailu salonu, 'w' => web salonu]
+ */
+function overitEmail(string $email, array $k, ?callable $naWebu = null): ?string
+{
+    $naWebu ??= 'emailNaWebu';
+    if (!empty($k['e']) && hash_equals($k['e'], hash('sha256', $email))) return 'e-mail salonu v katalogu';
+    $web = (string)($k['w'] ?? '');
+    if ($web === '') return null;
+    $domWeb = domena($web);
+    $domEmail = strtolower(substr(strrchr($email, '@') ?: '', 1));
+    if ($domWeb === '' || preg_match(SDILENE, ".$domWeb.")) return null;
+    if ($domEmail !== '' && !preg_match(SDILENE, ".$domEmail.") && koren($domEmail) === koren($domWeb)) return "e-mail na doméně webu salonu ($domWeb)";
+    if ($naWebu($email, $web)) return "e-mail uvedený na webu salonu ($domWeb)";
+    return null;
+}
 
 /** Přihlašovací odkaz platný PLATNOST_DNI dní */
 function odkaz(string $salon, string $url, string $email, callable $podpis, callable $b64): string
@@ -103,7 +166,7 @@ function posli_odkaz(string $salon, string $url, string $email, callable $podpis
 }
 
 /** Ověření přihlášení majitele z parametrů s, e, x, t */
-$prihlaseni = function (array $z) use ($podpis, $unb64, $platneId): array {
+$prihlaseni = function (array $z) use ($podpis, $unb64, $platneId, $db): array {
     $salon = (string)($z['s'] ?? '');
     $email = strtolower($unb64((string)($z['e'] ?? '')));
     $x = (int)($z['x'] ?? 0);
@@ -111,6 +174,9 @@ $prihlaseni = function (array $z) use ($podpis, $unb64, $platneId): array {
         || !hash_equals($podpis("sprava:$salon:$email:$x"), (string)($z['t'] ?? ''))) {
         json_out(403, ['ok' => false, 'chyba' => 'Odkaz je neplatný nebo vypršel. Vyžádejte si nový na stránce salonu.']);
     }
+    $st = $db->prepare('SELECT 1 FROM blokace WHERE salon = ? AND email = ?');
+    $st->execute([$salon, $email]);
+    if ($st->fetchColumn()) json_out(403, ['ok' => false, 'chyba' => 'Přístup ke správě tohoto salonu byl zrušen.']);
     return [$salon, $email];
 };
 
@@ -174,7 +240,7 @@ if (isset($_GET['admin'])) {
                 ? '<a href="?akce=zamitnout&s=' . $p['salon'] . '&t=' . $podpis('zamitnout:' . $p['salon']) . '">Stáhnout z webu</a>'
                 : '<a href="?akce=obnovit&s=' . $p['salon'] . '&t=' . $podpis('obnovit:' . $p['salon']) . '">Obnovit</a>') . '</p>';
     }
-    html_out('Správa profilů', $h . '<p style="color:#6b645a;font-size:13px">Změny se na web propisují automaticky jednou denně (GitHub Actions „Synchronizace profilů“), nebo ručním spuštěním.</p>');
+    html_out('Správa profilů', $h . '<p style="color:#6b645a;font-size:13px">Změny se na web propisují automaticky každé 3 hodiny (GitHub Actions „Synchronizace profilů“), nebo ručním spuštěním.</p>');
 }
 
 $akce = (string)($_GET['akce'] ?? $_POST['akce'] ?? '');
@@ -192,6 +258,29 @@ if (in_array($akce, ['pristup', 'odmitnout'], true) && isset($_GET['z'], $_GET['
         html_out('Přístup schválen', '<p>' . ($ok ? 'Odkaz pro správu jsme poslali na ' . htmlspecialchars($z['email']) . '.' : 'E-mail se nepodařilo odeslat.') . '</p>');
     }
     html_out('Žádost odmítnuta', '<p>Majitel přístup nedostane.</p>');
+}
+if ($akce === 'blokovat' && isset($_GET['s'], $_GET['e'], $_GET['t'])) {
+    $salon = (string)$_GET['s'];
+    $email = strtolower($unb64((string)$_GET['e']));
+    if (!$platneId($salon) || !hash_equals($podpis("blokovat:$salon:$email"), (string)$_GET['t'])) html_out('Neplatný odkaz', '');
+    $db->prepare('INSERT OR IGNORE INTO blokace (salon, email, vytvoreno) VALUES (?,?,?)')->execute([$salon, $email, date('c')]);
+    // Úpravy a fotky blokovaného e-mailu z webu zmizí; skutečný majitel si profil může znovu převzít
+    $st = $db->prepare('SELECT email FROM profily WHERE salon = ?');
+    $st->execute([$salon]);
+    $jehoProfil = $st->fetchColumn() === $email;
+    if ($jehoProfil) $db->prepare('DELETE FROM profily WHERE salon = ?')->execute([$salon]);
+    $st = $db->prepare('SELECT n FROM fotky WHERE salon = ? AND (email = ?' . ($jehoProfil ? ' OR email IS NULL' : '') . ')');
+    $st->execute([$salon, $email]);
+    foreach ($st->fetchAll() as $f) {
+        @unlink("$fotkyDir/$salon/{$f['n']}.jpg");
+        $db->prepare('DELETE FROM fotky WHERE salon = ? AND n = ?')->execute([$salon, $f['n']]);
+    }
+    posli_mail(PRIJEMCE, '[najdikadernictvi.cz] Zablokován přístup ke správě', "Salon: $salon
+Zablokovaný e-mail: $email
+Úpravy a fotky tohoto e-mailu byly odstraněny.
+");
+    html_out('Přístup zablokován', '<p>E-mail ' . htmlspecialchars($email) . ' už nemůže spravovat tento salon a jeho úpravy i fotky jsme z webu odstranili (změna se projeví do několika hodin).</p>'
+        . '<p>Pokud salon spravujete vy, vyžádejte si nový přihlašovací odkaz na jeho stránce.</p>');
 }
 if (in_array($akce, ['zamitnout', 'obnovit'], true) && isset($_GET['s'], $_GET['t'])) {
     $salon = (string)$_GET['s'];
@@ -218,27 +307,57 @@ if ($akce === 'zadost' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $st->execute([$otiskIp]);
     if ((int)$st->fetchColumn() >= 5) json_out(429, ['ok' => false, 'chyba' => 'Příliš mnoho žádostí. Zkuste to prosím později.']);
 
-    // E-mail salonu z katalogu (uložený jen jako otisk) nebo e-mail, který už profil spravuje
-    $hashe = json_decode((string)@file_get_contents(($_SERVER['DOCUMENT_ROOT'] ?: __DIR__ . '/..') . '/sprava-overeni.json'), true) ?: [];
+    $st = $db->prepare('SELECT 1 FROM blokace WHERE salon = ? AND email = ?');
+    $st->execute([$salon, $email]);
+    $blokovany = (bool)$st->fetchColumn();
+
+    // Údaje salonu z katalogu (otisk e-mailu, web); starší formát souboru obsahoval jen otisk
+    $katalog = json_decode((string)@file_get_contents(($_SERVER['DOCUMENT_ROOT'] ?: __DIR__ . '/..') . '/sprava-overeni.json'), true) ?: [];
+    $k = $katalog[$salon] ?? [];
+    if (is_string($k)) $k = ['e' => $k];
     $st = $db->prepare("SELECT email FROM profily WHERE salon = ? AND stav = 'ok'");
     $st->execute([$salon]);
-    $spravce = $st->fetchColumn();
-    $shoda = (isset($hashe[$salon]) && hash_equals($hashe[$salon], hash('sha256', $email))) || ($spravce && $spravce === $email);
+    $spravce = (string)($st->fetchColumn() ?: '');
+    $overeni = $blokovany ? null : ($spravce === $email ? 'stávající správce profilu' : overitEmail($email, (array)$k));
 
-    $db->prepare('INSERT INTO zadosti (salon, url, email, jmeno, telefon, stav, vytvoreno, otisk_ip) VALUES (?,?,?,?,?,?,?,?)')
-        ->execute([$salon, $url, $email, $jmeno ?: null, $tel ?: null, $shoda ? 'automaticky' : 'ceka', date('c'), $otiskIp]);
+    // Limit neověřených žádostí na salon (brání zkoušení e-mailů); ověřený majitel projde vždy
+    if (!$overeni) {
+        $st = $db->prepare('SELECT COUNT(*) FROM zadosti WHERE salon = ? AND vytvoreno >= ? AND overeni IS NULL');
+        $st->execute([$salon, date('c', time() - 86400)]);
+        if ((int)$st->fetchColumn() >= MAX_ZADOSTI_SALON) json_out(429, ['ok' => false, 'chyba' => 'K tomuto salonu přišlo dnes už několik žádostí. Zkuste to prosím zítra.']);
+
+    }
+
+    $db->prepare('INSERT INTO zadosti (salon, url, email, jmeno, telefon, stav, vytvoreno, otisk_ip, overeni) VALUES (?,?,?,?,?,?,?,?,?)')
+        ->execute([$salon, $url, $email, $jmeno ?: null, $tel ?: null, $overeni ? 'automaticky' : ($blokovany ? 'blokovano' : 'ceka'), date('c'), $otiskIp, $overeni]);
     $id = (int)$db->lastInsertId();
+    if ($blokovany) json_out(200, ['ok' => true, 'rezim' => 'kontrola']); // nic neprozrazujeme
 
-    if ($shoda) {
+    $api = WEB . '/api/sprava.php';
+    $blok = fn(string $e) => "$api?akce=blokovat&s=$salon&e=" . $b64($e) . '&t=' . $podpis("blokovat:$salon:$e");
+    if ($overeni) {
         posli_odkaz($salon, $url, $email, $podpis, $b64);
+        // Všichni dosavadní správci se o novém přístupu dozví a můžou ho jedním klikem zrušit
+        $st = $db->prepare("SELECT DISTINCT email FROM zadosti WHERE salon = ? AND email != ? AND stav IN ('automaticky', 'schvaleno')
+            AND email NOT IN (SELECT email FROM blokace WHERE salon = ?)");
+        $st->execute([$salon, $email, $salon]);
+        $predchozi = $st->fetchAll(PDO::FETCH_COLUMN);
+        if ($spravce !== '' && $spravce !== $email) $predchozi[] = $spravce;
+        foreach (array_unique($predchozi) as $spravce) {
+            posli_mail($spravce, 'Někdo další získal přístup ke správě vašeho salonu',
+                "Dobrý den,\n\nk profilu vašeho salonu " . WEB . $url . " získal přístup ke správě e-mail $email ($overeni).\n\n"
+                . "Pokud ho neznáte, zrušte mu přístup a odstraňte jeho úpravy jedním kliknutím:\n" . $blok($email) . "\n\nNajdi kadeřnictví\n");
+        }
+        posli_mail(PRIJEMCE, '[najdikadernictvi.cz] Majitel ověřen automaticky',
+            "Salon: " . WEB . $url . " ($salon)\nE-mail: $email\nJméno: " . ($jmeno ?: '-') . "\nTelefon: " . ($tel ?: '-') . "\nOvěření: $overeni\n\n"
+            . "Zablokovat a odstranit jeho úpravy: " . $blok($email) . "\n");
         json_out(200, ['ok' => true, 'rezim' => 'odkaz']);
     }
-    $api = WEB . '/api/sprava.php';
     posli_mail(
         PRIJEMCE,
         '[najdikadernictvi.cz] Žádost o správu profilu',
         "Salon: " . WEB . $url . " ($salon)\nE-mail: $email\nJméno: " . ($jmeno ?: '-') . "\nTelefon: " . ($tel ?: '-') . "\n\n"
-            . "Ověřte, že žadatel salon opravdu zastupuje (např. zavolejte na telefon salonu z katalogu), a pak:\n\n"
+            . "Automaticky ověřit nešlo (e-mail se neshoduje s e-mailem ani webem salonu). Ověřte, že žadatel salon opravdu zastupuje (např. zavolejte na telefon salonu z katalogu), a pak:\n\n"
             . "Poslat přístup: $api?akce=pristup&z=$id&t=" . $podpis("pristup:$id") . "\n"
             . "Odmítnout: $api?akce=odmitnout&z=$id&t=" . $podpis("odmitnout:$id") . "\n"
     );
@@ -387,7 +506,7 @@ if ($akce === 'foto' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!is_dir("$fotkyDir/$salon")) @mkdir("$fotkyDir/$salon", 0700, true);
     if (!@imagejpeg($img, "$fotkyDir/$salon/$n.jpg", 84)) json_out(500, ['ok' => false, 'chyba' => 'Fotku se nepodařilo uložit.']);
     imagedestroy($img);
-    $db->prepare('INSERT INTO fotky (salon, n, verze) VALUES (?,?,?)')->execute([$salon, $n, time()]);
+    $db->prepare('INSERT INTO fotky (salon, n, verze, email) VALUES (?,?,?,?)')->execute([$salon, $n, time(), $email]);
     json_out(200, ['ok' => true, 'fotky' => $fotkySalonu($salon)]);
 }
 if ($akce === 'smazfoto' && $_SERVER['REQUEST_METHOD'] === 'POST') {

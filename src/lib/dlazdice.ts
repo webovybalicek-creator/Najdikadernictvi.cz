@@ -3,7 +3,7 @@ import { PROVOZOVNY, url, adresa, tyden, type Provozovna } from './data';
 
 export const klicDlazdice = (lat: number, lon: number) => `${Math.floor(lat * 2)}_${Math.floor(lon * 2)}`;
 
-/** Záznam: [lat, lon, název, url, adresa, barber, týden | 0, dětské, id, bezbariérové, karta] */
+/** Záznam: [lat, lon, název, url, adresa, barber, týden | 0, dětské, id, bezbariérové, karta, fotka majitele?] */
 export const zaznam = (p: Provozovna) => [
   Math.round(p.lat * 1e4) / 1e4,
   Math.round(p.lon * 1e4) / 1e4,
@@ -16,6 +16,7 @@ export const zaznam = (p: Provozovna) => [
   p.id,
   p.bezbarierove === 'yes' || p.bezbarierove === 'limited' ? 1 : 0,
   p.platbaKartou === 'yes' ? 1 : 0,
+  ...(p.fotky?.[0] ? [p.fotky[0]] : []),
 ];
 
 /** Bitové příznaky pro lehký přehled všech bodů na mapě */

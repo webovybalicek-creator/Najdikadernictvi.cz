@@ -16,6 +16,7 @@ const data = JSON.stringify({
   ...(p.typ === 'barber' ? { b: 1 } : {}),
   la: p.lat,
   lo: p.lon,
+  ...(p.fotky?.[0] ? { f: p.fotky[0] } : {}),
 });
 ---
 

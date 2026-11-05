@@ -8,6 +8,7 @@ export interface UlozenySalon {
   b?: 1; // barbershop
   la?: number;
   lo?: number;
+  f?: string; // fotka od majitele
   c?: number; // čas uložení
 }
 

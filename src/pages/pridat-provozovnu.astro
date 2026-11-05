@@ -18,7 +18,7 @@ import { SITE } from '../lib/config';
         <ul class="vyhody">
           <li><strong>Kompletní profil</strong> s telefonem, otevírací dobou a službami se zobrazuje výš ve výpisech.</li>
           <li><strong>Ceník a služby</strong> pomáhají zákazníkům rozhodnout se ještě před zavoláním.</li>
-          <li><strong>Fotky salonu</strong> nám pošlete e-mailem na <a href={`mailto:${SITE.email}`}>{SITE.email}</a> (jen fotky, ke kterým máte práva).</li>
+          <li><strong>Vlastní fotky a správa profilu</strong>: salon, který už v katalogu je, si spravujete sami. Na jeho stránce klikněte na „Spravovat profil“, nahrajte fotky (nahradí pohled z ulice) a upravte údaje. Zdarma a bez čekání.</li>
         </ul>
         <p class="muted mala">
           Chcete salon z katalogu odstranit? Vyberte „Odstranit salon“. Žádosti o odstranění vyřizujeme přednostně.
@@ -40,6 +40,11 @@ import { SITE } from '../lib/config';
         </div>
 
         <p class="vybrany" data-vybrany hidden></p>
+        <div class="sam" data-sam hidden>
+          <strong>Spravujte profil sami, hned a zdarma</strong>
+          <p>Nahrajte vlastní fotky (nahradí pohled z ulice), doplňte ceník, otevírací dobu a kontakty. Stačí e-mail salonu nebo e-mail na doméně jeho webu a přihlašovací odkaz přijde hned.</p>
+          <a class="btn" data-sam-odkaz href="/hledat/">Najít svůj salon a spravovat profil</a>
+        </div>
 
         <div class="pole">
           <label for="f-nazev">Název salonu</label>
@@ -129,7 +134,16 @@ import { SITE } from '../lib/config';
     vybrany.innerHTML = `Salon: <a href="${salon.replace(/"/g, '')}">${(nazev ?? salon).replace(/[<>&]/g, '')}</a>`;
   }
 
+  // Úprava existujícího salonu: nabídnout samoobslužnou správu (/sprava/)
+  const sam = form.querySelector<HTMLElement>('[data-sam]')!;
+  const id = q.get('id');
+  if (salon && salon.startsWith('/') && id && /^[nwr]\d{1,12}$/.test(id)) {
+    sam.querySelector<HTMLAnchorElement>('[data-sam-odkaz]')!.href = `/sprava/?salon=${id}&u=${encodeURIComponent(salon)}`;
+    sam.querySelector<HTMLAnchorElement>('[data-sam-odkaz]')!.textContent = 'Spravovat profil salonu';
+  }
+
   const prepni = () => {
+    sam.hidden = (form.querySelector('input[name=typ]:checked') as HTMLInputElement).value !== 'uprava';
     const odstraneni = (form.querySelector('input[name=typ]:checked') as HTMLInputElement).value === 'odstraneni';
     form.querySelectorAll<HTMLElement>('[data-skryt-odstraneni]').forEach((el) => (el.hidden = odstraneni));
   };
@@ -176,6 +190,17 @@ import { SITE } from '../lib/config';
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
     gap: clamp(2rem, 6vw, 5rem);
     align-items: start;
+  }
+  .sam {
+    background: var(--bg, #f6f4ef);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    margin: 0 0 1.5rem;
+  }
+  .sam p {
+    margin: 0.35rem 0 0.9rem;
+    font-size: 0.95rem;
   }
   .vyhody {
     padding-left: 1.1rem;

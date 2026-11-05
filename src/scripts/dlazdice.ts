@@ -1,5 +1,5 @@
 // Načítání dlaždic se salony (/data/dlazdice/<klíč>.json) a lehkého přehledu bodů (/data/body.json)
-export type Zaznam = [number, number, string, string, string, 0 | 1, [number, number][][] | 0, 0 | 1, string, 0 | 1, 0 | 1];
+export type Zaznam = [number, number, string, string, string, 0 | 1, [number, number][][] | 0, 0 | 1, string, 0 | 1, 0 | 1, string?];
 
 export const klic = (lat: number, lon: number) => `${Math.floor(lat * 2)}_${Math.floor(lon * 2)}`;
 const cache = new Map<string, Promise<Zaznam[]>>();

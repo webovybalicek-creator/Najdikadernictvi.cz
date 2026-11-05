@@ -271,7 +271,7 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
           <h2>{p.overeno ? 'Změna údajů?' : 'Je to váš salon?'}</h2>
           <p>{p.overeno ? 'Údaje ověřil majitel. Pokud se něco změnilo, dejte nám vědět.' : 'Ověřte profil a doplňte ceník, popis, rezervace a aktuální otevírací dobu. Je to zdarma.'}</p>
           <a class="btn" href={`/sprava/?salon=${p.id}&u=${encodeURIComponent(url(p))}`}>Spravovat profil</a>
-          <p class="majitel__alt"><a href={`/pridat-provozovnu/?salon=${encodeURIComponent(url(p))}&nazev=${encodeURIComponent(p.nazev)}`}>Nebo nám pošlete změny formulářem</a></p>
+          <p class="majitel__alt"><a href={`/pridat-provozovnu/?salon=${encodeURIComponent(url(p))}&nazev=${encodeURIComponent(p.nazev)}&id=${p.id}`}>Nebo nám pošlete změny formulářem</a></p>
         </div>
       </div>
     </div>
