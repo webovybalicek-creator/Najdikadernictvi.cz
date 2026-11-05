@@ -197,28 +197,31 @@
   .srch__geo {
     display: inline-flex;
     align-items: center;
-    gap: 0.4em;
+    gap: 0.45em;
     padding: 0 1.1em;
     height: var(--srch-h);
     border-radius: 8px;
-    background: transparent;
-    font-size: 0.88rem;
-    font-weight: 500;
+    background: var(--accent);
+    font-size: 0.92rem;
+    font-weight: 600;
     white-space: nowrap;
     text-decoration: none;
-    color: var(--ink);
+    color: #fff;
     -webkit-tap-highlight-color: transparent;
     transition:
       background-color 150ms var(--ease-out),
       transform 160ms var(--ease-out);
+  }
+  .srch__geo svg {
+    stroke-width: 2;
   }
   .srch__geo:active {
     transform: scale(0.97);
   }
   @media (hover: hover) {
     .srch__geo:hover {
-      background: var(--mint);
-      color: var(--ink);
+      background: #c94812;
+      color: #fff;
     }
   }
   @media (max-width: 560px) {
@@ -234,9 +237,7 @@
       flex: 1;
       justify-content: center;
     }
-    .srch__geo {
-      background: var(--mint);
-    }
+
   }
   .srch__res {
     position: absolute;
