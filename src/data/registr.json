@@ -30199,6 +30199,19 @@
 "lon": 16.263652
 },
 {
+"id": "r15986551",
+"kodAdm": 15986551,
+"nazev": null,
+"ulice": "Pálená",
+"cisloDomu": "117",
+"psc": "572 01",
+"mesto": "Polička",
+"cast": "Polička-Město",
+"kraj": "pardubicky-kraj",
+"lat": 49.715417,
+"lon": 16.264281
+},
+{
 "id": "r15986977",
 "kodAdm": 15986977,
 "nazev": null,
@@ -46852,6 +46865,19 @@
 "lon": 16.595313
 },
 {
+"id": "r19107749",
+"kodAdm": 19107749,
+"nazev": null,
+"ulice": "Úvoz",
+"cisloDomu": "489/24",
+"psc": "602 00",
+"mesto": "Brno",
+"cast": "Staré Brno",
+"kraj": "jihomoravsky-kraj",
+"lat": 49.193634,
+"lon": 16.595628
+},
+{
 "id": "r19107901",
 "kodAdm": 19107901,
 "nazev": null,
@@ -61956,19 +61982,6 @@
 "kraj": "stredocesky-kraj",
 "lat": 50.027741,
 "lon": 15.203271
-},
-{
-"id": "r21154741",
-"kodAdm": 21154741,
-"nazev": "Stavby-Marhityč s.r.o.",
-"ulice": "Rubešova",
-"cisloDomu": "60",
-"psc": "280 02",
-"mesto": "Kolín",
-"cast": "Kolín I",
-"kraj": "stredocesky-kraj",
-"lat": 50.028034,
-"lon": 15.203507
 },
 {
 "id": "r21154937",
@@ -125554,19 +125567,6 @@
 "lon": 17.099438
 },
 {
-"id": "r27395731",
-"kodAdm": 27395731,
-"nazev": null,
-"ulice": null,
-"cisloDomu": "458",
-"psc": "582 53",
-"mesto": "Štoky",
-"cast": null,
-"kraj": "kraj-vysocina",
-"lat": 49.504169,
-"lon": 15.587387
-},
-{
 "id": "r27396789",
 "kodAdm": 27396789,
 "nazev": null,
@@ -128388,6 +128388,19 @@
 "lon": 14.527831
 },
 {
+"id": "r27918874",
+"kodAdm": 27918874,
+"nazev": "ALMMOT s.r.o.",
+"ulice": "Bělohorská",
+"cisloDomu": "2426/205",
+"psc": "169 00",
+"mesto": "Praha",
+"cast": "Praha 6",
+"kraj": "praha",
+"lat": 50.077425,
+"lon": 14.33927
+},
+{
 "id": "r27923185",
 "kodAdm": 27923185,
 "nazev": null,
@@ -128971,6 +128984,19 @@
 "kraj": "stredocesky-kraj",
 "lat": 50.31135,
 "lon": 14.915847
+},
+{
+"id": "r28024877",
+"kodAdm": 28024877,
+"nazev": null,
+"ulice": "Šípková",
+"cisloDomu": "279",
+"psc": "251 62",
+"mesto": "Mukařov",
+"cast": "Srbín",
+"kraj": "stredocesky-kraj",
+"lat": 49.986692,
+"lon": 14.742117
 },
 {
 "id": "r28026764",
