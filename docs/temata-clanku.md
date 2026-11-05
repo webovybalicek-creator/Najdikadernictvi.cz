@@ -4,11 +4,8 @@ Automatická úloha bere témata shora. Hotové téma přesune do sekce „Hotov
 Nová témata přidávej na konec zásobníku. Kategorie: Pro pány | Pro ženy | Péče o vlasy | Rady a návody.
 
 ## Zásobník
-- Kadeřnictví v Ostravě otevřená v sobotu | Rady a návody | Data: ostrava
-- Kadeřnictví v Olomouci otevřená večer a o víkendu | Rady a návody | Data: olomouc
 - Kadeřnictví v Plzni otevřená v sobotu | Rady a návody | Data: plzen
 - Barbershopy v Praze otevřené v neděli | Pro pány | Data: praha
-- Kadeřnictví v Hradci Králové a Pardubicích o víkendu | Rady a návody | Data: hradec-kralove
 - Mikádo (bob) 2026: druhy a komu sluší | Pro ženy
 - Pixie střih: pro koho je a jak ho udržovat | Pro ženy
 - Jak ostříhat vlasy strojkem doma (pánský střih) | Pro pány
@@ -63,3 +60,6 @@ Nová témata přidávej na konec zásobníku. Kategorie: Pro pány | Pro ženy 
 - Dětská kadeřnictví v Brně → přeskočeno (2026-10-30): v katalogu žádné brněnské salony označené jako dětské
 - Dětská kadeřnictví v Praze → přeskočeno (2026-10-30): v katalogu žádné pražské salony označené jako dětské
 - Barbershopy v Plzni → barbershopy-plzen.md (2026-11-04)
+- Kadeřnictví v Ostravě otevřená v sobotu → přeskočeno (2026-11-05): málo dat, v sobotu jen 3 salony a bez přesných adres
+- Kadeřnictví v Olomouci večer a o víkendu → přeskočeno (2026-11-05): v katalogu u olomouckých salonů žádná otevírací doba
+- Kadeřnictví v Hradci Králové a Pardubicích o víkendu → kadernictvi-hradec-kralove-pardubice-vikend.md (2026-11-05)
