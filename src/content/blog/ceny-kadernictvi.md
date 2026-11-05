@@ -41,6 +41,6 @@ Tabulka shrnuje ceníky několika salonů v Brně a Praze a údaje z článků c
 
 ## Jak najít salon v okolí a porovnat ho
 
-V našem katalogu najdete u ověřených salonů i ceník. U ostatních je tu telefon, takže se na cenu můžete zeptat předem. Začněte výběrem [podle kraje](/kraje/), [na mapě](/mapa/) nebo přes [salony ve vašem okolí](/okoli/).
+V našem katalogu najdete u ověřených salonů i ceník. U ostatních je tu telefon, takže se na cenu můžete zeptat předem. Začněte [vyhledáním podle města](/), [na mapě](/mapa/) nebo přes [salony ve vašem okolí](/okoli/).
 
 **Zdroje:** [TN.cz: Kadeřnictví zdražují (data ČSÚ)](https://tn.nova.cz/zpravodajstvi/clanek/482472-kadernictvi-zdrazuji-nejvice-si-priplati-muzi-vyssi-ceny-ale-cekaji-i-zeny), [Energozrouti.cz: kadeřník o cenách a spropitném](https://energozrouti.cz/clanek/kadernik-otevrene-promluvil-o-spropitnem-od-cechu), ceníky salonů [Gardin Brno](https://gardin.cz/cenik/) a [Cutegory Brno](https://www.cutegory.cz/cenik-kadernictvi-brno) (stav říjen 2026).

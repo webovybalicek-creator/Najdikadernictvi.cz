@@ -23,7 +23,7 @@ for (const m of seznam) {
   if (!skupiny.has(p)) skupiny.set(p, []);
   skupiny.get(p)!.push(m);
 }
-const breadcrumb = [{ nazev: 'Kraje', href: '/kraje/' }, { nazev: k.nazev }];
+const breadcrumb = [{ nazev: k.nazev }];
 ---
 
 <Base

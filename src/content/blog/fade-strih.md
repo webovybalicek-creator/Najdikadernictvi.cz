@@ -35,6 +35,6 @@ Fade odrůstá rychle, po 2–3 týdnech už přechod není tak čistý. Kdo chc
 
 ## Kde fade nechat udělat
 
-Nejlepší volbou je [barbershop](/barbershopy/brno/) nebo pánské kadeřnictví, které má fade v ceníku a ukázky na Instagramu. Přehled barbershopů ve vašem městě najdete přes [kraje](/kraje/) nebo na [mapě](/mapa/), kde si zapnete filtr „Barbershopy“.
+Nejlepší volbou je [barbershop](/barbershopy/brno/) nebo pánské kadeřnictví, které má fade v ceníku a ukázky na Instagramu. Přehled barbershopů ve vašem městě najdete přes [vyhledávání](/) nebo na [mapě](/mapa/), kde si zapnete filtr „Barbershopy“.
 
 Do domácí péče se hodí matná pasta nebo hlína. Jak vybrat správný styling, radíme v článku [Pomáda, vosk, hlína, nebo gel?](/blog/pomada-vosk-hlina-gel/)

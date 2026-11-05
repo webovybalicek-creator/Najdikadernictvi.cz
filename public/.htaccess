@@ -13,6 +13,9 @@ ErrorDocument 404 /404.html
   RewriteCond %{HTTP_HOST} ^www\. [NC]
   RewriteRule ^ https://najdikadernictvi.cz%{REQUEST_URI} [L,R=301]
 
+  # Zrušený přehled krajů – hledání je na úvodní stránce
+  RewriteRule ^kraje/?$ / [L,R=301]
+
   # Překlep v adrese statistiky
   RewriteRule ^navstevnost/?$ /navstenost/ [L,R=301]
 </IfModule>

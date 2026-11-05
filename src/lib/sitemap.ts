@@ -18,7 +18,7 @@ export async function polozky(cast: Cast): Promise<Polozka[]> {
     const nejnovejsi = blog.reduce((m, c) => (c.data.datum > m ? c.data.datum : m), new Date(0));
     return [
       { loc: '/', lastmod: dataZmena },
-      ...['/kraje/', '/mapa/'].map((loc) => ({ loc, lastmod: dataZmena })),
+      ...['/mapa/'].map((loc) => ({ loc, lastmod: dataZmena })),
       ...KRAJE.map((k) => ({ loc: krajUrl(k.slug), lastmod: dataZmena })),
       { loc: '/blog/', lastmod: den(nejnovejsi) },
       ...KATEGORIE.map((k) => ({ loc: kategorieUrl(k), lastmod: den(nejnovejsi) })),

@@ -13,7 +13,7 @@ Najít kadeřníka, kterému můžete věřit, chvíli trvá. Pár jednoduchých
 
 ## 1. Začněte v okolí
 
-Kadeřnictví by mělo být dostupné. Pokud se má z návštěvy stát pravidelná rutina, je praktické mít salon blízko domova nebo práce. V katalogu si můžete zobrazit [salony podle města](/kraje/) a u každého z nich vidíte i další provozovny v okolí.
+Kadeřnictví by mělo být dostupné. Pokud se má z návštěvy stát pravidelná rutina, je praktické mít salon blízko domova nebo práce. V katalogu si můžete zobrazit [salony podle města](/) a u každého z nich vidíte i další provozovny v okolí.
 
 ## 2. Podívejte se na ukázky práce
 
