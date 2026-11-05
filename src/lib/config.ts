@@ -14,7 +14,6 @@ export const SITE = {
     ico: '03051820',
     sidlo: 'Nerudova 765/10, 251 01 Říčany',
     zapis: 'zapsaný v živnostenském rejstříku vedeném Městským úřadem Říčany',
-    telefon: '+420 723 933 774',
     /** Hlavní činnost provozovatele (tvorba webů) – posiluje důvěryhodnost na stránce O webu */
     web: 'https://www.webovybalicek.cz',
   },
