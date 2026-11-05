@@ -13,6 +13,10 @@ export const SITE = {
     nazev: 'Vladimír Fischer',
     ico: '03051820',
     sidlo: 'Nerudova 765/10, 251 01 Říčany',
+    zapis: 'zapsaný v živnostenském rejstříku vedeném Městským úřadem Říčany',
+    telefon: '+420 723 933 774',
+    /** Hlavní činnost provozovatele (tvorba webů) – posiluje důvěryhodnost na stránce O webu */
+    web: 'https://www.webovybalicek.cz',
   },
   /** Ověření v Google Search Console (obsah meta tagu google-site-verification) */
   googleOvereni: '',

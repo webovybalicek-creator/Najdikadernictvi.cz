@@ -12,13 +12,13 @@ const p = SITE.provozovatel;
         <>
           Správcem osobních údajů je {p.nazev}
           {p.ico && <>, IČO {p.ico}</>}
-          {p.sidlo && <>, se sídlem {p.sidlo}</>}.
+          {p.sidlo && <>, se sídlem {p.sidlo}</>}{p.zapis && <>, {p.zapis}</>}.
         </>
       ) : (
         <>Správcem osobních údajů je provozovatel webu {SITE.domena}.</>
       )
     }{' '}
-    Kontakt: <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+    Kontakt: <a href={`mailto:${SITE.email}`}>{SITE.email}</a>{p.telefon && <>, tel. {p.telefon}</>}.
   </p>
 
   <h2>Údaje o salonech</h2>

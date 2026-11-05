@@ -7,17 +7,18 @@ const p = SITE.provozovatel;
 <Text title="Kontakt" description="Kontakt na provozovatele webu Najdi kadeřnictví.">
   <p class="lead">Máte dotaz, připomínku nebo nápad na článek? Napište nám.</p>
   <p>
-    E-mail: <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+    E-mail: <a href={`mailto:${SITE.email}`}>{SITE.email}</a><br />
+    Telefon: <a href={`tel:${p.telefon.replace(/\s/g, '')}`}>{p.telefon}</a>
   </p>
-  {
-    p.nazev && (
-      <p>
-        Provozovatel: {p.nazev}
-        {p.ico && <><br />IČO: {p.ico}</>}
-        {p.sidlo && <><br />Sídlo: {p.sidlo}</>}
-      </p>
-    )
-  }
+  <h2>Provozovatel</h2>
+  <p>
+    {p.nazev}<br />
+    IČO: {p.ico}<br />
+    Sídlo: {p.sidlo}<br />
+    {p.zapis.charAt(0).toUpperCase() + p.zapis.slice(1)}<br />
+    Web: <a href={p.web} rel="noopener">{p.web.replace('https://', '')}</a>
+  </p>
+  <p>Kdo web provozuje a proč vznikl, najdete na stránce <a href="/o-webu/#kdo-za-webem-stoji">O webu</a>.</p>
   <h2>Údaje o salonu</h2>
   <p>
     Přidání, opravu nebo odstranění salonu nejrychleji vyřídíte přes <a href="/pridat-provozovnu/">formulář pro majitele</a>.

@@ -3,7 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
 import ProvozovnaRadek from '../../../components/ProvozovnaRadek.astro';
 import MapaSalonu from '../../../components/MapaSalonu.astro';
-import { vsechnyCtvrti, ctvrti, ctvrtUrl, mestoUrl, krajUrl, pocetText, type Ctvrt } from '../../../lib/data';
+import { vsechnyCtvrti, ctvrti, indexovatMesto, ctvrtUrl, mestoUrl, krajUrl, pocetText, type Ctvrt } from '../../../lib/data';
 import { statistiky, itemListJsonLd } from '../../../lib/seo-mesto';
 import { hhmm } from '../../../lib/oteviraci-doba';
 import { metaMesta } from '../../../lib/meta';
@@ -39,6 +39,7 @@ const breadcrumb = [
   title={meta.title}
   description={meta.description}
   jsonLd={itemListJsonLd(`Kadeřnictví ${misto}`, s)}
+  noindex={!indexovatMesto(c)}
 >
   <div class="wrap section">
     <Breadcrumb items={breadcrumb} />

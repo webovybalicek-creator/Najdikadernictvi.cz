@@ -4,7 +4,9 @@ import { krajUrl } from '../lib/data';
 import { SITE } from '../lib/config';
 import Logo from './Logo.astro';
 
+const { reklamy = false } = Astro.props as { reklamy?: boolean };
 const rok = new Date().getFullYear();
+const p = SITE.provozovatel;
 ---
 
 <footer class="ftr">
@@ -36,12 +38,12 @@ const rok = new Date().getFullYear();
         <li><a href="/pro-salony/">Odznak pro salony</a></li>
         <li><a href="/ochrana-osobnich-udaju/">Ochrana osobních údajů</a></li>
         <li><a href="/podminky-uziti/">Podmínky užití</a></li>
-        {SITE.adsense && <li><a href="#" data-cookies>Nastavení cookies</a></li>}
+        {reklamy && <li><a href="#" data-cookies>Nastavení cookies</a></li>}
       </ul>
     </div>
   </div>
   <div class="wrap ftr__bottom">
-    <p>© {rok} {SITE.domena}</p>
+    <p>© {rok} {SITE.domena} · provozuje <a href="/o-webu/#kdo-za-webem-stoji">{p.nazev}</a>, IČO {p.ico}</p>
     <p>
       Data o provozovnách: © přispěvatelé <a href="https://www.openstreetmap.org/copyright" rel="noopener"
         >OpenStreetMap</a
@@ -52,7 +54,7 @@ const rok = new Date().getFullYear();
 </footer>
 
 {
-  SITE.adsense && (
+  reklamy && (
     <script is:inline>
       // Znovu otevře lištu souhlasu (CMP Googlu z AdSense)
       document.addEventListener('click', function (e) {

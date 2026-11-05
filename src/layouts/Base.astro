@@ -24,6 +24,8 @@ const og = {
   h: obrazek?.h ?? 630,
 };
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
+// Reklamy jen na stránkách s plnohodnotným obsahem (ne na chudých detailech, hledání apod.)
+const reklamy = !!SITE.adsense && SITE.indexovat && !noindex;
 const robots = !SITE.indexovat || noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large';
 // Značku přidat jen ke krátkým titulkům – u dlouhých by Google usekl to důležité (název webu ukazuje zvlášť)
 const fullTitle = title.includes(SITE.nazev) || title.length > 42 ? title : `${title} | ${SITE.nazev}`;
@@ -62,7 +64,7 @@ const fullTitle = title.includes(SITE.nazev) || title.length > 42 ? title : `${t
     <meta name="twitter:image" content={og.src} />
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
     {
-      SITE.adsense && (
+      reklamy && (
         <>
           <script is:inline set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});`} />
           <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${SITE.adsense}`} crossorigin="anonymous" />
@@ -77,7 +79,7 @@ const fullTitle = title.includes(SITE.nazev) || title.length > 42 ? title : `${t
     <main id="obsah">
       <slot />
     </main>
-    <Footer />
+    <Footer reklamy={reklamy} />
     <script>
       import { nuzkyNaTlacitka } from '../scripts/nuzky';
       import { doplnHodnoceni } from '../scripts/hodnoceni-souhrn';

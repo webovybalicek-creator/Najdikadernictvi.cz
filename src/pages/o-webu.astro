@@ -2,6 +2,7 @@
 import Text from '../layouts/Text.astro';
 import { PROVOZOVNY, IMPORT_META, mestaSloucena, pocetText } from '../lib/data';
 import { SITE } from '../lib/config';
+const p = SITE.provozovatel;
 const aktualizace = new Date(IMPORT_META.importovano).toLocaleDateString('cs-CZ');
 const zOsm = PROVOZOVNY.filter((p) => p.zdroj === 'osm').length;
 const zRzp = PROVOZOVNY.length - zOsm;
@@ -45,11 +46,25 @@ const zRzp = PROVOZOVNY.length - zOsm;
       zpravidla do několika dní od nahlášení.
     </li>
     <li>
-      <strong>Články.</strong> Rady a tipy píše redakce webu na základě obecně dostupných informací a zkušeností z praxe.
-      Nejsou placenou reklamou. Fotky jsou z Unsplash pod jejich licencí, autor je uveden u každé fotky.
+      <strong>Články.</strong> Přednost mají články postavené na datech z našeho katalogu (otevírací doby, salony
+      v konkrétních městech). Při přípravě textů pomáhají AI nástroje, čísla a tvrzení ale vždy vychází z katalogu nebo
+      z uvedených zdrojů. Za obsah odpovídá provozovatel webu. Články nejsou placenou reklamou. Fotky jsou z Unsplash
+      pod jejich licencí, autor je uveden u každé fotky.
     </li>
     <li><strong>Soukromí.</strong> Nezveřejňujeme soukromé údaje osob. Kdokoli může požádat o opravu nebo odstranění záznamu.</li>
   </ul>
+
+  <h2 id="kdo-za-webem-stoji">Kdo za webem stojí</h2>
+  <p>
+    Web provozuje <strong>{p.nazev}</strong> z Říčan u Prahy. Živí se tvorbou webových stránek
+    (<a href={p.web} rel="noopener">{p.web.replace('https://', '')}</a>), mimo jiné i pro kadeřnictví a barbershopy.
+    Při té práci se ukázalo, že spousta dobrých salonů žádný web nemá a zákazníci je na internetu těžko hledají, i když
+    mají otevřeno přesně tehdy, kdy je potřebujete. Katalog má tohle hledání zjednodušit.
+  </p>
+  <p>
+    Web je nezávislý, nepatří žádnému řetězci salonů ani rezervačnímu systému. Provoz financuje provozovatel, časem
+    ho doplní reklama (Google AdSense), která je vždy zřetelně oddělená od obsahu.
+  </p>
 
   <h2>Jste majitel salonu?</h2>
   <p>
@@ -59,14 +74,8 @@ const zRzp = PROVOZOVNY.length - zOsm;
 
   <h2>Kontakt</h2>
   <p>
-    <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
-    {SITE.provozovatel.nazev && (
-      <>
-        <br />
-        Provozovatel: {SITE.provozovatel.nazev}
-        {SITE.provozovatel.ico && <>, IČO {SITE.provozovatel.ico}</>}
-        {SITE.provozovatel.sidlo && <>, {SITE.provozovatel.sidlo}</>}
-      </>
-    )}
+    E-mail: <a href={`mailto:${SITE.email}`}>{SITE.email}</a><br />
+    Telefon: <a href={`tel:${p.telefon.replace(/\s/g, '')}`}>{p.telefon}</a><br />
+    Provozovatel: {p.nazev}, IČO {p.ico}, se sídlem {p.sidlo}, {p.zapis}.
   </p>
 </Text>

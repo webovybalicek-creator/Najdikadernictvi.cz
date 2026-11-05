@@ -35,7 +35,7 @@ export async function polozky(cast: Cast): Promise<Polozka[]> {
     }
     return out;
   }
-  if (cast === 'ctvrti') return vsechnyCtvrti().map((c) => ({ loc: ctvrtUrl(c), lastmod: dataZmena }));
+  if (cast === 'ctvrti') return vsechnyCtvrti().filter(indexovatMesto).map((c) => ({ loc: ctvrtUrl(c), lastmod: dataZmena }));
   return PROVOZOVNY.filter(indexovatDetail).map((p) => ({ loc: url(p), lastmod: p.overeno ? den(p.overeno) : dataZmena }));
 }
 

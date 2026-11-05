@@ -216,11 +216,14 @@ function sestav(): Provozovna[] {
 export const PROVOZOVNY = sestav();
 export const IMPORT_META = meta as { zdroj: string; importovano: string; pocet: number };
 
-/** Detail salonu jen z rejstříku je pro Google příliš chudý – neindexujeme ho, dokud nemá víc údajů */
-export const indexovatDetail = (p: Provozovna) => p.zdroj === 'osm' || !!p.overeno;
-/** Stránka obce jde do vyhledávačů, jen když má skutečný obsah: aspoň jeden salon s ověřenými údaji
- *  (OSM / majitel) nebo aspoň 3 salony. Obce s 1–2 záznamy z rejstříku zůstávají dostupné, ale noindex. */
-export const indexovatMesto = (m: { provozovny: Provozovna[] }) => m.provozovny.length >= 3 || m.provozovny.some(indexovatDetail);
+/** Detail salonu jde do vyhledávačů, jen když nabízí víc než název a adresu (ty má každá mapa):
+ *  otevírací dobu, kontakt nebo údaje od majitele. Ostatní detaily zůstávají dostupné, ale noindex a bez reklam. */
+export const maObsah = (p: Provozovna) =>
+  !!(p.overeno || p.oteviraciDoba || p.telefon || p.web || p.facebook || p.instagram || p.popis || p.cenik?.length || p.fotky?.length);
+export const indexovatDetail = (p: Provozovna) => maObsah(p);
+/** Stránka obce / čtvrti jde do vyhledávačů, jen když má aspoň jeden salon s obsahem.
+ *  Výpis samotných adres z rejstříku je pro čtenáře i Google málo hodnotný. */
+export const indexovatMesto = (m: { provozovny: Provozovna[] }) => m.provozovny.some(indexovatDetail);
 
 export const url = (p: Provozovna) => `/${p.mestoSlug}/${p.slug}/`;
 export const mestoUrl = (slug: string) => `/${slug}/`;
