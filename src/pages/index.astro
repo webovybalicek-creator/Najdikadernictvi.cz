@@ -3,8 +3,7 @@ import Base from '../layouts/Base.astro';
 import Hledani from '../components/Hledani.astro';
 import Magazin from '../components/Magazin.astro';
 import Vybrane from '../components/Vybrane.astro';
-import { KRAJE } from '../lib/kraje';
-import { PROVOZOVNY, nejvetsiMesta, krajUrl, mestoUrl, pocetText, tyden } from '../lib/data';
+import { PROVOZOVNY, nejvetsiMesta, mestoUrl, pocetText, tyden } from '../lib/data';
 import { SITE } from '../lib/config';
 import { Picture } from 'astro:assets';
 import fotoHero from '../assets/blog/salon-kreslo-zrcadlo.jpg';
@@ -110,18 +109,6 @@ const jsonLd = [
     </div>
   </section>
 
-  <nav class="rozcestnik" aria-label="Kadeřnictví podle měst a krajů">
-    <div class="wrap">
-      <p class="rozcestnik__h">Kadeřnictví podle měst</p>
-      <ul>
-        {top.map((m) => <li><a href={mestoUrl(m.slug)}>{m.nazev}</a></li>)}
-      </ul>
-      <p class="rozcestnik__h">Podle krajů</p>
-      <ul>
-        {KRAJE.map((k) => <li><a href={krajUrl(k.slug)}>{k.nazev}</a></li>)}
-      </ul>
-    </div>
-  </nav>
 </Base>
 
 
@@ -418,36 +405,4 @@ const jsonLd = [
     max-width: 56ch;
   }
 
-  .rozcestnik {
-    padding: 2rem 0 2.5rem;
-    border-top: 1px solid var(--line);
-    font-size: 0.85rem;
-  }
-  .rozcestnik__h {
-    margin: 0 0 0.4rem;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--ink);
-  }
-  .rozcestnik ul {
-    list-style: none;
-    margin: 0 0 1.25rem;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem 1rem;
-  }
-  .rozcestnik ul:last-child {
-    margin-bottom: 0;
-  }
-  .rozcestnik a {
-    color: var(--ink-soft);
-    text-decoration: none;
-  }
-  @media (hover: hover) {
-    .rozcestnik a:hover {
-      color: var(--ink);
-      text-decoration: underline;
-    }
-  }
 </style>
