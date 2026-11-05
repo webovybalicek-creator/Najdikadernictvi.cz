@@ -4,10 +4,24 @@ import Hledani from '../components/Hledani.astro';
 import Magazin from '../components/Magazin.astro';
 import Vybrane from '../components/Vybrane.astro';
 import { KRAJE } from '../lib/kraje';
-import { PROVOZOVNY, nejvetsiMesta, krajUrl, mestoUrl, pocetText } from '../lib/data';
+import { Picture } from 'astro:assets';
+import { PROVOZOVNY, nejvetsiMesta, krajUrl, mestoUrl, pocetText, tyden } from '../lib/data';
+import fotoOtevreno from '../assets/blog/salon-cihly.jpg';
+import fotoBarber from '../assets/blog/barbershop-interier.jpg';
+import fotoSobota from '../assets/blog/barber-kreslo-slunce.jpg';
+import fotoVecer from '../assets/blog/barbershop-noc.jpg';
 import { SITE } from '../lib/config';
 
 const top = nejvetsiMesta(24);
+// Karty „Nejbližší salon, který…“: čísla z katalogu, „otevřeno teď“ se dopočítá v prohlížeči
+const tydny = PROVOZOVNY.map((p) => tyden(p)).filter((t) => !!t);
+const cislo = (n: number) => n.toLocaleString('cs-CZ');
+const karty = [
+  { href: '/okoli/?open=1', foto: fotoOtevreno, titul: 'má otevřeno teď', popis: 'Ostříhat se ještě dnes', stitek: `${cislo(tydny.length)} salonů se známou otevírací dobou`, zive: true },
+  { href: '/okoli/?typ=1', foto: fotoBarber, titul: 'je barbershop', popis: 'Fade, vousy a holení břitvou', stitek: `${cislo(PROVOZOVNY.filter((p) => p.typ === 'barber').length)} barbershopů` },
+  { href: '/okoli/?sobota=1', foto: fotoSobota, titul: 'má otevřeno v sobotu', popis: 'Když přes týden nestíháte', stitek: `${cislo(tydny.filter((t) => t[5]?.length).length)} salonů v sobotu` },
+  { href: '/okoli/?vecer=1', foto: fotoVecer, titul: 'má otevřeno večer', popis: 'Po práci, do 19:00 i déle', stitek: `${cislo(tydny.filter((t) => t.slice(0, 5).some((d) => d.some(([, k]) => k >= 19 * 60))).length)} salonů večer` },
+];
 const jsonLd = [
   {
     '@context': 'https://schema.org',
@@ -54,11 +68,23 @@ const jsonLd = [
     <div class="wrap">
       <h2 id="rychle-h" class="rychle__h">Nejbližší salon, který…</h2>
       <ul class="rychle__list">
-        <li><a href="/okoli/?open=1"><i aria-hidden="true">⏱</i><strong>má otevřeno teď</strong><span>Podle otevírací doby salonů</span></a></li>
-        <li><a href="/okoli/?typ=1"><i aria-hidden="true">✂</i><strong>je barbershop</strong><span>Střih, fade a úprava vousů</span></a></li>
-        <li><a href="/okoli/?sobota=1"><i aria-hidden="true">☀</i><strong>má otevřeno v sobotu</strong><span>Když přes týden nestíháte</span></a></li>
-        <li><a href="/okoli/?detske=1"><i aria-hidden="true">★</i><strong>stříhá děti</strong><span>Salony s dětskými střihy</span></a></li>
+        {
+          karty.map((k) => (
+            <li>
+              <a href={k.href} class="rk">
+                <Picture src={k.foto} alt="" widths={[360, 560, 720]} sizes="(max-width: 640px) 80vw, (max-width: 1000px) 45vw, 270px" formats={['avif', 'webp']} loading="lazy" class="rk__foto" />
+                <span class="rk__stitek" data-zive={k.zive ? '' : undefined}>{k.stitek}</span>
+                <span class="rk__text">
+                  <strong>{k.titul}</strong>
+                  <span>{k.popis}</span>
+                </span>
+                <i class="rk__sipka" aria-hidden="true">→</i>
+              </a>
+            </li>
+          ))
+        }
       </ul>
+      <script type="application/json" id="rychle-tydny" set:html={JSON.stringify(tydny)} />
       <p class="rychle__pozn">Použijeme vaši polohu jen v prohlížeči, nikam ji neukládáme.</p>
     </div>
   </section>
@@ -91,6 +117,21 @@ const jsonLd = [
 
 
 <script>
+  import { stav } from '../scripts/stav';
+  // Živý počet salonů, které mají právě otevřeno
+  try {
+    const el = document.querySelector<HTMLElement>('.rk__stitek[data-zive]');
+    const data = document.getElementById('rychle-tydny')?.textContent;
+    if (el && data) {
+      const n = (JSON.parse(data) as [number, number][][][]).filter((t) => stav(t).open).length;
+      el.textContent = n ? `${n.toLocaleString('cs-CZ')} má teď otevřeno` : 'Teď je většina zavřená, ukážeme kdy otevírají';
+    }
+  } catch {
+    /* bez živého počtu zůstane statický štítek */
+  }
+</script>
+
+<script>
   import { fen } from '../scripts/fen';
   const heroFen = document.querySelector<HTMLElement>('[data-fen]');
   if (heroFen) fen(heroFen);
@@ -112,48 +153,93 @@ const jsonLd = [
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.75rem;
   }
-  .rychle__list i {
-    flex: none;
+  .rk {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 5;
+    border-radius: 20px;
+    overflow: hidden;
+    color: #fff;
+    text-decoration: none;
+    isolation: isolate;
+    background: #222;
+  }
+  .rk :global(.rk__foto),
+  .rk :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+    transition: transform 0.5s ease;
+  }
+  .rk::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 30%, rgba(0, 0, 0, 0.78) 100%);
+  }
+  .rk:hover :global(img) {
+    transform: scale(1.06);
+  }
+  .rk__stitek {
+    position: absolute;
+    top: 0.85rem;
+    left: 0.85rem;
+    right: 0.85rem;
+    width: fit-content;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--ink);
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  .rk__stitek[data-zive]::before {
+    content: '';
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-right: 0.4rem;
+    border-radius: 50%;
+    background: var(--open);
+    vertical-align: 0.05em;
+  }
+  .rk__text {
+    position: absolute;
+    left: 1.1rem;
+    right: 3.2rem;
+    bottom: 1.1rem;
+    display: grid;
+    gap: 0.2rem;
+  }
+  .rk__text strong {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.15;
+  }
+  .rk__text span {
+    font-size: 0.85rem;
+    opacity: 0.85;
+  }
+  .rk__sipka {
+    position: absolute;
+    right: 1rem;
+    bottom: 1.1rem;
     display: grid;
     place-items: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 14px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    color: #fff;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    background: var(--accent);
     font-style: normal;
-    font-size: 1.25rem;
+    transition: transform 0.2s;
   }
-  .rychle__list a {
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
-    flex-wrap: wrap;
-    height: 100%;
-    padding: 1.1rem 1.25rem;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 18px;
-    text-decoration: none;
-    color: var(--ink);
-    transition: border-color 0.15s, transform 0.15s;
-  }
-  .rychle__list a:hover {
-    border-color: var(--ink);
-    transform: translateY(-2px);
-  }
-  .rychle__list strong {
-    flex: 1;
-    min-width: 0;
-    font-size: 1.05rem;
-    font-weight: 600;
-  }
-  .rychle__list span {
-    flex-basis: 100%;
-    margin-top: -0.25rem;
-    padding-left: calc(2.75rem + 0.9rem);
-    font-size: 0.82rem;
-    color: var(--ink-soft);
+  .rk:hover .rk__sipka {
+    transform: translateX(3px);
   }
   .rychle__pozn {
     margin: 0.75rem 0 0;
@@ -185,19 +271,21 @@ const jsonLd = [
       padding-top: 24px;
     }
     .rychle__list {
-      grid-template-columns: 1fr !important;
-      gap: 0.5rem;
+      grid-template-columns: none !important;
+      grid-auto-flow: column;
+      grid-auto-columns: 72%;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      margin: 0 calc(-1 * var(--gutter));
+      padding: 0 var(--gutter) 4px;
+      gap: 0.6rem;
     }
-    .rychle__list a {
-      padding: 0.7rem 0.9rem;
+    .rychle__list li {
+      scroll-snap-align: start;
     }
-    .rychle__list i {
-      width: 2.4rem;
-      height: 2.4rem;
-      font-size: 1.1rem;
-    }
-    .rychle__list span {
-      display: none;
+    .rk {
+      aspect-ratio: 3 / 4;
     }
   }
   .rozcestnik {
