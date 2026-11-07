@@ -33,7 +33,7 @@ Neexistuje jedno číslo, které platí pro všechny. Vlasy v průměru rostou z
 - **Melír, balayage:** díky měkkému přechodu vydrží **2 až 4 měsíce**.
 - **Tónování:** odstín se vymývá, obnova obvykle po **6 až 8 týdnech**.
 
-Více o rozdílech mezi technikami barvení najdete v článku [Melír, balayage, nebo ombré?](/blog/barveni-vlasu-melir-balayage-ombre/).
+Více o rozdílech mezi technikami barvení najdete v článku [Melír, balayage, nebo ombré?](/blog/salonni-sluzby-pro-zeny/).
 
 ## Pánské střihy
 
@@ -57,3 +57,16 @@ Více o rozdílech mezi technikami barvení najdete v článku [Melír, balayage
 Když odcházíte ze salonu spokojení, domluvte si rovnou další termín. Nemusíte pak řešit, že oblíbená kadeřnice má volno až za tři týdny.
 
 [Najděte kadeřnictví ve svém městě](/) a zjistěte jeho otevírací dobu.
+
+## Kdy na střih vyjde čas: co ukazují otevírací doby
+
+Nejčastější důvod, proč se střih odkládá, je čas. Podívali jsme se proto, kdy salony v katalogu skutečně mají otevřeno:
+
+- **58 %** salonů má aspoň jeden všední den otevřeno do 19:00 nebo déle, takže se dá zajít po práci.
+- **44 %** otevírá ve všední den nejpozději v 8:00.
+- **42 %** má otevřeno v sobotu, v neděli už jen **19 %**.
+- V pondělí má zavřeno jen 3 % salonů, takže představa „kadeřnictví mají v pondělí zavřeno“ už neplatí.
+
+Pokud chodíte po 4 až 6 týdnech, vyplatí se mít salon, který se vám hodí časově. Salony otevřené večer najdete třeba v [Praze 6](/otevreno-vecer/praha-6/) nebo v [Brně](/otevreno-vecer/brno/), sobotní v [Praze 10](/otevreno-v-sobotu/praha-10/) nebo v [Plzni](/otevreno-v-sobotu/plzen/).
+
+Data jsou z našeho katalogu ke 7. 11. 2026 a vychází z 579 salonů, u kterých známe otevírací dobu.

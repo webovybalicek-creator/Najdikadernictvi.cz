@@ -76,7 +76,9 @@ export const ZAMERY: Zamer[] = [
 ];
 
 /** Cílené podstránky vznikají jen tam, kde mají aspoň tolik výsledků */
-/** Výběr (barbershopy, otevřeno v sobotu…) se generuje až od 5 salonů, menší výpis je tenká stránka */
+/** Výběr (barbershopy, otevřeno v sobotu…) se generuje od 3 salonů (ať nevznikají 404 na dřív existujících adresách),
+ *  do vyhledávačů jde až od MIN_ZAMER salonů s obsahem – menší výpis je tenká stránka (noindex) */
+export const MIN_ZAMER_STRANKA = 3;
 export const MIN_ZAMER = 5;
 export const zamerUrl = (z: Zamer, mestoSlug: string) => `/${z.slug}/${mestoSlug}/`;
 const _zamery = new Map<string, { z: Zamer; salony: Provozovna[]; ids: Set<string> }[]>();
@@ -88,7 +90,7 @@ export const zameryMesta = (m: Mesto) => {
       ZAMERY.map((z) => {
         const salony = m.provozovny.filter(z.filtr);
         return { z, salony, ids: new Set(salony.map((p) => p.id)) };
-      }).filter((x) => x.salony.length >= MIN_ZAMER),
+      }).filter((x) => x.salony.length >= MIN_ZAMER_STRANKA),
     );
   }
   return _zamery.get(k)!;

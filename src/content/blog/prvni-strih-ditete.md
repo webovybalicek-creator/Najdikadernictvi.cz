@@ -45,3 +45,13 @@ Pokud dítě pláče a nejde to ani po chvilce uklidnění, **nenuťte ho**. Dom
 Pochvalte dítě, ukažte mu nový účes v zrcadle a vyfoťte ho. Hodně rodičů si schovává i **pramínek z prvního stříhání** na památku.
 
 Hledáte kadeřnictví pro děti? [Vyberte salon ve svém městě](/) nebo [v okolí](/okoli/).
+
+## Kdy na první střih zajít
+
+S malým dítětem je nejdůležitější čas. Unavené dítě po obědě nebo večer střih skoro jistě nevydrží. Ideální je dopoledne, kdy je odpočaté a najezené.
+
+- **Ve všední den ráno** bývá v salonu klid. Skoro polovina salonů v katalogu otevírá nejpozději v 8:00, výběr najdete třeba v [Praze 6](/otevreno-rano/praha-6/) nebo v [Brně](/otevreno-rano/brno/).
+- **V sobotu dopoledne** to vyhovuje rodičům, kteří přes týden pracují. V sobotu má otevřeno zhruba 4 z 10 salonů, například v [Praze 10](/otevreno-v-sobotu/praha-10/) nebo v [Hradci Králové](/otevreno-v-sobotu/hradec-kralove/). Sobotní termíny se ale plní rychle, objednejte se aspoň týden dopředu.
+- **Zavolejte předem** a zeptejte se, jestli děti stříhají a od kolika let. Ne každý salon to dělá a některé barbershopy přijímají jen dospělé.
+
+Pokud salon stříhá děti a není to v katalogu uvedené, dejte nám vědět přes „Nahlásit chybu“ u profilu salonu. Pomůžete dalším rodičům.

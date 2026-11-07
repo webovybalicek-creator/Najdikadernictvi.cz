@@ -37,4 +37,12 @@ Fade odrůstá rychle, po 2–3 týdnech už přechod není tak čistý. Kdo chc
 
 Nejlepší volbou je [barbershop](/barbershopy/brno/) nebo pánské kadeřnictví, které má fade v ceníku a ukázky na Instagramu. Přehled barbershopů ve vašem městě najdete přes [vyhledávání](/) nebo na [mapě](/mapa/), kde si zapnete filtr „Barbershopy“.
 
-Do domácí péče se hodí matná pasta nebo hlína. Jak vybrat správný styling, radíme v článku [Pomáda, vosk, hlína, nebo gel?](/blog/pomada-vosk-hlina-gel/)
+Do domácí péče se hodí matná pasta nebo hlína. Jak vybrat správný styling, radíme v [přehledu pánských střihů](/blog/panske-strihy-prehled/)
+
+## Kde je barbershopů nejvíc
+
+Fade udělá dobře hlavně barber, který ho dělá denně. V katalogu evidujeme 297 barbershopů. Nejvíc jich se známou otevírací dobou je v [Brně](/barbershopy/brno/), v [Praze 5](/barbershopy/praha-5/), v [Praze 1](/barbershopy/praha-1/) a v [Praze 3](/barbershopy/praha-3/).
+
+Protože fade je potřeba obnovovat po 2 až 3 týdnech, rozhoduje i čas. Barbershopy mají častěji otevřeno večer (76 % z nich aspoň jeden den do 19:00) i v sobotu (61 %). Jednou za dva týdny se tak dá zajít po práci a nemusíte si brát volno.
+
+Data jsou z našeho katalogu ke 7. 11. 2026 a vychází z 579 salonů, u kterých známe otevírací dobu.

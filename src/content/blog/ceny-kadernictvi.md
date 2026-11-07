@@ -43,4 +43,16 @@ Tabulka shrnuje ceníky několika salonů v Brně a Praze a údaje z článků c
 
 V našem katalogu najdete u ověřených salonů i ceník. U ostatních je tu telefon, takže se na cenu můžete zeptat předem. Začněte [vyhledáním podle města](/), [na mapě](/mapa/) nebo přes [salony ve vašem okolí](/okoli/).
 
+## Kdy salon zvolit podle otevírací doby, ne podle ceny
+
+Rozdíl pár stovek mezi salony často převáží jiná věc: jestli se tam vůbec dostanete. V katalogu má 58 % salonů aspoň jeden den otevřeno do 19:00 a 42 % v sobotu. Salony s delší otevírací dobou bývají ve větších městech a často i dražší, ale ušetří vám volno z práce.
+
+Praktický postup, jak porovnat salony v okolí:
+
+1. Najděte salony [podle polohy](/okoli/) a vyfiltrujte ty, které mají otevřeno, když máte čas.
+2. U dvou až tří vybraných se podívejte na jejich web nebo sociální sítě, většina tam ceník zveřejňuje.
+3. Zavolejte a zeptejte se na konečnou cenu i s mytím a stylingem. Ceník často uvádí cenu „od“.
+
+Ceníky salonů postupně doplňujeme do jejich profilů. Jakmile jich bude dost, zveřejníme srovnání skutečných cen podle měst.
+
 **Zdroje:** [TN.cz: Kadeřnictví zdražují (data ČSÚ)](https://tn.nova.cz/zpravodajstvi/clanek/482472-kadernictvi-zdrazuji-nejvice-si-priplati-muzi-vyssi-ceny-ale-cekaji-i-zeny), [Energozrouti.cz: kadeřník o cenách a spropitném](https://energozrouti.cz/clanek/kadernik-otevrene-promluvil-o-spropitnem-od-cechu), ceníky salonů [Gardin Brno](https://gardin.cz/cenik/) a [Cutegory Brno](https://www.cutegory.cz/cenik-kadernictvi-brno) (stav říjen 2026).

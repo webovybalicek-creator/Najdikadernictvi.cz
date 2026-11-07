@@ -13,6 +13,24 @@ ErrorDocument 404 /404.html
   RewriteCond %{HTTP_HOST} ^www\. [NC]
   RewriteRule ^ https://najdikadernictvi.cz%{REQUEST_URI} [L,R=301]
 
+  # Sloučené články blogu (listopad 2026)
+  RewriteRule ^blog/fenovani-doma/?$ /blog/pece-o-vlasy-doma/ [L,R=301]
+  RewriteRule ^blog/pece-o-barvene-vlasy/?$ /blog/pece-o-vlasy-doma/ [L,R=301]
+  RewriteRule ^blog/kudrnate-vlasy/?$ /blog/pece-o-vlasy-doma/ [L,R=301]
+  RewriteRule ^blog/sediny-barvit-nebo-nechat/?$ /blog/pece-o-vlasy-doma/ [L,R=301]
+  RewriteRule ^blog/barveni-vlasu-melir-balayage-ombre/?$ /blog/salonni-sluzby-pro-zeny/ [L,R=301]
+  RewriteRule ^blog/trvala-na-vlasy/?$ /blog/salonni-sluzby-pro-zeny/ [L,R=301]
+  RewriteRule ^blog/keratinove-narovnani-vlasu/?$ /blog/salonni-sluzby-pro-zeny/ [L,R=301]
+  RewriteRule ^blog/prodluzovani-vlasu/?$ /blog/salonni-sluzby-pro-zeny/ [L,R=301]
+  RewriteRule ^blog/damske-strihy-podle-tvaru-obliceje/?$ /blog/damske-strihy-a-ucesy/ [L,R=301]
+  RewriteRule ^blog/strihy-pro-jemne-vlasy/?$ /blog/damske-strihy-a-ucesy/ [L,R=301]
+  RewriteRule ^blog/rychle-ucesy-na-kazdy-den/?$ /blog/damske-strihy-a-ucesy/ [L,R=301]
+  RewriteRule ^blog/svatebni-uces/?$ /blog/damske-strihy-a-ucesy/ [L,R=301]
+  RewriteRule ^blog/pomada-vosk-hlina-gel/?$ /blog/panske-strihy-prehled/ [L,R=301]
+  RewriteRule ^blog/panske-strihy-ridnouci-vlasy/?$ /blog/panske-strihy-prehled/ [L,R=301]
+  RewriteRule ^blog/jak-se-pripravit-na-kadernictvi/?$ /blog/jak-vybrat-kadernika/ [L,R=301]
+  RewriteRule ^blog/dysko-u-kadernika/?$ /blog/jak-vybrat-kadernika/ [L,R=301]
+
   # Zrušený přehled krajů – hledání je na úvodní stránce
   RewriteRule ^kraje/?$ / [L,R=301]
 

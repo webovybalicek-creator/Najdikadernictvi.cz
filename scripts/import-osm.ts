@@ -191,6 +191,20 @@ out;`;
       }
       continue;
     }
+    // Overpass občas vrátí prázdný nebo neúplný výsledek bez chyby (listopad 2026: Olomoucký kraj 0, Jihomoravský polovina).
+    // Výrazný propad oproti minulému importu proto bereme jako selhání a ponecháme předchozí data.
+    {
+      const stara = predchozi.filter((p) => p.kraj === kraj.slug);
+      if (stara.length >= 20 && shops.length < stara.length * 0.8) {
+        gh('warning', `${kraj.nazev}: podezřele málo výsledků (${shops.length} oproti ${stara.length} minule), ponechávám předchozí data`);
+        selhaly.push(kraj.nazev);
+        for (const p of stara) {
+          seen.add(p.id);
+          all.push(p);
+        }
+        continue;
+      }
+    }
     // Obce slouží jen k doplnění chybějícího addr:city, jejich selhání import nezastaví
     let places: { name: string; lat: number; lon: number }[] = [];
     if (kraj.iso !== 'CZ-10') {

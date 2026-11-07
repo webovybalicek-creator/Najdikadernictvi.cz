@@ -34,4 +34,24 @@ Na mapě i ve výpisu měst si můžete zapnout filtry **Bezbariérové** a **Pl
 - **Připomínka do kalendáře.** U každého salonu najdete tlačítko „Připomenout za 6 týdnů“. Uloží vám do kalendáře připomínku, ať se objednáte včas.
 - **Uložte si oblíbené.** Srdíčkem si salon přidáte do [oblíbených](/oblibene/) a příště ho najdete na jedno kliknutí.
 
+## Kde je otevřeno nejdéle: srovnání měst
+
+Podívali jsme se na města a pražské obvody s nejvíc salony, u kterých známe otevírací dobu. Čísla ukazují, kolik z nich má otevřeno v sobotu, v neděli a večer do 19:00 a déle.
+
+| Město | Salonů se známou dobou | Sobota | Neděle | Večer |
+|---|---|---|---|---|
+| [Brno](/brno/) | 67 | 17 | 6 | 35 |
+| [Praha 6](/praha-6/) | 37 | 19 | 11 | 32 |
+| [Praha 10](/praha-10/) | 36 | 17 | 10 | 26 |
+| [Praha 9](/praha-9/) | 34 | 12 | 7 | 22 |
+| [Hradec Králové](/hradec-kralove/) | 30 | 11 | 7 | 14 |
+| [Praha 5](/praha-5/) | 29 | 15 | 10 | 22 |
+| [Praha 4](/praha-4/) | 29 | 14 | 8 | 20 |
+| [Praha 1](/praha-1/) | 26 | 12 | 2 | 24 |
+| [Plzeň](/plzen/) | 16 | 11 | 4 | 9 |
+
+Zajímavost: v Brně má večer otevřeno víc salonů (35) než v sobotu (17). Kdo potřebuje víkendový termín, má to v Brně těžší než v Praze 6, kde má v sobotu otevřeno zhruba každý druhý salon. Nedělní střih je všude vzácný, nejlepší šanci máte v [Praze 6](/otevreno-v-nedeli/praha-6/), [Praze 10](/otevreno-v-nedeli/praha-10/) a [Praze 5](/otevreno-v-nedeli/praha-5/).
+
+Data jsou z katalogu ke 7. 11. 2026. Otevírací dobu známe jen u části salonů, skutečný počet otevřených salonů je proto vyšší.
+
 Našli jste u salonu špatnou otevírací dobu? Pod každým profilem je tlačítko „Nahlásit chybu“, opravíme ji.
