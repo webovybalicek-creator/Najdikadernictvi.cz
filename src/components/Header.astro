@@ -1,10 +1,9 @@
 ---
 import Logo from './Logo.astro';
-// Na úvodní stránce je hlavička průhledná přes gradient, po posunu stránky dostane bílé pozadí
-const pruhledna = Astro.url.pathname === '/';
+// Bílá hlavička (Airbnb): logo vlevo, odkazy uprostřed, kruhová tlačítka vpravo
 ---
 
-<header class:list={['hdr', pruhledna && 'hdr--pruhledna']} data-hdr>
+<header class="hdr" data-hdr>
   <div class="wrap hdr__in">
     <a href="/" class="hdr__logo" aria-label="Najdi kadeřnictví – úvod"><Logo /></a>
     <nav aria-label="Hlavní menu">
@@ -13,7 +12,7 @@ const pruhledna = Astro.url.pathname === '/';
         <li class="nav-skryt-m"><a href="/blog/">Rady a tipy</a></li>
         <li class="nav-skryt-m"><a href="/o-webu/">O webu</a></li>
         <li>
-          <a href="/oblibene/" class="hdr__obl" aria-label="Oblíbené salony">
+          <a href="/oblibene/" class="hdr__obl kruh" aria-label="Oblíbené salony">
             <svg viewBox="0 0 24 24" aria-hidden="true"
               ><path
                 d="M12 20.5s-7.5-4.6-9.3-9.4C1.4 7.6 3.6 4 7.2 4c2 0 3.6 1.1 4.8 2.8C13.2 5.1 14.8 4 16.8 4c3.6 0 5.8 3.6 4.5 7.1-1.8 4.8-9.3 9.4-9.3 9.4z"
@@ -22,9 +21,9 @@ const pruhledna = Astro.url.pathname === '/';
             <span class="hdr__obl-pocet" data-pocet-oblibenych hidden></span>
           </a>
         </li>
-        <li class="nav-skryt-m"><a href="/pridat-provozovnu/" class="btn btn--ghost hdr__cta">Přidat salon</a></li>
+        <li class="nav-skryt-m"><a href="/pridat-provozovnu/" class="hdr__cta">Přidat salon</a></li>
         <li class="nav-jen-m">
-          <button type="button" class="hdr__burger" aria-expanded="false" aria-controls="mobilni-menu" data-burger>
+          <button type="button" class="hdr__burger kruh" aria-expanded="false" aria-controls="mobilni-menu" data-burger>
             <span class="sr-only">Menu</span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
           </button>
@@ -46,12 +45,6 @@ const pruhledna = Astro.url.pathname === '/';
 </header>
 
 <script>
-  const hdr = document.querySelector<HTMLElement>('[data-hdr].hdr--pruhledna');
-  if (hdr) {
-    const obnov = () => hdr.classList.toggle('hdr--posunuta', scrollY > 8);
-    obnov();
-    addEventListener('scroll', obnov, { passive: true });
-  }
   const btn = document.querySelector<HTMLButtonElement>('[data-burger]');
   const menu = document.querySelector<HTMLElement>('[data-mmenu]');
   if (btn && menu) {
@@ -72,73 +65,104 @@ const pruhledna = Astro.url.pathname === '/';
 
 <style>
   .hdr {
-    background: rgb(255 255 255 / 0.85);
-    backdrop-filter: saturate(1.4) blur(10px);
-    border-bottom: 1px solid var(--line);
     position: sticky;
     top: 0;
     z-index: 40;
+    background: #fff;
+    border-bottom: 1px solid var(--line);
   }
-  /* Úvodní stránka: hlavička bez linky, po posunu dostane bílé pozadí */
-  .hdr--pruhledna {
-    position: fixed;
-    left: 0;
-    right: 0;
-    background: transparent;
-    border-bottom-color: transparent;
-    backdrop-filter: none;
-    transition: background 0.25s, border-color 0.25s, backdrop-filter 0.25s;
+  .hdr__in {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 80px;
   }
-  .hdr--pruhledna.hdr--posunuta {
-    background: rgb(255 255 255 / 0.85);
-    border-bottom-color: var(--line);
-    backdrop-filter: saturate(1.4) blur(10px);
+  .hdr__logo {
+    text-decoration: none;
+    color: var(--ink);
   }
-  .hdr--pruhledna .hdr__burger:not([aria-expanded='true']) {
-    background: rgb(255 255 255 / 0.6);
+  .hdr__logo :global(.logo) {
+    --nuzky-logo: var(--accent);
+  }
+  nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  nav a {
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .nav-skryt-m a {
+    display: inline-flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 0.9rem;
+    border-radius: var(--pill);
+    transition: background-color 150ms var(--ease-out);
+  }
+  @media (hover: hover) {
+    .nav-skryt-m a:hover {
+      background: var(--canvas);
+      color: var(--ink);
+    }
+  }
+  .hdr__cta {
+    font-weight: 600;
   }
   .nav-jen-m {
     display: none;
   }
-  .hdr__burger {
-    display: grid;
-    place-items: center;
-    width: 2.6rem;
-    height: 2.6rem;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-sm);
-    background: var(--surface);
-    color: var(--ink);
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    transition: transform 160ms var(--ease-out);
+  .hdr__obl {
+    position: relative;
+    margin-left: 0.4rem;
   }
-  .hdr__burger:active {
-    transform: scale(0.95);
-  }
+  .hdr__obl svg,
   .hdr__burger svg {
-    width: 1.3rem;
-    height: 1.3rem;
+    width: 1.1rem;
+    height: 1.1rem;
     fill: none;
     stroke: currentColor;
-    stroke-width: 1.7;
+    stroke-width: 2;
+    stroke-linejoin: round;
     stroke-linecap: round;
   }
+  .hdr__obl-pocet {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    min-width: 1.1rem;
+    height: 1.1rem;
+    padding: 0 0.28rem;
+    border-radius: var(--pill);
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 600;
+    line-height: 1.1rem;
+    text-align: center;
+    box-shadow: 0 0 0 2px #fff;
+  }
   .hdr__burger[aria-expanded='true'] {
-    background: var(--bottle);
-    border-color: var(--bottle);
-    color: var(--bottle-ink);
+    background: var(--ink);
+    color: #fff;
   }
   .mmenu {
     position: absolute;
-    top: 100%;
-    left: 16px;
-    right: 16px;
-    padding: 0.5rem 1.25rem 1.25rem;
-    background: var(--surface);
-    border: 1px solid var(--line);
+    top: calc(100% - 8px);
+    right: var(--gutter);
+    width: min(280px, calc(100vw - 32px));
+    padding: 0.5rem 0;
+    background: #fff;
     border-radius: var(--radius);
-    box-shadow: 0 16px 40px rgb(17 17 19 / 0.14);
+    box-shadow: var(--sh-menu);
     transform-origin: top right;
     animation: mmenu-in 180ms var(--ease-out);
   }
@@ -153,88 +177,28 @@ const pruhledna = Astro.url.pathname === '/';
   }
   .mmenu ul {
     list-style: none;
-    margin: 0 0 1rem;
-    padding: 0;
+    margin: 0;
+    padding: 0 0 0.5rem;
+    border-bottom: 1px solid var(--line);
   }
   .mmenu li a {
     display: block;
-    padding: 0.8rem 0;
-    border-bottom: 1px solid var(--line);
-    font-size: 1.05rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
     text-decoration: none;
     color: var(--ink);
+  }
+  .mmenu li a:hover {
+    background: var(--canvas);
   }
   .mmenu .btn {
-    display: block;
-    text-align: center;
-  }
-  .hdr__in {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    min-height: 68px;
-  }
-  .hdr__logo {
-    text-decoration: none;
-    color: var(--ink);
-  }
-  nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    gap: clamp(1rem, 3vw, 2.25rem);
-    align-items: center;
-    font-size: 0.92rem;
-    font-weight: 500;
-  }
-  nav a {
-    text-decoration: none;
-    white-space: nowrap;
-  }
-  @media (hover: hover) {
-    nav a:not(.btn):hover {
-      text-decoration: underline;
-      text-underline-offset: 0.25em;
-    }
-  }
-  .hdr__obl {
-    position: relative;
-    display: grid;
-    place-items: center;
-    width: 2.2rem;
-    height: 2.2rem;
-  }
-  .hdr__obl svg {
-    width: 1.3rem;
-    height: 1.3rem;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.6;
-    stroke-linejoin: round;
-  }
-  .hdr__obl-pocet {
-    position: absolute;
-    top: -0.1rem;
-    right: -0.25rem;
-    min-width: 1.05rem;
-    height: 1.05rem;
-    padding: 0 0.25rem;
-    border-radius: 999px;
-    background: #b0574a;
-    color: #fff;
-    font-size: 0.65rem;
-    font-weight: 600;
-    line-height: 1.05rem;
-    text-align: center;
-    letter-spacing: 0;
-  }
-  .hdr__cta {
-    padding: 0.6em 1.15em;
-    font-size: 0.88rem;
+    margin: 0.75rem 1rem 0.25rem;
   }
   @media (max-width: 760px) {
+    .hdr__in {
+      min-height: 64px;
+    }
     .nav-skryt-m {
       display: none;
     }
@@ -242,33 +206,12 @@ const pruhledna = Astro.url.pathname === '/';
       display: list-item;
     }
     nav ul {
-      gap: 0.9rem;
+      gap: 0.5rem;
     }
   }
   @media (max-width: 400px) {
     .hdr__logo :global(.logo) {
       font-size: 1.2rem;
-    }
-    nav ul {
-      gap: 0.6rem;
-    }
-  }
-  @media (max-width: 360px) {
-    .hdr__cta-txt {
-      display: none;
-    }
-    .hdr__cta::before {
-      content: '+';
-      font-size: 1.1rem;
-      line-height: 1;
-    }
-  }
-  @media (max-width: 440px) {
-    .hdr__cta-cele {
-      display: none;
-    }
-    .hdr__cta {
-      padding: 0.6em 0.8em;
     }
   }
 </style>

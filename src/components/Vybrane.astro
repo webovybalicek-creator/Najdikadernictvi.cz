@@ -77,7 +77,7 @@ const mestaSVyberem = mesta.filter((m) => pool.some((x) => x.m === m.slug));
   .vyb {
     position: relative;
     z-index: 1;
-    padding: clamp(40px, 6vw, 72px) 0 0;
+    padding: 48px 0 0;
   }
   .vyb__hlava h2 {
     margin: 0 0 0.35rem;
@@ -85,45 +85,56 @@ const mestaSVyberem = mesta.filter((m) => pool.some((x) => x.m === m.slug));
   .vyb__pod {
     margin: 0;
     color: var(--ink-soft);
-    font-size: 0.95rem;
+    font-size: 0.875rem;
   }
+  /* Záložky měst jako na Airbnb: text, aktivní s 2px černou linkou */
   .vyb__mesta {
     display: flex;
-    gap: 0.35rem;
-    margin: 1.25rem 0 1.5rem;
+    gap: 1.75rem;
+    margin: 1.25rem 0 1.75rem;
+    border-bottom: 1px solid var(--line);
     overflow-x: auto;
     scrollbar-width: none;
     -webkit-tap-highlight-color: transparent;
   }
   .vyb__mesta button {
     flex: none;
-    font: inherit;
-    font-size: 0.88rem;
-    font-weight: 500;
-    padding: 0.42em 0.85em;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-sm);
-    background: #fff;
+    position: relative;
+    padding: 0.6rem 0 0.85rem;
+    font: 500 0.875rem/1.2 var(--f-text);
+    border: 0;
+    background: none;
     color: var(--ink-soft);
     cursor: pointer;
-    transition:
-      background-color 150ms var(--ease-out),
-      color 150ms var(--ease-out),
-      transform 160ms var(--ease-out);
+    transition: color 150ms var(--ease-out);
   }
-  .vyb__mesta button:active {
-    transform: scale(0.97);
+  .vyb__mesta button::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--ink);
+    transform: scaleX(0);
+    transition: transform 200ms var(--ease-out);
   }
   @media (hover: hover) {
     .vyb__mesta button:hover {
       color: var(--ink);
-      border-color: #d4d4d8;
+    }
+    .vyb__mesta button:hover::after {
+      transform: scaleX(1);
+      background: var(--line-strong);
     }
   }
   .vyb__mesta button[aria-selected='true'] {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .vyb__mesta button[aria-selected='true']::after {
+    transform: scaleX(1);
     background: var(--ink);
-    border-color: var(--ink);
-    color: #fff;
   }
   .vyb__pas {
     list-style: none;
@@ -131,7 +142,7 @@ const mestaSVyberem = mesta.filter((m) => pool.some((x) => x.m === m.slug));
     padding: 0;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 2rem 1.25rem;
+    gap: 2.5rem 1.5rem;
   }
   .vyb__pas :global(.viz) {
     border-radius: var(--radius);

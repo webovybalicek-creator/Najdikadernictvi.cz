@@ -49,11 +49,11 @@ const misto = p.mesto === 'Praha' && p.cast ? `Praha, ${p.cast}` : p.mesto;
   }
   .karta__nazev {
     font-family: var(--f-display);
-    font-size: 1.02rem;
+    font-size: 0.9375rem;
     font-weight: 600;
-    line-height: 1.25;
-    letter-spacing: -0.01em;
-    margin: 0.85rem 0 0.15rem;
+    line-height: 1.3;
+    letter-spacing: 0;
+    margin: 0.75rem 0 0.1rem;
   }
   @media (hover: hover) {
     .karta a:hover .karta__nazev {
@@ -62,8 +62,8 @@ const misto = p.mesto === 'Praha' && p.cast ? `Praha, ${p.cast}` : p.mesto;
     }
   }
   .karta__stav {
-    margin: 0 0 0.15rem;
-    font-size: 0.85rem;
+    margin: 0 0 0.1rem;
+    font-size: 0.875rem;
   }
   .karta__stav :global(.stav) {
     font-weight: 500;
@@ -72,13 +72,13 @@ const misto = p.mesto === 'Praha' && p.cast ? `Praha, ${p.cast}` : p.mesto;
     display: inline;
     margin: 0;
     font-size: inherit;
-    font-weight: 500;
-    color: var(--ink);
+    font-weight: 400;
+    color: var(--ink-soft);
   }
   .karta__adr {
     margin: 0;
-    font-size: 0.84rem;
-    line-height: 1.45;
+    font-size: 0.875rem;
+    line-height: 1.43;
     color: var(--ink-soft);
   }
   .karta .hod-mini {

@@ -15,7 +15,7 @@ const p = SITE.provozovatel;
         Nezávislý katalog kadeřnictví a barbershopů v celém Česku. Otevírací doba, kontakt a cesta na jednom místě,
         i u salonů bez vlastního webu.
       </p>
-      <a class="btn" href="/pridat-provozovnu/">Přidat salon</a>
+      <a class="btn btn--ghost" href="/pridat-provozovnu/">Přidat salon</a>
     </div>
     <nav class="ftr__col" aria-label="Hledání">
       <h2 class="ftr__h">Hledání</h2>
@@ -76,9 +76,10 @@ const p = SITE.provozovatel;
 
 <style>
   .ftr {
-    background: var(--slate);
+    margin-top: 48px;
+    background: var(--canvas);
     color: var(--slate-ink);
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     --ink: var(--slate-ink);
     border-top: 1px solid var(--line);
   }
@@ -102,37 +103,35 @@ const p = SITE.provozovatel;
     color: var(--ink-soft);
     max-width: 30ch;
     margin: 1rem 0 1.25rem;
-    font-size: 0.95rem;
-    line-height: 1.55;
+    font-size: 0.875rem;
+    line-height: 1.43;
   }
-  .ftr .btn {
-    color: var(--slate-ink);
-    border-color: var(--line);
-    background: #fff;
-  }
-  .ftr .btn:hover {
-    border-color: var(--ink);
-    color: var(--ink);
-  }
+
   .ftr__h {
     font-family: var(--f-text);
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    letter-spacing: 0;
     margin: 0.35rem 0 1rem;
-    color: var(--ink-soft);
+    color: var(--ink);
   }
   ul {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 0.55rem;
-    font-size: 0.95rem;
+    gap: 0.75rem;
+    font-size: 0.875rem;
   }
   ul a {
+    color: var(--ink-soft);
     text-decoration: none;
+    transition: color 150ms var(--ease-out);
+  }
+  @media (hover: hover) {
+    ul a:hover {
+      text-decoration: underline;
+    }
   }
   .ftr__bottom {
     border-top: 1px solid var(--line);

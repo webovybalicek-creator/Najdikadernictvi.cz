@@ -15,10 +15,10 @@ const panoUrl = vlastni ?? `/api/panorama.php?lat=${p.lat}&lon=${p.lon}&s=${velk
 
 // Neutrální šedé tóny, ať monogram nepůsobí jako barevná dekorace
 const PALETA = [
-  ['#f4f4f5', '#3f3f46'],
-  ['#efeff1', '#52525b'],
-  ['#f2f2f0', '#44403c'],
-  ['#eef0f2', '#334155'],
+  ['#f7f7f7', '#222222'],
+  ['#f2f2f2', '#3d3d3d'],
+  ['#ebebeb', '#222222'],
+  ['#f7f7f7', '#6a6a6a'],
 ];
 let h = 0;
 for (const ch of p.id + p.nazev) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
@@ -71,7 +71,7 @@ const id = `v-${p.id}`;
 <style>
   .viz {
     position: relative;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 20 / 19;
     background: var(--bg);
     color: var(--fg);
     overflow: hidden;
@@ -108,7 +108,7 @@ const id = `v-${p.id}`;
   }
   @media (hover: hover) {
     :global(a:hover) > .viz .viz__foto.ok {
-      transform: scale(1.025);
+      transform: scale(1.04);
     }
   }
   .viz__foto--vlastni {
@@ -119,7 +119,10 @@ const id = `v-${p.id}`;
   }
   /* Dokud se fotka načítá: jen neutrální šedé pozadí, bez monogramu (ten jen když fotka není) */
   .viz--foto {
-    background: #f1f1f3;
+    background: var(--canvas);
+  }
+  .viz--velky {
+    aspect-ratio: 4 / 3;
   }
   .viz--foto svg,
   .viz--foto .viz__mono {
