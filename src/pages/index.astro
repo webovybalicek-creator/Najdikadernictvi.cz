@@ -13,12 +13,21 @@ const cislo = (n: number) => n.toLocaleString('cs-CZ');
 const pocetBarber = PROVOZOVNY.filter((p) => p.typ === 'barber').length;
 const pocetSobota = tydny.filter((t) => t[5]?.length).length;
 const pocetVecer = tydny.filter((t) => t.slice(0, 5).some((d) => d.some(([, k]) => k >= 19 * 60))).length;
-const karty = [
-  { href: '/okoli/?open=1', cislo: 'Podle aktuálního času', titul: 'Otevřeno teď', popis: 'Salony, kam můžete zajít ještě dnes', zive: true },
-  { href: '/okoli/?typ=1', cislo: `${cislo(pocetBarber)} salonů`, titul: 'Barbershopy', popis: 'Fade, úprava vousů, holení břitvou' },
-  { href: '/okoli/?sobota=1', cislo: `${cislo(pocetSobota)} salonů`, titul: 'Otevřeno v sobotu', popis: 'Když přes týden nestíháte' },
-  { href: '/okoli/?vecer=1', cislo: `${cislo(pocetVecer)} salonů`, titul: 'Otevřeno večer', popis: 'Po práci, do 19:00 i déle' },
+const pocetNedele = tydny.filter((t) => t[6]?.length).length;
+// Panel „právě teď“: sloupce = počet otevřených salonů v jednotlivých hodinách dne (dopočítá prohlížeč)
+const HODINY = Array.from({ length: 16 }, (_, i) => 6 + i); // 6:00–21:00
+const ikony = {
+  nuzky: 'M6 7a2.5 2.5 0 1 0 0-.01M6 17a2.5 2.5 0 1 0 0-.01M8.2 8.3 19 17M8.2 15.7 19 7',
+  kalendar: 'M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM16 3v4M8 3v4M4 11h16',
+  mesic: 'M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z',
+};
+// Výchozí (bez JS) obsah malých karet; skript je podle dne a času přepíše
+const volby = [
+  { id: 'barber', href: '/okoli/?typ=1', ikona: ikony.nuzky, titul: 'Barbershopy', pod: 'Fade, vousy, břitva', cislo: pocetBarber },
+  { id: 'vikend', href: '/okoli/?sobota=1', ikona: ikony.kalendar, titul: 'V sobotu', pod: 'Když přes týden nestíháte', cislo: pocetSobota },
+  { id: 'vecer', href: '/okoli/?vecer=1', ikona: ikony.mesic, titul: 'Večer po práci', pod: 'Do 19:00 i déle', cislo: pocetVecer },
 ];
+const pocty = { sobota: pocetSobota, nedele: pocetNedele, vecer: pocetVecer };
 const jsonLd = [
   {
     '@context': 'https://schema.org',
@@ -62,25 +71,37 @@ const jsonLd = [
   </section>
 
   <section class="rychle" aria-labelledby="rychle-h">
-    <div class="wrap">
-      <h2 id="rychle-h" class="sr-only">Rychlé hledání v okolí</h2>
-      <ul class="rychle__list">
+    <div class="wrap rychle__in">
+      <h2 id="rychle-h" class="sr-only">Právě teď a rychlé hledání v okolí</h2>
+      <a class="ted" href="/okoli/?open=1" data-ted>
+        <span class="ted__kdy" data-ted-kdy>Podle aktuálního času</span>
+        <strong class="ted__titul"><span class="ted__tecka" aria-hidden="true"></span><span data-ted-pocet>Otevřeno teď</span></strong>
+        <span class="ted__graf" data-ted-graf aria-hidden="true" hidden>
+          {HODINY.map((h) => <span data-h={h}></span>)}
+        </span>
+        <span class="ted__osa" aria-hidden="true" data-ted-osa hidden><span>6</span><span>9</span><span>12</span><span>15</span><span>18</span><span>21</span></span>
+        <span class="ted__pod"><span data-ted-spicka>Salony, kam můžete zajít ještě dnes.</span> <span class="ted__cta">Ukázat v okolí →</span></span>
+      </a>
+      <ul class="volby">
         {
-          karty.map((k) => (
+          volby.map((v) => (
             <li>
-              <a href={k.href} class="rk">
-                <span class="rk__cislo" data-zive={k.zive ? '' : undefined}>{k.cislo}</span>
-                <strong class="rk__titul">{k.titul}</strong>
-                <span class="rk__popis">{k.popis}</span>
-                <span class="rk__sipka" aria-hidden="true">→</span>
+              <a href={v.href} class="volba" data-volba={v.id}>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d={v.ikona} /></svg>
+                <span class="volba__txt">
+                  <strong data-titul>{v.titul}</strong>
+                  <span data-pod>{v.pod}</span>
+                </span>
+                <span class="volba__cislo" data-cislo>{cislo(v.cislo)}</span>
               </a>
             </li>
           ))
         }
       </ul>
       <script type="application/json" id="rychle-tydny" set:html={JSON.stringify(tydny)} />
-      <p class="rychle__pozn">Hledání v okolí použije vaši polohu jen v prohlížeči, nikam ji neukládáme.</p>
+      <script type="application/json" id="rychle-pocty" set:html={JSON.stringify(pocty)} />
     </div>
+    <p class="wrap rychle__pozn">Hledání v okolí použije vaši polohu jen v prohlížeči, nikam ji neukládáme.</p>
   </section>
 
   <Vybrane />
@@ -101,17 +122,62 @@ const jsonLd = [
 
 
 <script>
-  import { stav } from '../scripts/stav';
-  // Živý počet salonů, které mají právě otevřeno
+  import { stav, prahaTed } from '../scripts/stav';
+  // Panel „právě teď“: živý počet, graf otevřenosti dnes po hodinách a karty podle dne a času
   try {
-    const el = document.querySelector<HTMLElement>('.rk__cislo[data-zive]');
-    const data = document.getElementById('rychle-tydny')?.textContent;
-    if (el && data) {
-      const n = (JSON.parse(data) as [number, number][][][]).filter((t) => stav(t).open).length;
-      if (n) el.textContent = `${n.toLocaleString('cs-CZ')} má otevřeno`;
+    type Tyden = [number, number][][];
+    const tydny = JSON.parse(document.getElementById('rychle-tydny')!.textContent!) as Tyden[];
+    const pocty = JSON.parse(document.getElementById('rychle-pocty')!.textContent!) as Record<string, number>;
+    const { den, min } = prahaTed();
+    const DNY = ['Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota', 'Neděle'];
+    const cz = (n: number) => n.toLocaleString('cs-CZ');
+    const $ = (sel: string) => document.querySelector<HTMLElement>(sel)!;
+
+    const otevreno = tydny.filter((t) => stav(t).open).length;
+    $('[data-ted-kdy]').textContent = `${DNY[den]} ${Math.floor(min / 60)}:${String(min % 60).padStart(2, '0')}`;
+    $('[data-ted-pocet]').textContent = otevreno
+      ? `${cz(otevreno)} ${otevreno < 5 ? 'salony mají' : 'salonů má'} otevřeno`
+      : 'Teď má většina zavřeno';
+
+    // Kolik salonů má dnes otevřeno v každé hodině (měřeno v půl)
+    const sloupce = [...document.querySelectorAll<HTMLElement>('[data-ted-graf] [data-h]')];
+    const hodnoty = sloupce.map((el) => {
+      const m = Number(el.dataset.h) * 60 + 30;
+      return tydny.filter((t) => (t[den] ?? []).some(([a, b]) => m >= a && m < b)).length;
+    });
+    const max = Math.max(...hodnoty, 1);
+    sloupce.forEach((el, i) => {
+      el.style.height = `${Math.max(4, (hodnoty[i] / max) * 100)}%`;
+      el.title = `${el.dataset.h}:00 · ${hodnoty[i]}`;
+      if (Number(el.dataset.h) === Math.floor(min / 60)) el.classList.add('je-ted');
+    });
+    if (hodnoty.some(Boolean)) {
+      $('[data-ted-graf]').hidden = false;
+      $('[data-ted-osa]').hidden = false;
+      // Špička: souvislý úsek hodin s aspoň 85 % maxima
+      const hs = sloupce.map((el) => Number(el.dataset.h)).filter((_, i) => hodnoty[i] >= max * 0.85);
+      $('[data-ted-spicka]').textContent = `Dnes je nejvíc otevřeno ${hs[0]}–${hs[hs.length - 1] + 1} h.`;
+    } else {
+      $('[data-ted-spicka]').textContent = 'Dnes má většina salonů zavřeno.';
+    }
+
+    const nastav = (id: string, titul: string, pod: string, pocet: number, href: string) => {
+      const a = $(`[data-volba="${id}"]`);
+      a.href = href;
+      a.querySelector('[data-titul]')!.textContent = titul;
+      a.querySelector('[data-pod]')!.textContent = pod;
+      a.querySelector('[data-cislo]')!.textContent = cz(pocet);
+    };
+    // Víkend: v sobotu nabídnout neděli, jinak sobotu
+    if (den === 5) nastav('vikend', 'Zítra v neděli', 'Má otevřeno jen málokdo', pocty.nedele, '/okoli/?nedele=1');
+    else if (den === 4) nastav('vikend', 'Zítra v sobotu', 'Když přes týden nestíháte', pocty.sobota, '/okoli/?sobota=1');
+    // Večer: ve všední den před 19:00 počet salonů otevřených dnes do večera
+    if (den <= 4 && min < 19 * 60) {
+      const dnesVecer = tydny.filter((t) => (t[den] ?? []).some(([, b]) => b >= 19 * 60)).length;
+      if (dnesVecer) nastav('vecer', 'Dnes večer', 'Otevřeno do 19:00 i déle', dnesVecer, '/okoli/?vecer=1');
     }
   } catch {
-    /* bez živého počtu zůstane statický štítek */
+    /* bez JS zůstanou statické karty */
   }
 </script>
 
@@ -177,24 +243,19 @@ const jsonLd = [
     }
   }
 
-  /* Rychlé volby: ploché dlaždice na šedém plátně, bez rámečků */
+  /* Panel „právě teď“ + tři menší volby (ploché plochy bez rámečků) */
   .rychle {
     padding: 0 0 8px;
   }
-  .rychle__list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  .rychle__in {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
     gap: 12px;
   }
-  .rk {
-    position: relative;
-    display: grid;
-    gap: 0.15rem;
-    height: 100%;
-    padding: 1.25rem 2.75rem 1.25rem 1.25rem;
+  .ted {
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 1.5rem;
     background: var(--canvas);
     border-radius: var(--radius);
     color: var(--ink);
@@ -204,70 +265,165 @@ const jsonLd = [
       background-color 150ms var(--ease-out),
       transform 160ms var(--ease-out);
   }
-  .rk:active {
+  .ted:active {
+    transform: scale(0.99);
+  }
+  .ted__kdy {
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .ted__titul {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.15rem;
+    font-size: 1.375rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .ted__tecka {
+    position: relative;
+    flex: none;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--open);
+  }
+  .ted__tecka::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--open);
+    animation: tecka 2.4s var(--ease-out) infinite;
+  }
+  @keyframes tecka {
+    0% {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+    70%,
+    100% {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+  }
+  .ted__graf {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 64px;
+    margin-top: 1.1rem;
+  }
+  .ted__graf[hidden],
+  .ted__osa[hidden] {
+    display: none;
+  }
+  .ted__graf span {
+    flex: 1;
+    height: 4%;
+    border-radius: 3px 3px 1px 1px;
+    background: var(--line-strong);
+    transition: height 500ms var(--ease-out);
+  }
+  .ted__graf span.je-ted {
+    background: var(--accent);
+  }
+  .ted__osa {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.35rem;
+    font-size: 0.6875rem;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .ted__pod {
+    margin-top: auto;
+    padding-top: 0.9rem;
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+  }
+  .ted__cta {
+    color: var(--ink);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .volby {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+  }
+  .volba {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    height: 100%;
+    min-height: 72px;
+    padding: 0.85rem 1.25rem;
+    background: var(--canvas);
+    border-radius: var(--radius);
+    color: var(--ink);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color 150ms var(--ease-out),
+      transform 160ms var(--ease-out);
+  }
+  .volba:active {
     transform: scale(0.98);
   }
   @media (hover: hover) {
-    .rk:hover {
+    .ted:hover,
+    .volba:hover {
       background: var(--line);
       color: var(--ink);
     }
-    .rk:hover .rk__sipka {
-      transform: translateX(3px);
-    }
   }
-  .rk__cislo {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    font-size: 0.75rem;
+  .volba svg {
+    flex: none;
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .volba__txt {
+    display: grid;
+    min-width: 0;
+  }
+  .volba__txt strong {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .volba__txt span {
+    font-size: 0.875rem;
+    color: var(--ink-soft);
+  }
+  .volba__cislo {
+    margin-left: auto;
+    font-size: 0.875rem;
     font-weight: 500;
     color: var(--ink-soft);
     font-variant-numeric: tabular-nums;
   }
-  .rk__cislo[data-zive]::before {
-    content: '';
-    width: 0.45rem;
-    height: 0.45rem;
-    border-radius: 50%;
-    background: var(--open);
-  }
-  .rk__titul {
-    font-size: 1rem;
-    font-weight: 600;
-  }
-  .rk__popis {
-    font-size: 0.875rem;
-    color: var(--ink-soft);
-    line-height: 1.43;
-  }
-  .rk__sipka {
-    position: absolute;
-    right: 1.1rem;
-    top: 50%;
-    margin-top: -0.7em;
-    color: var(--ink);
-    transition: transform 200ms var(--ease-out);
-  }
   .rychle__pozn {
-    margin: 0.75rem 0 0;
+    margin: 0.75rem auto 0;
     font-size: 0.75rem;
     color: var(--ink-soft);
   }
   @media (max-width: 860px) {
-    .rychle__list {
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
+    .rychle__in {
+      grid-template-columns: 1fr;
     }
   }
   @media (max-width: 640px) {
     .hero__mesta li:nth-child(n + 6) {
-      display: none;
-    }
-    .rk {
-      padding: 1rem 2.25rem 1rem 1rem;
-    }
-    .rk__popis {
       display: none;
     }
   }

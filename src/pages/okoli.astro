@@ -21,6 +21,7 @@ import Hledani from '../components/Hledani.astro';
       </fieldset>
       <label class="chk"><input type="checkbox" name="open" /> Otevřeno teď</label>
       <label class="chk"><input type="checkbox" name="sobota" /> V sobotu</label>
+      <label class="chk"><input type="checkbox" name="nedele" /> V neděli</label>
       <label class="chk"><input type="checkbox" name="vecer" /> Večer po 19:00</label>
     </div>
 
@@ -64,11 +65,13 @@ import Hledani from '../components/Hledani.astro';
     const jenOtevreno = filtr.querySelector<HTMLInputElement>('input[name=open]')!.checked;
     const sobota = filtr.querySelector<HTMLInputElement>('input[name=sobota]')!.checked;
     const vecer = filtr.querySelector<HTMLInputElement>('input[name=vecer]')!.checked;
+    const nedele = filtr.querySelector<HTMLInputElement>('input[name=nedele]')!.checked;
     const vyhovuje = serazene.filter(
       ({ z }) =>
         (typ === '' || String(z[5]) === typ) &&
         (!jenOtevreno || (z[6] && stav(z[6]).open)) &&
         (!sobota || (z[6] && z[6][5].length)) &&
+        (!nedele || (z[6] && z[6][6].length)) &&
         (!vecer || (z[6] && z[6].slice(0, 5).some((d) => d.some(([, b]) => b >= 19 * 60)))),
     );
     seznam.innerHTML = vyhovuje
@@ -119,10 +122,10 @@ import Hledani from '../components/Hledani.astro';
   });
 
   const q = new URLSearchParams(location.search);
-  // Předvolené filtry z odkazu (např. /okoli/?typ=1, ?open=1, ?sobota=1, ?vecer=1)
+  // Předvolené filtry z odkazu (např. /okoli/?typ=1, ?open=1, ?sobota=1, ?nedele=1, ?vecer=1)
   const typQ = q.get('typ');
   if (typQ === '0' || typQ === '1') filtr.querySelector<HTMLInputElement>(`input[name=typ][value="${typQ}"]`)!.checked = true;
-  for (const k of ['open', 'sobota', 'vecer']) if (q.get(k) === '1') filtr.querySelector<HTMLInputElement>(`input[name=${k}]`)!.checked = true;
+  for (const k of ['open', 'sobota', 'nedele', 'vecer']) if (q.get(k) === '1') filtr.querySelector<HTMLInputElement>(`input[name=${k}]`)!.checked = true;
   const qLat = Number(q.get('lat'));
   const qLon = Number(q.get('lon'));
   if (qLat && qLon) {
