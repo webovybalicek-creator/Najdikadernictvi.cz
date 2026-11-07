@@ -182,6 +182,9 @@
   .srch:focus-within {
     box-shadow: var(--sh-menu);
   }
+  .srch__pole:focus-within {
+    background: transparent;
+  }
   .srch__pole,
   .srch__geo {
     display: flex;
@@ -251,7 +254,7 @@
   @media (hover: hover) {
     .srch__pole:hover,
     .srch__geo:hover {
-      background: var(--line);
+      background: var(--canvas);
       color: var(--ink);
     }
     .srch__geo:hover::before {
