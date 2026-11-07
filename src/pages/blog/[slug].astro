@@ -1,6 +1,7 @@
 ---
 import { render } from 'astro:content';
-import { Picture, getImage } from 'astro:assets';
+import { Picture, Image, getImage } from 'astro:assets';
+import fotoAutor from '../../assets/autor.jpg';
 import Base from '../../layouts/Base.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import Hledani from '../../components/Hledani.astro';
@@ -55,7 +56,10 @@ const jsonLd = {
         <a href={kategorieUrl(c.data.kategorie)}>{c.data.kategorie}</a>
         <span><time datetime={c.data.datum.toISOString()}>{datumText(c.data.datum)}</time></span>
         <span>{casCteni(c)} min čtení</span>
-        <span>Autor: <a href="/o-webu/#kdo-za-webem-stoji">{SITE.provozovatel.nazev}</a></span>
+        <span class="meta__autor">
+          <Image src={fotoAutor} alt="" width={22} height={22} densities={[1, 2]} class="meta__foto" />
+          <a href="/o-webu/#kdo-za-webem-stoji">{SITE.provozovatel.nazev}</a>
+        </span>
       </p>
       <h1>{c.data.title}</h1>
       <p class="perex">{c.data.perex}</p>
@@ -150,6 +154,7 @@ const jsonLd = {
   }
   .meta {
     display: flex;
+    align-items: center;
     justify-content: center;
     flex-wrap: wrap;
     gap: 0.4rem 1.25rem;
@@ -162,6 +167,17 @@ const jsonLd = {
   }
   .meta a {
     color: var(--ink);
+  }
+  .meta__autor {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .meta :global(.meta__foto) {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    object-fit: cover;
   }
   .hlava h1 {
     font-size: clamp(2rem, 5vw, 3.2rem);
