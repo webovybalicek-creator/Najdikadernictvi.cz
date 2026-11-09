@@ -1,0 +1,619 @@
+{
+ "zdroj": "ČSÚ – Registr ekonomických subjektů (RES), CZ-NACE 2025 96.21",
+ "aktualizace": "2026-11-09",
+ "aktivni": 75462,
+ "fyzicke": 73806,
+ "pravnicke": 1656,
+ "mesice": [
+  {
+   "mesic": "2024-10",
+   "vznik": 261,
+   "zanik": 0,
+   "vznikKraje": {
+    "praha": 46,
+    "jihocesky-kraj": 23,
+    "ustecky-kraj": 14,
+    "olomoucky-kraj": 16,
+    "jihomoravsky-kraj": 25,
+    "stredocesky-kraj": 41,
+    "zlinsky-kraj": 14,
+    "plzensky-kraj": 16,
+    "kraj-vysocina": 11,
+    "moravskoslezsky-kraj": 18,
+    "karlovarsky-kraj": 10,
+    "kralovehradecky-kraj": 11,
+    "pardubicky-kraj": 7,
+    "liberecky-kraj": 9
+   },
+   "zanikKraje": {}
+  },
+  {
+   "mesic": "2024-11",
+   "vznik": 234,
+   "zanik": 0,
+   "vznikKraje": {
+    "praha": 49,
+    "jihomoravsky-kraj": 33,
+    "ustecky-kraj": 13,
+    "pardubicky-kraj": 15,
+    "liberecky-kraj": 5,
+    "moravskoslezsky-kraj": 26,
+    "kralovehradecky-kraj": 10,
+    "plzensky-kraj": 15,
+    "stredocesky-kraj": 21,
+    "olomoucky-kraj": 6,
+    "karlovarsky-kraj": 5,
+    "kraj-vysocina": 12,
+    "zlinsky-kraj": 9,
+    "jihocesky-kraj": 15
+   },
+   "zanikKraje": {}
+  },
+  {
+   "mesic": "2024-12",
+   "vznik": 152,
+   "zanik": 0,
+   "vznikKraje": {
+    "jihomoravsky-kraj": 17,
+    "kraj-vysocina": 4,
+    "praha": 35,
+    "ustecky-kraj": 13,
+    "karlovarsky-kraj": 4,
+    "kralovehradecky-kraj": 10,
+    "liberecky-kraj": 7,
+    "olomoucky-kraj": 4,
+    "pardubicky-kraj": 8,
+    "stredocesky-kraj": 21,
+    "jihocesky-kraj": 8,
+    "moravskoslezsky-kraj": 12,
+    "plzensky-kraj": 6,
+    "zlinsky-kraj": 3
+   },
+   "zanikKraje": {}
+  },
+  {
+   "mesic": "2025-01",
+   "vznik": 337,
+   "zanik": 0,
+   "vznikKraje": {
+    "praha": 54,
+    "moravskoslezsky-kraj": 29,
+    "kraj-vysocina": 22,
+    "karlovarsky-kraj": 10,
+    "kralovehradecky-kraj": 16,
+    "plzensky-kraj": 17,
+    "stredocesky-kraj": 39,
+    "ustecky-kraj": 24,
+    "olomoucky-kraj": 15,
+    "liberecky-kraj": 10,
+    "jihocesky-kraj": 21,
+    "jihomoravsky-kraj": 48,
+    "pardubicky-kraj": 18,
+    "zlinsky-kraj": 14
+   },
+   "zanikKraje": {}
+  },
+  {
+   "mesic": "2025-02",
+   "vznik": 291,
+   "zanik": 4,
+   "vznikKraje": {
+    "praha": 47,
+    "plzensky-kraj": 15,
+    "zlinsky-kraj": 14,
+    "moravskoslezsky-kraj": 27,
+    "olomoucky-kraj": 20,
+    "ustecky-kraj": 19,
+    "jihomoravsky-kraj": 44,
+    "pardubicky-kraj": 15,
+    "kralovehradecky-kraj": 15,
+    "kraj-vysocina": 9,
+    "stredocesky-kraj": 39,
+    "karlovarsky-kraj": 7,
+    "jihocesky-kraj": 7,
+    "liberecky-kraj": 13
+   },
+   "zanikKraje": {
+    "praha": 3,
+    "kralovehradecky-kraj": 1
+   }
+  },
+  {
+   "mesic": "2025-03",
+   "vznik": 319,
+   "zanik": 1,
+   "vznikKraje": {
+    "moravskoslezsky-kraj": 35,
+    "plzensky-kraj": 16,
+    "ustecky-kraj": 20,
+    "jihomoravsky-kraj": 39,
+    "kraj-vysocina": 14,
+    "olomoucky-kraj": 18,
+    "karlovarsky-kraj": 12,
+    "zlinsky-kraj": 14,
+    "stredocesky-kraj": 46,
+    "liberecky-kraj": 13,
+    "praha": 52,
+    "jihocesky-kraj": 14,
+    "kralovehradecky-kraj": 14,
+    "pardubicky-kraj": 12
+   },
+   "zanikKraje": {
+    "praha": 1
+   }
+  },
+  {
+   "mesic": "2025-04",
+   "vznik": 336,
+   "zanik": 0,
+   "vznikKraje": {
+    "jihomoravsky-kraj": 35,
+    "praha": 71,
+    "ustecky-kraj": 16,
+    "plzensky-kraj": 25,
+    "moravskoslezsky-kraj": 30,
+    "olomoucky-kraj": 23,
+    "stredocesky-kraj": 38,
+    "zlinsky-kraj": 19,
+    "kraj-vysocina": 7,
+    "kralovehradecky-kraj": 19,
+    "jihocesky-kraj": 18,
+    "pardubicky-kraj": 22,
+    "karlovarsky-kraj": 10,
+    "liberecky-kraj": 3
+   },
+   "zanikKraje": {}
+  },
+  {
+   "mesic": "2025-05",
+   "vznik": 293,
+   "zanik": 5,
+   "vznikKraje": {
+    "stredocesky-kraj": 49,
+    "kraj-vysocina": 10,
+    "olomoucky-kraj": 12,
+    "zlinsky-kraj": 22,
+    "praha": 46,
+    "plzensky-kraj": 19,
+    "ustecky-kraj": 16,
+    "jihomoravsky-kraj": 26,
+    "pardubicky-kraj": 11,
+    "moravskoslezsky-kraj": 30,
+    "jihocesky-kraj": 11,
+    "kralovehradecky-kraj": 15,
+    "karlovarsky-kraj": 15,
+    "liberecky-kraj": 11
+   },
+   "zanikKraje": {
+    "moravskoslezsky-kraj": 1,
+    "praha": 3,
+    "karlovarsky-kraj": 1
+   }
+  },
+  {
+   "mesic": "2025-06",
+   "vznik": 301,
+   "zanik": 0,
+   "vznikKraje": {
+    "plzensky-kraj": 19,
+    "jihomoravsky-kraj": 38,
+    "ustecky-kraj": 14,
+    "olomoucky-kraj": 18,
+    "kraj-vysocina": 16,
+    "praha": 51,
+    "moravskoslezsky-kraj": 31,
+    "kralovehradecky-kraj": 18,
+    "jihocesky-kraj": 12,
+    "stredocesky-kraj": 31,
+    "karlovarsky-kraj": 12,
+    "liberecky-kraj": 19,
+    "pardubicky-kraj": 13,
+    "zlinsky-kraj": 9
+   },
+   "zanikKraje": {}
+  },
+  {
+   "mesic": "2025-07",
+   "vznik": 250,
+   "zanik": 3,
+   "vznikKraje": {
+    "jihocesky-kraj": 17,
+    "olomoucky-kraj": 11,
+    "kralovehradecky-kraj": 21,
+    "jihomoravsky-kraj": 31,
+    "kraj-vysocina": 13,
+    "stredocesky-kraj": 35,
+    "ustecky-kraj": 11,
+    "plzensky-kraj": 15,
+    "zlinsky-kraj": 10,
+    "praha": 35,
+    "liberecky-kraj": 6,
+    "moravskoslezsky-kraj": 19,
+    "pardubicky-kraj": 18,
+    "karlovarsky-kraj": 8
+   },
+   "zanikKraje": {
+    "kralovehradecky-kraj": 1,
+    "stredocesky-kraj": 1,
+    "praha": 1
+   }
+  },
+  {
+   "mesic": "2025-08",
+   "vznik": 267,
+   "zanik": 2,
+   "vznikKraje": {
+    "liberecky-kraj": 10,
+    "jihocesky-kraj": 16,
+    "karlovarsky-kraj": 10,
+    "plzensky-kraj": 14,
+    "ustecky-kraj": 14,
+    "olomoucky-kraj": 15,
+    "zlinsky-kraj": 15,
+    "stredocesky-kraj": 34,
+    "moravskoslezsky-kraj": 28,
+    "praha": 42,
+    "jihomoravsky-kraj": 35,
+    "pardubicky-kraj": 12,
+    "kraj-vysocina": 10,
+    "kralovehradecky-kraj": 12
+   },
+   "zanikKraje": {
+    "kraj-vysocina": 1,
+    "plzensky-kraj": 1
+   }
+  },
+  {
+   "mesic": "2025-09",
+   "vznik": 346,
+   "zanik": 4,
+   "vznikKraje": {
+    "stredocesky-kraj": 47,
+    "jihomoravsky-kraj": 53,
+    "ustecky-kraj": 14,
+    "jihocesky-kraj": 22,
+    "praha": 51,
+    "plzensky-kraj": 17,
+    "kraj-vysocina": 16,
+    "moravskoslezsky-kraj": 34,
+    "liberecky-kraj": 13,
+    "olomoucky-kraj": 22,
+    "kralovehradecky-kraj": 13,
+    "karlovarsky-kraj": 16,
+    "zlinsky-kraj": 11,
+    "pardubicky-kraj": 17
+   },
+   "zanikKraje": {
+    "ustecky-kraj": 1,
+    "moravskoslezsky-kraj": 1,
+    "praha": 1,
+    "plzensky-kraj": 1
+   }
+  },
+  {
+   "mesic": "2025-10",
+   "vznik": 303,
+   "zanik": 2,
+   "vznikKraje": {
+    "praha": 77,
+    "liberecky-kraj": 9,
+    "olomoucky-kraj": 16,
+    "ustecky-kraj": 12,
+    "jihocesky-kraj": 12,
+    "moravskoslezsky-kraj": 21,
+    "zlinsky-kraj": 17,
+    "kralovehradecky-kraj": 14,
+    "jihomoravsky-kraj": 43,
+    "kraj-vysocina": 9,
+    "stredocesky-kraj": 35,
+    "plzensky-kraj": 23,
+    "pardubicky-kraj": 8,
+    "karlovarsky-kraj": 7
+   },
+   "zanikKraje": {
+    "praha": 1,
+    "moravskoslezsky-kraj": 1
+   }
+  },
+  {
+   "mesic": "2025-11",
+   "vznik": 278,
+   "zanik": 7,
+   "vznikKraje": {
+    "olomoucky-kraj": 13,
+    "kralovehradecky-kraj": 21,
+    "jihomoravsky-kraj": 21,
+    "ustecky-kraj": 17,
+    "plzensky-kraj": 29,
+    "stredocesky-kraj": 32,
+    "kraj-vysocina": 12,
+    "moravskoslezsky-kraj": 28,
+    "jihocesky-kraj": 17,
+    "pardubicky-kraj": 4,
+    "liberecky-kraj": 10,
+    "praha": 56,
+    "zlinsky-kraj": 13,
+    "karlovarsky-kraj": 5
+   },
+   "zanikKraje": {
+    "praha": 3,
+    "ustecky-kraj": 2,
+    "kralovehradecky-kraj": 1,
+    "kraj-vysocina": 1
+   }
+  },
+  {
+   "mesic": "2025-12",
+   "vznik": 181,
+   "zanik": 7,
+   "vznikKraje": {
+    "stredocesky-kraj": 14,
+    "kralovehradecky-kraj": 14,
+    "jihomoravsky-kraj": 14,
+    "kraj-vysocina": 13,
+    "praha": 44,
+    "moravskoslezsky-kraj": 11,
+    "jihocesky-kraj": 9,
+    "liberecky-kraj": 14,
+    "ustecky-kraj": 9,
+    "pardubicky-kraj": 11,
+    "karlovarsky-kraj": 4,
+    "plzensky-kraj": 8,
+    "zlinsky-kraj": 8,
+    "olomoucky-kraj": 8
+   },
+   "zanikKraje": {
+    "ustecky-kraj": 1,
+    "praha": 5,
+    "jihomoravsky-kraj": 1
+   }
+  },
+  {
+   "mesic": "2026-01",
+   "vznik": 357,
+   "zanik": 1,
+   "vznikKraje": {
+    "praha": 63,
+    "jihocesky-kraj": 23,
+    "moravskoslezsky-kraj": 34,
+    "olomoucky-kraj": 30,
+    "stredocesky-kraj": 40,
+    "kraj-vysocina": 16,
+    "ustecky-kraj": 25,
+    "pardubicky-kraj": 18,
+    "kralovehradecky-kraj": 17,
+    "jihomoravsky-kraj": 43,
+    "karlovarsky-kraj": 13,
+    "liberecky-kraj": 8,
+    "zlinsky-kraj": 13,
+    "plzensky-kraj": 14
+   },
+   "zanikKraje": {
+    "praha": 1
+   }
+  },
+  {
+   "mesic": "2026-02",
+   "vznik": 335,
+   "zanik": 3,
+   "vznikKraje": {
+    "jihocesky-kraj": 24,
+    "stredocesky-kraj": 32,
+    "olomoucky-kraj": 20,
+    "ustecky-kraj": 18,
+    "praha": 64,
+    "moravskoslezsky-kraj": 34,
+    "zlinsky-kraj": 12,
+    "jihomoravsky-kraj": 33,
+    "plzensky-kraj": 20,
+    "kralovehradecky-kraj": 21,
+    "karlovarsky-kraj": 18,
+    "kraj-vysocina": 15,
+    "liberecky-kraj": 12,
+    "pardubicky-kraj": 12
+   },
+   "zanikKraje": {
+    "praha": 2,
+    "jihomoravsky-kraj": 1
+   }
+  },
+  {
+   "mesic": "2026-03",
+   "vznik": 341,
+   "zanik": 1,
+   "vznikKraje": {
+    "praha": 62,
+    "plzensky-kraj": 28,
+    "jihocesky-kraj": 16,
+    "moravskoslezsky-kraj": 38,
+    "olomoucky-kraj": 14,
+    "jihomoravsky-kraj": 31,
+    "stredocesky-kraj": 49,
+    "ustecky-kraj": 12,
+    "kralovehradecky-kraj": 19,
+    "karlovarsky-kraj": 9,
+    "kraj-vysocina": 14,
+    "pardubicky-kraj": 16,
+    "liberecky-kraj": 16,
+    "zlinsky-kraj": 17
+   },
+   "zanikKraje": {
+    "kraj-vysocina": 1
+   }
+  },
+  {
+   "mesic": "2026-04",
+   "vznik": 328,
+   "zanik": 2,
+   "vznikKraje": {
+    "pardubicky-kraj": 14,
+    "olomoucky-kraj": 25,
+    "plzensky-kraj": 23,
+    "praha": 54,
+    "ustecky-kraj": 19,
+    "jihomoravsky-kraj": 45,
+    "kraj-vysocina": 14,
+    "kralovehradecky-kraj": 14,
+    "stredocesky-kraj": 44,
+    "liberecky-kraj": 8,
+    "moravskoslezsky-kraj": 27,
+    "jihocesky-kraj": 21,
+    "karlovarsky-kraj": 15,
+    "zlinsky-kraj": 5
+   },
+   "zanikKraje": {
+    "praha": 1,
+    "jihomoravsky-kraj": 1
+   }
+  },
+  {
+   "mesic": "2026-05",
+   "vznik": 260,
+   "zanik": 4,
+   "vznikKraje": {
+    "praha": 64,
+    "moravskoslezsky-kraj": 24,
+    "jihomoravsky-kraj": 21,
+    "kraj-vysocina": 11,
+    "kralovehradecky-kraj": 15,
+    "zlinsky-kraj": 10,
+    "pardubicky-kraj": 8,
+    "karlovarsky-kraj": 7,
+    "stredocesky-kraj": 29,
+    "olomoucky-kraj": 16,
+    "plzensky-kraj": 17,
+    "jihocesky-kraj": 17,
+    "ustecky-kraj": 14,
+    "liberecky-kraj": 7
+   },
+   "zanikKraje": {
+    "praha": 2,
+    "kralovehradecky-kraj": 1,
+    "stredocesky-kraj": 1
+   }
+  },
+  {
+   "mesic": "2026-06",
+   "vznik": 305,
+   "zanik": 2,
+   "vznikKraje": {
+    "liberecky-kraj": 21,
+    "stredocesky-kraj": 42,
+    "moravskoslezsky-kraj": 31,
+    "pardubicky-kraj": 12,
+    "olomoucky-kraj": 20,
+    "jihomoravsky-kraj": 32,
+    "ustecky-kraj": 15,
+    "praha": 59,
+    "plzensky-kraj": 10,
+    "kralovehradecky-kraj": 13,
+    "jihocesky-kraj": 14,
+    "zlinsky-kraj": 11,
+    "karlovarsky-kraj": 9,
+    "kraj-vysocina": 16
+   },
+   "zanikKraje": {
+    "praha": 1,
+    "liberecky-kraj": 1
+   }
+  },
+  {
+   "mesic": "2026-07",
+   "vznik": 281,
+   "zanik": 1,
+   "vznikKraje": {
+    "jihomoravsky-kraj": 34,
+    "praha": 58,
+    "ustecky-kraj": 15,
+    "pardubicky-kraj": 10,
+    "kralovehradecky-kraj": 10,
+    "karlovarsky-kraj": 6,
+    "stredocesky-kraj": 34,
+    "jihocesky-kraj": 19,
+    "olomoucky-kraj": 20,
+    "moravskoslezsky-kraj": 28,
+    "zlinsky-kraj": 12,
+    "liberecky-kraj": 10,
+    "plzensky-kraj": 17,
+    "kraj-vysocina": 8
+   },
+   "zanikKraje": {
+    "praha": 1
+   }
+  },
+  {
+   "mesic": "2026-08",
+   "vznik": 318,
+   "zanik": 2,
+   "vznikKraje": {
+    "olomoucky-kraj": 16,
+    "moravskoslezsky-kraj": 28,
+    "kraj-vysocina": 8,
+    "jihomoravsky-kraj": 43,
+    "praha": 48,
+    "karlovarsky-kraj": 10,
+    "liberecky-kraj": 14,
+    "pardubicky-kraj": 14,
+    "plzensky-kraj": 24,
+    "stredocesky-kraj": 43,
+    "kralovehradecky-kraj": 18,
+    "ustecky-kraj": 19,
+    "zlinsky-kraj": 16,
+    "jihocesky-kraj": 17
+   },
+   "zanikKraje": {
+    "jihomoravsky-kraj": 2
+   }
+  },
+  {
+   "mesic": "2026-09",
+   "vznik": 308,
+   "zanik": 4,
+   "vznikKraje": {
+    "jihomoravsky-kraj": 45,
+    "ustecky-kraj": 26,
+    "plzensky-kraj": 20,
+    "kralovehradecky-kraj": 20,
+    "stredocesky-kraj": 34,
+    "praha": 47,
+    "karlovarsky-kraj": 11,
+    "kraj-vysocina": 12,
+    "pardubicky-kraj": 13,
+    "moravskoslezsky-kraj": 23,
+    "olomoucky-kraj": 9,
+    "jihocesky-kraj": 16,
+    "zlinsky-kraj": 16,
+    "liberecky-kraj": 16
+   },
+   "zanikKraje": {
+    "moravskoslezsky-kraj": 2,
+    "praha": 1,
+    "ustecky-kraj": 1
+   }
+  },
+  {
+   "mesic": "2026-10",
+   "vznik": 258,
+   "zanik": 1,
+   "vznikKraje": {
+    "praha": 47,
+    "ustecky-kraj": 19,
+    "moravskoslezsky-kraj": 27,
+    "jihomoravsky-kraj": 40,
+    "kraj-vysocina": 6,
+    "plzensky-kraj": 14,
+    "jihocesky-kraj": 19,
+    "kralovehradecky-kraj": 13,
+    "olomoucky-kraj": 9,
+    "liberecky-kraj": 10,
+    "stredocesky-kraj": 36,
+    "karlovarsky-kraj": 4,
+    "zlinsky-kraj": 6,
+    "pardubicky-kraj": 8
+   },
+   "zanikKraje": {
+    "praha": 1
+   }
+  }
+ ]
+}
