@@ -1,0 +1,47 @@
+name: IndexNow – oznámit celý web
+
+# Pošle všechny URL ze živé sitemapy do IndexNow (Seznam, Bing, Yandex…).
+# Běžný deploy oznamuje jen změněné stránky; tohle je jednorázový plný ping.
+# Spuštění: Actions → „IndexNow – oznámit celý web“ → Run workflow.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/indexnow-vse.yml']
+
+jobs:
+  indexnow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HOST: najdikadernictvi.cz
+      KEY: 46d564eebf61cc0e9b8e08f03a218cae
+    steps:
+      - name: Kontrola klíče na webu
+        run: |
+          OBSAH=$(curl -sS --fail "https://$HOST/$KEY.txt")
+          [ "$OBSAH" = "$KEY" ] || { echo "::error::Klíčový soubor na webu nesedí"; exit 1; }
+
+      - name: Načtení URL ze sitemapy
+        run: |
+          curl -sS --fail "https://$HOST/sitemap.xml" | grep -o '<loc>[^<]*' | sed 's/<loc>//' > casti.txt
+          : > urls.txt
+          while read -r s; do
+            curl -sS --fail "$s" | grep -o '<loc>[^<]*' | sed 's/<loc>//' >> urls.txt
+          done < casti.txt
+          sort -u urls.txt -o urls.txt
+          echo "::notice::Sitemap: $(wc -l < casti.txt) částí, $(wc -l < urls.txt) URL"
+
+      - name: Odeslání do IndexNow (po 10 000 URL)
+        run: |
+          split -l 10000 -d urls.txt davka-
+          for f in davka-*; do
+            jq -R . "$f" | jq -s --arg h "$HOST" --arg k "$KEY" \
+              '{host: $h, key: $k, keyLocation: ("https://" + $h + "/" + $k + ".txt"), urlList: .}' > indexnow.json
+            for api in https://search.seznam.cz/indexnow https://api.indexnow.org/indexnow; do
+              KOD=$(curl -s -o odpoved.txt -w '%{http_code}' -X POST -H 'Content-Type: application/json; charset=utf-8' --data @indexnow.json "$api")
+              echo "::notice::$api ($f, $(wc -l < "$f") URL) → HTTP $KOD"
+              case "$KOD" in 200|202) ;; *) cat odpoved.txt ;; esac
+              sleep 2
+            done
+          done
