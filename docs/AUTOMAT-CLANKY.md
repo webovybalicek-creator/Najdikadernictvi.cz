@@ -16,6 +16,18 @@ Web nesmí působit jako farma generovaných článků. Každý článek musí �
   ideálně jeden při každém běhu, kdy v zásobníku není silné datové téma.
 - Raději žádný článek než slabý článek. Když nic nesplní laťku, běh skonči bez publikace a napiš proč.
 
+## Měsíční report z rejstříku (první běh v měsíci)
+Při prvním běhu v každém měsíci (první pondělí) napiš místo tématu ze zásobníku report za uplynulý měsíc:
+- Data: `src/data/statistiky-registr.json` (zapisuje import z RES, denně). Pole `mesice[]` má `vznik`, `vznikKraje`
+  po měsících. Stránka https://najdikadernictvi.cz/kadernictvi-v-cislech/ ukazuje totéž v grafu – odkazuj na ni.
+- Slug `nova-kadernictvi-<mesic>-<rok>` (např. `nova-kadernictvi-rijen-2026`), kategorie `Data`, titulek typu
+  „V říjnu vzniklo 214 nových kadeřnictví: nejvíc ve Středočeském kraji“.
+- Obsah: počet za měsíc, srovnání se stejným měsícem loni a s průměrem 12 měsíců, pořadí krajů (tabulka),
+  1–2 věty interpretace bez spekulací. Nezapomeň na upozornění, že jde o subjekty (firmy a OSVČ) s hlavní činností
+  kadeřnictví podle RES, ne o nově otevřené provozovny. Zdroj: ČSÚ, Registr ekonomických subjektů.
+- Zániky (`zanik`) nepoužívej jako hlavní číslo: CZ-NACE 2025 mají jen novější záznamy, zániky jsou podhodnocené.
+- Když data za uplynulý měsíc v souboru nejsou (import neproběhl), report přeskoč a napiš běžný článek.
+
 ## Postup jednoho běhu
 1. `git pull`. Vezmi první vhodné téma ze zásobníku (datová témata mají přednost) v `docs/temata-clanku.md`.
    Zkontroluj, že podobný článek v `src/content/blog/` ještě není (jinak téma přeskoč a přesuň do Hotovo s poznámkou „duplicitní“).

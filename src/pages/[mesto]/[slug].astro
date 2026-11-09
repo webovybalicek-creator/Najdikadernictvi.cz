@@ -32,6 +32,7 @@ import { DNY, denText, souhrn, schemaSpec } from '../../lib/oteviraci-doba';
 import { SITE } from '../../lib/config';
 import { metaSalonu } from '../../lib/meta';
 import { srovnani } from '../../lib/srovnani';
+import PotvrzeniDoby from '../../components/PotvrzeniDoby.astro';
 
 export function getStaticPaths() {
   return PROVOZOVNY.map((p) => ({ params: { mesto: p.mestoSlug, slug: p.slug }, props: { p } }));
@@ -165,6 +166,7 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
               </p>
             )
           }
+          {(t || p.oteviraciDoba) && <PotvrzeniDoby id={p.id} url={url(p)} />}
         </section>
 
         <section>

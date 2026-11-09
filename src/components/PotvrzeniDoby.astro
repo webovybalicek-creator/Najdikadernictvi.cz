@@ -1,0 +1,164 @@
+---
+// „Sedí otevírací doba?“ – potvrzení od návštěvníků (API /api/doba.php).
+// Zobrazí „ověřeno návštěvníky“ s datem, odpověď „Ne“ otevře pole pro správnou dobu.
+interface Props {
+  id: string;
+  url: string;
+}
+const { id, url } = Astro.props;
+---
+
+<div class="pd" data-pd data-id={id} data-url={url}>
+  <p class="pd__info" data-pd-info hidden></p>
+  <div class="pd__otazka" data-pd-otazka>
+    <span>Byli jste tu nedávno? Sedí otevírací doba?</span>
+    <button type="button" class="pd__btn" data-odpoved="ano">Ano, sedí</button>
+    <button type="button" class="pd__btn" data-odpoved="ne">Ne, je jinak</button>
+  </div>
+  <form class="pd__ne" data-pd-ne hidden>
+    <label for={`pd-${id}`}>Jaká je správná otevírací doba? (nepovinné)</label>
+    <textarea id={`pd-${id}`} name="pozn" rows="2" maxlength="400" placeholder="Například: v sobotu už nemají otevřeno, ve středu do 19:00"></textarea>
+    <input type="text" name="web" tabindex="-1" autocomplete="off" class="pd__past" aria-hidden="true" />
+    <button type="submit" class="pd__btn">Odeslat</button>
+  </form>
+  <p class="pd__dik" data-pd-dik hidden aria-live="polite"></p>
+</div>
+
+<script>
+  const KLIC = 'pd-odpovedi';
+  const datum = (s: string) => new Date(s).toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric' });
+  document.querySelectorAll<HTMLElement>('[data-pd]').forEach((el) => {
+    const id = el.dataset.id!;
+    const url = el.dataset.url!;
+    const info = el.querySelector<HTMLElement>('[data-pd-info]')!;
+    const otazka = el.querySelector<HTMLElement>('[data-pd-otazka]')!;
+    const ne = el.querySelector<HTMLFormElement>('[data-pd-ne]')!;
+    const dik = el.querySelector<HTMLElement>('[data-pd-dik]')!;
+
+    const ukaz = (d: { ano: number; ne: number; naposledy: string | null }) => {
+      if (!d.ano && !d.ne) return;
+      const casti: string[] = [];
+      if (d.naposledy) casti.push(`Návštěvníci naposledy potvrdili ${datum(d.naposledy)}`);
+      if (d.ano + d.ne > 1) casti.push(`souhlasí ${d.ano} z ${d.ano + d.ne}`);
+      info.textContent = casti.join(', ') + '.';
+      info.dataset.stav = d.ne > d.ano ? 'pozor' : 'ok';
+      info.hidden = false;
+    };
+
+    let hlasoval = false;
+    try {
+      hlasoval = (JSON.parse(localStorage.getItem(KLIC) || '[]') as string[]).includes(id);
+    } catch {}
+    if (hlasoval) otazka.hidden = true;
+
+    fetch(`/api/doba.php?salon=${encodeURIComponent(id)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => d?.ok && ukaz(d))
+      .catch(() => {});
+
+    const posli = async (odpoved: 'ano' | 'ne', pozn = '', web = '') => {
+      const fd = new FormData();
+      fd.set('salon', id);
+      fd.set('url', url);
+      fd.set('odpoved', odpoved);
+      fd.set('pozn', pozn);
+      fd.set('web', web);
+      otazka.hidden = true;
+      ne.hidden = true;
+      try {
+        const r = await fetch('/api/doba.php', { method: 'POST', body: fd });
+        const d = await r.json();
+        if (!d.ok) throw new Error();
+        ukaz(d);
+        dik.textContent = odpoved === 'ano' ? 'Díky, pomohli jste dalším zákazníkům.' : 'Díky, údaje prověříme a opravíme.';
+        try {
+          const a = JSON.parse(localStorage.getItem(KLIC) || '[]') as string[];
+          localStorage.setItem(KLIC, JSON.stringify([...a.filter((x) => x !== id), id].slice(-200)));
+        } catch {}
+      } catch {
+        dik.textContent = 'Odpověď se nepodařilo odeslat. Zkuste to prosím později.';
+      }
+      dik.hidden = false;
+    };
+
+    el.querySelectorAll<HTMLButtonElement>('[data-odpoved]').forEach((b) =>
+      b.addEventListener('click', () => {
+        if (b.dataset.odpoved === 'ano') posli('ano');
+        else {
+          otazka.hidden = true;
+          ne.hidden = false;
+          ne.querySelector('textarea')!.focus();
+        }
+      }),
+    );
+    ne.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const f = new FormData(ne);
+      posli('ne', String(f.get('pozn') || ''), String(f.get('web') || ''));
+    });
+  });
+</script>
+
+<style>
+  .pd {
+    margin-top: 0.9rem;
+    font-size: 0.88rem;
+  }
+  .pd__info {
+    margin: 0 0 0.6rem;
+    color: var(--ink-soft);
+  }
+  .pd__info[data-stav='ok']::before {
+    content: '✓ ';
+    color: var(--open, #008a05);
+    font-weight: 700;
+  }
+  .pd__info[data-stav='pozor']::before {
+    content: '! ';
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .pd__otazka {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ink-soft);
+  }
+  .pd__otazka span {
+    margin-right: 0.25rem;
+  }
+  .pd__btn {
+    font: inherit;
+    font-size: 0.85rem;
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: #fff;
+    cursor: pointer;
+  }
+  .pd__btn:hover {
+    border-color: var(--ink);
+  }
+  .pd__ne {
+    display: grid;
+    gap: 0.45rem;
+    max-width: 30rem;
+  }
+  .pd__ne textarea {
+    font: inherit;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  .pd__ne .pd__btn {
+    justify-self: start;
+  }
+  .pd__past {
+    position: absolute;
+    left: -9999px;
+  }
+  .pd__dik {
+    margin: 0.4rem 0 0;
+  }
+</style>

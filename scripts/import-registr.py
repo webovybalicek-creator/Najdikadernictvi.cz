@@ -47,33 +47,73 @@ def get(url: str, timeout: int = 900) -> bytes:
 
 
 # ---------------------------------------------------------------- 1. RES
+STAT_OUT = os.path.join(ROOT, 'src', 'data', 'statistiky-registr.json')
+# NUTS3 (první 5 znaků kódu okresu LAU1 v RES) → slug kraje
+NUTS_KRAJ = {
+    'CZ010': 'praha', 'CZ020': 'stredocesky-kraj', 'CZ031': 'jihocesky-kraj', 'CZ032': 'plzensky-kraj',
+    'CZ041': 'karlovarsky-kraj', 'CZ042': 'ustecky-kraj', 'CZ051': 'liberecky-kraj', 'CZ052': 'kralovehradecky-kraj',
+    'CZ053': 'pardubicky-kraj', 'CZ063': 'kraj-vysocina', 'CZ064': 'jihomoravsky-kraj', 'CZ071': 'olomoucky-kraj',
+    'CZ072': 'zlinsky-kraj', 'CZ080': 'moravskoslezsky-kraj',
+}
+
+
+def mesic(d: str | None) -> str | None:
+    """'2024-05-17' i '17.05.2024' → '2024-05'"""
+    d = (d or '').strip()
+    if len(d) >= 7 and d[4] == '-':
+        return d[:7]
+    if d.count('.') == 2:
+        den, m, r = d.split('.')[:3]
+        if len(r.strip()) == 4:
+            return f'{r.strip()}-{m.strip().zfill(2)}'
+    return None
+
+
 def ica_z_res() -> dict[str, str]:
     print('RES: stahuji res_data.csv …', flush=True)
     raw = get('https://opendata.csu.gov.cz/soubory/od/od_org03/res_data.csv')
     out = {}
+    # Statistika pro datové články: vznik a zánik subjektů s CZ-NACE 2025 96.21 po měsících a krajích
+    od = (dt.date.today().replace(day=1) - dt.timedelta(days=760)).strftime('%Y-%m')
+    vznik: dict[str, dict[str, int]] = {}
+    zanik: dict[str, dict[str, int]] = {}
+    fo = po = 0
     for r in csv.DictReader(io.StringIO(raw.decode('utf-8'))):
-        if (r.get('NACE2025') or '').startswith('9621') and not (r.get('DDATZAN') or '').strip():
-            out[r['ICO'].strip().zfill(8)] = (r.get('FORMA') or '').strip()
+        if not (r.get('NACE2025') or '').startswith('9621'):
+            continue
+        aktivni = not (r.get('DDATZAN') or '').strip()
+        forma = (r.get('FORMA') or '').strip()
+        if aktivni:
+            out[r['ICO'].strip().zfill(8)] = forma
+            if forma.startswith('1'):
+                fo += 1
+            else:
+                po += 1
+        okres = (r.get('OKRESLAU') or r.get('OKRES') or '').strip()
+        kraj = NUTS_KRAJ.get(okres[:5], 'neznamy')
+        for slovnik, datum in ((vznik, r.get('DDATVZN')), (zanik, r.get('DDATZAN'))):
+            m = mesic(datum)
+            if m and m >= od:
+                k = slovnik.setdefault(m, {})
+                k[kraj] = k.get(kraj, 0) + 1
     print(f'RES: {len(out)} aktivních subjektů s CZ-NACE 96.21', flush=True)
+    mesice = sorted(set(vznik) | set(zanik))
+    stat = {
+        'zdroj': 'ČSÚ – Registr ekonomických subjektů (RES), CZ-NACE 2025 96.21',
+        'aktualizace': dt.date.today().isoformat(),
+        'aktivni': len(out),
+        'fyzicke': fo,
+        'pravnicke': po,
+        'mesice': [
+            {'mesic': m, 'vznik': sum(vznik.get(m, {}).values()), 'zanik': sum(zanik.get(m, {}).values()),
+             'vznikKraje': vznik.get(m, {}), 'zanikKraje': zanik.get(m, {})}
+            for m in mesice
+        ],
+    }
+    with open(STAT_OUT, 'w', encoding='utf-8') as f:
+        json.dump(stat, f, ensure_ascii=False, indent=1)
+        f.write('\n')
     return out
-
-
-# ---------------------------------------------------------------- 2. RŽP
-class Limiter:
-    def __init__(self, per_sec: float):
-        self.interval = 1 / per_sec
-        self.lock = threading.Lock()
-        self.next = time.monotonic()
-
-    def wait(self):
-        with self.lock:
-            now = time.monotonic()
-            if self.next > now:
-                time.sleep(self.next - now)
-            self.next = max(self.next, now) + self.interval
-
-
-limiter = Limiter(ZA_SEKUNDU)
 
 
 def je_kadernicka(zivnost: dict) -> bool:

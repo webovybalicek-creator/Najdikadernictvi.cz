@@ -43,16 +43,16 @@ V našem katalogu u každého salonu najdete typ provozovny, kontakt a otevírac
 
 ## Barbershop a kadeřnictví v číslech
 
-V katalogu evidujeme **297 barbershopů**, u 112 z nich známe otevírací dobu. Ve srovnání s klasickými kadeřnictvími mají barbershopy otevřeno déle a víc přizpůsobeně lidem, kteří pracují:
+V katalogu evidujeme **332 barbershopů**, u 135 z nich známe otevírací dobu. Ve srovnání s klasickými kadeřnictvími mají barbershopy otevřeno déle a víc přizpůsobeně lidem, kteří pracují:
 
 | | Barbershopy | Kadeřnictví |
 |---|---|---|
-| Otevřeno v sobotu | 61 % | 38 % |
-| Otevřeno večer do 19:00 a déle | 76 % | 54 % |
-| Typicky hodin týdně | 57 | 51 |
+| Otevřeno v sobotu | 57 % | 36 % |
+| Otevřeno večer do 19:00 a déle | 72 % | 52 % |
+| Typicky hodin týdně | 55 | 50 |
 
 Když tedy potřebujete pánský střih v sobotu nebo pozdě večer, máte u barbera zhruba o polovinu větší šanci. Pro dámské střihy, barvení a dětské střihy zůstává jistější klasické kadeřnictví.
 
 Barbershopy podle města: [Brno](/barbershopy/brno/), [Praha 5](/barbershopy/praha-5/), [Praha 3](/barbershopy/praha-3/), [Praha 6](/barbershopy/praha-6/). Kadeřnictví s pánskými střihy najdete ve výběru [pánská kadeřnictví](/panska-kadernictvi/brno/).
 
-Data jsou z našeho katalogu ke 7. 11. 2026 a vychází z 579 salonů, u kterých známe otevírací dobu.
+Data jsou z našeho katalogu ke 9. 11. 2026 a vychází z 672 salonů, u kterých známe otevírací dobu.

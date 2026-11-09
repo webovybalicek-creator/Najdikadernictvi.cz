@@ -1,0 +1,381 @@
+---
+// Nástroj „Kdy se ostříhám“: vyberete město, den a čas → salony, které mají v tu dobu otevřeno.
+// Data se vkládají přímo do stránky (jen salony se známou otevírací dobou, zhruba 700 záznamů).
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { PROVOZOVNY, tyden, url } from '../lib/data';
+
+const DNY = ['pondělí', 'úterý', 'středa', 'čtvrtek', 'pátek', 'sobota', 'neděle'];
+const praha = (s: string) => /^praha-\d+$/.test(s);
+
+const salony = PROVOZOVNY.map((p) => ({ p, t: tyden(p) }))
+  .filter((x) => !!x.t && x.t.some((d) => d.length))
+  .map(({ p, t }) => [
+    p.nazev,
+    url(p),
+    praha(p.mestoSlug) ? 'praha' : p.mestoSlug,
+    praha(p.mestoSlug) ? p.mesto : '',
+    p.typ === 'barber' ? 1 : 0,
+    t,
+    Math.round(p.lat * 1e4) / 1e4,
+    Math.round(p.lon * 1e4) / 1e4,
+  ]);
+
+// Města s aspoň 5 salony se známou dobou
+const pocty = new Map<string, { nazev: string; n: number }>();
+for (const p of PROVOZOVNY) {
+  if (!tyden(p)) continue;
+  const k = praha(p.mestoSlug) ? 'praha' : p.mestoSlug;
+  const e = pocty.get(k) ?? { nazev: praha(p.mestoSlug) ? 'Praha' : p.mesto, n: 0 };
+  e.n++;
+  pocty.set(k, e);
+}
+const mestaVyber = [...pocty.entries()]
+  .filter(([, v]) => v.n >= 5)
+  .sort((a, b) => b[1].n - a[1].n)
+  .map(([slug, v]) => ({ slug, ...v }));
+
+const title = 'Kdy se ostříhám: kadeřnictví otevřená v určitý den a čas';
+const description =
+  'Vyberte město, den a hodinu a uvidíte kadeřnictví a barbershopy, které mají v tu dobu otevřeno. Funguje i podle vaší polohy.';
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Kdy se ostříhám',
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Web',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'CZK' },
+  description,
+};
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+  <div class="wrap section kdy">
+    <Breadcrumb items={[{ nazev: 'Kdy se ostříhám' }]} />
+    <h1>Kdy se <em>ostříhám?</em></h1>
+    <p class="lead">
+      Máte volno v sobotu odpoledne nebo ve středu po šesté? Vyberte, kdy můžete, a ukážeme salony, které mají právě tehdy
+      otevřeno.
+    </p>
+
+    <form class="formular" data-form>
+      <label>
+        <span>Kde</span>
+        <select name="mesto">
+          <option value="_poloha">V mém okolí (podle polohy)</option>
+          {mestaVyber.map((m) => <option value={m.slug} selected={m.slug === 'praha'}>{m.nazev} ({m.n})</option>)}
+        </select>
+      </label>
+      <label>
+        <span>Den</span>
+        <select name="den">
+          {DNY.map((d, i) => <option value={i} selected={i === 5}>{d}</option>)}
+        </select>
+      </label>
+      <label>
+        <span>Čas</span>
+        <select name="cas">
+          {Array.from({ length: 29 }, (_, i) => 360 + i * 30).map((m) => (
+            <option value={m} selected={m === 600}>{`${Math.floor(m / 60)}:${m % 60 ? '30' : '00'}`}</option>
+          ))}
+        </select>
+      </label>
+      <fieldset class="seg">
+        <legend class="sr-only">Typ</legend>
+        <label><input type="radio" name="typ" value="" checked /><span>Vše</span></label>
+        <label><input type="radio" name="typ" value="0" /><span>Kadeřnictví</span></label>
+        <label><input type="radio" name="typ" value="1" /><span>Barbershopy</span></label>
+      </fieldset>
+    </form>
+
+    <p class="souhrn" data-souhrn aria-live="polite">Načítám…</p>
+    <div class="hodiny" data-hodiny aria-hidden="true"></div>
+    <ol class="vysledky" data-vysledky></ol>
+    <p class="vice" data-vice hidden><button class="btn btn--ghost" type="button">Zobrazit další</button></p>
+
+    <section class="jak">
+      <h2>Jak to funguje</h2>
+      <p>
+        Nástroj prochází otevírací doby salonů v našem katalogu. Ukazuje jen salony, u kterých otevírací dobu známe (z
+        OpenStreetMap nebo od majitelů), takže skutečně otevřených salonů bývá víc. Pruh nad výsledky ukazuje, kolik salonů
+        má otevřeno v jednotlivých hodinách vybraného dne, ať vidíte, kdy je na výběr nejvíc.
+      </p>
+      <p>
+        Otevírací doba se může změnit, zvlášť o svátcích. Před cestou do salonu proto doporučujeme zavolat nebo se objednat.
+        Celkový přehled najdete na stránce <a href="/kadernictvi-v-cislech/">Kadeřnictví v číslech</a>.
+      </p>
+    </section>
+  </div>
+  <script type="application/json" id="kdy-data" set:html={JSON.stringify(salony)} />
+</Base>
+
+<script>
+  type Z = [string, string, string, string, 0 | 1, [number, number][][], number, number];
+  const DNY_KR = ['po', 'út', 'st', 'čt', 'pá', 'so', 'ne'];
+  const data: Z[] = JSON.parse(document.getElementById('kdy-data')!.textContent || '[]');
+  const form = document.querySelector<HTMLFormElement>('[data-form]')!;
+  const souhrn = document.querySelector<HTMLElement>('[data-souhrn]')!;
+  const vysledky = document.querySelector<HTMLOListElement>('[data-vysledky]')!;
+  const hodinyEl = document.querySelector<HTMLElement>('[data-hodiny]')!;
+  const vice = document.querySelector<HTMLElement>('[data-vice]')!;
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
+  const hhmm = (m: number) => `${Math.floor(m / 60) % 24}:${String(m % 60).padStart(2, '0')}`;
+  let poloha: { lat: number; lon: number } | null = null;
+  let limit = 30;
+
+  // Výchozí hodnoty z adresy (?mesto=brno&den=5&cas=600) nebo z aktuálního času
+  const q = new URLSearchParams(location.search);
+  const set = (n: string, v: string | null) => {
+    const el = form.elements.namedItem(n) as HTMLSelectElement | null;
+    if (el && v !== null && [...el.options].some((o) => o.value === v)) el.value = v;
+  };
+  set('mesto', q.get('mesto'));
+  set('den', q.get('den'));
+  set('cas', q.get('cas'));
+
+  function km(a: { lat: number; lon: number }, lat: number, lon: number) {
+    const r = Math.PI / 180;
+    const x = Math.sin(((lat - a.lat) * r) / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(lat * r) * Math.sin(((lon - a.lon) * r) / 2) ** 2;
+    return 12742 * Math.asin(Math.sqrt(x));
+  }
+
+  function vykresli() {
+    const f = new FormData(form);
+    const mesto = String(f.get('mesto'));
+    const den = Number(f.get('den'));
+    const cas = Number(f.get('cas'));
+    const typ = String(f.get('typ') ?? '');
+    try {
+      history.replaceState(null, '', `?mesto=${mesto}&den=${den}&cas=${cas}`);
+    } catch {}
+
+    if (mesto === '_poloha' && !poloha) {
+      souhrn.textContent = 'Zjišťuji vaši polohu…';
+      navigator.geolocation?.getCurrentPosition(
+        (p) => {
+          poloha = { lat: p.coords.latitude, lon: p.coords.longitude };
+          vykresli();
+        },
+        () => {
+          souhrn.textContent = 'Polohu se nepodařilo zjistit. Vyberte prosím město.';
+          vysledky.innerHTML = '';
+          hodinyEl.innerHTML = '';
+        },
+        { timeout: 10000 },
+      );
+      return;
+    }
+
+    const vMiste = data.filter(
+      (z) => (typ === '' || String(z[4]) === typ) && (mesto === '_poloha' ? km(poloha!, z[6], z[7]) <= 10 : z[2] === mesto),
+    );
+    const otevrene = vMiste
+      .map((z) => ({ z, i: z[5][den]?.find(([a, b]) => a <= cas && b > cas) }))
+      .filter((x) => !!x.i)
+      .map((x) => ({ ...x, d: poloha && mesto === '_poloha' ? km(poloha, x.z[6], x.z[7]) : 0 }))
+      .sort((a, b) => (mesto === '_poloha' ? a.d - b.d : b.i![1] - a.i![1]));
+
+    const kde = mesto === '_poloha' ? 'Do 10 km od vás' : form.querySelector<HTMLSelectElement>('select[name=mesto]')!.selectedOptions[0].text.replace(/ \(\d+\)$/, '');
+    const kdy = ['v pondělí', 'v úterý', 've středu', 've čtvrtek', 'v pátek', 'v sobotu', 'v neděli'][den];
+    souhrn.innerHTML = vMiste.length
+      ? `${esc(kde)}: <strong>${otevrene.length} z ${vMiste.length}</strong> salonů se známou otevírací dobou má ${kdy} v ${hhmm(cas)} otevřeno.`
+      : `${esc(kde)}: zatím neznáme otevírací dobu žádného salonu.`;
+
+    // Pruh otevřenosti po hodinách vybraného dne
+    const hodiny = Array.from({ length: 15 }, (_, i) => 7 + i);
+    const poHodinach = hodiny.map((h) => vMiste.filter((z) => z[5][den]?.some(([a, b]) => a <= h * 60 && b > h * 60)).length);
+    const maxH = Math.max(1, ...poHodinach);
+    hodinyEl.innerHTML = vMiste.length
+      ? hodiny
+          .map((h) => {
+            const n = poHodinach[h - 7];
+            const v = Math.round((n / maxH) * 100);
+            const akt = Math.floor(cas / 60) === h ? ' is-akt' : '';
+            return `<span class="hod${akt}" title="${h}:00 – ${n} otevřeno"><i style="height:${Math.max(3, v)}%"></i><b>${h}</b></span>`;
+          })
+          .join('')
+      : '';
+
+    vysledky.innerHTML = otevrene
+      .slice(0, limit)
+      .map(
+        ({ z, i, d }) => `<li><a href="${z[1]}">${esc(z[0])}</a>
+          <span class="meta">${z[4] ? 'Barbershop' : 'Kadeřnictví'}${z[3] ? ` · ${esc(z[3])}` : ''}${d ? ` · ${d < 1 ? Math.round(d * 1000) + ' m' : d.toFixed(1).replace('.', ',') + ' km'}` : ''}</span>
+          <span class="do">otevřeno do ${hhmm(i![1])}</span>
+          <span class="tyden">${z[5].map((x, k) => `<span class="${x.length ? 'ano' : 'ne'}${k === den ? ' dnes' : ''}">${DNY_KR[k]}</span>`).join('')}</span></li>`,
+      )
+      .join('');
+    vice.hidden = otevrene.length <= limit;
+  }
+
+  form.addEventListener('change', () => {
+    limit = 30;
+    vykresli();
+  });
+  vice.querySelector('button')!.addEventListener('click', () => {
+    limit += 30;
+    vykresli();
+  });
+  vykresli();
+</script>
+
+<style>
+  .kdy {
+    max-width: 56rem;
+  }
+  .formular {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: flex-end;
+    margin: 1.5rem 0 1rem;
+    padding: 1rem;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  }
+  .formular > label {
+    display: grid;
+    gap: 0.25rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    flex: 1 1 10rem;
+  }
+  .formular select {
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 400;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fff;
+  }
+  .souhrn {
+    min-height: 3.2em;
+    font-size: 1.05rem;
+    margin: 1rem 0 0.5rem;
+  }
+  .hodiny {
+    display: flex;
+    gap: 3px;
+    height: 70px;
+    margin-bottom: 1.25rem;
+  }
+  .hodiny :global(.hod) {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .hodiny :global(.hod i) {
+    width: 100%;
+    background: var(--line);
+    border-radius: 4px 4px 0 0;
+  }
+  .hodiny :global(.hod.is-akt i) {
+    background: var(--accent);
+  }
+  .hodiny :global(.hod b) {
+    font-size: 0.65rem;
+    font-weight: 400;
+    color: var(--ink-soft);
+    margin-top: 3px;
+  }
+  .vysledky {
+    /* místo pro výsledky vykreslené skriptem, ať text pod nimi neposkočí (CLS) */
+    min-height: 40rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .vysledky :global(li) {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.15rem 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .vysledky :global(a) {
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .vysledky :global(.meta) {
+    grid-column: 1;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .vysledky :global(.do) {
+    grid-row: 1;
+    grid-column: 2;
+    font-size: 0.85rem;
+    color: var(--open, #008a05);
+    white-space: nowrap;
+  }
+  .vysledky :global(.tyden) {
+    grid-column: 2;
+    grid-row: 2;
+    display: flex;
+    gap: 2px;
+    font-size: 0.68rem;
+  }
+  .vysledky :global(.tyden span) {
+    padding: 0.05rem 0.25rem;
+    border-radius: 4px;
+  }
+  .vysledky :global(.tyden .ne) {
+    color: #bbb;
+    text-decoration: line-through;
+  }
+  .vysledky :global(.tyden .dnes) {
+    background: var(--ink);
+    color: #fff;
+  }
+  .jak {
+    margin-top: 3rem;
+    max-width: 44rem;
+  }
+  @media (max-width: 560px) {
+    .vysledky :global(li) {
+      grid-template-columns: 1fr;
+    }
+    .vysledky :global(.do),
+    .vysledky :global(.tyden) {
+      grid-column: 1;
+      grid-row: auto;
+    }
+  }
+  .seg {
+    display: inline-flex;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 3px;
+    margin: 0;
+    background: #fff;
+  }
+  .seg label {
+    position: relative;
+  }
+  .seg input {
+    position: absolute;
+    opacity: 0;
+  }
+  .seg span {
+    display: block;
+    padding: 0.5rem 0.95rem;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+  .seg input:checked + span {
+    background: var(--ink);
+    color: #fff;
+  }
+  .seg input:focus-visible + span {
+    outline: 2px solid var(--accent);
+  }
+  .hodiny :global(.hod) {
+    cursor: default;
+  }
+</style>

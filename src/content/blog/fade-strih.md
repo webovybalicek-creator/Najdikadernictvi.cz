@@ -41,8 +41,8 @@ Do domácí péče se hodí matná pasta nebo hlína. Jak vybrat správný styli
 
 ## Kde je barbershopů nejvíc
 
-Fade udělá dobře hlavně barber, který ho dělá denně. V katalogu evidujeme 297 barbershopů. Nejvíc jich se známou otevírací dobou je v [Brně](/barbershopy/brno/), v [Praze 5](/barbershopy/praha-5/), v [Praze 1](/barbershopy/praha-1/) a v [Praze 3](/barbershopy/praha-3/).
+Fade udělá dobře hlavně barber, který ho dělá denně. V katalogu evidujeme 332 barbershopů. Nejvíc jich se známou otevírací dobou je v [Brně](/barbershopy/brno/), v [Praze 5](/barbershopy/praha-5/), v [Praze 1](/barbershopy/praha-1/) a v [Praze 3](/barbershopy/praha-3/).
 
-Protože fade je potřeba obnovovat po 2 až 3 týdnech, rozhoduje i čas. Barbershopy mají častěji otevřeno večer (76 % z nich aspoň jeden den do 19:00) i v sobotu (61 %). Jednou za dva týdny se tak dá zajít po práci a nemusíte si brát volno.
+Protože fade je potřeba obnovovat po 2 až 3 týdnech, rozhoduje i čas. Barbershopy mají častěji otevřeno večer (72 % z nich aspoň jeden den do 19:00) i v sobotu (57 %). Jednou za dva týdny se tak dá zajít po práci a nemusíte si brát volno.
 
-Data jsou z našeho katalogu ke 7. 11. 2026 a vychází z 579 salonů, u kterých známe otevírací dobu.
+Data jsou z našeho katalogu ke 9. 11. 2026 a vychází z 672 salonů, u kterých známe otevírací dobu.

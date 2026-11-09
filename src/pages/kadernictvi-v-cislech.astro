@@ -1,0 +1,340 @@
+---
+// Kadeřnictví v Česku v číslech – datová stránka z vlastního katalogu a z Registru ekonomických subjektů (ČSÚ).
+// Statistiku z RES zapisuje scripts/import-registr.py do src/data/statistiky-registr.json (denně v GitHub Actions).
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { PROVOZOVNY, tyden, krajUrl, indexovatDetail } from '../lib/data';
+import { KRAJE } from '../lib/kraje';
+
+interface MesicStat {
+  mesic: string;
+  vznik: number;
+  zanik: number;
+  vznikKraje: Record<string, number>;
+  zanikKraje: Record<string, number>;
+}
+interface RegStat {
+  zdroj: string;
+  aktualizace: string;
+  aktivni: number;
+  fyzicke: number;
+  pravnicke: number;
+  mesice: MesicStat[];
+}
+const soubory = import.meta.glob<{ default: RegStat }>('../data/statistiky-registr.json', { eager: true });
+const reg: RegStat | null = Object.values(soubory)[0]?.default ?? null;
+
+const cislo = (n: number) => n.toLocaleString('cs-CZ');
+const MESICE = ['leden', 'únor', 'březen', 'duben', 'květen', 'červen', 'červenec', 'srpen', 'září', 'říjen', 'listopad', 'prosinec'];
+const MES_KR = ['led', 'úno', 'bře', 'dub', 'kvě', 'čvn', 'čvc', 'srp', 'zář', 'říj', 'lis', 'pro'];
+const nazevMesice = (m: string) => `${MESICE[Number(m.slice(5, 7)) - 1]} ${m.slice(0, 4)}`;
+
+// --- Registr: posledních 24 uzavřených měsíců (aktuální měsíc ještě neskončil)
+const tento = new Date().toISOString().slice(0, 7);
+const rada = reg ? reg.mesice.filter((m) => m.mesic < tento).slice(-24) : [];
+const posledni = rada.at(-1);
+const predloni = posledni ? rada.find((m) => m.mesic === `${Number(posledni.mesic.slice(0, 4)) - 1}${posledni.mesic.slice(4)}`) : undefined;
+const posl12 = rada.slice(-12);
+const vznik12 = posl12.reduce((s, m) => s + m.vznik, 0);
+const max = Math.max(1, ...rada.map((m) => m.vznik));
+const krajeVznik = KRAJE.map((k) => ({ k, n: posl12.reduce((s, m) => s + (m.vznikKraje[k.slug] ?? 0), 0) }))
+  .filter((x) => x.n > 0)
+  .sort((a, b) => b.n - a.n);
+const maxKraj = Math.max(1, ...krajeVznik.map((x) => x.n));
+
+// --- Katalog: otevírací doby
+const tydny = PROVOZOVNY.map((p) => ({ p, t: tyden(p) })).filter((x): x is { p: (typeof PROVOZOVNY)[number]; t: NonNullable<ReturnType<typeof tyden>> } => !!x.t && x.t.some((d) => d.length));
+const zav = (t: [number, number][][]) => Math.max(0, ...t.slice(0, 5).flatMap((d) => d.map(([, b]) => Math.min(b, 1440))));
+const pct = (f: (x: (typeof tydny)[number]) => boolean) => Math.round((tydny.filter(f).length / tydny.length) * 100);
+const kat = {
+  celkem: PROVOZOVNY.length,
+  sObsahem: PROVOZOVNY.filter(indexovatDetail).length,
+  sDobou: tydny.length,
+  barber: PROVOZOVNY.filter((p) => p.typ === 'barber').length,
+  sobota: pct((x) => x.t[5]?.length > 0),
+  nedele: pct((x) => x.t[6]?.length > 0),
+  vecer: pct((x) => zav(x.t) >= 19 * 60),
+};
+// Otevřenost po hodinách v sobotu a ve všední den (podíl salonů se známou dobou)
+const hodiny = Array.from({ length: 14 }, (_, i) => 7 + i);
+const otevrenoV = (den: number, h: number) => Math.round((tydny.filter((x) => x.t[den]?.some(([a, b]) => a <= h * 60 && b > h * 60)).length / tydny.length) * 100);
+const vsedni = hodiny.map((h) => ({ h, v: otevrenoV(2, h), s: otevrenoV(5, h) }));
+
+const krajeKatalog = KRAJE.map((k) => ({ k, n: PROVOZOVNY.filter((p) => p.kraj === k.slug).length })).sort((a, b) => b.n - a.n);
+
+const title = 'Kadeřnictví v Česku v číslech';
+const description = reg
+  ? `Kolik kadeřnictví a barbershopů v Česku vzniká, kde jich přibývá nejvíc a kdy mají otevřeno. Data z Registru ekonomických subjektů ČSÚ a z katalogu Najdi kadeřnictví, aktualizace ${new Date(reg.aktualizace).toLocaleDateString('cs-CZ')}.`
+  : 'Kolik kadeřnictví a barbershopů je v Česku a kdy mají otevřeno. Data z katalogu Najdi kadeřnictví.';
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: title,
+  description,
+  creator: { '@type': 'Organization', name: 'Najdi kadeřnictví' },
+  isBasedOn: reg ? ['https://opendata.csu.gov.cz/', 'https://www.openstreetmap.org/'] : ['https://www.openstreetmap.org/'],
+  ...(reg ? { dateModified: reg.aktualizace } : {}),
+};
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+  <div class="wrap section data">
+    <Breadcrumb items={[{ nazev: 'V číslech' }]} />
+    <h1>Kadeřnictví v Česku <em>v číslech</em></h1>
+    <p class="lead">
+      Kolik salonů v Česku vzniká, kde jich přibývá a kdy mají otevřeno. Stránka se aktualizuje sama z veřejných registrů a z
+      našeho katalogu.
+    </p>
+
+    {
+      reg && posledni && (
+        <section>
+          <h2>Nová kadeřnictví a barbershopy po měsících</h2>
+          <div class="cisla">
+            <div>
+              <strong>{cislo(posledni.vznik)}</strong>
+              <span>nových subjektů za {nazevMesice(posledni.mesic)}</span>
+            </div>
+            <div>
+              <strong>{cislo(vznik12)}</strong>
+              <span>za posledních 12 měsíců</span>
+            </div>
+            <div>
+              <strong>{cislo(reg.aktivni)}</strong>
+              <span>aktivních subjektů s hlavní činností kadeřnictví</span>
+            </div>
+            <div>
+              <strong>{Math.round((reg.fyzicke / Math.max(1, reg.aktivni)) * 100)} %</strong>
+              <span>z nich jsou živnostníci (OSVČ)</span>
+            </div>
+          </div>
+          {predloni && (
+            <p>
+              Za {nazevMesice(posledni.mesic)} vzniklo {cislo(posledni.vznik)} nových subjektů,{' '}
+              {posledni.vznik === predloni.vznik
+                ? 'stejně jako'
+                : posledni.vznik > predloni.vznik
+                  ? `o ${Math.round(((posledni.vznik - predloni.vznik) / Math.max(1, predloni.vznik)) * 100)} % víc než`
+                  : `o ${Math.round(((predloni.vznik - posledni.vznik) / Math.max(1, predloni.vznik)) * 100)} % méně než`}{' '}
+              ve stejném měsíci předchozího roku ({cislo(predloni.vznik)}).
+            </p>
+          )}
+          <div class="graf" role="img" aria-label={`Počet nově vzniklých subjektů po měsících, posledních ${rada.length} měsíců`}>
+            {rada.map((m) => (
+              <div class="graf__sl" title={`${nazevMesice(m.mesic)}: ${m.vznik}`}>
+                <span class="graf__n">{m.vznik}</span>
+                <span class="graf__bar" style={`height:${Math.max(2, Math.round((m.vznik / max) * 100))}%`} />
+                <span class="graf__m">{m.mesic.endsWith('-01') ? m.mesic.slice(0, 4) : MES_KR[Number(m.mesic.slice(5, 7)) - 1]}</span>
+              </div>
+            ))}
+          </div>
+
+          {krajeVznik.length > 0 && (
+            <>
+              <h3>Kde jich za posledních 12 měsíců přibylo nejvíc</h3>
+              <ul class="pruhy">
+                {krajeVznik.map(({ k, n }) => (
+                  <li>
+                    <a href={krajUrl(k.slug)}>{k.nazev}</a>
+                    <span class="pruhy__bar" style={`width:${Math.round((n / maxKraj) * 100)}%`} />
+                    <span class="pruhy__n">{cislo(n)}</span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+          <p class="muted pozn">
+            Zdroj: {reg.zdroj}, stav k {new Date(reg.aktualizace).toLocaleDateString('cs-CZ')}. Počítáme subjekty (firmy a
+            živnostníky), které mají jako hlavní činnost kadeřnictví nebo holičství, podle data vzniku. Jeden subjekt může
+            provozovat víc salonů a nový živnostník často pracuje v už existujícím salonu.
+          </p>
+        </section>
+      )
+    }
+
+    <section>
+      <h2>Kdy mají salony otevřeno</h2>
+      <div class="cisla">
+        <div><strong>{kat.sobota} %</strong><span>má otevřeno v sobotu</span></div>
+        <div><strong>{kat.nedele} %</strong><span>má otevřeno v neděli</span></div>
+        <div><strong>{kat.vecer} %</strong><span>má aspoň jeden všední den otevřeno do 19:00 a déle</span></div>
+        <div><strong>{cislo(kat.barber)}</strong><span>barbershopů v katalogu</span></div>
+      </div>
+      <h3>Podíl otevřených salonů během dne</h3>
+      <table class="tab">
+        <thead>
+          <tr><th>Hodina</th><th>Středa</th><th>Sobota</th></tr>
+        </thead>
+        <tbody>
+          {vsedni.map(({ h, v, s }) => (
+            <tr>
+              <td>{h}:00</td>
+              <td><span class="mini" style={`width:${v}%`} />{v} %</td>
+              <td><span class="mini mini--so" style={`width:${s}%`} />{s} %</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p class="muted pozn">
+        Z {cislo(kat.sDobou)} salonů, u kterých známe otevírací dobu (zdroj: OpenStreetMap a údaje majitelů). Podrobnosti
+        v článku <a href="/blog/kdy-maji-kadernictvi-otevreno/">Kdy mají kadeřnictví otevřeno</a>.
+      </p>
+    </section>
+
+    <section>
+      <h2>Salony v katalogu podle krajů</h2>
+      <p>
+        V katalogu evidujeme {cislo(kat.celkem)} provozoven z OpenStreetMap a živnostenského rejstříku. U {cislo(kat.sObsahem)} z
+        nich známe víc než adresu (otevírací dobu, kontakt nebo údaje od majitele).
+      </p>
+      <ul class="pruhy">
+        {krajeKatalog.map(({ k, n }) => (
+          <li>
+            <a href={krajUrl(k.slug)}>{k.nazev}</a>
+            <span class="pruhy__bar pruhy__bar--sede" style={`width:${Math.round((n / krajeKatalog[0].n) * 100)}%`} />
+            <span class="pruhy__n">{cislo(n)}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <p class="muted pozn">
+      Data můžete volně citovat s odkazem na najdikadernictvi.cz. Jak data získáváme, popisujeme na stránce
+      <a href="/o-webu/">O webu</a>.
+    </p>
+  </div>
+</Base>
+
+<style>
+  .data {
+    max-width: 60rem;
+  }
+  section {
+    margin-top: 2.5rem;
+  }
+  .cisla {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 1rem 0 1.25rem;
+  }
+  .cisla div {
+    display: grid;
+    gap: 0.25rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+  }
+  .cisla strong {
+    font-size: 1.7rem;
+    line-height: 1.1;
+  }
+  .cisla span {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .graf {
+    display: flex;
+    align-items: stretch;
+    gap: 4px;
+    height: 220px;
+    margin: 1.25rem 0 0.5rem;
+  }
+  .graf__sl {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    min-width: 0;
+  }
+  .graf__bar {
+    width: 100%;
+    background: var(--accent);
+    border-radius: 4px 4px 0 0;
+  }
+  .graf__n {
+    font-size: 0.65rem;
+    color: var(--ink-soft);
+  }
+  .graf__m {
+    font-size: 0.65rem;
+    color: var(--ink-soft);
+    margin-top: 4px;
+    white-space: nowrap;
+  }
+  .pruhy {
+    list-style: none;
+    margin: 0.75rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.4rem;
+  }
+  .pruhy li {
+    display: grid;
+    grid-template-columns: 13rem 1fr 3.5rem;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.92rem;
+  }
+  .pruhy a {
+    text-decoration: none;
+  }
+  .pruhy__bar {
+    height: 10px;
+    border-radius: 999px;
+    background: var(--accent);
+  }
+  .pruhy__bar--sede {
+    background: var(--ink-soft);
+    opacity: 0.45;
+  }
+  .pruhy__n {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .tab {
+    width: 100%;
+    max-width: 34rem;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .tab th,
+  .tab td {
+    text-align: left;
+    padding: 0.35rem 0.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .tab td:not(:first-child) {
+    width: 40%;
+  }
+  .mini {
+    display: inline-block;
+    height: 8px;
+    max-width: 60%;
+    margin-right: 0.5rem;
+    border-radius: 999px;
+    background: var(--accent);
+    vertical-align: middle;
+  }
+  .mini--so {
+    background: var(--ink-soft);
+    opacity: 0.6;
+  }
+  .pozn {
+    font-size: 0.8rem;
+    margin-top: 0.75rem;
+  }
+  @media (max-width: 720px) {
+    .cisla {
+      grid-template-columns: 1fr 1fr;
+    }
+    .pruhy li {
+      grid-template-columns: 9rem 1fr 3rem;
+    }
+    .graf__n {
+      display: none;
+    }
+  }
+</style>

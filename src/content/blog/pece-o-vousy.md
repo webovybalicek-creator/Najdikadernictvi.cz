@@ -60,6 +60,6 @@ Hledáte barbershop s úpravou vousů? [Najděte barbera ve svém okolí](/okoli
 
 Kontury vousů vydrží zhruba 2 až 3 týdny, pak je vidět, že dorůstají. Pokud se o vousy staráte doma, stačí k barberovi jednou za měsíc na srovnání tvaru, s krátkými vousy a ostrou linkou častěji.
 
-Barbershopy mají otevřeno déle než běžná kadeřnictví: 76 % z nich má aspoň jeden všední den otevřeno do 19:00 a 61 % v sobotu (podle otevírací doby 112 barbershopů v našem katalogu). Úprava vousů trvá kolem 30 minut, takže se dá stihnout i cestou z práce.
+Barbershopy mají otevřeno déle než běžná kadeřnictví: 72 % z nich má aspoň jeden všední den otevřeno do 19:00 a 57 % v sobotu (podle otevírací doby 135 barbershopů v našem katalogu). Úprava vousů trvá kolem 30 minut, takže se dá stihnout i cestou z práce.
 
 Barbershopy podle města najdete třeba v [Brně](/barbershopy/brno/), v [Praze 5](/barbershopy/praha-5/) nebo v [Praze 6](/barbershopy/praha-6/). Při objednání se zeptejte, jestli dělají i holení břitvou s horkým ručníkem, ne každý barber ho nabízí.

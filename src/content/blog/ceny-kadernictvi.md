@@ -45,7 +45,7 @@ V našem katalogu najdete u ověřených salonů i ceník. U ostatních je tu te
 
 ## Kdy salon zvolit podle otevírací doby, ne podle ceny
 
-Rozdíl pár stovek mezi salony často převáží jiná věc: jestli se tam vůbec dostanete. V katalogu má 58 % salonů aspoň jeden den otevřeno do 19:00 a 42 % v sobotu. Salony s delší otevírací dobou bývají ve větších městech a často i dražší, ale ušetří vám volno z práce.
+Rozdíl pár stovek mezi salony často převáží jiná věc: jestli se tam vůbec dostanete. V katalogu má 56 % salonů aspoň jeden den otevřeno do 19:00 a 40 % v sobotu. Salony s delší otevírací dobou bývají ve větších městech a často i dražší, ale ušetří vám volno z práce.
 
 Praktický postup, jak porovnat salony v okolí:
 
