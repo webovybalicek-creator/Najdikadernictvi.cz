@@ -22,7 +22,7 @@ export const SITE = {
   /** Ověření v Bing Webmaster Tools (msvalidate.01) */
   bingOvereni: '',
   /** Ověření v Seznam Webmaster (obsah meta tagu seznam-wmt) – https://search.seznam.cz/wmt */
-  seznamOvereni: '',
+  seznamOvereni: 'bUj8BOOGlR5Qnq6Pnj6FSfRXYELRTpKB',
   /**
    * Google AdSense – ID vydavatele ve tvaru „ca-pub-1234567890123456“.
    * Prázdné = reklama i souhlas s cookies jsou vypnuté.
