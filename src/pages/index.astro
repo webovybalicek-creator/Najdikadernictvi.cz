@@ -50,6 +50,9 @@ const jsonLd = [
     email: SITE.email,
   },
 ];
+// Sváteční odkaz od 15. 11. do 2. 1. (web se sestavuje denně)
+const _d = new Date();
+const sezona = (_d.getMonth() === 10 && _d.getDate() >= 15) || _d.getMonth() === 11 || (_d.getMonth() === 0 && _d.getDate() <= 2);
 ---
 
 <Base
@@ -101,6 +104,7 @@ const jsonLd = [
       <script type="application/json" id="rychle-tydny" set:html={JSON.stringify(tydny)} />
       <script type="application/json" id="rychle-pocty" set:html={JSON.stringify(pocty)} />
     </div>
+    {sezona && <p class="wrap rychle__pozn"><a href="/kadernictvi-o-svatcich/">🎄 Kdo má otevřeno před Vánoci, mezi svátky a na Silvestra →</a></p>}
     <p class="wrap rychle__pozn"><a href="/kdy-se-ostriham/">Plánujete na jindy? Najděte salon otevřený v den a čas, kdy můžete →</a><br />Hledání v okolí použije vaši polohu jen v prohlížeči, nikam ji neukládáme.</p>
   </section>
 

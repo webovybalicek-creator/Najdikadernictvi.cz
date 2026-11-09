@@ -66,6 +66,7 @@ $data = [
     'telefon' => $v('telefon', 50),
     'web' => $v('webSalonu', 300),
     'oteviraci_doba' => $v('oteviraci_doba', 1000),
+    'svatky' => $v('svatky', 1000),
     'sluzby' => $v('sluzby', 3000),
     'popis' => $v('popis', 1000),
     'rezervace' => $v('rezervace', 300),

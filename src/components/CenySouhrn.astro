@@ -1,0 +1,64 @@
+---
+// Živý souhrn cen od návštěvníků podle měst (z /api/ceny.php?souhrn=1). Skrytý, dokud nejsou data.
+import { mesta } from '../lib/data';
+const nazvy = Object.fromEntries(mesta().map((m) => [m.slug, m.nazev]));
+---
+
+<aside class="cs" data-cs hidden>
+  <p class="cs__h">Kolik platí zákazníci: ceny od návštěvníků webu</p>
+  <table>
+    <thead><tr><th>Město</th><th>Pánský střih</th><th>Dámský střih</th><th>Odpovědí</th></tr></thead>
+    <tbody data-cs-telo></tbody>
+  </table>
+  <p class="cs__pozn">Medián cen, které uvedli návštěvníci u salonů v našem katalogu. Ukazujeme města s aspoň 3 odpověďmi. Svou cenu můžete přidat na stránce salonu.</p>
+  <script type="application/json" data-cs-nazvy set:html={JSON.stringify(nazvy)} />
+</aside>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-cs]').forEach(async (el) => {
+    try {
+      const nazvy = JSON.parse(el.querySelector('[data-cs-nazvy]')!.textContent || '{}') as Record<string, string>;
+      const d = await (await fetch('/api/ceny.php?souhrn=1')).json();
+      const mesta = Object.entries((d.mesta ?? {}) as Record<string, Record<string, { n: number; median: number }>>);
+      if (!mesta.length) return;
+      const kc = (v?: { median: number }) => (v ? `${v.median.toLocaleString('cs-CZ')} Kč` : '–');
+      el.querySelector('[data-cs-telo]')!.innerHTML = mesta
+        .map(([m, s]) => ({ m, s, n: Object.values(s).reduce((a, v) => a + v.n, 0) }))
+        .sort((a, b) => b.n - a.n)
+        .slice(0, 15)
+        .map(({ m, s, n }) => `<tr><td>${nazvy[m] ?? m}</td><td>${kc(s.pansky)}</td><td>${kc(s.damsky)}</td><td>${n}</td></tr>`)
+        .join('');
+      el.hidden = false;
+    } catch {}
+  });
+</script>
+
+<style>
+  .cs {
+    margin: 2rem 0;
+    padding: 1.2rem 1.4rem;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+  }
+  .cs__h {
+    margin: 0 0 0.75rem;
+    font-weight: 600;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    font-variant-numeric: tabular-nums;
+  }
+  th,
+  td {
+    text-align: left;
+    padding: 0.4rem 0.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .cs__pozn {
+    margin: 0.75rem 0 0;
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+  }
+</style>

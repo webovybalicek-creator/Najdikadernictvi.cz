@@ -1,0 +1,183 @@
+---
+// Tisknutelný plakát A5 pro salon: „Najdete nás na najdikadernictvi.cz“ + QR kód na profil + otevírací doba.
+// Použití: /plakat/?u=/brno/nazev-salonu/  (údaje se načtou ze strukturovaných dat stránky salonu)
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Plakát pro salon" description="Plakát do výlohy s QR kódem na profil salonu na Najdi kadeřnictví." noindex>
+  <div class="wrap section ovladani">
+    <h1>Plakát do výlohy</h1>
+    <p>
+      Vytiskněte si plakát A5 s QR kódem. Zákazníci si naskenují váš profil s otevírací dobou a kontaktem, i když máte
+      zavřeno.
+    </p>
+    <p class="chyba" data-chyba hidden>
+      Plakát se nepodařilo připravit. Otevřete ho prosím z profilu salonu (odkaz „Plakát do výlohy“).
+    </p>
+    <button class="btn" type="button" data-tisk disabled>Vytisknout / uložit jako PDF</button>
+  </div>
+
+  <article class="plakat" data-plakat aria-label="Náhled plakátu">
+    <p class="plakat__nad">Najdete nás na</p>
+    <p class="plakat__web">najdi<b>kadeřnictví</b>.cz</p>
+    <h2 class="plakat__nazev" data-nazev>…</h2>
+    <p class="plakat__adresa" data-adresa></p>
+    <div class="plakat__qr" data-qr></div>
+    <p class="plakat__pod">Naskenujte a uvidíte otevírací dobu, kontakt a cestu k nám</p>
+    <table class="plakat__doba" data-doba></table>
+  </article>
+</Base>
+
+<script>
+  import QRCode from 'qrcode';
+
+  const DNY = ['Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota', 'Neděle'];
+  const EN = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
+  const chyba = document.querySelector<HTMLElement>('[data-chyba]')!;
+  const tisk = document.querySelector<HTMLButtonElement>('[data-tisk]')!;
+
+  async function priprav() {
+    const u = new URLSearchParams(location.search).get('u') || '';
+    if (!/^\/[a-z0-9-]+\/[a-z0-9-]+\/$/.test(u)) throw new Error('adresa');
+    const html = await (await fetch(u)).text();
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const ld = [...doc.querySelectorAll('script[type="application/ld+json"]')]
+      .map((s) => {
+        try {
+          return JSON.parse(s.textContent || '');
+        } catch {
+          return null;
+        }
+      })
+      .flatMap((x) => (Array.isArray(x) ? x : x?.['@graph'] ?? [x]))
+      .find((x) => x && /HairSalon|BarberShop|BeautySalon|LocalBusiness/.test(String(x['@type'])));
+    if (!ld) throw new Error('data');
+
+    document.querySelector('[data-nazev]')!.textContent = ld.name;
+    const a = ld.address ?? {};
+    document.querySelector('[data-adresa]')!.textContent = [a.streetAddress, a.addressLocality].filter(Boolean).join(', ');
+
+    const odkaz = new URL(u, location.origin);
+    odkaz.searchParams.set('utm_source', 'plakat');
+    document.querySelector('[data-qr]')!.innerHTML = await QRCode.toString(odkaz.href, { type: 'svg', margin: 0, errorCorrectionLevel: 'M' });
+
+    // Otevírací doba ze schema.org openingHoursSpecification
+    const spec = (ld.openingHoursSpecification ?? []) as { dayOfWeek: string | string[]; opens: string; closes: string }[];
+    const dny: string[][] = DNY.map(() => []);
+    for (const s of spec)
+      for (const d of [s.dayOfWeek].flat()) {
+        const i = EN.findIndex((e) => String(d).endsWith(e));
+        if (i >= 0) dny[i].push(`${s.opens.slice(0, 5)}–${s.closes.slice(0, 5)}`);
+      }
+    const tab = document.querySelector<HTMLTableElement>('[data-doba]')!;
+    tab.innerHTML = dny.some((d) => d.length)
+      ? dny.map((d, i) => `<tr><th>${DNY[i]}</th><td>${d.length ? esc(d.join(', ')) : 'zavřeno'}</td></tr>`).join('')
+      : '';
+    document.title = `Plakát – ${ld.name}`;
+    tisk.disabled = false;
+  }
+
+  priprav().catch(() => {
+    chyba.hidden = false;
+  });
+  tisk.addEventListener('click', () => window.print());
+</script>
+
+<style>
+  .ovladani {
+    max-width: 40rem;
+  }
+  .chyba {
+    color: var(--accent);
+  }
+  .plakat {
+    width: 148mm;
+    min-height: 210mm;
+    margin: 1rem auto 4rem;
+    padding: 14mm 12mm;
+    box-sizing: border-box;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    color: #222;
+  }
+  .plakat__nad {
+    margin: 0;
+    font-size: 13pt;
+    color: #666;
+  }
+  .plakat__web {
+    margin: 0 0 8mm;
+    font-size: 22pt;
+    letter-spacing: -0.02em;
+  }
+  .plakat__web b {
+    color: #ff385c;
+  }
+  .plakat__nazev {
+    margin: 0;
+    font-size: 20pt;
+    line-height: 1.15;
+  }
+  .plakat__adresa {
+    margin: 2mm 0 6mm;
+    font-size: 11pt;
+    color: #555;
+  }
+  .plakat__qr {
+    width: 62mm;
+    height: 62mm;
+    margin: 0 auto;
+  }
+  .plakat__qr :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+  .plakat__pod {
+    margin: 4mm 0 6mm;
+    font-size: 11pt;
+  }
+  .plakat__doba {
+    margin: 0 auto;
+    font-size: 10.5pt;
+    border-collapse: collapse;
+  }
+  .plakat__doba :global(th),
+  .plakat__doba :global(td) {
+    padding: 1mm 4mm;
+    text-align: left;
+    font-weight: 400;
+  }
+  .plakat__doba :global(th) {
+    color: #666;
+  }
+  @media print {
+    @page {
+      size: A5;
+      margin: 0;
+    }
+    :global(body) > :global(*:not(main)),
+    .ovladani,
+    :global(header),
+    :global(footer),
+    :global(nav) {
+      display: none !important;
+    }
+    .plakat {
+      margin: 0;
+      border: 0;
+      box-shadow: none;
+      border-radius: 0;
+    }
+  }
+  @media (max-width: 600px) {
+    .plakat {
+      width: 100%;
+      min-height: 0;
+      padding: 8mm 6mm;
+    }
+  }
+</style>

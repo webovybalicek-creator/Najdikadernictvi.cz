@@ -1,0 +1,4 @@
+{
+  "_navod": "Sváteční otevírací doba potvrzená majitelem nebo ověřená (telefon, web salonu). Klíč = id salonu (např. n12345). Dny ve tvaru YYYY-MM-DD, hodnota 'zavřeno' nebo '08:00-14:00'. Zobrazuje se na /kadernictvi-o-svatcich/ a na detailu salonu.",
+  "salony": {}
+}

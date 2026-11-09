@@ -1,0 +1,313 @@
+---
+// Kadeřnictví o Vánocích a na Silvestra: kdo má otevřeno 21. 12. – 2. 1.
+// Potvrzené sváteční hodiny (src/data/svatky.json) mají přednost, jinak běžná otevírací doba
+// (salony s pravidlem „PH off“ z OSM se ve státní svátky nezobrazují).
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import Faq from '../components/Faq.astro';
+import { PROVOZOVNY, tyden, url } from '../lib/data';
+import svatkyRaw from '../data/svatky.json';
+
+const svatky = (svatkyRaw as { salony: Record<string, { dny: Record<string, string>; zdroj?: string }> }).salony;
+const praha = (s: string) => /^praha-\d+$/.test(s);
+
+// Rok podle aktuálního data buildu: v lednu ještě ukazujeme uplynulé Vánoce
+const ted = new Date();
+const rok = ted.getMonth() === 0 && ted.getDate() < 7 ? ted.getFullYear() - 1 : ted.getFullYear();
+const NAZVY: Record<string, string> = {
+  '12-24': 'Štědrý den',
+  '12-25': '1. svátek vánoční',
+  '12-26': '2. svátek vánoční',
+  '12-31': 'Silvestr',
+  '01-01': 'Nový rok',
+};
+const STATNI = new Set(['12-24', '12-25', '12-26', '01-01']);
+const DNY_KR = ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'];
+const dny = [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33].map((d) => {
+  const dt = new Date(Date.UTC(rok, 11, d));
+  const iso = dt.toISOString().slice(0, 10);
+  const md = iso.slice(5);
+  return {
+    iso,
+    popis: `${DNY_KR[dt.getUTCDay()]} ${dt.getUTCDate()}. ${dt.getUTCMonth() + 1}.`,
+    nazev: NAZVY[md] ?? '',
+    statni: STATNI.has(md),
+    den: (dt.getUTCDay() + 6) % 7, // 0 = pondělí
+  };
+});
+
+const salony = PROVOZOVNY.map((p) => ({ p, t: tyden(p) }))
+  .filter((x) => (!!x.t && x.t.some((d) => d.length)) || !!svatky[x.p.id])
+  .map(({ p, t }) => [
+    p.nazev,
+    url(p),
+    praha(p.mestoSlug) ? 'praha' : p.mestoSlug,
+    praha(p.mestoSlug) ? p.mesto : '',
+    t ?? [[], [], [], [], [], [], []],
+    /\bPH\b[^;]*\b(off|closed)\b/i.test(p.oteviraciDoba ?? '') ? 1 : 0,
+    svatky[p.id]?.dny ?? null,
+  ]);
+
+const pocty = new Map<string, { nazev: string; n: number }>();
+for (const p of PROVOZOVNY) {
+  if (!tyden(p) && !svatky[p.id]) continue;
+  const k = praha(p.mestoSlug) ? 'praha' : p.mestoSlug;
+  const e = pocty.get(k) ?? { nazev: praha(p.mestoSlug) ? 'Praha' : p.mesto, n: 0 };
+  e.n++;
+  pocty.set(k, e);
+}
+const mesta = [...pocty.entries()].filter(([, v]) => v.n >= 5).sort((a, b) => b[1].n - a[1].n);
+const potvrzenych = Object.keys(svatky).length;
+
+const title = `Kadeřnictví otevřená o Vánocích a na Silvestra ${rok}`;
+const description = `Které kadeřnictví a barbershop má otevřeno před Vánoci, mezi svátky a na Silvestra ${rok}? Vyberte město a den od 21. 12. do 2. 1.`;
+const faq = [
+  {
+    q: 'Mají kadeřnictví na Štědrý den otevřeno?',
+    a:
+      'Zákon o prodejní době omezuje jen obchody nad 200 m², kadeřnictví se netýká. Většina salonů má ale 24. 12. zavřeno nebo otevřeno jen dopoledne. Spolehlivě se na střih dostanete hlavně 22. a 23. prosince, kdy bývají termíny rychle obsazené.',
+  },
+  {
+    q: 'Kdy se objednat na střih před Vánoci?',
+    a:
+      'Ideálně 2 až 3 týdny dopředu. Poslední týden před Vánoci patří v salonech k nejvytíženějším v roce, volné termíny 22. a 23. 12. mizí už začátkem prosince.',
+  },
+  {
+    q: 'Mají kadeřnictví otevřeno mezi svátky?',
+    a:
+      'Ano, 28. až 30. prosince má většina salonů běžnou otevírací dobu, některé si ale berou dovolenou. Na Silvestra bývá otevřeno hlavně dopoledne, 1. ledna je většina salonů zavřená.',
+  },
+  {
+    q: 'Jak spolehlivé jsou údaje na této stránce?',
+    a: `U salonů označených „potvrzeno“ máme sváteční otevírací dobu od majitele. U ostatních ukazujeme běžnou otevírací dobu pro daný den v týdnu, o svátcích se může lišit. Před cestou proto zavolejte. Majitelé mohou sváteční hodiny doplnit přes formulář pro salony.`,
+  },
+];
+---
+
+<Base title={title} description={description}>
+  <div class="wrap section sv">
+    <Breadcrumb items={[{ nazev: 'O svátcích' }]} />
+    <h1>Kadeřnictví o Vánocích <em>a na Silvestra {rok}</em></h1>
+    <p class="lead">
+      Kdo má otevřeno před Vánoci, mezi svátky a na Silvestra. Vyberte město a den. Potvrzené sváteční hodiny od majitelů
+      jsou nahoře, ostatní salony ukazujeme podle běžné otevírací doby.
+    </p>
+
+    <form class="sv__form" data-form>
+      <label>
+        <span>Město</span>
+        <select name="mesto">
+          {mesta.map(([slug, v]) => <option value={slug} selected={slug === 'praha'}>{v.nazev} ({v.n})</option>)}
+        </select>
+      </label>
+    </form>
+    <div class="dny" role="tablist" aria-label="Den">
+      {
+        dny.map((d, i) => (
+          <button type="button" role="tab" class:list={['den', { 'den--svatek': d.statni }]} data-iso={d.iso} data-den={d.den} data-statni={d.statni ? '1' : ''} aria-selected={i === 2 ? 'true' : 'false'}>
+            <b>{d.popis}</b>
+            <span data-pocet>–</span>
+            {d.nazev && <small>{d.nazev}</small>}
+          </button>
+        ))
+      }
+    </div>
+    <p class="souhrn" data-souhrn aria-live="polite"></p>
+    <ol class="vysl" data-vysl></ol>
+
+    <aside class="majitel">
+      <strong>Máte salon?</strong> Doplňte sváteční otevírací dobu přes <a href="/pridat-provozovnu/">formulář pro majitele</a>
+      ({potvrzenych ? `zatím potvrzeno u ${potvrzenych} salonů` : 'buďte první s potvrzenými hodinami'}). Zákazníci vás pak uvidí
+      nahoře se štítkem „potvrzeno“.
+    </aside>
+
+    <Faq polozky={faq} nadpis="Časté dotazy" />
+  </div>
+  <script type="application/json" id="sv-data" set:html={JSON.stringify(salony)} />
+</Base>
+
+<script>
+  type Z = [string, string, string, string, [number, number][][], 0 | 1, Record<string, string> | null];
+  const data: Z[] = JSON.parse(document.getElementById('sv-data')!.textContent || '[]');
+  const form = document.querySelector<HTMLFormElement>('[data-form]')!;
+  const tlacitka = [...document.querySelectorAll<HTMLButtonElement>('.den')];
+  const souhrn = document.querySelector<HTMLElement>('[data-souhrn]')!;
+  const vysl = document.querySelector<HTMLOListElement>('[data-vysl]')!;
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
+  const hhmm = (m: number) => `${Math.floor(m / 60) % 24}:${String(m % 60).padStart(2, '0')}`;
+
+  try {
+    const q = new URLSearchParams(location.search).get('mesto');
+    const sel = form.querySelector<HTMLSelectElement>('select')!;
+    if (q && [...sel.options].some((o) => o.value === q)) sel.value = q;
+  } catch {}
+
+  /** Stav salonu v daný den: potvrzeno ze svatky.json, jinak běžná doba (ne ve státní svátek) */
+  function stav(z: Z, iso: string, den: number, statni: boolean) {
+    const sv = z[6]?.[iso];
+    if (sv) return sv.toLowerCase().startsWith('zav') ? null : { text: sv.replace('-', '–'), potvrzeno: true };
+    // Ve státní svátek (24.–26. 12., 1. 1.) bereme jen potvrzené hodiny, běžná doba tam nic neříká
+    if (statni) return null;
+    const i = z[4][den] ?? [];
+    if (!i.length) return null;
+    return { text: i.map(([a, b]) => `${hhmm(a)}–${hhmm(b)}`).join(', '), potvrzeno: false };
+  }
+
+  function vykresli() {
+    const mesto = String(new FormData(form).get('mesto'));
+    const vMeste = data.filter((z) => z[2] === mesto);
+    for (const b of tlacitka) {
+      const n = vMeste.filter((z) => stav(z, b.dataset.iso!, Number(b.dataset.den), !!b.dataset.statni)).length;
+      b.querySelector('[data-pocet]')!.textContent = b.dataset.statni ? (n ? `${n} potvrzeno` : 'nepotvrzeno') : `${n} otevřeno`;
+    }
+    const akt = tlacitka.find((b) => b.getAttribute('aria-selected') === 'true')!;
+    const iso = akt.dataset.iso!;
+    const radky = vMeste
+      .map((z) => ({ z, s: stav(z, iso, Number(akt.dataset.den), !!akt.dataset.statni) }))
+      .filter((x) => !!x.s)
+      .sort((a, b) => Number(b.s!.potvrzeno) - Number(a.s!.potvrzeno));
+    const denText = akt.querySelector('b')!.textContent;
+    souhrn.textContent = akt.dataset.statni
+      ? radky.length
+        ? `${denText}: otevřeno potvrdilo ${radky.length} salonů. Ostatní mají ve svátek většinou zavřeno, před cestou zavolejte.`
+        : `${denText}: zatím žádný salon nepotvrdil, že bude mít otevřeno. Většina kadeřnictví má ve státní svátek zavřeno, na Štědrý den některé dopoledne. Zavolejte svému salonu, nebo se objednejte 22.–23. 12.`
+      : radky.length
+        ? `${denText}: ${radky.length} z ${vMeste.length} salonů má v tento den v týdnu běžně otevřeno.${akt.dataset.iso!.endsWith('12-31') ? ' Na Silvestra mnoho salonů zavírá dřív, ověřte si to.' : ''}`
+        : `${denText}: o žádném otevřeném salonu nevíme.`;
+    vysl.innerHTML = radky
+      .slice(0, 60)
+      .map(
+        ({ z, s }) => `<li><a href="${z[1]}">${esc(z[0])}</a>${z[3] ? `<span class="m">${esc(z[3])}</span>` : ''}
+        <span class="h">${esc(s!.text)}</span>
+        <span class="${s!.potvrzeno ? 'stitek stitek--ok' : 'stitek'}">${s!.potvrzeno ? 'potvrzeno' : 'běžná doba, ověřte'}</span></li>`,
+      )
+      .join('');
+  }
+
+  form.addEventListener('change', vykresli);
+  for (const b of tlacitka)
+    b.addEventListener('click', () => {
+      tlacitka.forEach((x) => x.setAttribute('aria-selected', String(x === b)));
+      vykresli();
+    });
+  vykresli();
+</script>
+
+<style>
+  .sv {
+    max-width: 58rem;
+  }
+  .sv__form {
+    margin: 1.5rem 0 1rem;
+  }
+  .sv__form label {
+    display: inline-grid;
+    gap: 0.25rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+  .sv__form select {
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 400;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fff;
+    min-width: 16rem;
+  }
+  .dny {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(7.2rem, 1fr));
+    gap: 0.5rem;
+  }
+  .den {
+    display: grid;
+    gap: 0.1rem;
+    text-align: left;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: #fff;
+    font: inherit;
+    cursor: pointer;
+  }
+  .den b {
+    font-size: 0.95rem;
+  }
+  .den span {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+  .den small {
+    font-size: 0.72rem;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .den--svatek {
+    background: #fff6f7;
+  }
+  .den[aria-selected='true'] {
+    border-color: var(--ink);
+    box-shadow: inset 0 0 0 1px var(--ink);
+  }
+  .souhrn {
+    margin: 1.25rem 0 0.5rem;
+    font-size: 1.02rem;
+  }
+  .vysl {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .vysl :global(li) {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 0.2rem 1rem;
+    align-items: baseline;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .vysl :global(a) {
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .vysl :global(.m) {
+    grid-column: 1;
+    grid-row: 2;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+  }
+  .vysl :global(.h) {
+    font-size: 0.9rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .vysl :global(.stitek) {
+    font-size: 0.72rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    background: #f2f2f2;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .vysl :global(.stitek--ok) {
+    background: #e8f5ea;
+    color: #0b6b1d;
+  }
+  .majitel {
+    margin: 2rem 0;
+    padding: 1rem 1.2rem;
+    border-radius: 16px;
+    background: var(--accent-soft, #fff1f3);
+    font-size: 0.95rem;
+  }
+  @media (max-width: 560px) {
+    .vysl :global(li) {
+      grid-template-columns: 1fr auto;
+    }
+    .vysl :global(.stitek) {
+      grid-column: 2;
+    }
+  }
+</style>

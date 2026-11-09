@@ -93,7 +93,30 @@ const normAdr = (ulice?: string, cislo?: string) =>
   slugify(`${ulice ?? ''} ${(cislo ?? '').split('/').pop() ?? ''}`);
 
 function sestav(): Provozovna[] {
-  const osm: Provozovna[] = (osmRaw as Omit<Provozovna, 'zdroj'>[]).map((p) => ({ ...p, zdroj: 'osm' as const }));
+  const osmVse: Provozovna[] = (osmRaw as Omit<Provozovna, 'zdroj'>[]).map((p) => ({ ...p, zdroj: 'osm' as const }));
+  // Stejný salon zapsaný v OSM dvakrát (bod i budova, nebo dva body do 100 m se stejným názvem):
+  // ponecháme záznam s víc údaji a doplníme do něj chybějící pole z druhého. Pobočky na jiných adresách zůstávají.
+  const jadroNazvu = (s: string) =>
+    s
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/\b(kadernictvi|kadernicky salon|salon|studio)\b/g, ' ')
+      .replace(/[^a-z0-9]+/g, '');
+  const bohatost = (p: Provozovna) => Object.values(p).filter((v) => v !== undefined && v !== null && v !== '').length;
+  const osm: Provozovna[] = [];
+  const podleNazvu = new Map<string, number[]>();
+  for (const p of osmVse) {
+    const k = `${p.mestoSlug}|${jadroNazvu(p.nazev)}`;
+    const idx = k.endsWith('|') ? undefined : (podleNazvu.get(k) ?? []).find((i) => metry(osm[i], p) < 100);
+    if (idx === undefined) {
+      podleNazvu.set(k, [...(podleNazvu.get(k) ?? []), osm.length]);
+      osm.push(p);
+      continue;
+    }
+    const [hlavni, druhy] = bohatost(p) > bohatost(osm[idx]) ? [p, osm[idx]] : [osm[idx], p];
+    osm[idx] = { ...druhy, ...Object.fromEntries(Object.entries(hlavni).filter(([, v]) => v !== undefined && v !== null && v !== '')) } as Provozovna;
+  }
 
   // Mřížka pro hledání blízkých bodů (~100 m)
   const mriz = new Map<string, Provozovna[]>();

@@ -33,6 +33,8 @@ import { SITE } from '../../lib/config';
 import { metaSalonu } from '../../lib/meta';
 import { srovnani } from '../../lib/srovnani';
 import PotvrzeniDoby from '../../components/PotvrzeniDoby.astro';
+import CenyNavstevniku from '../../components/CenyNavstevniku.astro';
+import svatkyRaw from '../../data/svatky.json';
 
 export function getStaticPaths() {
   return PROVOZOVNY.map((p) => ({ params: { mesto: p.mestoSlug, slug: p.slug }, props: { p } }));
@@ -106,6 +108,7 @@ const vybery = zameryMesta(mestoObj).filter(({ ids }) => ids.has(p.id));
 const meta = metaSalonu(p, okoli.length);
 // Srovnání s okolím jen u salonů s obsahem (ostatní jsou noindex, ušetří čas buildu)
 const sr = indexovatDetail(p) ? srovnani(p) : null;
+const svatky = Object.entries((svatkyRaw as { salony: Record<string, { dny: Record<string, string> }> }).salony[p.id]?.dny ?? {}).sort();
 const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
 ---
 
@@ -166,6 +169,22 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
               </p>
             )
           }
+          {
+            svatky.length > 0 && (
+              <div class="svatky">
+                <p class="svatky__h">O svátcích (potvrzeno salonem)</p>
+                <ul>
+                  {svatky.map(([d, h]) => (
+                    <li>
+                      <span>{new Date(d).toLocaleDateString('cs-CZ', { weekday: 'short', day: 'numeric', month: 'numeric' })}</span>
+                      <span>{h}</span>
+                    </li>
+                  ))}
+                </ul>
+                <a href="/kadernictvi-o-svatcich/">Kdo další má otevřeno o svátcích →</a>
+              </div>
+            )
+          }
           {(t || p.oteviraciDoba) && <PotvrzeniDoby id={p.id} url={url(p)} />}
         </section>
 
@@ -200,7 +219,9 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
               </table>
               <p class="muted cenik__pozn">Ceny uvádí salon. Konečná cena se může lišit podle délky vlasů a náročnosti.</p>
             </section>
-          ) : null
+          ) : (
+            indexovatDetail(p) && <CenyNavstevniku id={p.id} mesto={p.mestoSlug} barber={p.typ === 'barber'} />
+          )
         }
 
         {
@@ -273,6 +294,7 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
           <p>{p.overeno ? 'Údaje ověřil majitel. Pokud se něco změnilo, dejte nám vědět.' : 'Ověřte profil a doplňte ceník, popis, rezervace a aktuální otevírací dobu. Je to zdarma.'}</p>
           <a class="btn" href={`/sprava/?salon=${p.id}&u=${encodeURIComponent(url(p))}`}>Spravovat profil</a>
           <p class="majitel__alt"><a href={`/pridat-provozovnu/?salon=${encodeURIComponent(url(p))}&nazev=${encodeURIComponent(p.nazev)}&id=${p.id}`}>Nebo nám pošlete změny formulářem</a></p>
+          <p class="majitel__alt"><a href={`/plakat/?u=${encodeURIComponent(url(p))}`} rel="nofollow">Plakát do výlohy s QR kódem</a></p>
         </div>
       </div>
     </div>
@@ -642,5 +664,28 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
     .srov__popis {
       grid-column: 1 / -1;
     }
+  }
+  .svatky {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    border-radius: 14px;
+    background: #fff6f7;
+    font-size: 0.9rem;
+  }
+  .svatky__h {
+    margin: 0 0 0.4rem;
+    font-weight: 600;
+  }
+  .svatky ul {
+    list-style: none;
+    margin: 0 0 0.5rem;
+    padding: 0;
+    display: grid;
+    gap: 0.2rem;
+  }
+  .svatky li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
   }
 </style>

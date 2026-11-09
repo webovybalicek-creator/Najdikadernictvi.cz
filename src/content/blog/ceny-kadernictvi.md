@@ -53,6 +53,6 @@ Praktický postup, jak porovnat salony v okolí:
 2. U dvou až tří vybraných se podívejte na jejich web nebo sociální sítě, většina tam ceník zveřejňuje.
 3. Zavolejte a zeptejte se na konečnou cenu i s mytím a stylingem. Ceník často uvádí cenu „od“.
 
-Ceníky salonů postupně doplňujeme do jejich profilů. Jakmile jich bude dost, zveřejníme srovnání skutečných cen podle měst.
+Ceníky salonů postupně doplňujeme do jejich profilů. Pomoct můžete i vy: na stránce každého salonu můžete uvést, kolik jste platili. Jakmile bude ve městě dost odpovědí, ukážeme tady srovnání skutečných cen podle měst.
 
 **Zdroje:** [TN.cz: Kadeřnictví zdražují (data ČSÚ)](https://tn.nova.cz/zpravodajstvi/clanek/482472-kadernictvi-zdrazuji-nejvice-si-priplati-muzi-vyssi-ceny-ale-cekaji-i-zeny), [Energozrouti.cz: kadeřník o cenách a spropitném](https://energozrouti.cz/clanek/kadernik-otevrene-promluvil-o-spropitnem-od-cechu), ceníky salonů [Gardin Brno](https://gardin.cz/cenik/) a [Cutegory Brno](https://www.cutegory.cz/cenik-kadernictvi-brno) (stav říjen 2026).

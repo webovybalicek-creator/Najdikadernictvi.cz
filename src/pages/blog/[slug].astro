@@ -7,6 +7,7 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import Hledani from '../../components/Hledani.astro';
 import BlogKarta from '../../components/BlogKarta.astro';
 import KatalogVClanku from '../../components/KatalogVClanku.astro';
+import CenySouhrn from '../../components/CenySouhrn.astro';
 import { clanky, clanekUrl, kategorieUrl, casCteni, datumText, souvisejici, type Clanek } from '../../lib/blog';
 import { SITE } from '../../lib/config';
 import { nejvetsiMesta, mestoUrl } from '../../lib/data';
@@ -109,6 +110,7 @@ const jsonLd = {
       <div class="text">
         <Content />
         {obecny && <KatalogVClanku kategorie={c.data.kategorie} />}
+        {c.id === 'ceny-kadernictvi' && <CenySouhrn />}
         <aside class="ctete-text">
           <p class="toc__h">Čtěte také</p>
           <ul>

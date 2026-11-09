@@ -42,6 +42,7 @@ const fullTitle = title.includes(SITE.nazev) || title.length > 42 ? title : `${t
     <link rel="canonical" href={canonical} />
     {SITE.googleOvereni && <meta name="google-site-verification" content={SITE.googleOvereni} />}
     {SITE.bingOvereni && <meta name="msvalidate.01" content={SITE.bingOvereni} />}
+    {SITE.seznamOvereni && <meta name="seznam-wmt" content={SITE.seznamOvereni} />}
     <link rel="sitemap" href="/sitemap.xml" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />

@@ -1,0 +1,152 @@
+---
+// „Kolik jste tu platili?“ – ceny od návštěvníků (API /api/ceny.php). Průměr (medián) se ukáže od 3 odpovědí.
+interface Props {
+  id: string;
+  mesto: string;
+  barber: boolean;
+}
+const { id, mesto, barber } = Astro.props;
+const SLUZBY = barber
+  ? [['pansky', 'Pánský střih'], ['vousy', 'Úprava vousů'], ['detsky', 'Dětský střih']]
+  : [['damsky', 'Dámský střih'], ['pansky', 'Pánský střih'], ['barveni', 'Barvení'], ['detsky', 'Dětský střih']];
+---
+
+<section class="cn" data-cn data-id={id} data-mesto={mesto}>
+  <h2>Kolik se tu platí</h2>
+  <ul class="cn__seznam" data-cn-seznam hidden></ul>
+  <p class="cn__nic" data-cn-nic>Ceny zatím nemáme. Byli jste tu? Pomozte dalším zákazníkům.</p>
+  <form class="cn__form" data-cn-form>
+    <span class="cn__otazka">Kolik jste tu naposledy platili?</span>
+    <select name="sluzba" aria-label="Služba">
+      {SLUZBY.map(([v, t]) => <option value={v}>{t}</option>)}
+    </select>
+    <label class="cn__cena">
+      <input name="cena" type="number" inputmode="numeric" min="50" max="20000" step="10" placeholder="350" aria-label="Cena v Kč" required />
+      <span>Kč</span>
+    </label>
+    <input type="text" name="web" tabindex="-1" autocomplete="off" class="cn__past" aria-hidden="true" />
+    <button type="submit">Odeslat</button>
+  </form>
+  <p class="cn__dik" data-cn-dik hidden aria-live="polite"></p>
+  <p class="cn__pozn">Ceny uvádějí návštěvníci webu, průměr ukážeme od 3 odpovědí. Aktuální ceník vám řekne salon.</p>
+</section>
+
+<script>
+  const NAZVY: Record<string, string> = { pansky: 'Pánský střih', damsky: 'Dámský střih', detsky: 'Dětský střih', barveni: 'Barvení', vousy: 'Úprava vousů' };
+  document.querySelectorAll<HTMLElement>('[data-cn]').forEach((el) => {
+    const seznam = el.querySelector<HTMLUListElement>('[data-cn-seznam]')!;
+    const nic = el.querySelector<HTMLElement>('[data-cn-nic]')!;
+    const form = el.querySelector<HTMLFormElement>('[data-cn-form]')!;
+    const dik = el.querySelector<HTMLElement>('[data-cn-dik]')!;
+    const ukaz = (s: Record<string, { n: number; median: number | null }>) => {
+      const radky = Object.entries(s ?? {}).filter(([, v]) => v.median !== null);
+      const celkem = Object.values(s ?? {}).reduce((a, v) => a + v.n, 0);
+      seznam.innerHTML = radky
+        .map(([k, v]) => `<li><span>${NAZVY[k] ?? k}</span><strong>${v.median!.toLocaleString('cs-CZ')} Kč</strong><small>${v.n}× uvedeno</small></li>`)
+        .join('');
+      seznam.hidden = !radky.length;
+      nic.hidden = !!radky.length;
+      if (!radky.length && celkem) nic.textContent = `Zatím ${celkem}× uvedená cena, průměr ukážeme od 3 odpovědí. Byli jste tu?`;
+    };
+    fetch(`/api/ceny.php?salon=${encodeURIComponent(el.dataset.id!)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => d?.ok && ukaz(d.sluzby))
+      .catch(() => {});
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      fd.set('salon', el.dataset.id!);
+      fd.set('mesto', el.dataset.mesto!);
+      try {
+        const r = await fetch('/api/ceny.php', { method: 'POST', body: fd });
+        const d = await r.json();
+        if (!d.ok) throw new Error(d.chyba || '');
+        ukaz(d.sluzby);
+        form.reset();
+        dik.textContent = 'Díky! Cena pomůže dalším zákazníkům.';
+      } catch (err) {
+        dik.textContent = (err as Error).message || 'Cenu se nepodařilo odeslat. Zkuste to prosím později.';
+      }
+      dik.hidden = false;
+    });
+  });
+</script>
+
+<style>
+  .cn__seznam {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    gap: 0.6rem;
+  }
+  .cn__seznam :global(li) {
+    display: grid;
+    gap: 0.1rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+  }
+  .cn__seznam :global(span) {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .cn__seznam :global(strong) {
+    font-size: 1.3rem;
+  }
+  .cn__seznam :global(small) {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+  }
+  .cn__nic {
+    margin: 0 0 0.8rem;
+  }
+  .cn__form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+  .cn__otazka {
+    color: var(--ink-soft);
+    margin-right: 0.25rem;
+  }
+  .cn__form select,
+  .cn__form input,
+  .cn__form button {
+    font: inherit;
+    padding: 0.45rem 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: #fff;
+  }
+  .cn__cena {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .cn__cena input {
+    width: 6.5rem;
+  }
+  .cn__form button {
+    cursor: pointer;
+    background: var(--ink);
+    color: #fff;
+    border-color: var(--ink);
+  }
+  .cn__past {
+    position: absolute;
+    left: -9999px;
+  }
+  .cn__dik {
+    margin: 0.5rem 0 0;
+    font-size: 0.9rem;
+  }
+  .cn__pozn {
+    margin: 0.6rem 0 0;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+  }
+</style>
