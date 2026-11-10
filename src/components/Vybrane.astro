@@ -1,16 +1,13 @@
 ---
-// Vybrané salony s fotkami: nejdřív kurátorský výběr redakce (UVOD_FOTKY), pak ostatní salony s fotkami.
-// Záložky měst ukážou salony s fotkami z daného města. Pořadí je pevné, ať úvodní stránka působí upraveně.
+// Salony s fotkami: všechny mají stejnou váhu, pořadí se každý den zamíchá (stejně pro všechny návštěvníky).
+// Při buildu se zamíchá podle data buildu, v prohlížeči podle dnešního data (kdyby build ten den neproběhl).
+// Záložky měst ukážou salony s fotkami z daného města ve stejném denním pořadí.
 import Karta from './Karta.astro';
-import { PROVOZOVNY, UVOD_FOTKY, uplnost, type Provozovna } from '../lib/data';
+import { PROVOZOVNY, url, type Provozovna } from '../lib/data';
+import { poradiDne } from '../lib/denni';
 
 const ZOBRAZIT = 8;
-const podleId = new Map(PROVOZOVNY.map((p) => [p.id, p]));
-const vybrane = UVOD_FOTKY.map((id) => podleId.get(id)).filter((p): p is Provozovna => !!p?.fotky?.length);
-const ostatni = PROVOZOVNY.filter((p) => p.fotky?.length && !UVOD_FOTKY.includes(p.id)).sort(
-  (a, b) => (b.fotky!.length - a.fotky!.length) || uplnost(b) - uplnost(a) || a.id.localeCompare(b.id),
-);
-const pool = [...vybrane, ...ostatni];
+const pool = poradiDne(PROVOZOVNY.filter((p) => p.fotky?.length), url);
 // Pražské obvody pod jednou záložkou „Praha“
 const mestoKlic = (p: Provozovna) => (p.kraj === 'praha' ? 'praha' : p.mestoSlug);
 const mestoNazev = (p: Provozovna) => (p.kraj === 'praha' ? 'Praha' : p.mesto);
@@ -31,7 +28,7 @@ const zalozky = [...pocty].filter(([, v]) => v.n >= 2).sort((a, b) => b[1].n - a
           <p class="vyb__pod">Podívejte se dovnitř dřív, než se objednáte. Fotky, otevírací doba a kontakt na jednom místě.</p>
         </div>
         <div class="vyb__mesta" role="tablist" aria-label="Město">
-          <button type="button" role="tab" aria-selected="true" data-vyb-mesto="">Doporučujeme</button>
+          <button type="button" role="tab" aria-selected="true" data-vyb-mesto="">Všechna města</button>
           {zalozky.map(([k, v]) => <button type="button" role="tab" aria-selected="false" data-vyb-mesto={k}>{v.nazev}</button>)}
         </div>
         <ul class="vyb__pas" data-vyb-pas>
@@ -45,9 +42,14 @@ const zalozky = [...pocty].filter(([, v]) => v.n >= 2).sort((a, b) => b[1].n - a
 
 <script>
   import { aplikujStav } from '../scripts/stav';
+  import { poradiDne } from '../lib/denni';
   document.querySelectorAll<HTMLElement>('[data-vyb]').forEach((sek) => {
     const pas = sek.querySelector<HTMLElement>('[data-vyb-pas]')!;
-    const karty = [...pas.querySelectorAll<HTMLElement>(':scope > li')];
+    // Denní pořadí podle dnešního data (shodné s buildem téhož dne, jinak se karty jen přeskládají)
+    const karty = poradiDne([...pas.querySelectorAll<HTMLElement>(':scope > li')], (li) =>
+      li.querySelector('a')!.getAttribute('href')!,
+    );
+    karty.forEach((k) => pas.appendChild(k));
     const n = Number(sek.dataset.zobrazit) || 8;
     const vice = sek.querySelector<HTMLElement>('[data-vyb-vice]')!;
     const ukaz = (mesto: string) => {
@@ -66,6 +68,7 @@ const zalozky = [...pocty].filter(([, v]) => v.n >= 2).sort((a, b) => b[1].n - a
         ukaz(b.dataset.vybMesto!);
       }),
     );
+    ukaz('');
     aplikujStav(sek);
   });
 </script>

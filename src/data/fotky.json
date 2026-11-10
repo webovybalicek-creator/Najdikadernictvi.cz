@@ -1,27 +1,5 @@
 {
-  "_popis": "Fotky salonů vybrané redakcí z veřejných profilů (Google Mapy, web salonu). Klíč = id salonu. Pole: fotky (URL v /public/foto/<id>/, první je hlavní; ke každé existuje i zmenšenina <n>-m.webp), slug (volitelně nová URL podle názvu; starou adresu přesměrovat v public/.htaccess), web (volitelně, jen když salon žádný nemá), nazev (volitelně veřejný název provozovny místo názvu z rejstříku). Fotky nahrané majitelem přes /sprava/ mají přednost. uvod = pořadí salonů v sekci Vybrané salony na úvodní stránce.",
-  "uvod": [
-    "n4951560799",
-    "n13988774101",
-    "r23764694",
-    "n10733531405",
-    "n10585030393",
-    "r19099711",
-    "r17828848",
-    "n4722157228",
-    "n4460856113",
-    "n296770304",
-    "r3180417",
-    "r3290018",
-    "r74172476",
-    "r19584385",
-    "r24570630",
-    "n7825576849",
-    "r24572381",
-    "r3187411",
-    "n296540062",
-    "r26729423"
-  ],
+  "_popis": "Fotky salonů vybrané redakcí z veřejných profilů (Google Mapy, web salonu). Klíč = id salonu. Pole: fotky (URL v /public/foto/<id>/, první je hlavní; ke každé existuje i zmenšenina <n>-m.webp), slug (volitelně nová URL podle názvu; starou adresu přesměrovat v public/.htaccess), web (volitelně, jen když salon žádný nemá), nazev (volitelně veřejný název provozovny místo názvu z rejstříku). Fotky nahrané majitelem přes /sprava/ mají přednost.",
   "salony": {
     "n13430278028": {
       "fotky": [

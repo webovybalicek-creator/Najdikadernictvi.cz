@@ -61,7 +61,6 @@ export interface GoogleHodnoceni {
 }
 
 interface FotkyRedakce {
-  uvod: string[];
   salony: Record<string, { fotky: string[]; nazev?: string; slug?: string; web?: string }>;
 }
 
@@ -374,9 +373,6 @@ export function uplnost(p: Provozovna): number {
     (p.overeno ? 2 : 0)
   );
 }
-
-/** Salony s nejhezčími fotkami pro úvodní stránku, v pořadí podle redakce */
-export const UVOD_FOTKY: string[] = (fotkyRaw as unknown as FotkyRedakce).uvod;
 
 /** Zmenšenina fotky pro karty a galerii (jen fotky redakce v /foto/, ostatní beze změny) */
 export const nahled = (url: string) => (/^\/foto\/[^/]+\/\d+\.webp$/.test(url) ? url.replace(/\.webp$/, '-m.webp') : url);
