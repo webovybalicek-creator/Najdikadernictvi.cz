@@ -7,6 +7,8 @@
 declare(strict_types=1);
 
 const PRIJEMCE = 'info@najdikadernictvi.cz';
+/** Kopie odkazů do administrace (Gmail provozovatele, čte ho i Claude přes připojený Gmail) */
+const KOPIE = 'webovybalicek@gmail.com';
 const WEB = 'https://najdikadernictvi.cz';
 header('X-Robots-Tag: noindex');
 header('Content-Type: text/html; charset=utf-8');
@@ -44,12 +46,12 @@ $telo = "Odkazy do administrace webu najdikadernictvi.cz (nesdílejte je):\n\n"
     . "Odběry upozornění:\n$api/upozorneni.php?admin=" . $podpis('upozorneni-admin') . "\n\n"
     . "Oslovení salonů e-mailem:\n$api/osloveni.php?admin=" . $podpis('osloveni-admin') . "\n";
 $ok = @mail(
-    PRIJEMCE,
+    PRIJEMCE . ', ' . KOPIE,
     '=?UTF-8?B?' . base64_encode('[najdikadernictvi.cz] Odkazy do administrace') . '?=',
     $telo,
     implode("\r\n", ['From: Najdi kadeřnictví <' . PRIJEMCE . '>', 'Content-Type: text/plain; charset=UTF-8', 'MIME-Version: 1.0']),
     '-f' . PRIJEMCE
 );
 $stranka($ok
-    ? '<p>Hotovo. Odkazy jsme poslali na ' . PRIJEMCE . '. Pokud e-mail nedorazí do pár minut, podívejte se do spamu.</p>'
+    ? '<p>Hotovo. Odkazy jsme poslali na ' . PRIJEMCE . ' a ' . KOPIE . '. Pokud e-mail nedorazí do pár minut, podívejte se do spamu.</p>'
     : '<p>E-mail se nepodařilo odeslat. Server pravděpodobně nemá povolenou funkci mail(). Ozvěte se správci webu.</p>');

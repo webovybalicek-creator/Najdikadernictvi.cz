@@ -1,5 +1,7 @@
 import osmRaw from '../data/provozovny.json';
 import registrRaw from '../data/registr.json';
+// Dočasné testovací salony (end-to-end test oslovení a správy profilu) – nikdy se neindexují; po testu soubor vyprázdnit na []
+import testovaciRaw from '../data/testovaci.json';
 import meta from '../data/import-meta.json';
 import vyrazene from '../data/vyrazene.json';
 import overeneRaw from '../data/overene.json';
@@ -43,6 +45,8 @@ export interface Provozovna {
   popis?: string;
   cenik?: { polozka: string; cena: string }[];
   rezervace?: string;
+  /** Testovací záznam (nikdy se neindexuje) */
+  test?: boolean;
   /** Otevírací doba o svátcích od majitele (volný text) */
   svatky?: string;
   /** Fotky salonu (URL): od majitele, nebo vybrané redakcí z veřejných profilů */
@@ -102,7 +106,7 @@ const normAdr = (ulice?: string, cislo?: string) =>
   slugify(`${ulice ?? ''} ${(cislo ?? '').split('/').pop() ?? ''}`);
 
 function sestav(): Provozovna[] {
-  const osmVse: Provozovna[] = (osmRaw as Omit<Provozovna, 'zdroj'>[]).map((p) => ({ ...p, zdroj: 'osm' as const }));
+  const osmVse: Provozovna[] = [...(osmRaw as Omit<Provozovna, 'zdroj'>[]), ...(testovaciRaw as Omit<Provozovna, 'zdroj'>[])].map((p) => ({ ...p, zdroj: 'osm' as const }));
   // Stejný salon zapsaný v OSM dvakrát (bod i budova, nebo dva body do 100 m se stejným názvem):
   // ponecháme záznam s víc údaji a doplníme do něj chybějící pole z druhého. Pobočky na jiných adresách zůstávají.
   const jadroNazvu = (s: string) =>
@@ -270,7 +274,7 @@ export const IMPORT_META = meta as { zdroj: string; importovano: string; pocet: 
  *  otevírací dobu, kontakt nebo údaje od majitele. Ostatní detaily zůstávají dostupné, ale noindex a bez reklam. */
 export const maObsah = (p: Provozovna) =>
   !!(p.overeno || p.oteviraciDoba || p.telefon || p.web || p.facebook || p.instagram || p.popis || p.cenik?.length || p.fotky?.length);
-export const indexovatDetail = (p: Provozovna) => maObsah(p);
+export const indexovatDetail = (p: Provozovna) => !p.test && maObsah(p);
 /** Stránka obce / čtvrti jde do vyhledávačů, jen když má aspoň 3 salony s obsahem (otevírací doba, kontakt…).
  *  Obec s jedním salonem nic nepřidá oproti jeho detailu a výpis samotných adres z rejstříku je málo hodnotný. */
 export const MIN_MESTO = 3;
