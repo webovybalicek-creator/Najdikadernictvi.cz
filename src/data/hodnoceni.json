@@ -1,5 +1,10 @@
 {
   "_popis": "Hodnocení návštěvníků (souhrn [průměr, počet] a schválené texty). Soubor přepisuje workflow Synchronizace profilů, ručně neupravovat.",
   "recenze": {},
-  "souhrn": {}
+  "souhrn": {
+    "n12040147378": [
+      5,
+      1
+    ]
+  }
 }
