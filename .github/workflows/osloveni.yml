@@ -1,0 +1,17 @@
+name: Oslovení salonů (denní dávka)
+
+# Každý pracovní den dopoledne pošle server další dávku oslovovacích e-mailů (AUTO_DAVKA v public/api/osloveni.php).
+# Server sám hlídá jednu dávku denně, okno 7–13 h a denní limit. Souhrn přijde e-mailem na info@ a kopii.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 8 * * 1-5'   # 9:23 v zimě, 10:23 v létě (Praha)
+
+jobs:
+  davka:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Odeslání dávky
+        run: |
+          curl -sS --max-time 300 -X POST -A "najdikadernictvi-osloveni" "https://najdikadernictvi.cz/api/osloveni.php?auto=1" | tee /tmp/vystup.txt
+          echo "::notice::$(head -3 /tmp/vystup.txt | tr '\n' ' ')"

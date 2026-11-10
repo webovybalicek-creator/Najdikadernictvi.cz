@@ -19,6 +19,13 @@ Cíl: majitelé doplní fotky, ceník, popis a otevírací dobu. Je to nejsilně
 6. Odhlášení: odkaz v patičce e-mailu i tlačítko „Odhlásit“ v poštovním klientu (List-Unsubscribe).
    Odhlášeným, salonům, které už profil upravily, a už osloveným systém znovu nepošle.
 
+## Automatické rozesílání
+- Workflow **Oslovení salonů (denní dávka)** běží každý pracovní den kolem 9:20 a pošle **10 e-mailů** dalším
+  neosloveným salonům (napřed ty, jejichž profil už je v Googlu). Velikost dávky: `AUTO_DAVKA` v `public/api/osloveni.php`.
+- Server pustí nejvýš jednu dávku denně, jen v pracovní dny 7–13 h, a vždy dodrží denní limit.
+- Po každé dávce přijde na info@ a webovybalicek@gmail.com souhrn: odesláno, otevřeli, upravili, kolik zbývá.
+- Zastavení: v GitHubu Actions → workflow → „Disable workflow“.
+
 ## Pravidla
 - Žádné hromadné rozesílky ani připomínky. Každý salon jeden e-mail.
 - Odpovědi chodí na info@. Žádost o odstranění vyřiďte do pár dní (záznam do `src/data/vyrazene.json`).

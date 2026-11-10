@@ -16,9 +16,12 @@ const PRIJEMCE = 'info@najdikadernictvi.cz';
 const ODESILATEL = 'Vladimír Fischer – Najdi kadeřnictví';
 const WEB = 'https://najdikadernictvi.cz';
 const DENNI_LIMIT = 20;
+const AUTO_DAVKA = 10;              // automatická denní dávka (GitHub Actions, pracovní dny dopoledne)
+const KOPIE = 'webovybalicek@gmail.com';
 const PLATNOST_E_MAILU_DNI = 90;   // jak dlouho funguje odkaz v e-mailu
 const PLATNOST_SPRAVY_DNI = 30;    // jak dlouho platí přihlášení do správy po kliknutí (jako v sprava.php)
 
+date_default_timezone_set('Europe/Prague');
 header('X-Robots-Tag: noindex');
 header('Cache-Control: no-store');
 
@@ -204,9 +207,15 @@ if (isset($_GET['odhlasit'])) {
         . '<p>Pokud chcete salon z katalogu odstranit nebo opravit údaje, napište na <a href="mailto:' . PRIJEMCE . '">' . PRIJEMCE . '</a>.</p>');
 }
 
+// ---------------------------------------------------------------- automatická denní dávka
+// Spouští GitHub Actions (POST ?auto=1). Bez tajemství, ale nejvýš jedna dávka denně, jen v pracovní dny 7–13 h,
+// takže spuštění zvenku nemůže poslat víc e-mailů, jen dnešní dávku dřív.
+$auto = isset($_GET['auto']) && $_SERVER['REQUEST_METHOD'] === 'POST';
+if (isset($_GET['auto']) && !$auto) { http_response_code(405); exit; }
+
 // ---------------------------------------------------------------- administrace
 $admin = (string)($_POST['admin'] ?? $_GET['admin'] ?? '');
-if (!hash_equals($podpis('osloveni-admin'), $admin)) stranka('Oslovení salonů', '<p>Odkaz do administrace přijde e-mailem přes <a href="/api/admin.php">/api/admin.php</a>.</p>');
+if (!$auto && !hash_equals($podpis('osloveni-admin'), $admin)) stranka('Oslovení salonů', '<p>Odkaz do administrace přijde e-mailem přes <a href="/api/admin.php">/api/admin.php</a>.</p>');
 
 // stav každého salonu: oslovení + úprava profilu majitelem (sprava.sqlite)
 $stav = [];
@@ -241,26 +250,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['akce'] ?? '') === 'test') 
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['akce'] ?? '') === 'odeslat') {
-    $ids = array_slice(array_values(array_filter((array)($_POST['ids'] ?? []), fn($i) => isset($salony[$i]))), 0, $zbyva);
+/** Odešle e-mail vybraným salonům (přeskočí oslovené, odhlášené a upravené). Vrací [odesláno, chyb]. */
+$odesli = function (array $ids) use ($db, $salony, $stav, $odhlaseni, $upraveno, $podpis): array {
     $ok = $chyb = 0;
     foreach ($ids as $sid) {
-        $s = $salony[$sid];
-        if (isset($stav[$sid]['odeslano']) || isset($odhlaseni[$s['email']]) || isset($upraveno[$sid])) continue;
+        $s = $salony[$sid] ?? null;
+        if (!$s || isset($stav[$sid]['odeslano']) || isset($odhlaseni[$s['email']]) || isset($upraveno[$sid])) continue;
         $db->prepare('INSERT INTO osloveni (salon, email, odeslano) VALUES (?, ?, ?)')->execute([$sid, $s['email'], date('c')]);
         $id = (int)$db->lastInsertId();
         $klik = WEB . "/api/osloveni.php?k=$id&t=" . $podpis("osloveni-klik:$id");
         $odh = WEB . "/api/osloveni.php?odhlasit=$id&t=" . $podpis("osloveni-odhlasit:$id");
         [$predmet, $text, $html] = textEmailu($s, $klik, $odh);
         [$hl, $telo] = mimeZprava($text, $html, $odh);
-        $poslano = @mail($s['email'], '=?UTF-8?B?' . base64_encode($predmet) . '?=', $telo, $hl, '-f' . PRIJEMCE);
-        if ($poslano) $ok++;
+        if (@mail($s['email'], '=?UTF-8?B?' . base64_encode($predmet) . '?=', $telo, $hl, '-f' . PRIJEMCE)) $ok++;
         else {
             $chyb++;
             $db->prepare('UPDATE osloveni SET chyba = ? WHERE id = ?')->execute(['mail() selhal', $id]);
         }
         usleep(1500000); // ať server neposílá dávku naráz
     }
+    return [$ok, $chyb];
+};
+
+/** Salony, které ještě lze oslovit (v pořadí seznamu: indexované profily napřed) */
+$kOsloveni = function () use ($salony, $stav, $odhlaseni, $upraveno): array {
+    $ids = array_keys(array_filter($salony, fn($s, $sid) => !isset($stav[$sid]) && !isset($odhlaseni[$s['email']]) && !isset($upraveno[$sid]), ARRAY_FILTER_USE_BOTH));
+    usort($ids, fn($a, $b) => (int)$salony[$b]['index'] <=> (int)$salony[$a]['index']);
+    return $ids;
+};
+
+if ($auto) {
+    header('Content-Type: text/plain; charset=utf-8');
+    $den = (int)date('N');
+    $hod = (int)date('G');
+    if ($den > 5 || $hod < 7 || $hod > 13) exit("mimo okno (den $den, hodina $hod)\n");
+    $db->exec('CREATE TABLE IF NOT EXISTS auto_davky (den TEXT PRIMARY KEY, odeslano INTEGER, chyb INTEGER)');
+    $dnesDen = date('Y-m-d');
+    try {
+        $db->prepare('INSERT INTO auto_davky (den, odeslano, chyb) VALUES (?, 0, 0)')->execute([$dnesDen]);
+    } catch (PDOException $e) {
+        exit("dnešní dávka už proběhla\n");
+    }
+    $fronta = $kOsloveni();
+    [$ok, $chyb] = $odesli(array_slice($fronta, 0, min(AUTO_DAVKA, $zbyva)));
+    $db->prepare('UPDATE auto_davky SET odeslano = ?, chyb = ? WHERE den = ?')->execute([$ok, $chyb, $dnesDen]);
+    $zbyvaSalonu = max(0, count($fronta) - $ok - $chyb);
+    $celkem = (int)$db->query('SELECT COUNT(DISTINCT salon) FROM osloveni WHERE chyba IS NULL')->fetchColumn();
+    $klikli = (int)$db->query('SELECT COUNT(DISTINCT salon) FROM osloveni WHERE kliknuto IS NOT NULL')->fetchColumn();
+    $souhrn = "Oslovení salonů – dávka $dnesDen\n\n"
+        . "Dnes odesláno: $ok" . ($chyb ? " (chyb: $chyb)" : '') . "\n"
+        . "Celkem osloveno: $celkem\n"
+        . "Otevřeli odkaz: $klikli\n"
+        . "Upravili profil: " . count($upraveno) . "\n"
+        . "Zbývá oslovit: $zbyvaSalonu" . ($zbyvaSalonu ? ' (asi ' . (int)ceil($zbyvaSalonu / AUTO_DAVKA) . ' pracovních dní)' : ' – hotovo, všichni osloveni') . "\n\n"
+        . "Odpovědi salonů chodí na " . PRIJEMCE . ". Žádosti o odstranění zapište do src/data/vyrazene.json.\n";
+    if ($ok || $chyb) @mail(PRIJEMCE . ', ' . KOPIE, '=?UTF-8?B?' . base64_encode("[najdikadernictvi.cz] Oslovení: dnes $ok, zbývá $zbyvaSalonu") . '?=', $souhrn,
+        implode("\r\n", ['From: Najdi kadeřnictví <' . PRIJEMCE . '>', 'Content-Type: text/plain; charset=UTF-8', 'MIME-Version: 1.0']), '-f' . PRIJEMCE);
+    exit($souhrn);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['akce'] ?? '') === 'odeslat') {
+    $ids = array_slice(array_values(array_filter((array)($_POST['ids'] ?? []), fn($i) => isset($salony[$i]))), 0, $zbyva);
+    [$ok, $chyb] = $odesli($ids);
     header('Location: ?admin=' . urlencode($admin) . '&odeslano=' . $ok . '&chyb=' . $chyb, true, 303);
     exit;
 }
