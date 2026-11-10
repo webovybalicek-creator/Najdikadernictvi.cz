@@ -71,7 +71,11 @@ const jsonLd = {
   '@type': 'Dataset',
   name: title,
   description,
-  creator: { '@type': 'Organization', name: 'Najdi kadeřnictví' },
+  url: 'https://najdikadernictvi.cz/kadernictvi-v-cislech/',
+  license: 'https://creativecommons.org/licenses/by/4.0/',
+  isAccessibleForFree: true,
+  inLanguage: 'cs',
+  creator: { '@type': 'Organization', name: 'Najdi kadeřnictví', url: 'https://najdikadernictvi.cz/' },
   isBasedOn: reg ? ['https://opendata.csu.gov.cz/', 'https://www.openstreetmap.org/'] : ['https://www.openstreetmap.org/'],
   ...(reg ? { dateModified: reg.aktualizace } : {}),
 };
@@ -200,7 +204,8 @@ const jsonLd = {
     </section>
 
     <p class="muted pozn">
-      Data můžete volně citovat s odkazem na najdikadernictvi.cz. Jak data získáváme, popisujeme na stránce
+      Data můžete volně citovat s odkazem na najdikadernictvi.cz (licence
+      <a href="https://creativecommons.org/licenses/by/4.0/deed.cs" rel="license noopener" target="_blank">CC BY 4.0</a>). Jak data získáváme, popisujeme na stránce
       <a href="/o-webu/">O webu</a>.
     </p>
   </div>
