@@ -547,16 +547,40 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
   .grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-    gap: clamp(24px, 4vw, 56px);
+    gap: 1.5rem;
     align-items: start;
   }
-  .info section {
-    margin-bottom: 2rem;
+  /* Sekce profilu jako samostatné karty, ať se od sebe na první pohled oddělí */
+  .info > :global(section) {
+    margin: 0 0 1rem;
+    padding: 1.5rem 1.6rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--surface);
   }
-  .info h2,
+  .info > :global(section > h2) {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0 0 1rem;
+    font-size: 1.15rem;
+  }
+  .info > :global(section > h2)::before {
+    content: '';
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
   .majitel h2,
   .okoli h2 {
     font-size: 1.75rem;
+  }
+  @media (max-width: 640px) {
+    .info > :global(section) {
+      padding: 1.2rem 1.1rem;
+    }
   }
   .doba {
     border-collapse: collapse;
