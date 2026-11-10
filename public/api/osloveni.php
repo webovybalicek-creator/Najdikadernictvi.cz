@@ -143,6 +143,29 @@ if (is_file($uloziste . '/sprava.sqlite')) {
 $dnes = (int)$db->query("SELECT COUNT(*) FROM osloveni WHERE substr(odeslano, 1, 10) = '" . date('Y-m-d') . "' AND chyba IS NULL")->fetchColumn();
 $zbyva = max(0, DENNI_LIMIT - $dnes);
 
+$hlavicky = fn(string $odh): string => implode("\r\n", [
+    'From: =?UTF-8?B?' . base64_encode(ODESILATEL) . '?= <' . PRIJEMCE . '>',
+    'Reply-To: ' . PRIJEMCE,
+    'List-Unsubscribe: <' . $odh . '>, <mailto:' . PRIJEMCE . '?subject=odhlasit>',
+    'List-Unsubscribe-Post: List-Unsubscribe=One-Click',
+    'Content-Type: text/plain; charset=UTF-8',
+    'Content-Transfer-Encoding: 8bit',
+    'MIME-Version: 1.0',
+]);
+
+// Zkušební e-mail na libovolnou adresu (např. mail-tester.com) – nic se nezaznamená
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['akce'] ?? '') === 'test') {
+    $kam = trim((string)($_POST['kam'] ?? ''));
+    $vz = reset($salony);
+    $ok = filter_var($kam, FILTER_VALIDATE_EMAIL) && $vz;
+    if ($ok) {
+        [$predmet, $telo] = textEmailu($vz, WEB . '/api/osloveni.php?k=0&t=test', WEB . '/api/osloveni.php?odhlasit=0&t=test');
+        $ok = @mail($kam, '=?UTF-8?B?' . base64_encode($predmet) . '?=', $telo, $hlavicky(WEB . '/api/osloveni.php?odhlasit=0&t=test'), '-f' . PRIJEMCE);
+    }
+    header('Location: ?admin=' . urlencode($admin) . '&test=' . ($ok ? 'ok' : 'chyba'), true, 303);
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['akce'] ?? '') === 'odeslat') {
     $ids = array_slice(array_values(array_filter((array)($_POST['ids'] ?? []), fn($i) => isset($salony[$i]))), 0, $zbyva);
     $ok = $chyb = 0;
@@ -158,15 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['akce'] ?? '') === 'odeslat
             $s['email'],
             '=?UTF-8?B?' . base64_encode($predmet) . '?=',
             $telo,
-            implode("\r\n", [
-                'From: =?UTF-8?B?' . base64_encode(ODESILATEL) . '?= <' . PRIJEMCE . '>',
-                'Reply-To: ' . PRIJEMCE,
-                'List-Unsubscribe: <' . $odh . '>, <mailto:' . PRIJEMCE . '?subject=odhlasit>',
-                'List-Unsubscribe-Post: List-Unsubscribe=One-Click',
-                'Content-Type: text/plain; charset=UTF-8',
-                'Content-Transfer-Encoding: 8bit',
-                'MIME-Version: 1.0',
-            ]),
+            $hlavicky($odh),
             '-f' . PRIJEMCE
         );
         if ($poslano) $ok++;
@@ -207,7 +222,8 @@ foreach ($salony as $sid => $s) {
 $mesta = array_unique(array_column($salony, 'mesto'));
 sort($mesta);
 
-$zprava = isset($_GET['odeslano']) ? '<p style="padding:.75rem 1rem;background:#e8f5ea;border-radius:10px">Odesláno: ' . (int)$_GET['odeslano'] . ((int)($_GET['chyb'] ?? 0) ? ', chyb: ' . (int)$_GET['chyb'] . ' (server odmítl odeslat, zkontrolujte funkci mail() na hostingu)' : '') . '.</p>' : '';
+$zprava = (isset($_GET['test']) ? '<p style="padding:.75rem 1rem;background:' . ($_GET['test'] === 'ok' ? '#e8f5ea' : '#fdecec') . ';border-radius:10px">' . ($_GET['test'] === 'ok' ? 'Zkušební e-mail odeslán.' : 'Zkušební e-mail se nepodařilo odeslat (neplatná adresa nebo nefunguje mail() na serveru).') . '</p>' : '')
+    . (isset($_GET['odeslano']) ? '<p style="padding:.75rem 1rem;background:#e8f5ea;border-radius:10px">Odesláno: ' . (int)$_GET['odeslano'] . ((int)($_GET['chyb'] ?? 0) ? ', chyb: ' . (int)$_GET['chyb'] . ' (server odmítl odeslat, zkontrolujte funkci mail() na hostingu)' : '') . '.</p>' : '');
 
 stranka('Oslovení salonů', '<h1 style="margin:0 0 .5rem">Oslovení salonů</h1>'
     . '<p>Salony s veřejným e-mailem: <b>' . $pocty['vse'] . '</b> · osloveno: <b>' . $pocty['osloveno'] . '</b> · otevřeli odkaz: <b>' . $pocty['kliknuto'] . '</b> · upravili profil: <b>' . $pocty['upraveno'] . '</b></p>'
@@ -215,6 +231,11 @@ stranka('Oslovení salonů', '<h1 style="margin:0 0 .5rem">Oslovení salonů</h1
     . '<p>Dnes můžete odeslat ještě <b>' . $zbyva . '</b> z ' . DENNI_LIMIT . ' e-mailů. Každý salon dostane jen jeden e-mail, odhlášeným a salonům, které už profil upravily, se nic nepošle.</p>'
     . '<details style="margin:1rem 0;padding:1rem;background:#fff;border:1px solid #e5e5e5;border-radius:12px"><summary><b>Náhled e-mailu</b>' . ($vzor ? ' (pro ' . $h($vzor['nazev']) . ')' : '') . '</summary>'
     . '<p><b>Předmět:</b> ' . $h($vzorPredmet) . '</p><pre style="white-space:pre-wrap;font:inherit;font-size:.9rem">' . $h($vzorTelo) . '</pre></details>'
+    . '<form method="post" style="display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:1rem 0">'
+    . '<input type="hidden" name="admin" value="' . $h($admin) . '"><input type="hidden" name="akce" value="test">'
+    . '<input type="email" name="kam" required placeholder="adresa z mail-tester.com nebo vaše" style="padding:.45rem .6rem;min-width:18rem">'
+    . '<button type="submit" style="padding:.45rem .9rem">Poslat zkušební e-mail</button>'
+    . '<small>Ověřte, že e-mail nepadá do spamu (mail-tester.com ukáže skóre i SPF/DKIM).</small></form>'
     . '<form method="post" data-form>'
     . '<input type="hidden" name="admin" value="' . $h($admin) . '"><input type="hidden" name="akce" value="odeslat">'
     . '<div style="display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:1rem 0;position:sticky;top:0;background:#fafafa;padding:.5rem 0;z-index:1">'

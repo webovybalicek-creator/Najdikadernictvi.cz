@@ -4,3 +4,6 @@ dist/
 .env
 .env.*
 .DS_Store
+
+# Lokální data PHP API (SQLite, tajný klíč, fotky) – na serveru leží mimo web, do repozitáře nepatří
+najdikadernictvi-data/
