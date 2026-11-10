@@ -22,7 +22,7 @@ import Logo from './Logo.astro';
             <span class="hdr__obl-pocet" data-pocet-oblibenych hidden></span>
           </a>
         </li>
-        <li class="nav-skryt-m"><a href="/pridat-provozovnu/" class="hdr__cta">Přidat salon</a></li>
+        <li class="nav-skryt-m"><a href="/pridat-provozovnu/" class="hdr__cta"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" /></svg>Přidat salon</a></li>
         <li class="nav-jen-m">
           <button type="button" class="hdr__burger kruh" aria-expanded="false" aria-controls="mobilni-menu" data-burger>
             <span class="sr-only">Menu</span>
@@ -116,8 +116,26 @@ import Logo from './Logo.astro';
       color: var(--ink);
     }
   }
-  .hdr__cta {
+  /* Hlavní výzva v menu: plná tmavá pilulka, ať je mezi odkazy vidět na první pohled */
+  .nav-skryt-m a.hdr__cta {
+    gap: 0.4rem;
+    margin-left: 0.5rem;
+    padding: 0 1.15rem;
+    background: var(--ink);
+    color: #fff;
     font-weight: 600;
+    transition:
+      background-color 150ms var(--ease-out),
+      transform 150ms var(--ease-out);
+  }
+  .nav-skryt-m a.hdr__cta:active {
+    transform: scale(0.97);
+  }
+  @media (hover: hover) {
+    .nav-skryt-m a.hdr__cta:hover {
+      background: #000;
+      color: #fff;
+    }
   }
   .nav-jen-m {
     display: none;

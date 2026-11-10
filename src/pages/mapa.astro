@@ -41,7 +41,7 @@ import Base from '../layouts/Base.astro';
 
 <script>
   import 'leaflet/dist/leaflet.css';
-  import { stav } from '../scripts/stav';
+  import { stav, stavAtribut } from '../scripts/stav';
   import { body, dlazdice, klic, nactiObdelnik, P } from '../scripts/dlazdice';
 
   type Z = [number, number, string, string, string, 0 | 1, [number, number][][] | 0, 0 | 1, string, 0 | 1, 0 | 1];
@@ -154,7 +154,7 @@ import Base from '../layouts/Base.astro';
         .slice(0, 40)
         .map((z) => {
           const s = z[6] ? stav(z[6]) : null;
-          return `<li><a href="${z[3]}">${esc(z[2])}</a><span>${esc(z[4])}</span>${s ? `<span class="stav" data-stav="${s.open ? 'open' : 'closed'}">${s.text}</span>` : ''}</li>`;
+          return `<li><a href="${z[3]}">${esc(z[2])}</a><span>${esc(z[4])}</span>${s ? `<span class="stav" data-stav="${stavAtribut(s)}">${s.text}</span>` : ''}</li>`;
         })
         .join('');
     }

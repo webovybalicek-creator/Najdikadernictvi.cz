@@ -18,6 +18,7 @@
   --slate-ink: #222222;
   --open: #008a05;
   --closed: #c13515;
+  --soon: #b25a00;
   --accent: #ff385c;
   --accent-2: #e00b41;
   --accent-soft: #fff1f3;
@@ -261,6 +262,12 @@ p {
 
 .stav[data-stav='closed'] {
   color: var(--closed);
+}
+
+/* Do hodiny zavírá / do hodiny otevírá */
+.stav[data-stav='konci'],
+.stav[data-stav='brzy'] {
+  color: var(--soon);
 }
 
 .breadcrumb {

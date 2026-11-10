@@ -1,15 +1,26 @@
 ---
+import { Picture } from 'astro:assets';
 import Base from './Base.astro';
 interface Props {
   title: string;
   description: string;
+  /** Ilustrační fotka pod nadpisem (ať textová stránka nepůsobí prázdně) */
+  obrazek?: ImageMetadata;
+  obrazekAlt?: string;
 }
-const { title, description } = Astro.props;
+const { title, description, obrazek, obrazekAlt = '' } = Astro.props;
 ---
 
 <Base title={title} description={description}>
   <article class="wrap section text">
     <h1>{title}</h1>
+    {
+      obrazek && (
+        <figure class="text__foto">
+          <Picture formats={['avif', 'webp']} src={obrazek} alt={obrazekAlt} widths={[480, 800, 1200]} sizes="(max-width: 800px) 100vw, 48rem" loading="eager" />
+        </figure>
+      )
+    }
     <slot />
   </article>
 </Base>
@@ -17,6 +28,19 @@ const { title, description } = Astro.props;
 <style>
   .text {
     max-width: 48rem;
+  }
+  .text__foto {
+    margin: 1.5rem 0 2rem;
+    aspect-ratio: 21 / 9;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--canvas);
+  }
+  .text__foto :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   .text :global(h2) {
     font-size: 1.9rem;

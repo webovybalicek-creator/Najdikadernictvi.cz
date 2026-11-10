@@ -19,6 +19,7 @@ import {
   url,
   TYP_NAZEV,
   ZAMERENI_NAZEV,
+  SLUZBY_NAZEV,
   mesta,
   pocetText,
   indexovatDetail,
@@ -223,6 +224,7 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
             {p.facebook && (<><dt>Facebook</dt><dd><a href={p.facebook} rel="noopener nofollow" target="_blank">Profil na Facebooku</a></dd></>)}
             {p.platbaKartou && (<><dt>Platba kartou</dt><dd>{p.platbaKartou === 'yes' ? 'Ano' : 'Ne, jen hotově'}</dd></>)}
             {p.bezbarierove && (<><dt>Bezbariérový přístup</dt><dd>{p.bezbarierove === 'yes' ? 'Ano' : p.bezbarierove === 'limited' ? 'Částečně' : 'Ne'}</dd></>)}
+            {p.sluzby?.length && (<><dt>Služby</dt><dd class="sluzby">{p.sluzby.map((k) => <span class="tag">{SLUZBY_NAZEV[k]}</span>)}</dd></>)}
           </dl>
         </section>
 
@@ -361,6 +363,12 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
       }
     </p>
     <NahlasitChybu p={p} />
+    {/* Mobil: hlavní akce zůstávají po ruce i po odrolování (zobrazí se, až zmizí tlačítka v záhlaví) */}
+    <nav class="mlista" data-mlista hidden aria-label="Rychlé akce">
+      {p.rezervace && <a class="btn" href={p.rezervace} rel="noopener nofollow" target="_blank">Rezervovat</a>}
+      {p.telefon && <a class:list={['btn', p.rezervace && 'btn--ghost']} href={`tel:${p.telefon.replace(/\s/g, '')}`}>Zavolat</a>}
+      <a class:list={['btn', (p.telefon || p.rezervace) && 'btn--ghost']} href={navigace.google} rel="noopener" target="_blank">Navigovat</a>
+    </nav>
     <script
       type="application/json"
       id="salon-data"
@@ -380,6 +388,7 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
         platbaKartou: p.platbaKartou ?? '',
         bezbarierove: p.bezbarierove ?? '',
         zamereni: p.zamereni,
+        sluzby: p.sluzby ?? [],
       }).replace(/</g, '\\u003c')}
     />
   </div>
@@ -390,6 +399,19 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
   import { zapisHistorii } from '../../scripts/oblibene';
   const srd = document.querySelector<HTMLElement>('.akce2 [data-oblibene]');
   if (srd) zapisHistorii(JSON.parse(srd.dataset.oblibene!));
+</script>
+
+<script>
+  // Mobilní lišta akcí: ukázat, jakmile tlačítka v záhlaví odjedou z obrazovky
+  const lista = document.querySelector<HTMLElement>('[data-mlista]');
+  const akce = document.querySelector('.head .akce');
+  if (lista && akce && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => {
+      const pod = !e.isIntersecting && e.boundingClientRect.top < 0;
+      lista.hidden = !pod;
+      document.body.classList.toggle('ma-mlistu', pod);
+    }).observe(akce);
+  }
 </script>
 
 <script>
@@ -482,6 +504,39 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
   .head__stav .stav {
     font-size: 1rem;
     font-weight: 500;
+  }
+  .sluzby {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .mlista {
+    display: none;
+  }
+  @media (max-width: 640px) {
+    .mlista:not([hidden]) {
+      position: fixed;
+      inset: auto 0 0 0;
+      z-index: 40;
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.6rem var(--gutter) calc(0.6rem + env(safe-area-inset-bottom));
+      background: var(--surface);
+      border-top: 1px solid var(--line);
+      box-shadow: 0 -4px 16px rgb(0 0 0 / 0.08);
+    }
+    .mlista .btn {
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 0 0.5em;
+      font-size: 0.95rem;
+    }
+    :global(body.ma-mlistu) {
+      padding-bottom: 76px;
+    }
+    :global(body.ma-mlistu .por-lista) {
+      bottom: 88px;
+    }
   }
   .akce {
     display: flex;

@@ -80,6 +80,14 @@ import Breadcrumb from '../components/Breadcrumb.astro';
           <label><input type="checkbox" name="zamereni" value="panske" /> Pánské</label>
           <label><input type="checkbox" name="zamereni" value="detske" /> Dětské</label>
         </fieldset>
+        <fieldset class="pole volby">
+          <legend>Služby a vybavení <em>(podle nich si vás zákazníci vyfiltrují)</em></legend>
+          <label><input type="checkbox" name="sluzby" value="bez-objednani" /> Bereme i bez objednání</label>
+          <label><input type="checkbox" name="sluzby" value="parkovani" /> Parkování u salonu</label>
+          <label><input type="checkbox" name="sluzby" value="vousy" /> Úprava vousů</label>
+          <label><input type="checkbox" name="sluzby" value="barveni" /> Barvení a melír</label>
+          <label><input type="checkbox" name="sluzby" value="prodluzovani" /> Prodlužování vlasů</label>
+        </fieldset>
         <div class="dva">
           <label class="pole"><span>Platba kartou</span>
             <select name="platbaKartou"><option value="">Neuvádět</option><option value="yes">Ano</option><option value="no">Ne, jen hotově</option></select>
@@ -140,6 +148,7 @@ import Breadcrumb from '../components/Breadcrumb.astro';
     platbaKartou: string;
     bezbarierove: string;
     zamereni: string[];
+    sluzby?: string[];
     oteviraciDoba?: string;
     google?: { h: number; n: number; datum: string; url?: string };
   }
@@ -265,6 +274,7 @@ import Breadcrumb from '../components/Breadcrumb.astro';
       (form.elements.namedItem(k) as HTMLInputElement).value = (v[k] as string) ?? '';
     }
     form.querySelectorAll<HTMLInputElement>('[name=zamereni]').forEach((c) => (c.checked = (v.zamereni ?? []).includes(c.value)));
+    form.querySelectorAll<HTMLInputElement>('[name=sluzby]').forEach((c) => (c.checked = (v.sluzby ?? []).includes(c.value)));
     (form.elements.namedItem('googleH') as HTMLInputElement).value = v.google ? String(v.google.h) : '';
     (form.elements.namedItem('googleN') as HTMLInputElement).value = v.google ? String(v.google.n) : '';
     (form.elements.namedItem('googleUrl') as HTMLInputElement).value = v.google?.url ?? '';
@@ -346,6 +356,7 @@ import Breadcrumb from '../components/Breadcrumb.astro';
       const data: Record<string, unknown> = {};
       for (const k of ['telefon', 'email', 'web', 'rezervace', 'instagram', 'facebook', 'popis', 'svatky', 'platbaKartou', 'bezbarierove']) data[k] = String(fd.get(k) ?? '').trim();
       data.zamereni = fd.getAll('zamereni');
+      data.sluzby = fd.getAll('sluzby');
       data.google = { h: String(fd.get('googleH') ?? '').replace(',', '.'), n: String(fd.get('googleN') ?? ''), url: String(fd.get('googleUrl') ?? '').trim() };
       const t = prectiDobu();
       data.oteviraciDoba = t ? doOsm(t) : '';

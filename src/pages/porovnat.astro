@@ -21,7 +21,7 @@ import Breadcrumb from '../components/Breadcrumb.astro';
 
 <script>
   import { porovnani, odeberZPorovnani } from '../scripts/oblibene';
-  import { stav } from '../scripts/stav';
+  import { stav, stavAtribut } from '../scripts/stav';
   import { dlazdice, klic } from '../scripts/dlazdice';
 
   type Z = [number, number, string, string, string, 0 | 1, [number, number][][] | 0, 0 | 1, string, 0 | 1, 0 | 1];
@@ -98,7 +98,7 @@ import Breadcrumb from '../components/Breadcrumb.astro';
         z.map((x) => {
           if (!x || !x[6]) return '<span class="muted">otevírací doba neznámá</span>';
           const st = stav(x[6]);
-          return `<span class="stav" data-stav="${st.open ? 'open' : 'closed'}">${st.text}</span>`;
+          return `<span class="stav" data-stav="${stavAtribut(st)}">${st.text}</span>`;
         }),
       ),
     );

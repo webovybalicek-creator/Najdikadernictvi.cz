@@ -16,8 +16,8 @@
       aria-autocomplete="list"
     />
   </label>
-  <a class="srch__geo" href="/okoli/" title="Salony v mém okolí">
-    <span class="srch__lbl">V okolí</span>
+  <a class="srch__geo" href="/okoli/" aria-label="Salony v mém okolí. Polohu použijeme jen ve vašem prohlížeči, nikam ji neukládáme.">
+    <span class="srch__lbl">V okolí <span class="srch__info" aria-hidden="true">i<span class="srch__tip">Polohu použijeme jen ve vašem prohlížeči, nikam ji neukládáme.</span></span></span>
     <span class="srch__geo-txt">
       <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"
         ><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z" fill="none" stroke="currentColor" stroke-width="2"
@@ -63,17 +63,61 @@
     return index;
   }
 
+  /** Nejmenší počet úprav, kterými se z `t` stane začátek slova `w` (překlep, přehozené písmeno) */
+  function prefixVzdalenost(t: string, w: string): number {
+    let prev = Array.from({ length: w.length + 1 }, () => 0).map((_, j) => j);
+    let prev2: number[] | null = null;
+    for (let i = 1; i <= t.length; i++) {
+      const cur = [i];
+      for (let j = 1; j <= w.length; j++) {
+        const stejne = t[i - 1] === w[j - 1];
+        let v = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (stejne ? 0 : 1));
+        if (prev2 && i > 1 && j > 1 && t[i - 1] === w[j - 2] && t[i - 2] === w[j - 1]) v = Math.min(v, prev2[j - 2] + 1);
+        cur.push(v);
+      }
+      prev2 = prev;
+      prev = cur;
+    }
+    return Math.min(...prev);
+  }
+  const tolerance = (w: string) => (w.length >= 8 ? 2 : w.length >= 4 ? 1 : 0);
+
   function vyhledej(q: string, idx: { m: Mesto[]; s: Salon[] }) {
     const t = norm(q).split(/\s+/).filter(Boolean);
     const shoda = (txt: string) => {
       const n = norm(txt);
       return t.every((w) => n.includes(w));
     };
-    const mesta = idx.m
+    let mesta = idx.m
       .filter((m) => shoda(m[0]))
       .sort((a, b) => Number(norm(b[0]).startsWith(t[0])) - Number(norm(a[0]).startsWith(t[0])) || b[2] - a[2])
       .slice(0, 6);
-    const salony = idx.s.filter((s) => shoda(`${s[0]} ${s[2]}`)).slice(0, 8);
+    let salony = idx.s.filter((s) => shoda(`${s[0]} ${s[2]}`)).slice(0, 8);
+    // Nic přesného: zkusit totéž s tolerancí k překlepům („olomuc“, „brnno“, „kadernictvi nika“ → „nyka“)
+    if (!mesta.length && !salony.length && t.some((w) => tolerance(w) > 0)) {
+      const skore = (txt: string) => {
+        const slova = norm(txt).split(/[^a-z0-9]+/).filter(Boolean);
+        let soucet = 0;
+        for (const w of t) {
+          const d = Math.min(...slova.map((s) => prefixVzdalenost(w, s)));
+          if (d > tolerance(w)) return -1;
+          soucet += d;
+        }
+        return soucet;
+      };
+      mesta = idx.m
+        .map((m) => ({ m, d: skore(m[0]) }))
+        .filter((x) => x.d >= 0)
+        .sort((a, b) => a.d - b.d || b.m[2] - a.m[2])
+        .slice(0, 6)
+        .map((x) => x.m);
+      salony = idx.s
+        .map((s) => ({ s, d: skore(`${s[0]} ${s[2]}`) }))
+        .filter((x) => x.d >= 0)
+        .sort((a, b) => a.d - b.d)
+        .slice(0, 8)
+        .map((x) => x.s);
+    }
     return { mesta, salony };
   }
 
@@ -242,6 +286,78 @@
     height: 32px;
     margin-top: -16px;
     border-left: 1px solid var(--line-strong);
+  }
+  /* Vysvětlivka k poloze: decentní (i), text se ukáže při najetí nebo fokusu */
+  .srch__info {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    margin-left: 0.25em;
+    border: 1px solid var(--ink-mute);
+    border-radius: 50%;
+    color: var(--ink-soft);
+    font: italic 600 9px/1 Georgia, 'Times New Roman', serif;
+    vertical-align: 1px;
+    transition:
+      border-color 150ms var(--ease-out),
+      color 150ms var(--ease-out);
+  }
+  .srch__tip {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    z-index: 30;
+    width: max-content;
+    max-width: 15rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: var(--radius-sm);
+    background: var(--ink);
+    color: #fff;
+    font: 400 0.75rem/1.4 var(--f-text);
+    text-align: left;
+    white-space: normal;
+    box-shadow: var(--sh-menu);
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, 4px);
+    transition:
+      opacity 150ms var(--ease-out),
+      transform 150ms var(--ease-out),
+      visibility 150ms;
+    pointer-events: none;
+  }
+  .srch__tip::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border: 5px solid transparent;
+    border-top-color: var(--ink);
+  }
+  .srch__geo:focus-visible .srch__tip {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+  }
+  @media (hover: hover) {
+    .srch__info:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+    .srch__info:hover .srch__tip {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, 0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .srch__tip {
+      transition: none;
+    }
   }
   .srch__geo-txt {
     display: inline-flex;

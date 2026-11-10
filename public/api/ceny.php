@@ -3,6 +3,7 @@
  * Ceny od návštěvníků („Kolik jste tu platili?“).
  *
  * GET  ?salon=<id>        → { sluzby: { pansky: { n, median } … } }   median jen od 3 odpovědí
+ * GET  ?export=1          → { salony: { <id>: { pansky: <medián>, damsky: <medián> } } }   pro build webu, jen od 3 odpovědí
  * GET  ?souhrn=1          → { mesta: { <mesto>: { pansky: { n, median } … } }, cr: { … } }   jen od 3 odpovědí
  * POST salon, mesto, sluzba, cena
  *
@@ -86,6 +87,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $mesta = array_map('shrn', $mesta);
         $mesta = array_filter(array_map(fn($m) => array_filter($m, fn($x) => $x['median'] !== null), $mesta));
         out(200, ['ok' => true, 'mesta' => $mesta, 'cr' => shrn($vse), 'odpovedi' => count($vse)], 3600);
+    }
+    if (isset($_GET['export'])) {
+        // Mediány cen střihu podle salonu pro build webu (štítek „střih od“, filtr a řazení podle ceny)
+        $st = $db->prepare("SELECT salon, sluzba, cena FROM ceny WHERE vytvoreno >= ? AND sluzba IN ('pansky', 'damsky')");
+        $st->execute([$od]);
+        $po = [];
+        foreach ($st->fetchAll() as $r) $po[$r['salon']][] = $r;
+        $salony = [];
+        foreach ($po as $id => $radky) {
+            $m = array_map(fn($x) => $x['median'], array_filter(shrn($radky), fn($x) => $x['median'] !== null));
+            if ($m) $salony[$id] = $m;
+        }
+        ksort($salony);
+        out(200, ['ok' => true, 'salony' => (object)$salony], 3600);
     }
     $salon = $_GET['salon'] ?? '';
     if (!is_string($salon) || !preg_match('/^[nwr]\d{1,12}$/', $salon)) out(400, ['ok' => false]);

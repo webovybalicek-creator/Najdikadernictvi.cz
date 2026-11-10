@@ -151,6 +151,12 @@ const pool = await Promise.all(
         ))
       }
       <p class="pas__vice">
+        <button type="button" class="pas__sipka kruh" data-pas-posun="-1" aria-label="Předchozí články v tématu" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7" /></svg>
+        </button>
+        <button type="button" class="pas__sipka kruh" data-pas-posun="1" aria-label="Další články v tématu" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7" /></svg>
+        </button>
         <a class="btn btn--ghost" href={zalozky[0] ? kategorieUrl(zalozky[0].k) : '/blog/'} data-mag-vice>
           Další články: <span data-mag-vice-k>{zalozky[0]?.k}</span> <span aria-hidden="true">→</span>
         </a>
@@ -173,6 +179,8 @@ const pool = await Promise.all(
     }
     return b;
   };
+  // Články jednotlivých témat (v náhodném pořadí) a pozice, od které se v panelu zobrazují
+  const temata = new Map<HTMLElement, { v: P[]; od: number; kresli: () => void }>();
   document.querySelectorAll<HTMLElement>('[data-mag]').forEach((mag) => {
     const el = mag.querySelector('[data-mag-pool]');
     if (!el) return;
@@ -202,14 +210,25 @@ const pool = await Promise.all(
     const nahore = new Set([hl.u, ...bocni.map((c) => c.u)]);
     mag.querySelectorAll<HTMLElement>('[data-kat]').forEach((panel) => {
       const v = pool.filter((c) => c.ks === panel.dataset.kat);
-      const vyber = [...v.filter((c) => !nahore.has(c.u)), ...v.filter((c) => nahore.has(c.u))].slice(0, 3);
-      panel.innerHTML = vyber
-        .map(
-          (c) => `<article><a href="${c.u}"><div class="pas__img">${pic(c.s, c.alt)}</div><h4>${esc(c.t)}</h4></a>
+      const serazene = [...v.filter((c) => !nahore.has(c.u)), ...v.filter((c) => nahore.has(c.u))];
+      const tema = {
+        v: serazene,
+        od: 0,
+        kresli: () => {
+          // trojice od pozice `od`; na konci seznamu pokračuje od začátku, ať je vždy plný řádek
+          const n = Math.min(3, serazene.length);
+          const vyber = Array.from({ length: n }, (_, i) => serazene[(tema.od + i) % serazene.length]);
+          panel.innerHTML = vyber
+            .map(
+              (c) => `<article><a href="${c.u}"><div class="pas__img">${pic(c.s, c.alt)}</div><h4>${esc(c.t)}</h4></a>
           <p class="meta"><span>${c.m} min čtení</span><a href="${c.ku}">${esc(c.k)}</a></p></article>`,
-        )
-        .join('');
-      oznac(panel);
+            )
+            .join('');
+          oznac(panel);
+        },
+      };
+      temata.set(panel, tema);
+      tema.kresli();
     });
   });
 
@@ -223,6 +242,9 @@ const pool = await Promise.all(
         const panel = pas.querySelector<HTMLElement>(`#${x.getAttribute('aria-controls')}`)!;
         panel.hidden = !on;
         if (on) {
+          // šipky jen u témat, kde je víc článků, než se vejde do řádku
+          const viceNez3 = (temata.get(panel)?.v.length ?? 0) > 3;
+          pas.querySelectorAll<HTMLElement>('[data-pas-posun]').forEach((b) => (b.hidden = !viceNez3));
           const vice = pas.querySelector<HTMLAnchorElement>('[data-mag-vice]');
           if (vice) {
             vice.href = panel.dataset.katUrl!;
@@ -231,6 +253,17 @@ const pool = await Promise.all(
         }
       });
     };
+    pas.querySelectorAll<HTMLElement>('[data-pas-posun]').forEach((b) =>
+      b.addEventListener('click', () => {
+        const panel = pas.querySelector<HTMLElement>('.pas__panel:not([hidden])');
+        const tema = panel && temata.get(panel);
+        if (!tema) return;
+        const n = tema.v.length;
+        tema.od = (((tema.od + Number(b.dataset.pasPosun) * 3) % n) + n) % n;
+        tema.kresli();
+      }),
+    );
+    if (tabs[0]) vyber(tabs[0]);
     tabs.forEach((t, i) => {
       t.addEventListener('click', () => vyber(t));
       t.addEventListener('keydown', (e) => {
@@ -437,8 +470,27 @@ const pool = await Promise.all(
     }
   }
   .pas__vice {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
     max-width: none;
     margin: 2rem 0 0;
+  }
+  .pas__sipka[hidden] {
+    display: none;
+  }
+  .pas__sipka svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .pas__sipka + .btn {
+    margin-left: 0.5rem;
   }
 
   @media (max-width: 900px) {

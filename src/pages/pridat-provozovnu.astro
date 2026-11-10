@@ -2,6 +2,8 @@
 import Base from '../layouts/Base.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import { SITE } from '../lib/config';
+import { Picture } from 'astro:assets';
+import foto from '../assets/blog/salon-cihly.jpg';
 ---
 
 <Base
@@ -23,6 +25,9 @@ import { SITE } from '../lib/config';
         <p class="muted mala">
           Chcete salon z katalogu odstranit? Vyberte „Odstranit salon“. Žádosti o odstranění vyřizujeme přednostně.
         </p>
+        <figure class="info__foto">
+          <Picture formats={['avif', 'webp']} src={foto} alt="Interiér kadeřnického salonu s křesly a kulatými zrcadly" widths={[480, 800]} sizes="(max-width: 860px) 100vw, 36rem" />
+        </figure>
       </div>
 
       <form class="form" data-form method="post" action="/api/salon.php" novalidate>
@@ -205,6 +210,19 @@ import { SITE } from '../lib/config';
   .sam p {
     margin: 0.35rem 0 0.9rem;
     font-size: 0.95rem;
+  }
+  .info__foto {
+    margin: 2rem 0 0;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--canvas);
+  }
+  .info__foto :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   .vyhody {
     padding-left: 1.1rem;

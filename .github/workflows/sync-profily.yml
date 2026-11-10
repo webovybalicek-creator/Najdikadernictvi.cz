@@ -38,12 +38,23 @@ jobs:
             echo "::warning::Export hodnocení se nepodařil, ponechávám poslední verzi."
           fi
 
+      - name: Stažení cen od návštěvníků
+        run: |
+          # Mediány cen střihu podle salonu (štítek „střih od“, filtr a řazení podle ceny). Když export selže, ponechá se poslední verze.
+          if curl -sSf --retry 3 -A "najdikadernictvi-sync" "https://najdikadernictvi.cz/api/ceny.php?export=1" -o /tmp/ceny.json \
+             && jq -e '.salony | type == "object"' /tmp/ceny.json > /dev/null; then
+            jq --sort-keys '{ "_popis": "Mediány cen od návštěvníků podle salonu (jen služby s aspoň 3 odpověďmi). Soubor přepisuje workflow Synchronizace profilů, ručně neupravovat.", salony: .salony }' /tmp/ceny.json > src/data/ceny.json
+            echo "::notice::Salonů s cenou od návštěvníků: $(jq '.salony | length' src/data/ceny.json)"
+          else
+            echo "::warning::Export cen se nepodařil, ponechávám poslední verzi."
+          fi
+
       - name: Commit
         id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/data/majitele.json src/data/hodnoceni.json
+          git add src/data/majitele.json src/data/hodnoceni.json src/data/ceny.json
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else

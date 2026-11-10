@@ -436,6 +436,8 @@ if ($akce === 'uloz' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if (in_array($vstup['bezbarierove'] ?? '', ['yes', 'limited', 'no'], true)) $d['bezbarierove'] = $vstup['bezbarierove'];
     $zam = array_values(array_intersect((array)($vstup['zamereni'] ?? []), ['panske', 'damske', 'detske', 'unisex']));
     if ($zam) $d['zamereni'] = $zam;
+    $slu = array_values(array_intersect((array)($vstup['sluzby'] ?? []), ['bez-objednani', 'parkovani', 'vousy', 'barveni', 'prodluzovani']));
+    if ($slu) $d['sluzby'] = $slu;
     $cenik = [];
     foreach (array_slice((array)($vstup['cenik'] ?? []), 0, 40) as $r) {
         $pol = $txt($r['polozka'] ?? '', 80);

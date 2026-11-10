@@ -37,7 +37,7 @@ import Hledani from '../components/Hledani.astro';
 </Base>
 
 <script>
-  import { stav } from '../scripts/stav';
+  import { stav, stavAtribut } from '../scripts/stav';
   import { nactiObdelnik } from '../scripts/dlazdice';
 
   type Zaznam = [number, number, string, string, string, 0 | 1, [number, number][][] | 0, 0 | 1, string, 0 | 1, 0 | 1, string?];
@@ -84,7 +84,7 @@ import Hledani from '../components/Hledani.astro';
           <div><h2 class="row__name"><a href="${z[3]}">${esc(z[2])}</a></h2><p class="row__adr">${esc(z[4])}</p></div>
           <div class="row__meta">
             <span class="tag${z[5] ? ' tag--barber' : ''}">${z[5] ? 'Barbershop' : 'Kadeřnictví'}</span>
-            ${s ? `<span class="stav" data-stav="${s.open ? 'open' : 'closed'}">${s.text}</span>` : ''}
+            ${s ? `<span class="stav" data-stav="${stavAtribut(s)}">${s.text}</span>` : ''}
             <span class="row__km">${vzd(d)}</span>
           </div></li>`;
       })

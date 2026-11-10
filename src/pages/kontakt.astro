@@ -1,10 +1,11 @@
 ---
 import Text from '../layouts/Text.astro';
 import { SITE } from '../lib/config';
+import foto from '../assets/blog/salon-kreslo-zrcadlo.jpg';
 const p = SITE.provozovatel;
 ---
 
-<Text title="Kontakt" description="Kontakt na provozovatele webu Najdi kadeřnictví.">
+<Text title="Kontakt" description="Kontakt na provozovatele webu Najdi kadeřnictví." obrazek={foto} obrazekAlt="Kadeřnický salon s křesly a zrcadlem">
   <p class="lead">Máte dotaz, připomínku nebo nápad na článek? Napište nám.</p>
   <p>
     E-mail: <a href={`mailto:${SITE.email}`}>{SITE.email}</a>

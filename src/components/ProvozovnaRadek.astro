@@ -1,7 +1,7 @@
 ---
 import Overeno from './Overeno.astro';
 import Vizual from './Vizual.astro';
-import { adresa, tyden, url, indexovatDetail, TYP_NAZEV, ZAMERENI_NAZEV, type Provozovna } from '../lib/data';
+import { adresa, tyden, url, indexovatDetail, vlastnosti, cenaOd, TYP_NAZEV, ZAMERENI_NAZEV, type Provozovna } from '../lib/data';
 
 interface Props {
   p: Provozovna;
@@ -12,6 +12,7 @@ interface Props {
 }
 const { p, vzdalenost, sMestem = false, nahled = false } = Astro.props;
 const t = tyden(p);
+const cena = cenaOd(p);
 // Profily, které neindexujeme (jen z rejstříku), Google nemusí procházet
 const rel = indexovatDetail(p) ? undefined : 'nofollow';
 ---
@@ -23,7 +24,8 @@ const rel = indexovatDetail(p) ? undefined : 'nofollow';
   data-lat={p.lat}
   data-lon={p.lon}
   data-typ={p.typ}
-  data-zamereni={[...p.zamereni, (p.bezbarierove === 'yes' || p.bezbarierove === 'limited') && 'bezbarierove', p.platbaKartou === 'yes' && 'karta'].filter(Boolean).join(' ')}
+  data-zamereni={vlastnosti(p).join(' ')}
+  data-cena={cena}
   data-oh={t ? JSON.stringify(t) : undefined}
   data-hledat={`${p.nazev} ${p.ulice ?? ''} ${p.cast ?? ''}`.toLowerCase()}
 >
@@ -41,6 +43,7 @@ const rel = indexovatDetail(p) ? undefined : 'nofollow';
   <div class="row__meta">
     <span class:list={['tag', p.typ === 'barber' && 'tag--barber']}>{TYP_NAZEV[p.typ]}</span>
     {p.zamereni.filter((z) => z !== 'unisex').map((z) => <span class="tag">{ZAMERENI_NAZEV[z]}</span>)}
+    {cena && <span class="row__cena" title={p.cena!.zdroj === 'cenik' ? 'Podle ceníku salonu' : 'Podle cen od návštěvníků'}>střih od {cena.toLocaleString('cs-CZ')} Kč</span>}
     {vzdalenost != null && <span class="row__km">{vzdalenost < 1 ? `${Math.round(vzdalenost * 1000)} m` : `${vzdalenost.toFixed(1).replace('.', ',')} km`}</span>}
     {t && <span class="stav" />}
   </div>
@@ -96,6 +99,11 @@ const rel = indexovatDetail(p) ? undefined : 'nofollow';
     gap: 0.4rem 0.6rem;
     align-items: center;
     justify-content: flex-end;
+  }
+  .row__cena {
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
   }
   .row__km {
     font-size: 0.875rem;

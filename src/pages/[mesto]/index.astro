@@ -9,7 +9,7 @@ import Karta from '../../components/Karta.astro';
 import { metaMesta } from '../../lib/meta';
 import { getCollection } from 'astro:content';
 import { statistiky, textMesta, faqMesta, faqJsonLd, itemListJsonLd, zameryMesta, zamerUrl } from '../../lib/seo-mesto';
-import { mesta, mestaSloucena, mestoUrl, indexovatMesto, krajUrl, pocetText, tyden, ctvrti, ctvrtUrl, type Mesto } from '../../lib/data';
+import { mesta, mestaSloucena, mestoUrl, indexovatMesto, krajUrl, pocetText, tyden, ctvrti, ctvrtUrl, vlastnosti, cenaOd, SLUZBY_NAZEV, type Mesto } from '../../lib/data';
 
 export function getStaticPaths() {
   // /praha/ má vlastní rozcestník (src/pages/praha/index.astro)
@@ -31,13 +31,13 @@ const vse = m.provozovny;
 const barberu = vse.filter((p) => p.typ === 'barber').length;
 const sDobou = vse.filter((p) => tyden(p)).length;
 const casti = [...new Set(vse.map((p) => p.cast).filter(Boolean) as string[])].sort((a, b) => a.localeCompare(b, 'cs'));
-const vlastnosti = (p: (typeof vse)[number]) => [
-  ...p.zamereni,
-  ...(p.bezbarierove === 'yes' || p.bezbarierove === 'limited' ? ['bezbarierove'] : []),
-  ...(p.platbaKartou === 'yes' ? ['karta'] : []),
-];
-const zamereni = ['panske', 'damske', 'detske', 'bezbarierove', 'karta'].filter((z) => vse.filter((p) => vlastnosti(p).includes(z)).length >= 2);
-const ZN: Record<string, string> = { panske: 'Pánské', damske: 'Dámské', detske: 'Dětské', bezbarierove: 'Bezbariérové', karta: 'Platba kartou' };
+// Filtr se nabídne, až když ho ve městě splní aspoň 2 salony (jinak by jen vyprázdnil výpis)
+const zamereni = ['panske', 'damske', 'detske', 'bezbarierove', 'karta', ...Object.keys(SLUZBY_NAZEV)].filter((z) => vse.filter((p) => vlastnosti(p).includes(z)).length >= 2);
+const ZN: Record<string, string> = { panske: 'Pánské', damske: 'Dámské', detske: 'Dětské', bezbarierove: 'Bezbariérové', karta: 'Platba kartou', ...SLUZBY_NAZEV };
+// Ceny střihu: filtr a řazení jen ve městech, kde cenu známe aspoň u 2 salonů
+const ceny = vse.map((p) => cenaOd(p)).filter((c): c is number => c !== undefined);
+const sCenou = ceny.length >= 2;
+const PASMA = [300, 500, 800].filter((h) => ceny.some((c) => c <= h) && ceny.some((c) => c > h));
 
 // Okolní obce: nejbližší střed obce
 const stred = (x: Mesto) => ({
@@ -151,12 +151,23 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
             <label class="chk"><input type="checkbox" name="zamereni" value={z} /> {ZN[z]}</label>
           ))}
           {sDobou > 0 && <label class="chk"><input type="checkbox" name="open" value="1" /> Otevřeno teď</label>}
+          {sCenou && (
+            <label>
+              <span class="sr-only">Cena střihu</span>
+              <select name="cena">
+                <option value="">Cena střihu</option>
+                {PASMA.map((h) => <option value={h}>do {h} Kč</option>)}
+                <option value="known">S uvedenou cenou</option>
+              </select>
+            </label>
+          )}
           <label class="razeni">
             <span>Řadit:</span>
             <select name="razeni">
               <option value="">Doporučené</option>
               <option value="hodnoceni">Nejlépe hodnocené</option>
               <option value="otevreno">Otevřeno teď</option>
+              {sCenou && <option value="cena">Od nejlevnějšího</option>}
               <option value="abeceda">Abecedně</option>
               <option value="blizko">Nejblíž mně</option>
             </select>
@@ -255,6 +266,7 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
     const typ = String(fd.get('typ') ?? '');
     const zam = fd.getAll('zamereni').map(String);
     const open = fd.get('open') === '1';
+    const cena = String(fd.get('cena') ?? '');
     let n = 0;
     for (const r of rows) {
       const ok =
@@ -262,7 +274,8 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
         (!cast || (r.dataset.hledat ?? '').includes(cast)) &&
         (!typ || r.dataset.typ === typ) &&
         zam.every((z) => (r.dataset.zamereni ?? '').split(' ').includes(z)) &&
-        (!open || r.dataset.open === '1');
+        (!open || r.dataset.open === '1') &&
+        (!cena || (!!r.dataset.cena && (cena === 'known' || Number(r.dataset.cena) <= Number(cena))));
       r.hidden = !ok;
       if (ok) n++;
     }
@@ -298,6 +311,8 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
       };
     } else if (zpusob === 'otevreno') {
       klic = (r) => (r.dataset.open === '1' ? 0 : r.dataset.oh ? 1 : 2);
+    } else if (zpusob === 'cena') {
+      klic = (r) => (r.dataset.cena ? Number(r.dataset.cena) : Infinity);
     } else if (zpusob === 'abeceda') {
       klic = (r) => r.dataset.nazev ?? '';
     } else if (zpusob === 'blizko') {

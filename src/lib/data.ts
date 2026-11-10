@@ -10,6 +10,7 @@ import googleRaw from '../data/google-hodnoceni.json';
 import fotkyRaw from '../data/fotky.json';
 import hodnoceniRaw from '../data/hodnoceni.json';
 import doplnenoRaw from '../data/doplneno.json';
+import cenyRaw from '../data/ceny.json';
 import { KRAJE, type Kraj } from './kraje';
 import { parseTyden, type Tyden } from './oteviraci-doba';
 import { slugify } from './slug';
@@ -59,6 +60,16 @@ export interface Provozovna {
   google?: GoogleHodnoceni;
   /** Hodnocení návštěvníků našeho webu (synchronizované při buildu) */
   hodnoceni?: Hodnoceni;
+  /** Služby a vybavení uvedené majitelem (klíče ze SLUZBY_NAZEV) */
+  sluzby?: string[];
+  /** Orientační cena střihu v Kč: z ceníku majitele, jinak medián cen od návštěvníků */
+  cena?: CenaStrihu;
+}
+
+export interface CenaStrihu {
+  pansky?: number;
+  damsky?: number;
+  zdroj: 'cenik' | 'navstevnici';
 }
 
 export interface Recenze {
@@ -88,7 +99,7 @@ interface FotkyRedakce {
   salony: Record<string, { fotky: string[]; nazev?: string; slug?: string; web?: string }>;
 }
 
-type Overeni = Partial<Pick<Provozovna, 'nazev' | 'platbaKartou' | 'bezbarierove' | 'telefon' | 'email' | 'web' | 'instagram' | 'facebook' | 'rezervace' | 'oteviraciDoba' | 'popis' | 'cenik' | 'zamereni' | 'fotky' | 'google'>> & {
+type Overeni = Partial<Pick<Provozovna, 'nazev' | 'platbaKartou' | 'bezbarierove' | 'telefon' | 'email' | 'web' | 'instagram' | 'facebook' | 'rezervace' | 'oteviraciDoba' | 'popis' | 'cenik' | 'zamereni' | 'fotky' | 'google' | 'sluzby'>> & {
   overeno: string;
 };
 
@@ -295,10 +306,70 @@ function sestav(): Provozovna[] {
     const s = hod.souhrn[p.id];
     if (s && s[1] > 0) p.hodnoceni = { prumer: s[0], pocet: s[1], recenze: hod.recenze[p.id] ?? [] };
   }
+  // Služby a orientační cena střihu: z údajů majitele (ceník), cena jinak z mediánu od návštěvníků
+  const cenyNav = (cenyRaw as { salony: Record<string, { pansky?: number; damsky?: number }> }).salony;
+  for (const p of vse) {
+    const sl = sluzbyZUdaju(p);
+    if (sl.length) p.sluzby = sl;
+    else delete p.sluzby;
+    const zCeniku = cenaZCeniku(p);
+    const n = cenyNav[p.id];
+    if (zCeniku) p.cena = zCeniku;
+    else if (n && (n.pansky || n.damsky)) p.cena = { pansky: n.pansky, damsky: n.damsky, zdroj: 'navstevnici' };
+  }
   // Salony vyřazené na žádost (id nebo URL)
   const blok = new Set<string>(vyrazene.polozky);
   return blok.size ? vse.filter((p) => !blok.has(p.id) && !blok.has(`/${p.mestoSlug}/${p.slug}/`)) : vse;
 }
+
+/** Služby a vybavení, podle kterých jde filtrovat. Uvádí je majitel ve správě profilu; část plyne z jeho ceníku. */
+export const SLUZBY_NAZEV: Record<string, string> = {
+  'bez-objednani': 'Bez objednání',
+  parkovani: 'Parkování',
+  vousy: 'Úprava vousů',
+  barveni: 'Barvení a melír',
+  prodluzovani: 'Prodlužování vlasů',
+};
+const SLUZBA_V_CENIKU: [string, RegExp][] = [
+  ['vousy', /vous|bradk|holení/i],
+  ['barveni', /barv|melír|balayage|odbarv|přeliv/i],
+  ['prodluzovani', /prodlu[zž]/i],
+];
+function sluzbyZUdaju(p: Provozovna): string[] {
+  const out = new Set((p.sluzby ?? []).filter((k) => k in SLUZBY_NAZEV));
+  for (const c of p.cenik ?? []) for (const [k, re] of SLUZBA_V_CENIKU) if (re.test(c.polozka)) out.add(k);
+  return Object.keys(SLUZBY_NAZEV).filter((k) => out.has(k));
+}
+
+/** První částka v textu ceny („od 350 Kč“, „350–450“, „1 200,-“) */
+function castka(text: string): number | undefined {
+  const m = text.match(/\d[\d \u00a0]*/);
+  const n = m ? Number(m[0].replace(/\D/g, '')) : NaN;
+  return n >= 50 && n <= 20000 ? n : undefined;
+}
+function cenaZCeniku(p: Provozovna): CenaStrihu | undefined {
+  let pansky: number | undefined;
+  let damsky: number | undefined;
+  const min = (a: number | undefined, b: number) => (a === undefined ? b : Math.min(a, b));
+  for (const c of p.cenik ?? []) {
+    if (!/st[řr]ih|st[řr]íhání/i.test(c.polozka) || /dět|det|vous|ofin/i.test(c.polozka)) continue;
+    const k = castka(c.cena);
+    if (!k) continue;
+    if (/pán|pan|muž|muz/i.test(c.polozka)) pansky = min(pansky, k);
+    else if (/dám|dam|žen|zen/i.test(c.polozka)) damsky = min(damsky, k);
+    else if (p.typ === 'barber') pansky = min(pansky, k);
+  }
+  return pansky || damsky ? { pansky, damsky, zdroj: 'cenik' } : undefined;
+}
+/** Nejnižší známá cena střihu (pro řazení a štítek ve výpisu) */
+export const cenaOd = (p: Provozovna) => (p.cena ? Math.min(p.cena.pansky ?? Infinity, p.cena.damsky ?? Infinity) : undefined);
+/** Vlastnosti salonu pro filtry ve výpisech (zaměření, vybavení, služby) */
+export const vlastnosti = (p: Provozovna): string[] => [
+  ...p.zamereni,
+  ...(p.bezbarierove === 'yes' || p.bezbarierove === 'limited' ? ['bezbarierove'] : []),
+  ...(p.platbaKartou === 'yes' ? ['karta'] : []),
+  ...(p.sluzby ?? []),
+];
 
 export const PROVOZOVNY = sestav();
 export const IMPORT_META = meta as { zdroj: string; importovano: string; pocet: number };
