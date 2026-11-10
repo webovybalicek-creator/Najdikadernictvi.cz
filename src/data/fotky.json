@@ -3,31 +3,26 @@
   "uvod": [
     "n4951560799",
     "n13988774101",
-    "n10585030393",
+    "r23764694",
     "n10733531405",
-    "r19584385",
+    "n10585030393",
+    "r19099711",
+    "r17828848",
     "n4722157228",
     "n4460856113",
     "n296770304",
     "r3180417",
+    "r3290018",
+    "r74172476",
+    "r19584385",
+    "r24570630",
     "n7825576849",
+    "r24572381",
+    "r3187411",
     "n296540062",
-    "n11469025780",
-    "n13716335894",
-    "n5020200489",
-    "n13625876799",
-    "n9884821879"
+    "r26729423"
   ],
   "salony": {
-    "n12083708604": {
-      "fotky": [
-        "/foto/n12083708604/1.webp",
-        "/foto/n12083708604/2.webp",
-        "/foto/n12083708604/3.webp",
-        "/foto/n12083708604/4.webp"
-      ],
-      "nazev": "Alessandro Barbershop"
-    },
     "n13430278028": {
       "fotky": [
         "/foto/n13430278028/1.webp",
@@ -309,6 +304,412 @@
         "/foto/n9884821879/4.webp",
         "/foto/n9884821879/5.webp"
       ]
+    },
+    "r26729423": {
+      "fotky": [
+        "/foto/r26729423/1.webp",
+        "/foto/r26729423/2.webp",
+        "/foto/r26729423/3.webp",
+        "/foto/r26729423/4.webp"
+      ],
+      "nazev": "Alessandro Barbershop"
+    },
+    "r24500526": {
+      "fotky": [
+        "/foto/r24500526/1.webp"
+      ],
+      "nazev": "Barber 7"
+    },
+    "n12183974860": {
+      "fotky": [
+        "/foto/n12183974860/1.webp"
+      ],
+      "nazev": "AMSalon"
+    },
+    "r17840104": {
+      "fotky": [
+        "/foto/r17840104/1.webp"
+      ],
+      "nazev": "Aspekt Studio"
+    },
+    "r17803641": {
+      "fotky": [
+        "/foto/r17803641/1.webp"
+      ],
+      "nazev": "Kadeřnictví Hair4U"
+    },
+    "r23653426": {
+      "fotky": [
+        "/foto/r23653426/1.webp",
+        "/foto/r23653426/2.webp"
+      ],
+      "nazev": "Blessed Barbershop"
+    },
+    "r28334213": {
+      "fotky": [
+        "/foto/r28334213/1.webp",
+        "/foto/r28334213/2.webp",
+        "/foto/r28334213/3.webp",
+        "/foto/r28334213/4.webp"
+      ],
+      "nazev": "Bubelíny Barber Shop"
+    },
+    "r25040430": {
+      "fotky": [
+        "/foto/r25040430/1.webp",
+        "/foto/r25040430/2.webp",
+        "/foto/r25040430/3.webp",
+        "/foto/r25040430/4.webp"
+      ],
+      "nazev": "Cavalier Barber"
+    },
+    "r24539210": {
+      "fotky": [
+        "/foto/r24539210/1.webp",
+        "/foto/r24539210/2.webp",
+        "/foto/r24539210/3.webp"
+      ],
+      "nazev": "Cavalier Barber Studio"
+    },
+    "r23375850": {
+      "fotky": [
+        "/foto/r23375850/1.webp",
+        "/foto/r23375850/2.webp",
+        "/foto/r23375850/3.webp"
+      ],
+      "nazev": "Caveman Barbershop"
+    },
+    "r19099711": {
+      "fotky": [
+        "/foto/r19099711/1.webp",
+        "/foto/r19099711/2.webp",
+        "/foto/r19099711/3.webp",
+        "/foto/r19099711/4.webp",
+        "/foto/r19099711/5.webp"
+      ],
+      "nazev": "Cutegory"
+    },
+    "r24570630": {
+      "fotky": [
+        "/foto/r24570630/1.webp",
+        "/foto/r24570630/2.webp",
+        "/foto/r24570630/3.webp",
+        "/foto/r24570630/4.webp",
+        "/foto/r24570630/5.webp"
+      ],
+      "nazev": "Desert Bloom Hair Salon"
+    },
+    "r23303786": {
+      "fotky": [
+        "/foto/r23303786/1.webp",
+        "/foto/r23303786/2.webp",
+        "/foto/r23303786/3.webp"
+      ],
+      "nazev": "Does Barber Shop"
+    },
+    "r26701634": {
+      "fotky": [
+        "/foto/r26701634/1.webp"
+      ],
+      "nazev": "Domi Hair"
+    },
+    "r74710214": {
+      "fotky": [
+        "/foto/r74710214/1.webp",
+        "/foto/r74710214/2.webp",
+        "/foto/r74710214/3.webp",
+        "/foto/r74710214/4.webp"
+      ],
+      "nazev": "Fresh Cut Barbers"
+    },
+    "r17796288": {
+      "fotky": [
+        "/foto/r17796288/1.webp"
+      ],
+      "nazev": "Gentleman Salon"
+    },
+    "r74172476": {
+      "fotky": [
+        "/foto/r74172476/1.webp",
+        "/foto/r74172476/2.webp",
+        "/foto/r74172476/3.webp",
+        "/foto/r74172476/4.webp",
+        "/foto/r74172476/5.webp"
+      ],
+      "nazev": "Goldman Barber"
+    },
+    "r24572381": {
+      "fotky": [
+        "/foto/r24572381/1.webp",
+        "/foto/r24572381/2.webp",
+        "/foto/r24572381/3.webp",
+        "/foto/r24572381/4.webp",
+        "/foto/r24572381/5.webp"
+      ],
+      "nazev": "Grand Barber Shop"
+    },
+    "r3290018": {
+      "fotky": [
+        "/foto/r3290018/1.webp",
+        "/foto/r3290018/2.webp",
+        "/foto/r3290018/3.webp",
+        "/foto/r3290018/4.webp"
+      ],
+      "nazev": "GREASE Barbershop"
+    },
+    "r24502332": {
+      "fotky": [
+        "/foto/r24502332/1.webp",
+        "/foto/r24502332/2.webp",
+        "/foto/r24502332/3.webp",
+        "/foto/r24502332/4.webp",
+        "/foto/r24502332/5.webp"
+      ],
+      "nazev": "Hary's Barber Shop"
+    },
+    "n3220984407": {
+      "fotky": [
+        "/foto/n3220984407/1.webp",
+        "/foto/n3220984407/2.webp"
+      ],
+      "nazev": "Holič(ka)"
+    },
+    "r23653876": {
+      "fotky": [
+        "/foto/r23653876/1.webp",
+        "/foto/r23653876/2.webp"
+      ],
+      "nazev": "Holičství 24"
+    },
+    "r22352023": {
+      "fotky": [
+        "/foto/r22352023/1.webp",
+        "/foto/r22352023/2.webp",
+        "/foto/r22352023/3.webp",
+        "/foto/r22352023/4.webp"
+      ],
+      "nazev": "Old School Barbershop"
+    },
+    "r23865784": {
+      "fotky": [
+        "/foto/r23865784/1.webp"
+      ]
+    },
+    "r28474864": {
+      "fotky": [
+        "/foto/r28474864/1.webp",
+        "/foto/r28474864/2.webp",
+        "/foto/r28474864/3.webp"
+      ],
+      "nazev": "Hot Hair"
+    },
+    "r17826900": {
+      "fotky": [
+        "/foto/r17826900/1.webp"
+      ],
+      "nazev": "Hygie – pánské kadeřnictví"
+    },
+    "r7797087": {
+      "fotky": [
+        "/foto/r7797087/1.webp"
+      ]
+    },
+    "r17804302": {
+      "fotky": [
+        "/foto/r17804302/1.webp"
+      ]
+    },
+    "r23658916": {
+      "fotky": [
+        "/foto/r23658916/1.webp",
+        "/foto/r23658916/2.webp"
+      ],
+      "nazev": "Kadeřnictví 007"
+    },
+    "r7702400": {
+      "fotky": [
+        "/foto/r7702400/1.webp"
+      ],
+      "nazev": "Kadeřnictví buď IN"
+    },
+    "r3291511": {
+      "fotky": [
+        "/foto/r3291511/1.webp"
+      ],
+      "nazev": "Kadeřnictví Divoké nůžky"
+    },
+    "r17828627": {
+      "fotky": [
+        "/foto/r17828627/1.webp",
+        "/foto/r17828627/2.webp"
+      ]
+    },
+    "r23666064": {
+      "fotky": [
+        "/foto/r23666064/1.webp",
+        "/foto/r23666064/2.webp"
+      ],
+      "nazev": "Kadeřnictví Lesí"
+    },
+    "r17866715": {
+      "fotky": [
+        "/foto/r17866715/1.webp"
+      ],
+      "nazev": "Kadeřnictví M"
+    },
+    "r25299328": {
+      "fotky": [
+        "/foto/r25299328/1.webp",
+        "/foto/r25299328/2.webp"
+      ]
+    },
+    "r23867728": {
+      "fotky": [
+        "/foto/r23867728/1.webp"
+      ],
+      "nazev": "Kadeřnictví Top"
+    },
+    "r23402610": {
+      "fotky": [
+        "/foto/r23402610/1.webp"
+      ],
+      "nazev": "Kadeřnictví U Koníčka"
+    },
+    "r23667168": {
+      "fotky": [
+        "/foto/r23667168/1.webp"
+      ],
+      "nazev": "Kadeřnictví ŠáZi"
+    },
+    "n3498325990": {
+      "fotky": [
+        "/foto/n3498325990/1.webp",
+        "/foto/n3498325990/2.webp",
+        "/foto/n3498325990/3.webp",
+        "/foto/n3498325990/4.webp"
+      ]
+    },
+    "r24511251": {
+      "fotky": [
+        "/foto/r24511251/1.webp",
+        "/foto/r24511251/2.webp",
+        "/foto/r24511251/3.webp",
+        "/foto/r24511251/4.webp",
+        "/foto/r24511251/5.webp"
+      ],
+      "nazev": "Ermani Hair Group"
+    },
+    "r17828848": {
+      "fotky": [
+        "/foto/r17828848/1.webp",
+        "/foto/r17828848/2.webp",
+        "/foto/r17828848/3.webp",
+        "/foto/r17828848/4.webp"
+      ],
+      "nazev": "Matty's Barbershop"
+    },
+    "r24532347": {
+      "fotky": [
+        "/foto/r24532347/1.webp",
+        "/foto/r24532347/2.webp"
+      ],
+      "nazev": "Paul's Barber Shop"
+    },
+    "r17829089": {
+      "fotky": [
+        "/foto/r17829089/1.webp",
+        "/foto/r17829089/2.webp"
+      ]
+    },
+    "r3183441": {
+      "fotky": [
+        "/foto/r3183441/1.webp",
+        "/foto/r3183441/2.webp"
+      ],
+      "nazev": "REALcutz. Barbershop"
+    },
+    "n4632291236": {
+      "fotky": [
+        "/foto/n4632291236/1.webp",
+        "/foto/n4632291236/2.webp",
+        "/foto/n4632291236/3.webp"
+      ],
+      "nazev": "Royal Barber & Shop"
+    },
+    "r84581212": {
+      "fotky": [
+        "/foto/r84581212/1.webp",
+        "/foto/r84581212/2.webp",
+        "/foto/r84581212/3.webp",
+        "/foto/r84581212/4.webp"
+      ],
+      "nazev": "Salon H2O2"
+    },
+    "r75665913": {
+      "fotky": [
+        "/foto/r75665913/1.webp",
+        "/foto/r75665913/2.webp",
+        "/foto/r75665913/3.webp",
+        "/foto/r75665913/4.webp"
+      ],
+      "nazev": "Salon Verto"
+    },
+    "r40261930": {
+      "fotky": [
+        "/foto/r40261930/1.webp"
+      ],
+      "nazev": "Sandra Studio"
+    },
+    "r23669721": {
+      "fotky": [
+        "/foto/r23669721/1.webp",
+        "/foto/r23669721/2.webp",
+        "/foto/r23669721/3.webp"
+      ],
+      "nazev": "Shairent"
+    },
+    "r3187411": {
+      "fotky": [
+        "/foto/r3187411/1.webp",
+        "/foto/r3187411/2.webp",
+        "/foto/r3187411/3.webp",
+        "/foto/r3187411/4.webp"
+      ],
+      "nazev": "Studio Karin"
+    },
+    "r23864699": {
+      "fotky": [
+        "/foto/r23864699/1.webp",
+        "/foto/r23864699/2.webp"
+      ],
+      "nazev": "The Royal Barbershop"
+    },
+    "r23764694": {
+      "fotky": [
+        "/foto/r23764694/1.webp",
+        "/foto/r23764694/2.webp",
+        "/foto/r23764694/3.webp",
+        "/foto/r23764694/4.webp",
+        "/foto/r23764694/5.webp"
+      ],
+      "nazev": "thePLACE."
+    },
+    "r3290964": {
+      "fotky": [
+        "/foto/r3290964/1.webp",
+        "/foto/r3290964/2.webp",
+        "/foto/r3290964/3.webp"
+      ],
+      "nazev": "UNIQUE Barber Shop"
+    },
+    "r22656375": {
+      "fotky": [
+        "/foto/r22656375/1.webp",
+        "/foto/r22656375/2.webp",
+        "/foto/r22656375/3.webp",
+        "/foto/r22656375/4.webp"
+      ],
+      "nazev": "Viktoriia Beauty Salon"
     }
   }
 }
