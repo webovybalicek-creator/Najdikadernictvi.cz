@@ -1,16 +1,1 @@
-[
- {
-  "id": "n9000000001",
-  "nazev": "TEST Zkušební salon (smazat)",
-  "slug": "test-zkusebni-salon",
-  "typ": "kadernictvi",
-  "zamereni": [],
-  "mesto": "Testovací obec",
-  "mestoSlug": "testovaci-obec",
-  "kraj": "jihocesky-kraj",
-  "lat": 48.9,
-  "lon": 13.75,
-  "email": "webovybalicek@gmail.com",
-  "test": true
- }
-]
+[]

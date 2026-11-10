@@ -78,7 +78,7 @@ function textEmailu(array $s, string $klik, string $odhlasit): array
         . "provozuji najdikadernictvi.cz, nezávislý katalog kadeřnictví a barbershopů v Česku. Lidé u nás hledají salon podle "
         . "města a podle toho, kdy má otevřeno. Váš salon " . $s['nazev'] . " (" . $s['mesto'] . ") u nás už je:\n"
         . WEB . $s['url'] . "\n\n"
-        . "U profilu zatím chybí $co. Můžete je doplnit sami a zdarma, bez registrace, přes tento osobní odkaz:\n"
+        . "Profil zatím není úplný. Sami a zdarma, bez registrace, do něj můžete doplnit $co přes tento osobní odkaz:\n"
         . "$klik\n\n"
         . "V profilu nahrajete až 6 fotek přímo z telefonu, upravíte otevírací dobu (i o svátcích), ceník, kontakty a odkaz "
         . "na online rezervace. Kompletní profily ukazujeme ve výpisech výš a k profilu si můžete stáhnout plakát do výlohy s QR kódem.\n\n"
