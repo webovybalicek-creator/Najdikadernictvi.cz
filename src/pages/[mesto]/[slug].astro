@@ -24,6 +24,7 @@ import {
   indexovatDetail,
   ctvrtSalonu,
   ctvrtUrl,
+  nahled,
   type Provozovna,
 } from '../../lib/data';
 import { zameryMesta, zamerUrl } from '../../lib/seo-mesto';
@@ -123,7 +124,7 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
 
     <header class="head">
       <figure class="head__viz">
-        <Vizual p={p} velky panorama />
+        <Vizual p={p} velky panorama hned />
       </figure>
       <div class="head__txt">
       <p class="head__typ">
@@ -241,11 +242,18 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
                 {p.fotky.map((f, i) => (
                   <li>
                     <a href={f} target="_blank" rel="noopener">
-                      <img src={f} alt={`${p.nazev} – fotka ${i + 1}`} loading="lazy" decoding="async" />
+                      <img src={nahled(f)} alt={`${p.nazev} – fotka ${i + 1}`} loading="lazy" decoding="async" />
                     </a>
                   </li>
                 ))}
               </ul>
+              {
+                p.fotkyRedakce && (
+                  <p class="galerie__zdroj">
+                    Fotky pochází z veřejných profilů salonu. Jste majitel a chcete je vyměnit? <a href="/pro-salony/">Upravte si profil zdarma</a>.
+                  </p>
+                )
+              }
             </section>
           )
         }
@@ -569,6 +577,11 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
     aspect-ratio: 1;
     object-fit: cover;
     border-radius: var(--radius);
+  }
+  .galerie__zdroj {
+    margin: 0.6rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--ink-soft);
   }
   .majitel__alt {
     margin: 0.75rem 0 0;

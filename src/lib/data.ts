@@ -5,6 +5,7 @@ import vyrazene from '../data/vyrazene.json';
 import overeneRaw from '../data/overene.json';
 import majiteleRaw from '../data/majitele.json';
 import googleRaw from '../data/google-hodnoceni.json';
+import fotkyRaw from '../data/fotky.json';
 import { KRAJE, type Kraj } from './kraje';
 import { parseTyden, type Tyden } from './oteviraci-doba';
 import { slugify } from './slug';
@@ -44,8 +45,10 @@ export interface Provozovna {
   rezervace?: string;
   /** Otevírací doba o svátcích od majitele (volný text) */
   svatky?: string;
-  /** Fotky od majitele (URL) */
+  /** Fotky salonu (URL): od majitele, nebo vybrané redakcí z veřejných profilů */
   fotky?: string[];
+  /** Fotky vybrala redakce (ne majitel) */
+  fotkyRedakce?: boolean;
   /** Hodnocení na Googlu od majitele (zobrazuje se odděleně od našich hodnocení) */
   google?: GoogleHodnoceni;
 }
@@ -55,6 +58,11 @@ export interface GoogleHodnoceni {
   n: number;
   datum: string;
   url?: string;
+}
+
+interface FotkyRedakce {
+  uvod: string[];
+  salony: Record<string, { fotky: string[]; nazev?: string }>;
 }
 
 type Overeni = Partial<Pick<Provozovna, 'nazev' | 'platbaKartou' | 'bezbarierove' | 'telefon' | 'email' | 'web' | 'instagram' | 'facebook' | 'rezervace' | 'oteviraciDoba' | 'popis' | 'cenik' | 'zamereni' | 'fotky' | 'google'>> & {
@@ -214,6 +222,16 @@ function sestav(): Provozovna[] {
     p.slug = kandidati.find((c) => c && !used.has(`${p.mestoSlug}/${c}`)) ?? slugify(p.id);
     used.add(`${p.mestoSlug}/${p.slug}`);
   }
+  // Fotky (a případně veřejný název) vybrané redakcí z veřejných profilů. Po přidělení slugu, aby se URL neměnila.
+  // Fotky od majitele (níže) je přepíšou.
+  const redakce = (fotkyRaw as unknown as FotkyRedakce).salony;
+  for (const p of vse) {
+    const f = redakce[p.id];
+    if (!f?.fotky?.length) continue;
+    p.fotky = f.fotky;
+    p.fotkyRedakce = true;
+    if (f.nazev) p.nazev = f.nazev;
+  }
   // Údaje ověřené majitelem (po přidělení slugu, aby se URL neměnila)
   // Nejdřív údaje, které majitel upravil sám (/sprava/), pak ruční opravy redakce (mají přednost)
   for (const zdroj of [majiteleRaw.salony, overeneRaw.salony] as Record<string, Overeni>[]) {
@@ -223,6 +241,7 @@ function sestav(): Provozovna[] {
       for (const [k, v] of Object.entries(o)) {
         if (v !== undefined && v !== null && v !== '' && !(Array.isArray(v) && !v.length)) (p as unknown as Record<string, unknown>)[k] = v;
       }
+      if (o.fotky?.length) p.fotkyRedakce = undefined;
     }
   }
   // Hodnocení na Googlu zadané redakcí (podle id nebo URL salonu)
@@ -344,9 +363,16 @@ export function uplnost(p: Provozovna): number {
     (p.instagram || p.facebook ? 1 : 0) +
     (p.email ? 1 : 0) +
     (p.zamereni.length ? 1 : 0) +
+    (p.fotky?.length ? 2 : 0) +
     (p.overeno ? 2 : 0)
   );
 }
+
+/** Salony s nejhezčími fotkami pro úvodní stránku, v pořadí podle redakce */
+export const UVOD_FOTKY: string[] = (fotkyRaw as unknown as FotkyRedakce).uvod;
+
+/** Zmenšenina fotky pro karty a galerii (jen fotky redakce v /foto/, ostatní beze změny) */
+export const nahled = (url: string) => (/^\/foto\/[^/]+\/\d+\.webp$/.test(url) ? url.replace(/\.webp$/, '-m.webp') : url);
 
 /** Deterministický výběr (stejný při každém buildu), rozprostřený přes různá města */
 export function vyber(seznam: Provozovna[], n: number): Provozovna[] {

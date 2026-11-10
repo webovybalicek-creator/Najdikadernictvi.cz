@@ -1,5 +1,5 @@
 // Rozdělení salonů do dlaždic 0,5° × 0,5° (cca 55 × 35 km), ať klient stahuje jen data z okolí.
-import { PROVOZOVNY, url, adresa, tyden, type Provozovna } from './data';
+import { PROVOZOVNY, url, adresa, tyden, nahled, type Provozovna } from './data';
 
 export const klicDlazdice = (lat: number, lon: number) => `${Math.floor(lat * 2)}_${Math.floor(lon * 2)}`;
 
@@ -16,7 +16,7 @@ export const zaznam = (p: Provozovna) => [
   p.id,
   p.bezbarierove === 'yes' || p.bezbarierove === 'limited' ? 1 : 0,
   p.platbaKartou === 'yes' ? 1 : 0,
-  ...(p.fotky?.[0] ? [p.fotky[0]] : []),
+  ...(p.fotky?.[0] ? [nahled(p.fotky[0])] : []),
 ];
 
 /** Bitové příznaky pro lehký přehled všech bodů na mapě */

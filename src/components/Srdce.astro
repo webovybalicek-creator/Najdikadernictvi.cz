@@ -1,6 +1,6 @@
 ---
 // Tlačítko „Do oblíbených“. Varianta „ikona“ (na kartách) nebo s textem (detail).
-import { adresa, url, type Provozovna } from '../lib/data';
+import { adresa, url, nahled, type Provozovna } from '../lib/data';
 
 interface Props {
   p: Provozovna;
@@ -16,7 +16,7 @@ const data = JSON.stringify({
   ...(p.typ === 'barber' ? { b: 1 } : {}),
   la: p.lat,
   lo: p.lon,
-  ...(p.fotky?.[0] ? { f: p.fotky[0] } : {}),
+  ...(p.fotky?.[0] ? { f: nahled(p.fotky[0]) } : {}),
 });
 ---
 

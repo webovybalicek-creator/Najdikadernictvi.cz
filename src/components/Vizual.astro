@@ -1,16 +1,18 @@
 ---
 // Generovaný vizuál salonu: monogram + vzor podle typu. Používá se, dokud nemáme vlastní fotku.
-import type { Provozovna } from '../lib/data';
+import { nahled, type Provozovna } from '../lib/data';
 
 interface Props {
   p: Provozovna;
   velky?: boolean;
   /** Načíst „pohled z ulice“ z Mapy.com přes /api/panorama.php (jen detail salonu, kvůli povinné atribuci) */
   panorama?: boolean;
+  /** Fotku načíst hned (karty nad zlomem, hlavní fotka detailu) */
+  hned?: boolean;
 }
-const { p, velky = false, panorama = false } = Astro.props;
-// Vlastní fotka od majitele má přednost před pohledem z ulice
-const vlastni = p.fotky?.[0];
+const { p, velky = false, panorama = false, hned = false } = Astro.props;
+// Fotka salonu (od majitele nebo vybraná redakcí) má přednost před pohledem z ulice; v kartách stačí zmenšenina
+const vlastni = p.fotky?.[0] ? (velky ? p.fotky[0] : nahled(p.fotky[0])) : undefined;
 const panoUrl = vlastni ?? `/api/panorama.php?lat=${p.lat}&lon=${p.lon}&s=${velky ? 'velky' : 'maly'}&v=2`;
 
 // Neutrální šedé tóny, ať monogram nepůsobí jako barevná dekorace
@@ -58,7 +60,7 @@ const id = `v-${p.id}`;
         class:list={['viz__foto', vlastni && 'viz__foto--vlastni']}
         src={panoUrl}
         alt=""
-        loading="lazy"
+        loading={hned ? 'eager' : 'lazy'}
         decoding="async"
         onload="this.classList.add('ok')"
         onerror="this.parentNode.classList.remove('viz--foto');this.remove()"

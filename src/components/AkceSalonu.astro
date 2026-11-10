@@ -1,7 +1,7 @@
 ---
 // Druhá řada akcí na detailu salonu: oblíbené, sdílení, připomínka do kalendáře
 import Srdce from './Srdce.astro';
-import { adresa, url, type Provozovna } from '../lib/data';
+import { adresa, url, nahled, type Provozovna } from '../lib/data';
 
 /** České mobilní číslo (+420 6xx / 7xx) → odkazy na WhatsApp a SMS */
 const mobil = (t?: string) => {
@@ -17,7 +17,7 @@ interface Props {
 const { p } = Astro.props;
 const abs = new URL(url(p), SITE.url).href;
 const mob = mobil(p.telefon);
-const salonData = JSON.stringify({ id: p.id, u: url(p), n: p.nazev, a: adresa(p, true) || p.mesto, ...(p.typ === 'barber' ? { b: 1 } : {}), la: p.lat, lo: p.lon, ...(p.fotky?.[0] ? { f: p.fotky[0] } : {}) });
+const salonData = JSON.stringify({ id: p.id, u: url(p), n: p.nazev, a: adresa(p, true) || p.mesto, ...(p.typ === 'barber' ? { b: 1 } : {}), la: p.lat, lo: p.lon, ...(p.fotky?.[0] ? { f: nahled(p.fotky[0]) } : {}) });
 const zprava = encodeURIComponent(`Dobrý den, rád/a bych se objednal/a na střih. Máte volný termín?`);
 ---
 

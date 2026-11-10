@@ -1,38 +1,47 @@
 ---
-// Vybrané salony z velkých měst (kompletní profily) – v prohlížeči se při každém načtení zamíchají
+// Vybrané salony s fotkami: nejdřív kurátorský výběr redakce (UVOD_FOTKY), pak ostatní salony s fotkami.
+// Záložky měst ukážou salony s fotkami z daného města. Pořadí je pevné, ať úvodní stránka působí upraveně.
 import Karta from './Karta.astro';
-import { nejvetsiMesta, tyden, uplnost, type Provozovna } from '../lib/data';
+import { PROVOZOVNY, UVOD_FOTKY, uplnost, type Provozovna } from '../lib/data';
 
-const NA_MESTO = 4;
-const mesta = nejvetsiMesta(10);
-const pool: { p: Provozovna; m: string }[] = [];
-for (const m of mesta) {
-  const vybrane = m.provozovny
-    .filter((p) => p.zdroj === 'osm' && tyden(p) && (p.telefon || p.web))
-    .sort((a, b) => uplnost(b) - uplnost(a) || a.id.localeCompare(b.id))
-    .slice(0, NA_MESTO);
-  for (const p of vybrane) pool.push({ p, m: m.slug });
-}
 const ZOBRAZIT = 8;
-const mestaSVyberem = mesta.filter((m) => pool.some((x) => x.m === m.slug));
+const podleId = new Map(PROVOZOVNY.map((p) => [p.id, p]));
+const vybrane = UVOD_FOTKY.map((id) => podleId.get(id)).filter((p): p is Provozovna => !!p?.fotky?.length);
+const ostatni = PROVOZOVNY.filter((p) => p.fotky?.length && !UVOD_FOTKY.includes(p.id)).sort(
+  (a, b) => (b.fotky!.length - a.fotky!.length) || uplnost(b) - uplnost(a) || a.id.localeCompare(b.id),
+);
+const pool = [...vybrane, ...ostatni];
+// Pražské obvody pod jednou záložkou „Praha“
+const mestoKlic = (p: Provozovna) => (p.kraj === 'praha' ? 'praha' : p.mestoSlug);
+const mestoNazev = (p: Provozovna) => (p.kraj === 'praha' ? 'Praha' : p.mesto);
+const pocty = new Map<string, { nazev: string; n: number }>();
+for (const p of pool) {
+  const k = mestoKlic(p);
+  pocty.set(k, { nazev: mestoNazev(p), n: (pocty.get(k)?.n ?? 0) + 1 });
+}
+const zalozky = [...pocty].filter(([, v]) => v.n >= 2).sort((a, b) => b[1].n - a[1].n || a[1].nazev.localeCompare(b[1].nazev, 'cs'));
 ---
 
-<section class="vyb" data-vyb data-zobrazit={ZOBRAZIT}>
-  <div class="wrap">
-    <div class="vyb__hlava">
-      <h2>Salony s kompletním profilem</h2>
-      <p class="vyb__pod">Otevírací doba, telefon a adresa ověřené z veřejných zdrojů.</p>
-    </div>
-    <div class="vyb__mesta" role="tablist" aria-label="Město">
-      <button type="button" role="tab" aria-selected="true" data-vyb-mesto="">Všechna města</button>
-      {mestaSVyberem.map((m) => <button type="button" role="tab" aria-selected="false" data-vyb-mesto={m.slug}>{m.nazev}</button>)}
-    </div>
-    <ul class="vyb__pas" data-vyb-pas>
-      {pool.map(({ p, m }, i) => <Karta p={p} stav skryta={i >= ZOBRAZIT} mesto={m} />)}
-    </ul>
-    <p class="vyb__vice" data-vyb-vice hidden><a href="/" data-vyb-vice-odkaz>Všechna kadeřnictví</a></p>
-  </div>
-</section>
+{
+  pool.length >= 4 && (
+    <section class="vyb" data-vyb data-zobrazit={ZOBRAZIT}>
+      <div class="wrap">
+        <div class="vyb__hlava">
+          <h2>Salony, kam se vyplatí zajít</h2>
+          <p class="vyb__pod">Podívejte se dovnitř dřív, než se objednáte. Fotky, otevírací doba a kontakt na jednom místě.</p>
+        </div>
+        <div class="vyb__mesta" role="tablist" aria-label="Město">
+          <button type="button" role="tab" aria-selected="true" data-vyb-mesto="">Doporučujeme</button>
+          {zalozky.map(([k, v]) => <button type="button" role="tab" aria-selected="false" data-vyb-mesto={k}>{v.nazev}</button>)}
+        </div>
+        <ul class="vyb__pas" data-vyb-pas>
+          {pool.map((p, i) => <Karta p={p} stav skryta={i >= ZOBRAZIT} mesto={mestoKlic(p)} />)}
+        </ul>
+        <p class="vyb__vice" data-vyb-vice hidden><a href="/" data-vyb-vice-odkaz>Všechna kadeřnictví</a></p>
+      </div>
+    </section>
+  )
+}
 
 <script>
   import { aplikujStav } from '../scripts/stav';
@@ -41,20 +50,9 @@ const mestaSVyberem = mesta.filter((m) => pool.some((x) => x.m === m.slug));
     const karty = [...pas.querySelectorAll<HTMLElement>(':scope > li')];
     const n = Number(sek.dataset.zobrazit) || 8;
     const vice = sek.querySelector<HTMLElement>('[data-vyb-vice]')!;
-    const zamichej = <T,>(a: T[]) => {
-      const b = [...a];
-      for (let i = b.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [b[i], b[j]] = [b[j], b[i]];
-      }
-      return b;
-    };
     const ukaz = (mesto: string) => {
-      const kandidati = mesto ? karty.filter((k) => k.dataset.mesto === mesto) : karty;
-      const vybrane = new Set(zamichej(kandidati).slice(0, n));
+      const vybrane = new Set((mesto ? karty.filter((k) => k.dataset.mesto === mesto) : karty).slice(0, n));
       karty.forEach((k) => (k.hidden = !vybrane.has(k)));
-      // pořadí podle zamíchání
-      [...vybrane].forEach((k) => pas.appendChild(k));
       if (mesto) {
         vice.hidden = false;
         const a = vice.querySelector<HTMLAnchorElement>('[data-vyb-vice-odkaz]')!;
@@ -68,7 +66,6 @@ const mestaSVyberem = mesta.filter((m) => pool.some((x) => x.m === m.slug));
         ukaz(b.dataset.vybMesto!);
       }),
     );
-    ukaz('');
     aplikujStav(sek);
   });
 </script>

@@ -1,0 +1,314 @@
+{
+  "_popis": "Fotky salonů vybrané redakcí z veřejných profilů (Google Mapy, web salonu). Klíč = id salonu. Pole: fotky (URL v /public/foto/<id>/, první je hlavní; ke každé existuje i zmenšenina <n>-m.webp), nazev (volitelně veřejný název provozovny místo názvu z rejstříku). Fotky nahrané majitelem přes /sprava/ mají přednost. uvod = pořadí salonů v sekci Vybrané salony na úvodní stránce.",
+  "uvod": [
+    "n4951560799",
+    "n13988774101",
+    "n10585030393",
+    "n10733531405",
+    "r19584385",
+    "n4722157228",
+    "n4460856113",
+    "n296770304",
+    "r3180417",
+    "n7825576849",
+    "n296540062",
+    "n11469025780",
+    "n13716335894",
+    "n5020200489",
+    "n13625876799",
+    "n9884821879"
+  ],
+  "salony": {
+    "n12083708604": {
+      "fotky": [
+        "/foto/n12083708604/1.webp",
+        "/foto/n12083708604/2.webp",
+        "/foto/n12083708604/3.webp",
+        "/foto/n12083708604/4.webp"
+      ],
+      "nazev": "Alessandro Barbershop"
+    },
+    "n13430278028": {
+      "fotky": [
+        "/foto/n13430278028/1.webp",
+        "/foto/n13430278028/2.webp"
+      ]
+    },
+    "n296770304": {
+      "fotky": [
+        "/foto/n296770304/1.webp",
+        "/foto/n296770304/2.webp",
+        "/foto/n296770304/3.webp"
+      ]
+    },
+    "n11469025780": {
+      "fotky": [
+        "/foto/n11469025780/1.webp",
+        "/foto/n11469025780/2.webp",
+        "/foto/n11469025780/3.webp",
+        "/foto/n11469025780/4.webp"
+      ]
+    },
+    "n296540062": {
+      "fotky": [
+        "/foto/n296540062/1.webp",
+        "/foto/n296540062/2.webp",
+        "/foto/n296540062/3.webp",
+        "/foto/n296540062/4.webp",
+        "/foto/n296540062/5.webp"
+      ]
+    },
+    "n13666948159": {
+      "fotky": [
+        "/foto/n13666948159/1.webp",
+        "/foto/n13666948159/2.webp"
+      ]
+    },
+    "n5020200489": {
+      "fotky": [
+        "/foto/n5020200489/1.webp",
+        "/foto/n5020200489/2.webp"
+      ]
+    },
+    "n13988774101": {
+      "fotky": [
+        "/foto/n13988774101/1.webp",
+        "/foto/n13988774101/2.webp",
+        "/foto/n13988774101/3.webp",
+        "/foto/n13988774101/4.webp"
+      ]
+    },
+    "n12813928695": {
+      "fotky": [
+        "/foto/n12813928695/1.webp",
+        "/foto/n12813928695/2.webp"
+      ]
+    },
+    "r26121735": {
+      "fotky": [
+        "/foto/r26121735/1.webp",
+        "/foto/r26121735/2.webp"
+      ],
+      "nazev": "Factory Barbershop"
+    },
+    "n10733531405": {
+      "fotky": [
+        "/foto/n10733531405/1.webp",
+        "/foto/n10733531405/2.webp",
+        "/foto/n10733531405/3.webp",
+        "/foto/n10733531405/4.webp",
+        "/foto/n10733531405/5.webp"
+      ]
+    },
+    "n1481092945": {
+      "fotky": [
+        "/foto/n1481092945/1.webp"
+      ]
+    },
+    "n4951560799": {
+      "fotky": [
+        "/foto/n4951560799/1.webp",
+        "/foto/n4951560799/2.webp",
+        "/foto/n4951560799/3.webp",
+        "/foto/n4951560799/4.webp",
+        "/foto/n4951560799/5.webp"
+      ],
+      "nazev": "Holičství U Paulího"
+    },
+    "r3180417": {
+      "fotky": [
+        "/foto/r3180417/1.webp",
+        "/foto/r3180417/2.webp",
+        "/foto/r3180417/3.webp",
+        "/foto/r3180417/4.webp",
+        "/foto/r3180417/5.webp"
+      ],
+      "nazev": "Champions Barber Shop Přívozská"
+    },
+    "r3307328": {
+      "fotky": [
+        "/foto/r3307328/1.webp"
+      ],
+      "nazev": "Champions Barber Shop Poruba"
+    },
+    "n898988694": {
+      "fotky": [
+        "/foto/n898988694/1.webp",
+        "/foto/n898988694/2.webp"
+      ]
+    },
+    "n7825576849": {
+      "fotky": [
+        "/foto/n7825576849/1.webp",
+        "/foto/n7825576849/2.webp",
+        "/foto/n7825576849/3.webp",
+        "/foto/n7825576849/4.webp"
+      ]
+    },
+    "n4478037389": {
+      "fotky": [
+        "/foto/n4478037389/1.webp",
+        "/foto/n4478037389/2.webp"
+      ]
+    },
+    "n14115029736": {
+      "fotky": [
+        "/foto/n14115029736/1.webp",
+        "/foto/n14115029736/2.webp",
+        "/foto/n14115029736/3.webp",
+        "/foto/n14115029736/4.webp"
+      ]
+    },
+    "n10585030393": {
+      "fotky": [
+        "/foto/n10585030393/1.webp",
+        "/foto/n10585030393/2.webp",
+        "/foto/n10585030393/3.webp",
+        "/foto/n10585030393/4.webp"
+      ]
+    },
+    "n13625876799": {
+      "fotky": [
+        "/foto/n13625876799/1.webp",
+        "/foto/n13625876799/2.webp"
+      ]
+    },
+    "n11973777226": {
+      "fotky": [
+        "/foto/n11973777226/1.webp"
+      ]
+    },
+    "n13458263024": {
+      "fotky": [
+        "/foto/n13458263024/1.webp",
+        "/foto/n13458263024/2.webp",
+        "/foto/n13458263024/3.webp",
+        "/foto/n13458263024/4.webp",
+        "/foto/n13458263024/5.webp"
+      ]
+    },
+    "n14148264179": {
+      "fotky": [
+        "/foto/n14148264179/1.webp",
+        "/foto/n14148264179/2.webp"
+      ]
+    },
+    "n12954180824": {
+      "fotky": [
+        "/foto/n12954180824/1.webp",
+        "/foto/n12954180824/2.webp"
+      ]
+    },
+    "n10881019590": {
+      "fotky": [
+        "/foto/n10881019590/1.webp"
+      ]
+    },
+    "n12956296899": {
+      "fotky": [
+        "/foto/n12956296899/1.webp",
+        "/foto/n12956296899/2.webp"
+      ]
+    },
+    "r23323957": {
+      "fotky": [
+        "/foto/r23323957/1.webp",
+        "/foto/r23323957/2.webp",
+        "/foto/r23323957/3.webp",
+        "/foto/r23323957/4.webp"
+      ]
+    },
+    "n12276834748": {
+      "fotky": [
+        "/foto/n12276834748/1.webp",
+        "/foto/n12276834748/2.webp"
+      ]
+    },
+    "n4763808593": {
+      "fotky": [
+        "/foto/n4763808593/1.webp"
+      ]
+    },
+    "n13041886138": {
+      "fotky": [
+        "/foto/n13041886138/1.webp"
+      ]
+    },
+    "n2213447413": {
+      "fotky": [
+        "/foto/n2213447413/1.webp",
+        "/foto/n2213447413/2.webp"
+      ]
+    },
+    "n4722157228": {
+      "fotky": [
+        "/foto/n4722157228/1.webp",
+        "/foto/n4722157228/2.webp",
+        "/foto/n4722157228/3.webp",
+        "/foto/n4722157228/4.webp"
+      ]
+    },
+    "n4882172170": {
+      "fotky": [
+        "/foto/n4882172170/1.webp"
+      ]
+    },
+    "r19584385": {
+      "fotky": [
+        "/foto/r19584385/1.webp",
+        "/foto/r19584385/2.webp",
+        "/foto/r19584385/3.webp",
+        "/foto/r19584385/4.webp",
+        "/foto/r19584385/5.webp"
+      ],
+      "nazev": "Salon Goldenhair"
+    },
+    "n13716335894": {
+      "fotky": [
+        "/foto/n13716335894/1.webp"
+      ]
+    },
+    "n4460856113": {
+      "fotky": [
+        "/foto/n4460856113/1.webp",
+        "/foto/n4460856113/2.webp",
+        "/foto/n4460856113/3.webp",
+        "/foto/n4460856113/4.webp"
+      ]
+    },
+    "n5041510625": {
+      "fotky": [
+        "/foto/n5041510625/1.webp",
+        "/foto/n5041510625/2.webp",
+        "/foto/n5041510625/3.webp",
+        "/foto/n5041510625/4.webp"
+      ]
+    },
+    "n4788299733": {
+      "fotky": [
+        "/foto/n4788299733/1.webp",
+        "/foto/n4788299733/2.webp",
+        "/foto/n4788299733/3.webp",
+        "/foto/n4788299733/4.webp",
+        "/foto/n4788299733/5.webp"
+      ]
+    },
+    "r21767777": {
+      "fotky": [
+        "/foto/r21767777/1.webp",
+        "/foto/r21767777/2.webp",
+        "/foto/r21767777/3.webp"
+      ],
+      "nazev": "Tata Barbershop"
+    },
+    "n9884821879": {
+      "fotky": [
+        "/foto/n9884821879/1.webp",
+        "/foto/n9884821879/2.webp",
+        "/foto/n9884821879/3.webp",
+        "/foto/n9884821879/4.webp",
+        "/foto/n9884821879/5.webp"
+      ]
+    }
+  }
+}
