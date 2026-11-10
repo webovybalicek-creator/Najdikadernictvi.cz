@@ -165,12 +165,6 @@
         "/foto/n10585030393/4.webp"
       ]
     },
-    "n13625876799": {
-      "fotky": [
-        "/foto/n13625876799/1.webp",
-        "/foto/n13625876799/2.webp"
-      ]
-    },
     "n11973777226": {
       "fotky": [
         "/foto/n11973777226/1.webp"
@@ -759,6 +753,14 @@
       ],
       "nazev": "Viktoriia Beauty Salon",
       "slug": "viktoriia-beauty-salon"
+    },
+    "r7781822": {
+      "fotky": [
+        "/foto/r7781822/1.webp",
+        "/foto/r7781822/2.webp"
+      ],
+      "nazev": "Kadeřnictví Linda",
+      "slug": "kadernictvi-linda"
     }
   }
 }

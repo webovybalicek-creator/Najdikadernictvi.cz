@@ -81,6 +81,7 @@ ErrorDocument 404 /404.html
   RewriteRule ^liberec/kadernictvi-ruzova-323-4/?$ /liberec/theplace/ [L,R=301]
   RewriteRule ^ostrava/kadernictvi-17-listopadu-768-68/?$ /ostrava/unique-barber-shop/ [L,R=301]
   RewriteRule ^praha-10/kadernictvi-krymska-166-43/?$ /praha-10/viktoriia-beauty-salon/ [L,R=301]
+  RewriteRule ^pardubice/kadernictvi-strossova-511/?$ /pardubice/kadernictvi-linda/ [L,R=301]
 
   # Zrušený přehled krajů – hledání je na úvodní stránce
   RewriteRule ^kraje/?$ / [L,R=301]
