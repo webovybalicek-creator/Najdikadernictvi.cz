@@ -1,0 +1,12 @@
+# Adresy odeslané k indexaci v Google Search Console (Kontrola adresy URL → Požádat o indexování)
+2026-11-10 https://najdikadernictvi.cz/liberec/theplace/
+2026-11-10 https://najdikadernictvi.cz/praha-2/cutegory/
+2026-11-10 https://najdikadernictvi.cz/plzen/u-pauliho/
+2026-11-10 https://najdikadernictvi.cz/olomouc/kadernicky-salon-art-hair-design/
+2026-11-10 https://najdikadernictvi.cz/usti-nad-labem/matty-s-barbershop/
+2026-11-10 https://najdikadernictvi.cz/praha-10/gentlemen-s-barber-club/
+2026-11-10 https://najdikadernictvi.cz/brno/cutegory/
+2026-11-10 https://najdikadernictvi.cz/praha-1/salon-petra-mechurova/
+2026-11-10 https://najdikadernictvi.cz/praha-3/barber-street/
+2026-11-10 https://najdikadernictvi.cz/brno/salon-goldenhair/
+2026-11-10 https://najdikadernictvi.cz/hradec-kralove/mario-a-elli/
