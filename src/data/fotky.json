@@ -1,5 +1,5 @@
 {
-  "_popis": "Fotky salonů vybrané redakcí z veřejných profilů (Google Mapy, web salonu). Klíč = id salonu. Pole: fotky (URL v /public/foto/<id>/, první je hlavní; ke každé existuje i zmenšenina <n>-m.webp), slug (volitelně nová URL podle názvu; starou adresu přesměrovat v public/.htaccess), nazev (volitelně veřejný název provozovny místo názvu z rejstříku). Fotky nahrané majitelem přes /sprava/ mají přednost. uvod = pořadí salonů v sekci Vybrané salony na úvodní stránce.",
+  "_popis": "Fotky salonů vybrané redakcí z veřejných profilů (Google Mapy, web salonu). Klíč = id salonu. Pole: fotky (URL v /public/foto/<id>/, první je hlavní; ke každé existuje i zmenšenina <n>-m.webp), slug (volitelně nová URL podle názvu; starou adresu přesměrovat v public/.htaccess), web (volitelně, jen když salon žádný nemá), nazev (volitelně veřejný název provozovny místo názvu z rejstříku). Fotky nahrané majitelem přes /sprava/ mají přednost. uvod = pořadí salonů v sekci Vybrané salony na úvodní stránce.",
   "uvod": [
     "n4951560799",
     "n13988774101",
@@ -177,12 +177,6 @@
         "/foto/n13458263024/3.webp",
         "/foto/n13458263024/4.webp",
         "/foto/n13458263024/5.webp"
-      ]
-    },
-    "n14148264179": {
-      "fotky": [
-        "/foto/n14148264179/1.webp",
-        "/foto/n14148264179/2.webp"
       ]
     },
     "n12954180824": {
@@ -761,6 +755,15 @@
       ],
       "nazev": "Kadeřnictví Linda",
       "slug": "kadernictvi-linda"
+    },
+    "r26020637": {
+      "fotky": [
+        "/foto/r26020637/1.webp",
+        "/foto/r26020637/2.webp"
+      ],
+      "nazev": "Kadeřnictví Šumava",
+      "slug": "kadernictvi-sumava",
+      "web": "https://kadernictvisumava-cz.webnode.cz/"
     }
   }
 }

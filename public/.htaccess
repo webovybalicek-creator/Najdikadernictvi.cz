@@ -82,6 +82,10 @@ ErrorDocument 404 /404.html
   RewriteRule ^ostrava/kadernictvi-17-listopadu-768-68/?$ /ostrava/unique-barber-shop/ [L,R=301]
   RewriteRule ^praha-10/kadernictvi-krymska-166-43/?$ /praha-10/viktoriia-beauty-salon/ [L,R=301]
   RewriteRule ^pardubice/kadernictvi-strossova-511/?$ /pardubice/kadernictvi-linda/ [L,R=301]
+  RewriteRule ^ceske-budejovice/kadernictvi-k-safare-887-64/?$ /ceske-budejovice/kadernictvi-sumava/ [L,R=301]
+  # Duplicitní záznam z OSM s chybnou obcí Zavadilka (správně České Budějovice, K. Šafáře 887/64)
+  RewriteRule ^zavadilka/kadernictvi-sumava/?$ /ceske-budejovice/kadernictvi-sumava/ [L,R=301]
+  RewriteRule ^zavadilka/?$ /ceske-budejovice/ [L,R=301]
 
   # Zrušený přehled krajů – hledání je na úvodní stránce
   RewriteRule ^kraje/?$ / [L,R=301]
