@@ -86,6 +86,8 @@ ErrorDocument 404 /404.html
   # Duplicitní záznam z OSM s chybnou obcí Zavadilka (správně České Budějovice, K. Šafáře 887/64)
   RewriteRule ^zavadilka/kadernictvi-sumava/?$ /ceske-budejovice/kadernictvi-sumava/ [L,R=301]
   RewriteRule ^zavadilka/?$ /ceske-budejovice/ [L,R=301]
+  # Vyřazený neexistující salon (Ústí n. L., Na Popluží 890/9a)
+  RewriteRule ^usti-nad-labem/kadernictvi-na-popluzi-890-9a/?$ /usti-nad-labem/ [L,R=301]
 
   # Zrušený přehled krajů – hledání je na úvodní stránce
   RewriteRule ^kraje/?$ / [L,R=301]

@@ -1,6 +1,7 @@
 {
   "_popis": "Salony vyřazené na žádost (námitka, odstranění) nebo jako duplicita jiného záznamu (starou URL přesměrovat v public/.htaccess). Položky: id salonu (např. r21927171, n123456) nebo cesta URL (/brno/nazev/). Import je znovu nepřidá.",
   "polozky": [
-    "n14148264179"
+    "n14148264179",
+    "r17804302"
   ]
 }
