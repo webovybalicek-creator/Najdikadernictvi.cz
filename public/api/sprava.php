@@ -424,6 +424,9 @@ if ($akce === 'uloz' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $popis = mb_substr(trim((string)($vstup['popis'] ?? '')), 0, 1000);
     if (preg_match('~https?://|www\.~i', $popis)) $chyby[] = 'Popis nesmí obsahovat odkazy.';
     elseif ($popis !== '') $d['popis'] = $popis;
+    $svatky = mb_substr(trim(preg_replace('/\s+/u', ' ', (string)($vstup['svatky'] ?? ''))), 0, 300);
+    if (preg_match('~https?://|www\.~i', $svatky)) $chyby[] = 'Otevírací doba o svátcích nesmí obsahovat odkazy.';
+    elseif ($svatky !== '') $d['svatky'] = $svatky;
     $doba = $txt($vstup['oteviraciDoba'] ?? '', 250);
     if ($doba !== '') {
         if (!preg_match('/^[A-Za-z0-9 :;,\-]+$/', $doba)) $chyby[] = 'Otevírací doba má neplatný formát.';

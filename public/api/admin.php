@@ -41,7 +41,8 @@ $telo = "Odkazy do administrace webu najdikadernictvi.cz (nesdílejte je):\n\n"
     . "Hodnocení ke schválení:\n$api/hodnoceni.php?admin=" . $podpis('admin') . "\n\n"
     . "Návštěvnost:\n$api/stat.php?admin=" . $podpis('stat-admin') . "\n\n"
     . "Úpravy profilů od majitelů:\n$api/sprava.php?admin=" . $podpis('sprava-admin') . "\n\n"
-    . "Odběry upozornění:\n$api/upozorneni.php?admin=" . $podpis('upozorneni-admin') . "\n";
+    . "Odběry upozornění:\n$api/upozorneni.php?admin=" . $podpis('upozorneni-admin') . "\n\n"
+    . "Oslovení salonů e-mailem:\n$api/osloveni.php?admin=" . $podpis('osloveni-admin') . "\n";
 $ok = @mail(
     PRIJEMCE,
     '=?UTF-8?B?' . base64_encode('[najdikadernictvi.cz] Odkazy do administrace') . '?=',

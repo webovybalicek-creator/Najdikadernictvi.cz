@@ -170,6 +170,15 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
             )
           }
           {
+            p.svatky && svatky.length === 0 && (
+              <div class="svatky">
+                <p class="svatky__h">O svátcích (podle salonu)</p>
+                <p class="svatky__text">{p.svatky}</p>
+                <a href="/kadernictvi-o-svatcich/">Kdo další má otevřeno o svátcích →</a>
+              </div>
+            )
+          }
+          {
             svatky.length > 0 && (
               <div class="svatky">
                 <p class="svatky__h">O svátcích (potvrzeno salonem)</p>

@@ -42,6 +42,8 @@ export interface Provozovna {
   popis?: string;
   cenik?: { polozka: string; cena: string }[];
   rezervace?: string;
+  /** Otevírací doba o svátcích od majitele (volný text) */
+  svatky?: string;
   /** Fotky od majitele (URL) */
   fotky?: string[];
   /** Hodnocení na Googlu od majitele (zobrazuje se odděleně od našich hodnocení) */
