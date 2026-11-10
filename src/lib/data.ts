@@ -62,7 +62,7 @@ export interface GoogleHodnoceni {
 
 interface FotkyRedakce {
   uvod: string[];
-  salony: Record<string, { fotky: string[]; nazev?: string }>;
+  salony: Record<string, { fotky: string[]; nazev?: string; slug?: string }>;
 }
 
 type Overeni = Partial<Pick<Provozovna, 'nazev' | 'platbaKartou' | 'bezbarierove' | 'telefon' | 'email' | 'web' | 'instagram' | 'facebook' | 'rezervace' | 'oteviraciDoba' | 'popis' | 'cenik' | 'zamereni' | 'fotky' | 'google'>> & {
@@ -231,6 +231,12 @@ function sestav(): Provozovna[] {
     p.fotky = f.fotky;
     p.fotkyRedakce = true;
     if (f.nazev) p.nazev = f.nazev;
+    // Hezčí URL podle veřejného názvu (stará adresa se 301 přesměruje v public/.htaccess)
+    if (f.slug && f.slug !== p.slug && !used.has(`${p.mestoSlug}/${f.slug}`)) {
+      used.delete(`${p.mestoSlug}/${p.slug}`);
+      p.slug = f.slug;
+      used.add(`${p.mestoSlug}/${p.slug}`);
+    }
   }
   // Údaje ověřené majitelem (po přidělení slugu, aby se URL neměnila)
   // Nejdřív údaje, které majitel upravil sám (/sprava/), pak ruční opravy redakce (mají přednost)
