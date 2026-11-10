@@ -46,11 +46,8 @@ Pravidla (AdSense, soukromí):
 
 ## Obce k doplnění (podle počtu salonů)
 - [x] Kladno, Karlovy Vary, Opava, Teplice, Mladá Boleslav (10. 11. 2026)
+- [x] Prostějov, Jihlava, Frýdek-Místek, Příbram (10. 11. 2026)
 - [ ] Most (jen 2 salony s údaji; hledat „kadeřnictví Most Litvínov“ nebo přiblížit mapu)
-- [ ] Prostějov
-- [ ] Jihlava
-- [ ] Frýdek-Místek
-- [ ] Příbram
 - [ ] Jablonec nad Nisou
 - [ ] Třebíč
 - [ ] Cheb
