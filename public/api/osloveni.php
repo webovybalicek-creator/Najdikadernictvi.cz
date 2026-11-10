@@ -91,16 +91,15 @@ function textEmailu(array $s, string $klik, string $odhlasit): array
     ];
 
     // ---- prostý text
-    $text = "Dobrý den,\n\n"
-        . "váš salon " . $s['nazev'] . " (" . $s['mesto'] . ") je v katalogu najdikadernictvi.cz, kde lidé hledají kadeřnictví a barbershopy podle města a otevírací doby:\n$profil\n\n"
+    $text = "Váš salon už je na Najdikadernictvi.cz\n" . $s['nazev'] . "\n\n"
+        . "Dobrý den,\n\nprovozujeme najdikadernictvi.cz, katalog kadeřnictví a barbershopů v Česku. Váš salon v něm už má profil:\n$profil\n\n"
         . "Co vám doplněný profil přinese:\n";
     foreach ($vyhody as [, $t, $d]) $text .= "- $t. $d\n";
     $text .= "\nCo v profilu zatím chybí: " . (implode(', ', array_map(fn($p) => mb_strtolower($p[0]), array_filter($polozky, fn($p) => !$p[1]))) ?: 'nic, jen zkontrolujte údaje') . ".\n\n"
         . "Doplnit profil (osobní odkaz, bez hesla):\n$klik\n\n"
         . "Když je něco špatně nebo v katalogu být nechcete, stačí odpovědět na tento e-mail.\n\n"
         . "Vladimír Fischer\nnajdikadernictvi.cz · " . PRIJEMCE . "\n\n--\n"
-        . "Píšu vám jednou na veřejný e-mail salonu. Nechcete-li ani případné budoucí zprávy: $odhlasit\n"
-        . "Provozovatel: Vladimír Fischer, IČO 03051820, Nerudova 765/10, 251 01 Říčany.\n";
+        . "Píšeme vám jednou na veřejný e-mail salonu. Nechcete-li ani případné budoucí zprávy: $odhlasit\n";
 
     // ---- HTML
     $f = "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
@@ -128,9 +127,9 @@ function textEmailu(array $s, string $klik, string $odhlasit): array
         . '<tr><td><img src="' . WEB . '/email/' . ($barber ? 'barber' : 'kadernictvi') . '.jpg" width="600" height="180" alt="" style="display:block;width:100%;max-width:600px;height:auto;border:0"></td></tr>'
         // úvod
         . '<tr><td style="padding:28px 28px 8px;' . $f . '">'
-        . '<h1 style="margin:0 0 12px;font-size:23px;line-height:1.3;color:#222;font-weight:700">Váš salon už je na Najdi kadeřnictví</h1>'
-        . '<p style="margin:0;font-size:15px;line-height:1.6;color:#444">Dobrý den, provozuji <a href="' . WEB . '" style="color:#222">najdikadernictvi.cz</a>, katalog kadeřnictví a barbershopů v Česku. '
-        . '<b style="color:#222">' . $e($s['nazev']) . '</b> (' . $e($s['mesto']) . ') v něm už má profil: <a href="' . $e($profil) . '" style="color:#e00b41">zobrazit</a>. '
+        . '<h1 style="margin:0 0 14px;font-size:23px;line-height:1.3;color:#222;font-weight:700">Váš salon už je na Najdikadernictvi.cz<br><span style="color:#ff385c">' . $e($s['nazev']) . '</span></h1>'
+        . '<p style="margin:0;font-size:15px;line-height:1.6;color:#444">Dobrý den, provozujeme <a href="' . WEB . '" style="color:#222">najdikadernictvi.cz</a>, katalog kadeřnictví a barbershopů v Česku. '
+        . 'Váš salon v něm už má profil: <a href="' . $e($profil) . '" style="color:#e00b41">zobrazit</a>. '
         . 'Když ho doplníte, pomůže vám získat nové zákazníky.</p></td></tr>'
         // stav profilu
         . '<tr><td style="padding:18px 28px 6px">'
@@ -149,8 +148,7 @@ function textEmailu(array $s, string $klik, string $odhlasit): array
         . '</table>'
         // patička
         . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px"><tr><td style="padding:16px 28px;' . $f . ';font-size:12px;line-height:1.5;color:#999;text-align:center">'
-        . 'Píšu vám jednou na veřejný e-mail salonu. Nechcete-li ani případné budoucí zprávy, <a href="' . $e($odhlasit) . '" style="color:#999">odhlaste se</a>.<br>'
-        . 'Provozovatel: Vladimír Fischer, IČO 03051820, Nerudova 765/10, 251 01 Říčany</td></tr></table>'
+        . 'Píšeme vám jednou na veřejný e-mail salonu. Nechcete-li ani případné budoucí zprávy, <a href="' . $e($odhlasit) . '" style="color:#999">odhlaste se</a>.</td></tr></table>'
         . '</td></tr></table></body></html>';
     return [$predmet, $text, $html];
 }
