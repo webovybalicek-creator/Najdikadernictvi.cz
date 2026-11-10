@@ -1,0 +1,114 @@
+{
+  "_popis": "Údaje salonů doplněné redakcí z veřejných profilů (Google Mapy, web salonu): telefon, web, facebook, oteviraciDoba (formát OSM). Doplňují jen chybějící pole; údaje od majitele (/sprava/) a ruční opravy (overene.json) mají přednost. Klíč = id salonu. Datum sběru: 2026-11-10.",
+  "salony": {
+    "r78664551": {
+      "telefon": "+420 602 976 439",
+      "oteviraciDoba": "Mo 08:00-18:00; Tu 07:00-18:00; We 07:00-18:00; Th 07:00-18:00; Fr 07:00-18:00"
+    },
+    "r25692691": {
+      "telefon": "+420 775 352 339",
+      "web": "https://kadernictviexclusive.myfox.cz",
+      "oteviraciDoba": "Mo 09:00-19:00; Tu 09:00-19:00; We 09:00-19:00; Th 09:00-19:00; Fr 09:00-17:00"
+    },
+    "r1435191": {
+      "telefon": "+420 774 605 860",
+      "facebook": "https://www.facebook.com/hair.salon.vs",
+      "oteviraciDoba": "Mo 09:00-12:00,13:00-18:00; Tu 09:00-12:00,13:00-18:00; Th 09:00-12:00,13:00-18:00; Fr 09:00-12:00,13:00-18:00"
+    },
+    "r1436856": {
+      "telefon": "+420 720 353 617",
+      "web": "https://mikkelsen.cz",
+      "oteviraciDoba": "Mo 09:00-20:00; Tu 09:00-20:00; We 09:00-16:00; Th 12:00-20:00; Fr 09:00-17:00; Su 10:00-17:00"
+    },
+    "r1441582": {
+      "telefon": "+420 725 171 919",
+      "web": "https://beauty-salon-asteri.webnode.cz",
+      "oteviraciDoba": "Mo 09:00-19:00; Tu 09:00-19:00; We 09:00-19:00; Th 09:00-19:00; Fr 09:00-19:00"
+    },
+    "r1437542": {
+      "telefon": "+420 775 017 333",
+      "facebook": "https://www.facebook.com/VERO-SALON-1568412933415218",
+      "oteviraciDoba": "Mo 08:30-19:30; Tu 08:30-19:30; We 08:30-19:30; Th 08:30-19:30; Fr 08:30-19:30; Sa 08:30-19:30; Su 08:30-19:30"
+    },
+    "r40269663": {
+      "telefon": "+420 774 047 836",
+      "oteviraciDoba": "Mo 09:00-20:00; Tu 09:00-20:00; We 09:00-20:00; Th 09:00-20:00; Fr 09:00-20:00; Sa 09:00-20:00; Su 09:00-20:00"
+    },
+    "n13770795269": {
+      "telefon": "+420 704 442 443",
+      "oteviraciDoba": "Mo 10:00-17:00; Tu 08:00-18:00; We 08:00-18:00; Th 08:00-18:00; Fr 08:00-18:00; Sa 08:00-13:00"
+    },
+    "r20743041": {
+      "telefon": "+420 353 331 717",
+      "web": "https://hairdesignmoskevska.cz",
+      "oteviraciDoba": "Mo 08:30-19:00; Tu 08:30-19:00; We 08:30-19:00; Th 08:30-19:00; Fr 08:30-19:00; Sa 09:00-15:00"
+    },
+    "r20685289": {
+      "telefon": "+420 608 797 129",
+      "oteviraciDoba": "Mo 08:00-17:00; Tu 08:00-17:00; We 08:00-17:00; Th 08:00-17:00; Fr 08:00-17:00"
+    },
+    "r20685378": {
+      "telefon": "+420 608 642 112",
+      "facebook": "https://www.facebook.com/kadernictvikarlovyvarycz",
+      "oteviraciDoba": "Mo 09:00-12:00,13:00-17:00; Tu 09:00-12:00,13:00-17:00; We 09:00-12:00,13:00-17:00; Th 09:00-12:00,13:00-17:00; Fr 09:00-12:00,13:00-17:00"
+    },
+    "r20746083": {
+      "telefon": "+420 604 995 095",
+      "oteviraciDoba": "Mo 10:30-17:00; Tu 10:30-17:00; We 10:30-17:00; Th 10:30-17:00; Fr 10:30-17:00; Sa 10:30-17:00"
+    },
+    "r4495021": {
+      "telefon": "+420 723 254 389",
+      "web": "https://www.kadernictvi-opava.cz",
+      "oteviraciDoba": "Mo 08:00-18:00; Tu 08:00-18:00; We 08:00-18:00; Th 08:00-18:00; Fr 08:00-18:00"
+    },
+    "r4505816": {
+      "telefon": "+420 775 210 007",
+      "web": "https://www.kadernictviopava.cz",
+      "oteviraciDoba": "Mo 07:00-19:00; Tu 07:00-19:00; We 07:00-19:00; Th 07:00-19:00; Fr 07:00-19:00; Sa 08:00-11:00"
+    },
+    "r4505123": {
+      "telefon": "+420 724 935 754",
+      "web": "https://www.bloomopava.cz",
+      "oteviraciDoba": "Mo 09:00-17:00; Tu 09:00-17:00; We 09:00-17:00; Th 09:00-17:00; Fr 09:00-17:00"
+    },
+    "r24373192": {
+      "telefon": "+420 704 700 801",
+      "oteviraciDoba": "Mo 10:00-17:00; Tu 10:00-17:00; We 10:00-17:00; Th 10:00-17:00; Fr 10:00-15:00"
+    },
+    "r5097363": {
+      "telefon": "+420 604 808 089",
+      "oteviraciDoba": "Mo 09:00-17:00; Tu 09:00-17:00; We 09:00-17:00; Th 09:00-17:00; Fr 09:00-17:00"
+    },
+    "r20257228": {
+      "telefon": "+420 775 662 758",
+      "web": "https://www.salongabriela.cz",
+      "oteviraciDoba": "Mo 07:00-19:00; Tu 07:00-19:00; We 07:00-19:00; Th 07:00-19:00; Fr 07:00-19:00"
+    },
+    "r20238193": {
+      "telefon": "+420 777 808 488",
+      "web": "https://www.kadernictvi-michal.cz"
+    },
+    "r20236964": {
+      "telefon": "+420 778 037 851",
+      "web": "https://www.evaeichlerova.cz",
+      "oteviraciDoba": "Mo 13:00-20:00; Tu 13:00-20:00; We 10:00-15:00; Th 13:00-20:00; Fr 09:00-15:00"
+    },
+    "r21248885": {
+      "telefon": "+420 773 939 303",
+      "web": "https://diva-mb.cz",
+      "oteviraciDoba": "Mo 09:00-19:00; Tu 09:00-19:00; We 09:00-19:00; Th 09:00-19:00; Fr 09:00-19:00"
+    },
+    "r21252696": {
+      "oteviraciDoba": "Mo 09:00-18:00; Tu 09:00-18:00; We 09:00-18:00; Th 09:00-18:00; Fr 09:00-18:00"
+    },
+    "r21235830": {
+      "telefon": "+420 722 171 407",
+      "web": "https://jkbarbers.cz",
+      "oteviraciDoba": "Mo 09:00-20:00; Tu 09:00-20:00; We 09:00-20:00; Th 09:00-20:00; Fr 09:00-20:00; Sa 09:00-18:00; Su 10:00-14:00"
+    },
+    "r21243638": {
+      "telefon": "+420 730 551 233",
+      "oteviraciDoba": "Tu 08:00-16:00; We 08:00-16:00; Th 08:00-16:00; Fr 08:00-15:30"
+    }
+  }
+}

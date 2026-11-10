@@ -186,6 +186,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         readfile($souhrnSoubor);
         exit;
     }
+    // Export pro build (workflow Synchronizace profilů): souhrn všech salonů + schválené texty (max. 10 na salon).
+    // Jen veřejná data, která web stejně zobrazuje; recenze se tak dostanou do HTML i strukturovaných dat.
+    if (isset($_GET['export'])) {
+        $souhrn = [];
+        foreach ($db->query('SELECT salon, ROUND(AVG(hvezdy), 1) p, COUNT(*) n FROM hodnoceni GROUP BY salon') as $r) {
+            $souhrn[$r['salon']] = [(float)$r['p'], (int)$r['n']];
+        }
+        $recenze = [];
+        foreach ($db->query("SELECT salon, hvezdy, text, jmeno, substr(vytvoreno, 1, 10) datum FROM hodnoceni
+            WHERE stav = 'ok' AND text IS NOT NULL AND text != '' ORDER BY id DESC") as $r) {
+            if (count($recenze[$r['salon']] ?? []) >= 10) continue;
+            $recenze[$r['salon']][] = ['h' => (int)$r['hvezdy'], 't' => $r['text'], 'j' => $r['jmeno'] ?: null, 'd' => $r['datum']];
+        }
+        json_out(200, ['souhrn' => (object)$souhrn, 'recenze' => (object)$recenze], 300);
+    }
     $salon = $_GET['salon'] ?? '';
     if (!$platneId($salon)) json_out(400, ['ok' => false]);
     $st = $db->prepare('SELECT ROUND(AVG(hvezdy), 1) p, COUNT(*) n FROM hodnoceni WHERE salon = ?');

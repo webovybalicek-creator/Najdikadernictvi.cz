@@ -8,6 +8,8 @@ import overeneRaw from '../data/overene.json';
 import majiteleRaw from '../data/majitele.json';
 import googleRaw from '../data/google-hodnoceni.json';
 import fotkyRaw from '../data/fotky.json';
+import hodnoceniRaw from '../data/hodnoceni.json';
+import doplnenoRaw from '../data/doplneno.json';
 import { KRAJE, type Kraj } from './kraje';
 import { parseTyden, type Tyden } from './oteviraci-doba';
 import { slugify } from './slug';
@@ -55,6 +57,24 @@ export interface Provozovna {
   fotkyRedakce?: boolean;
   /** Hodnocení na Googlu od majitele (zobrazuje se odděleně od našich hodnocení) */
   google?: GoogleHodnoceni;
+  /** Hodnocení návštěvníků našeho webu (synchronizované při buildu) */
+  hodnoceni?: Hodnoceni;
+}
+
+export interface Recenze {
+  /** hvězdy 1–5 */
+  h: number;
+  /** schválený text */
+  t: string;
+  /** jméno nebo přezdívka */
+  j: string | null;
+  /** datum YYYY-MM-DD */
+  d: string;
+}
+export interface Hodnoceni {
+  prumer: number;
+  pocet: number;
+  recenze: Recenze[];
 }
 
 export interface GoogleHodnoceni {
@@ -242,6 +262,13 @@ function sestav(): Provozovna[] {
       used.add(`${p.mestoSlug}/${p.slug}`);
     }
   }
+  // Údaje doplněné redakcí z veřejných profilů: jen chybějící pole (majitel a ruční opravy níže mají přednost)
+  const dopl = (doplnenoRaw as { salony: Record<string, Partial<Pick<Provozovna, 'telefon' | 'web' | 'facebook' | 'oteviraciDoba'>>> }).salony;
+  for (const p of vse) {
+    const d = dopl[p.id];
+    if (!d) continue;
+    for (const k of ['telefon', 'web', 'facebook', 'oteviraciDoba'] as const) if (d[k] && !p[k]) p[k] = d[k];
+  }
   // Údaje ověřené majitelem (po přidělení slugu, aby se URL neměnila)
   // Nejdřív údaje, které majitel upravil sám (/sprava/), pak ruční opravy redakce (mají přednost)
   for (const zdroj of [majiteleRaw.salony, overeneRaw.salony] as Record<string, Overeni>[]) {
@@ -262,6 +289,12 @@ function sestav(): Provozovna[] {
       if (z && z.h >= 1 && z.h <= 5 && z.n > 0) p.google = z;
     }
   }
+  // Hodnocení návštěvníků (souhrn hvězdiček + schválené texty) z workflow Synchronizace profilů
+  const hod = hodnoceniRaw as unknown as { souhrn: Record<string, [number, number]>; recenze: Record<string, Recenze[]> };
+  for (const p of vse) {
+    const s = hod.souhrn[p.id];
+    if (s && s[1] > 0) p.hodnoceni = { prumer: s[0], pocet: s[1], recenze: hod.recenze[p.id] ?? [] };
+  }
   // Salony vyřazené na žádost (id nebo URL)
   const blok = new Set<string>(vyrazene.polozky);
   return blok.size ? vse.filter((p) => !blok.has(p.id) && !blok.has(`/${p.mestoSlug}/${p.slug}/`)) : vse;
@@ -273,7 +306,7 @@ export const IMPORT_META = meta as { zdroj: string; importovano: string; pocet: 
 /** Detail salonu jde do vyhledávačů, jen když nabízí víc než název a adresu (ty má každá mapa):
  *  otevírací dobu, kontakt nebo údaje od majitele. Ostatní detaily zůstávají dostupné, ale noindex a bez reklam. */
 export const maObsah = (p: Provozovna) =>
-  !!(p.overeno || p.oteviraciDoba || p.telefon || p.web || p.facebook || p.instagram || p.popis || p.cenik?.length || p.fotky?.length);
+  !!(p.overeno || p.oteviraciDoba || p.telefon || p.web || p.facebook || p.instagram || p.popis || p.cenik?.length || p.fotky?.length || p.hodnoceni?.recenze.length);
 export const indexovatDetail = (p: Provozovna) => !p.test && maObsah(p);
 /** Stránka obce / čtvrti jde do vyhledávačů, jen když má aspoň 3 salony s obsahem (otevírací doba, kontakt…).
  *  Obec s jedním salonem nic nepřidá oproti jeho detailu a výpis samotných adres z rejstříku je málo hodnotný. */
@@ -374,6 +407,7 @@ export function uplnost(p: Provozovna): number {
     (p.email ? 1 : 0) +
     (p.zamereni.length ? 1 : 0) +
     (p.fotky?.length ? 2 : 0) +
+    (p.hodnoceni?.recenze.length ? 2 : 0) +
     (p.overeno ? 2 : 0)
   );
 }

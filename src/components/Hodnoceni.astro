@@ -7,6 +7,10 @@ interface Props {
   p: Provozovna;
 }
 const { p } = Astro.props;
+// Hodnocení známé při buildu se vykreslí rovnou do HTML (vidí ho vyhledávače); skript ho pak obnoví z API.
+const h = p.hodnoceni;
+const cislo = (n: number) => String(n).replace('.', ',');
+const datum = (d: string) => new Date(d).toLocaleDateString('cs-CZ', { timeZone: 'Europe/Prague' });
 ---
 
 <section
@@ -17,13 +21,33 @@ const { p } = Astro.props;
   data-nazev={p.nazev}
   data-typ={p.typ === 'barber' ? 'BarberShop' : 'HairSalon'}
   data-abs={new URL(url(p), SITE.url).href}
+  data-ld={h ? '1' : undefined}
 >
   <div class="hod__hlava">
     <h2>Hodnocení</h2>
-    <p class="hod__souhrn" data-souhrn>Zatím bez hodnocení. Buďte první.</p>
+    {
+      h ? (
+        <p class="hod__souhrn" data-souhrn>
+          <span class="hv" aria-label={`${cislo(h.prumer)} z 5`} style={`--p:${(h.prumer / 5) * 100}%`} />{' '}
+          <strong>{cislo(h.prumer)}</strong> z 5 · {h.pocet} hodnocení
+        </p>
+      ) : (
+        <p class="hod__souhrn" data-souhrn>Zatím bez hodnocení. Buďte první.</p>
+      )
+    }
   </div>
 
-  <ul class="hod__recenze" data-recenze></ul>
+  <ul class="hod__recenze" data-recenze>
+    {
+      h?.recenze.map((r) => (
+        <li>
+          <span class="hv" aria-label={`${r.h} z 5`} style={`--p:${(r.h / 5) * 100}%`} />
+          <p>{r.t}</p>
+          <span class="muted">{r.j || 'Anonym'} · {datum(r.d)}</span>
+        </li>
+      ))
+    }
+  </ul>
 
   <form class="hod__form" data-hod-form novalidate>
     <fieldset class="hvezdy">
@@ -124,7 +148,7 @@ const { p } = Astro.props;
           )
           .join('');
         // Strukturovaná data pro vyhledávače (souhrnné hodnocení)
-        if (!document.getElementById('ld-hodnoceni')) {
+        if (!sek.dataset.ld && !document.getElementById('ld-hodnoceni')) {
           const ld = document.createElement('script');
           ld.type = 'application/ld+json';
           ld.id = 'ld-hodnoceni';

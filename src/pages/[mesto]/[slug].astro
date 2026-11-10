@@ -88,6 +88,19 @@ const jsonLd = {
   openingHoursSpecification: t ? schemaSpec(t) : undefined,
   description: p.popis,
   image: p.fotky?.map((f) => new URL(f, SITE.url).href),
+  // Hodnocení návštěvníků našeho webu (nezávislý katalog, ne vlastní hodnocení salonu)
+  aggregateRating: p.hodnoceni
+    ? { '@type': 'AggregateRating', ratingValue: p.hodnoceni.prumer, ratingCount: p.hodnoceni.pocet, bestRating: 5, worstRating: 1 }
+    : undefined,
+  review: p.hodnoceni?.recenze.length
+    ? p.hodnoceni.recenze.slice(0, 5).map((r) => ({
+        '@type': 'Review',
+        reviewRating: { '@type': 'Rating', ratingValue: r.h, bestRating: 5, worstRating: 1 },
+        author: { '@type': 'Person', name: r.j || 'Anonym' },
+        datePublished: r.d,
+        reviewBody: r.t,
+      }))
+    : undefined,
   hasOfferCatalog: p.cenik?.length
     ? {
         '@type': 'OfferCatalog',
@@ -135,7 +148,7 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
       {p.overeno && <p class="head__over"><Overeno datum={p.overeno} /></p>}
       {t && <p class="head__stav" data-oh={JSON.stringify(t)}><span class="stav"></span></p>}
       <p class="head__adr">{adr || p.mesto}</p>
-      <a class="hod-mini head__hod" href="#hodnoceni" data-hod-id={p.id}><span class="hv" style="--p:0%"></span><span class="hod-mini__nic">Ohodnotit salon</span></a>
+      <a class="hod-mini head__hod" href="#hodnoceni" data-hod-id={p.id}><span class="hv" style="--p:0%"></span><span class="hod-mini__nic">Byli jste tu? Ohodnoťte salon</span></a>
       {p.google && <p class="head__g"><GoogleHodnoceni p={p} /></p>}
       <div class="akce">
         {p.rezervace && <a class="btn" href={p.rezervace} rel="noopener nofollow" target="_blank">Rezervovat online</a>}

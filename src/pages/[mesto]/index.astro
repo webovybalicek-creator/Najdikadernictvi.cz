@@ -5,6 +5,7 @@ import ProvozovnaRadek from '../../components/ProvozovnaRadek.astro';
 import MapaSalonu from '../../components/MapaSalonu.astro';
 import Faq from '../../components/Faq.astro';
 import OdberNovinek from '../../components/OdberNovinek.astro';
+import Karta from '../../components/Karta.astro';
 import { metaMesta } from '../../lib/meta';
 import { getCollection } from 'astro:content';
 import { statistiky, textMesta, faqMesta, faqJsonLd, itemListJsonLd, zameryMesta, zamerUrl } from '../../lib/seo-mesto';
@@ -66,6 +67,11 @@ const zamery = zameryMesta(m);
 const castiMesta = ctvrti(m);
 /** Kolik salonů ukázat hned, zbytek po kliknutí (celý seznam je v HTML kvůli vyhledávačům) */
 const ZOBRAZIT = 60;
+// Salony, kam se dá „podívat dovnitř“: s fotkami, nejdřív s víc hodnoceními a fotkami (skutečná data, žádné pořadí „nejlepších“)
+const sFotkami = vse
+  .filter((p) => p.fotky?.length)
+  .sort((a, b) => (b.hodnoceni?.pocet ?? 0) - (a.hodnoceni?.pocet ?? 0) || b.fotky!.length - a.fotky!.length || a.nazev.localeCompare(b.nazev, 'cs'))
+  .slice(0, 8);
 const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length > 1 ? [faqJsonLd(faq)] : [])];
 ---
 
@@ -81,6 +87,17 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
     <div class="uvod">
       <p class="lead">{uvod[0]}</p>
     </div>
+    {
+      sFotkami.length >= 2 && (
+        <section class="dovnitr" aria-labelledby="dovnitr-h">
+          <h2 id="dovnitr-h">Podívejte se dovnitř</h2>
+          <p class="muted">Salony v obci {m.nazev}, u kterých máme fotky interiéru{sFotkami.some((p) => p.hodnoceni) ? ' a hodnocení návštěvníků' : ''}.</p>
+          <ul class="dovnitr__pas">
+            {sFotkami.map((p) => <Karta p={p} stav />)}
+          </ul>
+        </section>
+      )
+    }
     {
       zamery.length > 0 && (
         <nav class="zamery" aria-label="Upřesnit výběr">
@@ -317,6 +334,30 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
 </script>
 
 <style>
+  .dovnitr {
+    margin: 1.5rem 0 2rem;
+  }
+  .dovnitr h2 {
+    margin: 0 0 0.25rem;
+  }
+  .dovnitr .muted {
+    margin: 0 0 1rem;
+    font-size: 0.875rem;
+  }
+  .dovnitr__pas {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+  @media (max-width: 960px) {
+    .dovnitr__pas {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem 0.75rem;
+    }
+  }
   .uvod p {
     margin-bottom: 0.6rem;
   }
