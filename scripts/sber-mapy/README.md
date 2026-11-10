@@ -50,13 +50,13 @@ Pravidla (AdSense, soukromí):
 - [x] Jablonec nad Nisou, Třebíč, Cheb, Chomutov (10. 11. 2026)
 - [ ] Most (jen 2 salony s údaji; hledat „kadeřnictví Most Litvínov“ nebo přiblížit mapu)
 - [ ] Havířov
-- [ ] Česká Lípa
-- [ ] Kroměříž
+- [x] Česká Lípa (10. 11. 2026)
+- [x] Kroměříž (10. 11. 2026)
 - [ ] Šumperk
 - [ ] Děčín
 - [ ] Chrudim
 - [ ] Trutnov
-- [ ] Písek
+- [x] Písek (10. 11. 2026)
 - [ ] Sokolov
 - [ ] Strakonice
 - [ ] Karviná
@@ -69,7 +69,7 @@ Pravidla (AdSense, soukromí):
 - [ ] Klatovy
 - [ ] Poděbrady
 - [ ] Valašské Meziříčí
-- [ ] Žatec
+- [x] Žatec (10. 11. 2026)
 - [ ] Uherský Brod
 - [ ] Mělník
 - [ ] Vyškov
@@ -80,9 +80,9 @@ Pravidla (AdSense, soukromí):
 - [ ] Žďár nad Sázavou
 - [ ] Louny
 - [ ] Náchod
-- [ ] Rokycany
-- [ ] Sušice
-- [ ] Hlinsko
+- [x] Rokycany (10. 11. 2026)
+- [x] Sušice (10. 11. 2026)
+- [ ] Hlinsko (10. 11. 2026 doplněny jen 2 salony, na indexaci chybí třetí; hledat „holičství Hlinsko“)
 - [ ] Bílina
 
 ## Barbershopy ve velkých městech (hledat „barbershop <Obec>“)
