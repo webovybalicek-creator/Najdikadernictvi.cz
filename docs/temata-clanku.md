@@ -5,7 +5,6 @@ Nová témata přidávej na konec zásobníku. Kategorie: Pro pány | Pro ženy 
 
 ## Zásobník
 <!-- Pořadí 10. 11. 2026: nahoře témata rubrik Pro ženy a Péče o vlasy (mají jen 2 články, pás „Podle témat“ na úvodu se v nich nemá čím střídat), řazená podle odhadu hledanosti. -->
-- Mikádo (bob) 2026: druhy a komu sluší | Pro ženy
 - Vypadávání vlasů na podzim: co je normální a kdy k lékaři | Péče o vlasy
 - Ofina: druhy a jak ji upravovat | Pro ženy
 - Lupy: příčiny a jak se jich zbavit | Péče o vlasy
@@ -64,3 +63,4 @@ Nová témata přidávej na konec zásobníku. Kategorie: Pro pány | Pro ženy 
 - Kadeřnictví v Hradci Králové a Pardubicích o víkendu → kadernictvi-hradec-kralove-pardubice-vikend.md (2026-11-05)
 - Kadeřnictví v Plzni otevřená v sobotu → kadernictvi-plzen-sobota.md (2026-11-06)
 - Barbershopy v Praze otevřené v neděli → barbershopy-praha-nedele.md (2026-11-09)
+- Mikádo (bob) 2026: druhy a komu sluší → mikado-bob-druhy.md (2026-11-11)
