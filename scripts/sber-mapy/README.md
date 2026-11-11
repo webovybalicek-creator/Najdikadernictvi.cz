@@ -49,12 +49,12 @@ Pravidla (AdSense, soukromí):
 - [x] Prostějov, Jihlava, Frýdek-Místek, Příbram (10. 11. 2026)
 - [x] Jablonec nad Nisou, Třebíč, Cheb, Chomutov (10. 11. 2026)
 - [ ] Most (jen 2 salony s údaji; hledat „kadeřnictví Most Litvínov“ nebo přiblížit mapu)
-- [ ] Havířov
+- [x] Havířov (11. 11. 2026)
 - [x] Česká Lípa (10. 11. 2026)
 - [x] Kroměříž (10. 11. 2026)
-- [ ] Šumperk
-- [ ] Děčín
-- [ ] Chrudim
+- [x] Šumperk (11. 11. 2026)
+- [x] Děčín (11. 11. 2026)
+- [x] Chrudim (11. 11. 2026)
 - [ ] Trutnov
 - [x] Písek (10. 11. 2026)
 - [ ] Sokolov
