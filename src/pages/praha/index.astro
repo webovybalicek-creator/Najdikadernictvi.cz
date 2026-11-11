@@ -4,6 +4,8 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import Hledani from '../../components/Hledani.astro';
 import Karta from '../../components/Karta.astro';
 import ProvozovnaRadek from '../../components/ProvozovnaRadek.astro';
+import Hlavicka from '../../components/Hlavicka.astro';
+import { nahled } from '../../lib/nahled';
 import { mestaVKraji, mestoUrl, pocetVKraji, pocetText, vyber, PROVOZOVNY } from '../../lib/data';
 
 const obvody = mestaVKraji('praha')
@@ -14,19 +16,23 @@ const vPraze = PROVOZOVNY.filter((p) => p.kraj === 'praha');
 const doporucene = vyber(vPraze, 8);
 const barberu = vPraze.filter((p) => p.typ === 'barber').length;
 const pocet = pocetVKraji('praha');
+const foto = nahled('praha');
 ---
 
 <Base
   title={`Kadeřnictví Praha: ${pocetText(pocet, 'salon', 'salony', 'salonů')} podle obvodů`}
   description={`Kadeřnictví a barbershopy v Praze: ${pocetText(pocet, 'salon', 'salony', 'salonů')} rozdělených podle obvodů Praha 1 až Praha 10. Adresy, telefony, otevírací doba a mapa.`}
+  nahled={foto}
 >
   <div class="wrap section">
     <Breadcrumb items={[{ nazev: 'Praha' }]} />
-    <h1>Kadeřnictví Praha</h1>
-    <p class="lead">
-      {pocetText(pocet, 'salon', 'salony', 'salonů')} v celé Praze{barberu > 0 && <>, z toho {pocetText(barberu, 'barbershop', 'barbershopy', 'barbershopů')}</>}.
-      Vyberte obvod nebo hledejte podle názvu.
-    </p>
+    <Hlavicka foto={foto}>
+      <h1>Kadeřnictví Praha</h1>
+      <p class="lead">
+        {pocetText(pocet, 'salon', 'salony', 'salonů')} v celé Praze{barberu > 0 && <>, z toho {pocetText(barberu, 'barbershop', 'barbershopy', 'barbershopů')}</>}.
+        Vyberte obvod nebo hledejte podle názvu.
+      </p>
+    </Hlavicka>
     <Hledani />
 
     {

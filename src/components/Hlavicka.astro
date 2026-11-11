@@ -1,0 +1,58 @@
+---
+import { Picture } from 'astro:assets';
+import type { Nahled } from '../lib/nahled';
+
+/** Hlavička výpisu: nadpis a úvod (slot) vedle náhledové fotky. Fotku Google použije jako náhled ve výsledcích. */
+interface Props {
+  foto: Nahled;
+}
+const { foto } = Astro.props;
+---
+
+<div class="hlava">
+  <div class="hlava__text"><slot /></div>
+  <figure class="hlava__foto">
+    <Picture
+      src={foto.src}
+      alt={foto.alt}
+      formats={['avif', 'webp']}
+      widths={[480, 800, 1200]}
+      sizes="(max-width: 899px) 100vw, 26rem"
+      loading="eager"
+      fetchpriority="high"
+    />
+  </figure>
+</div>
+
+<style>
+  .hlava {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .hlava__text > :global(:last-child) {
+    margin-bottom: 0;
+  }
+  .hlava__foto {
+    margin: 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--canvas);
+    aspect-ratio: 16 / 7;
+  }
+  .hlava__foto :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  @media (min-width: 900px) {
+    .hlava {
+      grid-template-columns: minmax(0, 1fr) 26rem;
+      gap: clamp(24px, 4vw, 56px);
+      align-items: center;
+    }
+    .hlava__foto {
+      aspect-ratio: 4 / 3;
+    }
+  }
+</style>

@@ -124,6 +124,8 @@ const meta = metaSalonu(p, okoli.length);
 // Srovnání s okolím jen u salonů s obsahem (ostatní jsou noindex, ušetří čas buildu)
 const sr = indexovatDetail(p) ? srovnani(p) : null;
 const svatky = Object.entries((svatkyRaw as { salony: Record<string, { dny: Record<string, string> }> }).salony[p.id]?.dny ?? {}).sort();
+// Náhled ve vyhledávání a při sdílení: hlavní fotka salonu (místo obecného /og.jpg)
+const hlavni = p.fotky?.[0];
 const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
 ---
 
@@ -132,6 +134,7 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
   description={meta.description}
   jsonLd={jsonLd}
   noindex={!indexovatDetail(p)}
+  obrazek={hlavni ? { src: hlavni, alt: `${p.nazev} – ${p.mesto}` } : undefined}
 >
   <div class="wrap section">
     <Breadcrumb items={breadcrumb} />

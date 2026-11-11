@@ -7,6 +7,8 @@ import Faq from '../../components/Faq.astro';
 import OdberNovinek from '../../components/OdberNovinek.astro';
 import Karta from '../../components/Karta.astro';
 import { metaMesta } from '../../lib/meta';
+import { nahled } from '../../lib/nahled';
+import Hlavicka from '../../components/Hlavicka.astro';
 import { getCollection } from 'astro:content';
 import { statistiky, textMesta, faqMesta, faqJsonLd, itemListJsonLd, zameryMesta, zamerUrl } from '../../lib/seo-mesto';
 import { mesta, mestaSloucena, mestoUrl, indexovatMesto, krajUrl, pocetText, tyden, ctvrti, ctvrtUrl, vlastnosti, cenaOd, SLUZBY_NAZEV, type Mesto } from '../../lib/data';
@@ -72,6 +74,7 @@ const sFotkami = vse
   .filter((p) => p.fotky?.length)
   .sort((a, b) => (b.hodnoceni?.pocet ?? 0) - (a.hodnoceni?.pocet ?? 0) || b.fotky!.length - a.fotky!.length || a.nazev.localeCompare(b.nazev, 'cs'))
   .slice(0, 8);
+const foto = nahled(m.slug);
 const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length > 1 ? [faqJsonLd(faq)] : [])];
 ---
 
@@ -80,13 +83,16 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
   description={meta.description}
   noindex={!indexovatMesto(m)}
   jsonLd={jsonLd}
+  nahled={foto}
 >
   <div class="wrap section">
     <Breadcrumb items={breadcrumb} />
-    <h1>Kadeřnictví {m.nazev}</h1>
-    <div class="uvod">
-      <p class="lead">{uvod[0]}</p>
-    </div>
+    <Hlavicka foto={foto}>
+      <h1>Kadeřnictví {m.nazev}</h1>
+      <div class="uvod">
+        <p class="lead">{uvod[0]}</p>
+      </div>
+    </Hlavicka>
     {
       sFotkami.length >= 2 && (
         <section class="dovnitr" aria-labelledby="dovnitr-h">

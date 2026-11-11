@@ -3,6 +3,8 @@ import Base from '../../layouts/Base.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import { KRAJE, type Kraj } from '../../lib/kraje';
 import { metaKraje } from '../../lib/meta';
+import { nahled } from '../../lib/nahled';
+import Hlavicka from '../../components/Hlavicka.astro';
 import { mestaVKraji, mestoUrl, pocetVKraji, pocetText } from '../../lib/data';
 
 export function getStaticPaths() {
@@ -24,14 +26,17 @@ for (const m of seznam) {
   skupiny.get(p)!.push(m);
 }
 const breadcrumb = [{ nazev: k.nazev }];
+const foto = nahled(`kraj/${k.slug}`);
 ---
 
 <Base
   title={metaKraje(k.vNazev, pocet, seznam.length, nejvetsi.map((x) => x.nazev)).title}
   description={metaKraje(k.vNazev, pocet, seznam.length, nejvetsi.map((x) => x.nazev)).description}
+  nahled={foto}
 >
   <div class="wrap section">
     <Breadcrumb items={breadcrumb} />
+    <Hlavicka foto={foto}>
     <h1>Kadeřnictví {k.vNazev}</h1>
     {
       seznam.length > 0 ? (
@@ -49,6 +54,7 @@ const breadcrumb = [{ nazev: k.nazev }];
         <p class="lead">V tomto kraji zatím nemáme žádný salon. Znáte nějaký? <a href="/pridat-provozovnu/">Přidejte ho</a>.</p>
       )
     }
+    </Hlavicka>
 
     <div class="abc">
       {

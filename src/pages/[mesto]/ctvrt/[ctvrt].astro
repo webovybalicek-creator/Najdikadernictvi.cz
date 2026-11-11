@@ -7,6 +7,8 @@ import { vsechnyCtvrti, ctvrti, indexovatMesto, ctvrtUrl, mestoUrl, krajUrl, poc
 import { statistiky, itemListJsonLd } from '../../../lib/seo-mesto';
 import { hhmm } from '../../../lib/oteviraci-doba';
 import { metaMesta } from '../../../lib/meta';
+import { nahled } from '../../../lib/nahled';
+import Hlavicka from '../../../components/Hlavicka.astro';
 
 export function getStaticPaths() {
   return vsechnyCtvrti().map((c) => ({ params: { mesto: c.mesto.slug, ctvrt: c.slug }, props: { c } }));
@@ -20,6 +22,7 @@ const ostatni = ctvrti(m).filter((x) => x.slug !== c.slug);
 const misto = `${m.nazev} – ${c.nazev}`;
 const praha = m.kraj.slug === 'praha';
 const meta = metaMesta(misto, s, st);
+const foto = nahled(`${m.slug}/ctvrt/${c.slug}`);
 
 const vety = [
   `V části ${c.nazev} (${m.nazev}) evidujeme ${pocetText(s.length, 'salon', 'salony', 'salonů')}${st.barberu ? `, z toho ${pocetText(st.barberu, 'barbershop', 'barbershopy', 'barbershopů')}` : ''}.`,
@@ -40,11 +43,14 @@ const breadcrumb = [
   description={meta.description}
   jsonLd={itemListJsonLd(`Kadeřnictví ${misto}`, s)}
   noindex={!indexovatMesto(c)}
+  nahled={foto}
 >
   <div class="wrap section">
     <Breadcrumb items={breadcrumb} />
-    <h1>Kadeřnictví {m.nazev} – {c.nazev}</h1>
-    <div class="uvod">{vety.map((t, i) => <p class:list={[i === 0 && 'lead']}>{t}</p>)}</div>
+    <Hlavicka foto={foto}>
+      <h1>Kadeřnictví {m.nazev} – {c.nazev}</h1>
+      <div class="uvod">{vety.map((t, i) => <p class:list={[i === 0 && 'lead']}>{t}</p>)}</div>
+    </Hlavicka>
 
     <ul class="seznam">
       {s.map((p, i) => <ProvozovnaRadek p={p} nahled={i < 20} />)}

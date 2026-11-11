@@ -7,6 +7,8 @@ import { mestoUrl, krajUrl, pocetText, indexovatDetail, type Mesto, type Provozo
 import { ZAMERY, zamerUrl, zameryMesta, statistiky, itemListJsonLd, MIN_ZAMER, type Zamer } from '../lib/seo-mesto';
 import { hhmm } from '../lib/oteviraci-doba';
 import { metaZameru } from '../lib/meta';
+import { nahled, TEMA_ZAMERU } from '../lib/nahled';
+import Hlavicka from './Hlavicka.astro';
 
 interface Props {
   z: Zamer;
@@ -18,7 +20,8 @@ const nazev = z.nazev(m.nazev);
 const st = statistiky(salony);
 const meta = metaZameru(z.slug, nazev, m.nazev, z.popis, salony, st);
 const ostatni = zameryMesta(m).filter((x) => x.z.slug !== z.slug);
-const den = z.slug === 'otevreno-v-nedeli' ? 6 : z.slug === 'otevreno-v-sobotu' ? 5 : -1;
+const foto = nahled(`${z.slug}/${m.slug}`, TEMA_ZAMERU[z.slug]);
+const den = z.slug ==='otevreno-v-nedeli' ? 6 : z.slug === 'otevreno-v-sobotu' ? 5 : -1;
 
 const vety: string[] = [
   `${m.nazev}: ${pocetText(salony.length, 'salon', 'salony', 'salonů')} z celkem ${m.provozovny.length} v katalogu (${z.popis}).`,
@@ -41,11 +44,14 @@ const breadcrumb = [
   title={meta.title}
   description={meta.description}
   jsonLd={itemListJsonLd(nazev, salony)}
+  nahled={foto}
 >
   <div class="wrap section">
     <Breadcrumb items={breadcrumb} />
-    <h1>{nazev}</h1>
-    <div class="uvod">{vety.map((t, i) => <p class:list={[i === 0 && 'lead']}>{t}</p>)}</div>
+    <Hlavicka foto={foto}>
+      <h1>{nazev}</h1>
+      <div class="uvod">{vety.map((t, i) => <p class:list={[i === 0 && 'lead']}>{t}</p>)}</div>
+    </Hlavicka>
 
     <ul class="seznam">
       {salony.map((p, i) => <ProvozovnaRadek p={p} nahled={i < 30} />)}
