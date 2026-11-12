@@ -10,3 +10,13 @@
 2026-11-10 https://najdikadernictvi.cz/praha-3/barber-street/
 2026-11-10 https://najdikadernictvi.cz/brno/salon-goldenhair/
 2026-11-10 https://najdikadernictvi.cz/hradec-kralove/mario-a-elli/
+2026-11-12 https://najdikadernictvi.cz/havlickuv-brod/
+2026-11-12 https://najdikadernictvi.cz/benesov/
+2026-11-12 https://najdikadernictvi.cz/trebic/ctvrt/nove-dvory/
+2026-11-12 https://najdikadernictvi.cz/praha-1/ctvrt/nove-mesto/
+2026-11-12 https://najdikadernictvi.cz/praha-3/ctvrt/zizkov/
+2026-11-12 https://najdikadernictvi.cz/praha-2/ctvrt/vinohrady/
+2026-11-12 https://najdikadernictvi.cz/praha-5/ctvrt/smichov/
+2026-11-12 https://najdikadernictvi.cz/praha-5/ctvrt/stodulky/
+2026-11-12 https://najdikadernictvi.cz/praha-4/ctvrt/chodov/
+2026-11-12 https://najdikadernictvi.cz/praha-7/ctvrt/holesovice/
