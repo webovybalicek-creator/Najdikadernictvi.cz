@@ -310,6 +310,7 @@ def main():
             'psc': m.get('psc'),
             'mesto': m['obec'],
             'cast': (m.get('obvod') if praha else m.get('castObce') if m.get('castObce') != m['obec'] else None),
+            **({'ctvrt': m.get('castObce')} if praha and m.get('castObce') else {}),
             'kraj': m['kraj'],
             'lat': lat,
             'lon': lon,

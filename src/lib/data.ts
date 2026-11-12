@@ -118,6 +118,8 @@ interface RegistrZaznam {
   psc?: string | null;
   mesto: string;
   cast?: string | null;
+  /** U Prahy: část obce z RÚIAN (Chodov, Háje, Vinohrady…), cast je pražský obvod */
+  ctvrt?: string | null;
   kraj: string;
   lat: number;
   lon: number;
@@ -180,12 +182,14 @@ function sestav(): Provozovna[] {
 
   // Záznamy z rejstříku, které nejsou duplicitou salonu z OSM
   const rzp: Provozovna[] = [];
+  const ctvrtPrahy = new Map<string, string>();
   for (const r of registrRaw as RegistrZaznam[]) {
     const blizko = vOkoliBodu(r.lat, r.lon).filter((o) => metry(o, r) < 60);
     const adr = normAdr(nn(r.ulice), nn(r.cisloDomu));
     if (blizko.some((o) => metry(o, r) < 15 || (o.ulice && normAdr(o.ulice, o.cisloDomu) === adr))) continue;
     const adresaText = [nn(r.ulice) ?? nn(r.cast) ?? r.mesto, nn(r.cisloDomu)].filter(Boolean).join(' ');
     const nazev = nn(r.nazev) ?? `Kadeřnictví ${adresaText}`;
+    if (r.ctvrt) ctvrtPrahy.set(r.id, r.ctvrt);
     rzp.push({
       id: r.id,
       zdroj: 'rzp',
@@ -225,6 +229,9 @@ function sestav(): Provozovna[] {
       p.mesto = obvod;
       if (p.cast === obvod) p.cast = undefined;
     }
+    // Čtvrť (část obce z RÚIAN) pro stránky /praha-N/ctvrt/…; salony z OSM ji dostanou v ctvrti() od nejbližšího souseda
+    const ctvrt = ctvrtPrahy.get(p.id);
+    if (ctvrt) p.cast = ctvrt;
   }
 
   const vse = [...osm, ...rzp];
