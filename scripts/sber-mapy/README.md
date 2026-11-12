@@ -60,14 +60,14 @@ Pravidla (AdSense, soukromí):
 - [ ] Sokolov
 - [ ] Strakonice
 - [ ] Karviná
-- [ ] Hodonín
+- [x] Hodonín (12. 11. 2026)
 - [ ] Jindřichův Hradec
 - [ ] Břeclav
 - [ ] Litoměřice
 - [ ] Beroun
 - [ ] Havlíčkův Brod
 - [ ] Klatovy
-- [ ] Poděbrady
+- [x] Poděbrady (12. 11. 2026)
 - [ ] Valašské Meziříčí
 - [x] Žatec (10. 11. 2026)
 - [ ] Uherský Brod
@@ -84,6 +84,11 @@ Pravidla (AdSense, soukromí):
 - [x] Sušice (10. 11. 2026)
 - [ ] Hlinsko (10. 11. 2026 doplněny jen 2 salony, na indexaci chybí třetí; hledat „holičství Hlinsko“)
 - [ ] Bílina
+- [x] Kralupy nad Vltavou (12. 11. 2026)
+
+## Čtvrti
+- [x] Opava – Město, Praha 4 – Michle, Poděbrady – Poděbrady III, Děčín – Podmokly, Olomouc – Povel (12. 11. 2026)
+- [ ] Olomouc – Nové Sady (12. 11. 2026 Google našel jen 2 salony, Schweitzerova 99 nejednoznačná adresa)
 
 ## Barbershopy ve velkých městech (hledat „barbershop <Obec>“)
 - [ ] Praha
