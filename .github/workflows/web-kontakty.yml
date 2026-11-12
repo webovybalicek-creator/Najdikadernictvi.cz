@@ -1,0 +1,58 @@
+name: Kontakty z webů salonů
+
+# Projde weby salonů, kterým chybí telefon nebo otevírací doba, a doplní je do src/data/doplneno.json
+# (jen když web uvádí adresu salonu). Viz scripts/web-kontakty.ts.
+on:
+  workflow_dispatch:
+    inputs:
+      zkouska:
+        description: 'Jen vypsat nálezy, nic neukládat'
+        type: boolean
+        default: false
+  schedule:
+    - cron: '23 3 * * 0'
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: import
+  cancel-in-progress: false
+
+jobs:
+  kontakty:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Procházení webů
+        run: npx -y tsx scripts/web-kontakty.ts ${{ inputs.zkouska && '--zkouska' || '' }} | tee /tmp/vystup.txt
+      - name: Souhrn
+        if: always()
+        run: |
+          { echo '### Kontakty z webů'; echo '```'; grep -E '^(kandidátů|výsledek|ok )' /tmp/vystup.txt || true; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Commit
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/doplneno.json
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Kontakty z webů salonů"
+            git pull --rebase origin main
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Spuštění deploye
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main
