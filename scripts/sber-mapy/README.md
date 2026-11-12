@@ -65,18 +65,18 @@ Pravidla (AdSense, soukromí):
 - [ ] Břeclav
 - [ ] Litoměřice
 - [ ] Beroun
-- [ ] Havlíčkův Brod
+- [x] Havlíčkův Brod (12. 11. 2026)
 - [ ] Klatovy
 - [x] Poděbrady (12. 11. 2026)
 - [ ] Valašské Meziříčí
 - [x] Žatec (10. 11. 2026)
 - [ ] Uherský Brod
-- [ ] Mělník
+- [x] Mělník (12. 11. 2026)
 - [ ] Vyškov
 - [ ] Mariánské Lázně
 - [ ] Nový Jičín
 - [ ] Vsetín
-- [ ] Benešov
+- [x] Benešov (12. 11. 2026)
 - [ ] Žďár nad Sázavou
 - [ ] Louny
 - [ ] Náchod
@@ -85,8 +85,10 @@ Pravidla (AdSense, soukromí):
 - [ ] Hlinsko (10. 11. 2026 doplněny jen 2 salony, na indexaci chybí třetí; hledat „holičství Hlinsko“)
 - [ ] Bílina
 - [x] Kralupy nad Vltavou (12. 11. 2026)
+- [x] Blansko (12. 11. 2026)
 
 ## Čtvrti
+- [x] Opava – Předměstí, Brno – Bystrc, Třebíč – Nové Dvory, Liberec – Nové Město (12. 11. 2026)
 - [x] Opava – Město, Praha 4 – Michle, Poděbrady – Poděbrady III, Děčín – Podmokly, Olomouc – Povel (12. 11. 2026)
 - [ ] Olomouc – Nové Sady (12. 11. 2026 Google našel jen 2 salony, Schweitzerova 99 nejednoznačná adresa)
 
