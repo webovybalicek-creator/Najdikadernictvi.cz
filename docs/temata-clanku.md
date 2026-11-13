@@ -4,6 +4,9 @@ Automatická úloha bere témata shora. Hotové téma přesune do sekce „Hotov
 Nová témata přidávej na konec zásobníku. Kategorie: Pro pány | Pro ženy | Péče o vlasy | Rady a návody.
 
 ## Zásobník
+- Kadeřnictví v Brně otevřená v sobotu (Data: 29 salonů se sobotní dobou) | Rady a návody
+- Bezbariérová kadeřnictví v Praze (Data: 48 salonů, rozdělit podle obvodů) | Rady a návody
+- Kadeřnictví v Praze brzy ráno (Data, otevreno-rano) | Rady a návody
 <!-- Pořadí 10. 11. 2026: nahoře témata rubrik Pro ženy a Péče o vlasy (mají jen 2 články, pás „Podle témat“ na úvodu se v nich nemá čím střídat), řazená podle odhadu hledanosti. -->
 - Vypadávání vlasů na podzim: co je normální a kdy k lékaři | Péče o vlasy
 - Ofina: druhy a jak ji upravovat | Pro ženy
@@ -64,3 +67,4 @@ Nová témata přidávej na konec zásobníku. Kategorie: Pro pány | Pro ženy 
 - Kadeřnictví v Plzni otevřená v sobotu → kadernictvi-plzen-sobota.md (2026-11-06)
 - Barbershopy v Praze otevřené v neděli → barbershopy-praha-nedele.md (2026-11-09)
 - Mikádo (bob) 2026: druhy a komu sluší → mikado-bob-druhy.md (2026-11-11)
+- Bezbariérová kadeřnictví v Brně (nové datové téma, zásobník žádné neměl) → bezbarierova-kadernictvi-brno.md (2026-11-13)
