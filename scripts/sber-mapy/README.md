@@ -86,11 +86,15 @@ Pravidla (AdSense, soukromí):
 - [ ] Bílina
 - [x] Kralupy nad Vltavou (12. 11. 2026)
 - [x] Blansko (12. 11. 2026)
+- [x] Boskovice, Domažlice, Tachov, Rychnov nad Kněžnou (13. 11. 2026)
 
 ## Čtvrti
 - [x] Opava – Předměstí, Brno – Bystrc, Třebíč – Nové Dvory, Liberec – Nové Město (12. 11. 2026)
 - [x] Opava – Město, Praha 4 – Michle, Poděbrady – Poděbrady III, Děčín – Podmokly, Olomouc – Povel (12. 11. 2026)
 - [ ] Olomouc – Nové Sady (12. 11. 2026 Google našel jen 2 salony, Schweitzerova 99 nejednoznačná adresa)
+
+- [x] Ostrava – Zábřeh, Plzeň – Severní Předměstí, Liberec – Jeřáb (13. 11. 2026)
+- [ ] Frýdek-Místek – Místek (13. 11. 2026 hledání „kadeřnictví Místek Frýdek-Místek“ vrátilo jen salony z Frýdku)
 
 ## Barbershopy ve velkých městech (hledat „barbershop <Obec>“)
 - [ ] Praha
