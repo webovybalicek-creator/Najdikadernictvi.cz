@@ -20,3 +20,13 @@
 2026-11-12 https://najdikadernictvi.cz/praha-5/ctvrt/stodulky/
 2026-11-12 https://najdikadernictvi.cz/praha-4/ctvrt/chodov/
 2026-11-12 https://najdikadernictvi.cz/praha-7/ctvrt/holesovice/
+2026-11-14 https://najdikadernictvi.cz/varnsdorf/
+2026-11-14 https://najdikadernictvi.cz/veseli-nad-moravou/
+2026-11-14 https://najdikadernictvi.cz/kolin/ctvrt/kolin-ii/
+2026-11-14 https://najdikadernictvi.cz/praha-5/ctvrt/zbraslav/
+2026-11-14 https://najdikadernictvi.cz/praha-10/ctvrt/vrsovice/
+2026-11-14 https://najdikadernictvi.cz/praha-2/ctvrt/nove-mesto/
+2026-11-14 https://najdikadernictvi.cz/praha-4/ctvrt/nusle/
+2026-11-14 https://najdikadernictvi.cz/praha-8/ctvrt/karlin/
+2026-11-14 https://najdikadernictvi.cz/praha-10/ctvrt/strasnice/
+2026-11-14 https://najdikadernictvi.cz/praha-3/ctvrt/vinohrady/
