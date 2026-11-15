@@ -88,6 +88,7 @@ Pravidla (AdSense, soukromí):
 - [x] Blansko (12. 11. 2026)
 - [x] Boskovice, Domažlice, Tachov, Rychnov nad Kněžnou (13. 11. 2026)
 - [x] Zábřeh, Varnsdorf, Veselí nad Moravou (14. 11. 2026)
+- [x] Jeseník, Kopřivnice, Dobříš, Žamberk (15. 11. 2026)
 - [ ] Hlučín (14. 11. 2026 doplněn jen 1 salon, další dva na Mapách vedené jako kosmetika)
 
 ## Čtvrti
@@ -99,6 +100,7 @@ Pravidla (AdSense, soukromí):
 - [ ] Frýdek-Místek – Místek (13. 11. 2026 hledání „kadeřnictví Místek Frýdek-Místek“ vrátilo jen salony z Frýdku)
 - [x] Kolín – Kolín I, Kolín – Kolín II, Praha 5 – Zbraslav (14. 11. 2026)
 - [ ] Praha 4 – Kamýk (14. 11. 2026 hledání vrátilo jen 6 výsledků, doplněn 1 salon)
+- [x] Praha 10 – Uhříněves, Praha 9 – Hloubětín, Praha 9 – Letňany (15. 11. 2026)
 
 ## Barbershopy ve velkých městech (hledat „barbershop <Obec>“)
 - [ ] Praha
