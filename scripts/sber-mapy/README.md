@@ -94,6 +94,9 @@ Pravidla (AdSense, soukromí):
 - [ ] Františkovy Lázně (16. 11. 2026 doplněn 1 salon, další dva na Mapách vedené jako kosmetika)
 - [x] Jablunkov, Čelákovice, České Velenice, Jílové u Prahy (16. 11. 2026)
 - [ ] Šlapanice (16. 11. 2026 hledání nespárovalo žádný salon bez údajů)
+- [x] Mukařov, Tanvald (16. 11. 2026)
+- [ ] Rousínov (16. 11. 2026 doplněny 2 salony, na indexaci chybí třetí; Studio Bianco je na Mapách „Prodejna“)
+- [ ] Úvaly (16. 11. 2026 doplněn 1 salon, na indexaci chybí třetí; Studio Dani je na Mapách „Kosmetický salon“)
 
 ## Čtvrti
 - [x] Opava – Předměstí, Brno – Bystrc, Třebíč – Nové Dvory, Liberec – Nové Město (12. 11. 2026)
@@ -110,6 +113,7 @@ Pravidla (AdSense, soukromí):
 - [ ] Havířov – Podlesí (16. 11. 2026 hledání nevrátilo žádný salon z této čtvrti)
 - [x] České Budějovice – České Budějovice 6, Třebíč – Vnitřní Město, Písek – Pražské Předměstí (16. 11. 2026)
 - [ ] Chrudim – Chrudim III (16. 11. 2026 hledání „kadeřnictví Chrudim“ nespárovalo žádný salon z této čtvrti)
+- [x] Praha 10 – Horní Měcholupy, Jičín – Nové Město, Chrudim – Chrudim II, Ústí nad Labem – Severní Terasa (16. 11. 2026)
 
 ## Barbershopy ve velkých městech (hledat „barbershop <Obec>“)
 - [ ] Praha
