@@ -46,6 +46,8 @@ export interface Provozovna {
   /** Datum ověření profilu majitelem (ISO) */
   overeno?: string;
   popis?: string;
+  /** Popis od redakce podle veřejných údajů salonu (web, sociální sítě); zobrazí se jen, když chybí popis od majitele */
+  popisRedakce?: string;
   cenik?: { polozka: string; cena: string }[];
   rezervace?: string;
   /** Testovací záznam (nikdy se neindexuje) */
@@ -281,11 +283,14 @@ function sestav(): Provozovna[] {
     }
   }
   // Údaje doplněné redakcí z veřejných profilů: jen chybějící pole (majitel a ruční opravy níže mají přednost)
-  const dopl = (doplnenoRaw as { salony: Record<string, Partial<Pick<Provozovna, 'telefon' | 'web' | 'facebook' | 'oteviraciDoba'>>> }).salony;
+  const dopl = (doplnenoRaw as { salony: Record<string, Partial<Pick<Provozovna, 'telefon' | 'web' | 'facebook' | 'instagram' | 'rezervace' | 'oteviraciDoba' | 'sluzby'>> & { popis?: string }> }).salony;
   for (const p of vse) {
     const d = dopl[p.id];
     if (!d) continue;
-    for (const k of ['telefon', 'web', 'facebook', 'oteviraciDoba'] as const) if (d[k] && !p[k]) p[k] = d[k];
+    for (const k of ['telefon', 'web', 'facebook', 'instagram', 'rezervace', 'oteviraciDoba'] as const) if (d[k] && !p[k]) p[k] = d[k];
+    if (d.sluzby?.length) p.sluzby = [...new Set([...(p.sluzby ?? []), ...d.sluzby])];
+    // Popis od redakce (z webu salonu) se zobrazuje odděleně od popisu majitele a majitelův ho nahradí
+    if (d.popis) p.popisRedakce = d.popis;
   }
   // Údaje ověřené majitelem (po přidělení slugu, aby se URL neměnila)
   // Nejdřív údaje, které majitel upravil sám (/sprava/), pak ruční opravy redakce (mají přednost)

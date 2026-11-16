@@ -67,7 +67,11 @@ export function metaSalonu(p: Provozovna, vOkoli: number) {
   const nazevLower = p.nazev.toLowerCase();
   const sUlici = ulice && !nazevLower.includes((p.ulice ?? '').toLowerCase()) ? ` (${ulice})` : '';
   const co = [doba && 'otevírací doba', p.telefon && 'telefon', p.cenik?.length && 'ceník'].filter(Boolean) as string[];
-  const title = `${nazev}${sUlici}, ${p.mesto} – ${co.length ? co.slice(0, 2).join(' a ') : 'adresa a mapa'}`;
+  // Typ do titulku, když ho název neobsahuje: lidé hledají „pasr barber“ i „1990 barbershop“, „kadeřnictví diana pardubice“
+  const maTypVNazvu =
+    p.typ === 'barber' ? /barber|holi[čc]/i.test(p.nazev) : /kade[řr]n|sal[oó]n|studio|hair|vlas|beauty|holi[čc]|barber|frizér/i.test(p.nazev);
+  const nazevSTypem = maTypVNazvu ? nazev : `${typ} ${nazev}`;
+  const title = `${nazevSTypem}${sUlici}, ${p.mesto} – ${co.length ? co.slice(0, 2).join(' a ') : 'adresa a mapa'}`;
   const jeTyp = nazevLower.startsWith(typ.toLowerCase()) || nazevLower.includes('barber');
   const description = slozit([
     doba ? `✂ ${jeTyp ? nazev : `${typ} ${nazev}`}, ${p.mesto}: otevřeno ${doba}.` : `✂ ${jeTyp ? nazev : `${typ} ${nazev}`}${ulice ? ` na ${ulice}` : ''}, ${p.mesto}.`,

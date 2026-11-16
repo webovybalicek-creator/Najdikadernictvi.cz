@@ -1,6 +1,6 @@
 ---
 title: 'Jak často chodit ke kadeřníkovi? Podle délky vlasů a typu střihu'
-description: 'Kdy je čas na další návštěvu kadeřnictví: orientační intervaly pro krátké, střední a dlouhé vlasy, barvené vlasy, ofinu i pánské střihy.'
+description: 'Kdy je čas na další návštěvu kadeřnictví: intervaly pro krátké, střední i dlouhé vlasy, barvu, ofinu, pánské střihy, vousy a děti. Plus kolik to stojí za rok.'
 perex: 'Za šest týdnů, nebo za tři měsíce? Interval mezi návštěvami kadeřnictví záleží na délce vlasů, střihu i barvě. Tady jsou orientační doporučení.'
 datum: 2026-10-21
 kategorie: 'Péče o vlasy'
@@ -44,6 +44,37 @@ Více o rozdílech mezi technikami barvení najdete v článku [Melír, balayage
 | Crew cut, klasický střih | 4–6 týdnů |
 | Delší vlasy nahoře (quiff, pompadour) | 4–6 týdnů |
 
+Krátké pánské střihy jsou nejnáročnější na pravidelnost: u fade se přechod od kůže rozmaže už po dvou týdnech. Pokud vám nevadí, že střih chvíli „dorůstá“, stačí chodit jednou za měsíc. Víc o jednotlivých variantách najdete v [přehledu pánských střihů](/blog/panske-strihy-prehled/) a v článku o [fade střihu](/blog/fade-strih/).
+
+## Vousy
+
+**Úprava vousů každé 2 až 4 týdny**, podle délky. Strniště a krátké vousy si většina mužů udržuje doma strojkem, v barbershopu pak stačí jednou za měsíc srovnat linii na tvářích a pod bradou. Delší plnovous potřebuje zastřihnout tvar zhruba jednou za 4 až 6 týdnů, jinak začne být nepravidelný. Barbershopy často nabízí střih i úpravu vousů v jedné návštěvě, což ušetří jednu cestu. Tipy na péči mezi návštěvami jsou v článku [Péče o vousy](/blog/pece-o-vousy/).
+
+## Děti
+
+U malých dětí záleží hlavně na tom, kdy vlasy začnou padat do očí. **Klukům s krátkým střihem stačí kadeřník jednou za 6 až 8 týdnů**, holčičkám s delšími vlasy zastřižení konečků dvakrát až třikrát do roka. U menších dětí se vyplatí kratší a pravidelnější návštěvy: dítě si na salon zvykne a stříhání trvá kratší dobu. Jak zvládnout úplně první střih, popisujeme v článku [První střih dítěte](/blog/prvni-strih-ditete/).
+
+## Kudrnaté a vlnité vlasy
+
+Kudrnaté vlasy obvykle snesou **delší interval, zhruba 10 až 16 týdnů**, protože kudrlina nerovnoměrnou délku schová. Mnoho kudrnatých lidí chodí na střih dvakrát až čtyřikrát do roka. Vyplatí se kadeřník, který stříhá kudrnaté vlasy nasucho nebo s ohledem na tvar kudrliny, protože mokré kudrnaté vlasy jsou mnohem delší než suché.
+
+## Prodloužené vlasy
+
+Prodloužení potřebuje **kontrolu nebo přepojení zhruba po 2 až 3 měsících** podle metody. Přírodní vlasy pod prodloužením rostou dál a spoje se posouvají dolů. Přesný interval vám řekne salon, který prodloužení dělal, protože záleží na použité technice.
+
+## Kolik to stojí za rok
+
+Interval návštěv rozhoduje i o tom, kolik za vlasy ročně utratíte. Pro představu, s orientačními cenami z našeho článku [Kolik stojí kadeřnictví](/blog/ceny-kadernictvi/):
+
+| Kdo a jak často | Návštěv za rok | Při ceně za návštěvu | Ročně |
+| --- | --- | --- | --- |
+| Pán s fade každé 3 týdny | 17 | 350 Kč | asi 6 000 Kč |
+| Pán s klasickým střihem každých 6 týdnů | 9 | 350 Kč | asi 3 100 Kč |
+| Dáma se střední délkou každých 7 týdnů | 7 | 700 Kč | asi 4 900 Kč |
+| Dlouhé vlasy každých 10 týdnů | 5 | 700 Kč | asi 3 500 Kč |
+
+Barvení tyto částky zhruba zdvojnásobí. Kdo chce ušetřit, může prodloužit interval tak, že si zvolí střih, který dorůstá přirozeně (delší vrstvy, melír místo celobarvy, méně výrazný přechod u pánského střihu).
+
 ## Signály, že je čas jít
 
 - vlasy nedrží tvar ani po fénování,
@@ -51,6 +82,21 @@ Více o rozdílech mezi technikami barvení najdete v článku [Melír, balayage
 - ofina padá do očí,
 - odrosty jsou výrazně vidět,
 - účes vám prostě „nesedí“.
+
+## Přehled na jednom místě
+
+| Vlasy | Jak často ke kadeřníkovi |
+| --- | --- |
+| Krátké (pixie, krátký bob) | 3–6 týdnů |
+| Střední délka | 6–8 týdnů |
+| Dlouhé | 8–12 týdnů |
+| Kudrnaté | 10–16 týdnů |
+| Ofina | 2–4 týdny |
+| Pánský fade | 2–3 týdny |
+| Klasický pánský střih | 4–6 týdnů |
+| Vousy | 2–4 týdny |
+| Odrosty po celobarvě | 4–6 týdnů |
+| Melír, balayage | 2–4 měsíce |
 
 ## Tip: objednejte se dopředu
 

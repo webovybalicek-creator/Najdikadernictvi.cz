@@ -195,6 +195,45 @@ export function faqMesta(m: Mesto, s: Statistiky): Faq[] {
       a: `Ve všední dny nejdříve otevírá ${s.nejdrive.p.nazev}, a to v ${hhmm(s.nejdrive.od)}.`,
     });
   }
+  // Večer po práci: aspoň jeden všední den do 19:00 nebo déle
+  const vecer = m.provozovny.filter((p) => tyden(p)?.slice(0, 5).some((d) => d.some(([, b]) => b >= 19 * 60)));
+  if (vecer.length) {
+    f.push({
+      q: `Které kadeřnictví (${m.nazev}) má otevřeno večer?`,
+      a: `Aspoň jeden všední den do 19:00 nebo déle má otevřeno ${pocetText(vecer.length, 'salon', 'salony', 'salonů')}: ${jmena(vecer, 3)}${vecer.length > 3 ? ' a další' : ''}.${s.nejdele ? ` Nejdéle, do ${hhmm(s.nejdele.do)}, má otevřeno ${s.nejdele.p.nazev}.` : ''}`,
+    });
+  }
+  // Orientační cena střihu z ceníků salonů a od návštěvníků (jen když ji známe aspoň u 2 salonů)
+  const median = (x: number[]) => {
+    const a = [...x].sort((p, q) => p - q);
+    return a.length % 2 ? a[(a.length - 1) / 2] : Math.round((a[a.length / 2 - 1] + a[a.length / 2]) / 2);
+  };
+  const pan = m.provozovny.map((p) => p.cena?.pansky).filter((c): c is number => !!c);
+  const dam = m.provozovny.map((p) => p.cena?.damsky).filter((c): c is number => !!c);
+  if (pan.length >= 2 || dam.length >= 2) {
+    const casti = [
+      pan.length >= 2 && `pánský střih kolem ${median(pan).toLocaleString('cs-CZ')} Kč (${pocetText(pan.length, 'salon', 'salony', 'salonů')})`,
+      dam.length >= 2 && `dámský střih kolem ${median(dam).toLocaleString('cs-CZ')} Kč (${pocetText(dam.length, 'salon', 'salony', 'salonů')})`,
+    ].filter(Boolean);
+    f.push({
+      q: `Kolik stojí střih v kadeřnictví (${m.nazev})?`,
+      a: `Podle ceníků salonů a údajů od návštěvníků vychází ${casti.join(' a ')}. Jde o medián, konečná cena záleží na délce vlasů a náročnosti.`,
+    });
+  }
+  const karta = m.provozovny.filter((p) => p.platbaKartou === 'yes');
+  if (karta.length) {
+    f.push({
+      q: `Kde se dá v kadeřnictví (${m.nazev}) platit kartou?`,
+      a: `Platbu kartou uvádí ${jmena(karta, 3)}${karta.length > 3 ? ` a další (celkem ${karta.length})` : ''}. U ostatních salonů údaj nemáme, neznamená to, že kartou platit nejde.`,
+    });
+  }
+  const bezb = m.provozovny.filter((p) => p.bezbarierove === 'yes' || p.bezbarierove === 'limited');
+  if (bezb.length) {
+    f.push({
+      q: `Je kadeřnictví (${m.nazev}) bezbariérové?`,
+      a: `Bezbariérový nebo částečně bezbariérový přístup uvádí ${jmena(bezb, 3)}${bezb.length > 3 ? ` a další (celkem ${bezb.length})` : ''}.`,
+    });
+  }
   if (s.barberu) {
     const b = m.provozovny.filter((p) => p.typ === 'barber');
     f.push({

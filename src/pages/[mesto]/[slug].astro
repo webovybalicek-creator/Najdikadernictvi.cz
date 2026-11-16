@@ -87,7 +87,7 @@ const jsonLd = {
   email: p.email,
   sameAs: [p.web, p.facebook, p.instagram].filter(Boolean),
   openingHoursSpecification: t ? schemaSpec(t) : undefined,
-  description: p.popis,
+  description: p.popis ?? p.popisRedakce,
   image: p.fotky?.map((f) => new URL(f, SITE.url).href),
   // Hodnocení návštěvníků našeho webu (nezávislý katalog, ne vlastní hodnocení salonu)
   aggregateRating: p.hodnoceni
@@ -279,6 +279,12 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
         <section>
           <h2>O salonu</h2>
           {p.popis && <p class="popis-majitel">{p.popis}</p>}
+          {!p.popis && p.popisRedakce && (
+            <>
+              <p class="popis-majitel">{p.popisRedakce}</p>
+              <p class="muted popis-zdroj">Shrnuto redakcí podle webu a profilů salonu. Jste majitel? <a href={`/sprava/?salon=${p.id}&u=${encodeURIComponent(url(p))}`}>Doplňte vlastní popis</a>.</p>
+            </>
+          )}
           {vety.map((v) => <p>{v}</p>)}
         </section>
 
@@ -708,6 +714,10 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
   }
   .popis-majitel {
     font-size: 1.05rem;
+  }
+  .popis-zdroj {
+    font-size: 0.85rem;
+    margin-top: -0.4rem;
   }
   .zdroj {
     margin-top: 2.5rem;
