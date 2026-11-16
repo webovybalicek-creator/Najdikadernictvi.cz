@@ -90,6 +90,8 @@ Pravidla (AdSense, soukromí):
 - [x] Zábřeh, Varnsdorf, Veselí nad Moravou (14. 11. 2026)
 - [x] Jeseník, Kopřivnice, Dobříš, Žamberk (15. 11. 2026)
 - [ ] Hlučín (14. 11. 2026 doplněn jen 1 salon, další dva na Mapách vedené jako kosmetika)
+- [x] Český Brod, Červený Kostelec, Lysá nad Labem, Přelouč (16. 11. 2026)
+- [ ] Františkovy Lázně (16. 11. 2026 doplněn 1 salon, další dva na Mapách vedené jako kosmetika)
 
 ## Čtvrti
 - [x] Opava – Předměstí, Brno – Bystrc, Třebíč – Nové Dvory, Liberec – Nové Město (12. 11. 2026)
@@ -101,6 +103,9 @@ Pravidla (AdSense, soukromí):
 - [x] Kolín – Kolín I, Kolín – Kolín II, Praha 5 – Zbraslav (14. 11. 2026)
 - [ ] Praha 4 – Kamýk (14. 11. 2026 hledání vrátilo jen 6 výsledků, doplněn 1 salon)
 - [x] Praha 10 – Uhříněves, Praha 9 – Hloubětín, Praha 9 – Letňany (15. 11. 2026)
+- [x] Praha 9 – Čakovice, Praha 10 – Vinohrady (16. 11. 2026)
+- [ ] Jičín – Valdické Předměstí (16. 11. 2026 doplněn 1 salon, Google vrací jen salony z centra)
+- [ ] Havířov – Podlesí (16. 11. 2026 hledání nevrátilo žádný salon z této čtvrti)
 
 ## Barbershopy ve velkých městech (hledat „barbershop <Obec>“)
 - [ ] Praha
