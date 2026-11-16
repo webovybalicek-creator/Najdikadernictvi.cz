@@ -30,3 +30,14 @@
 2026-11-14 https://najdikadernictvi.cz/praha-8/ctvrt/karlin/
 2026-11-14 https://najdikadernictvi.cz/praha-10/ctvrt/strasnice/
 2026-11-14 https://najdikadernictvi.cz/praha-3/ctvrt/vinohrady/
+2026-11-16 https://najdikadernictvi.cz/cesky-brod/
+2026-11-16 https://najdikadernictvi.cz/cerveny-kostelec/
+2026-11-16 https://najdikadernictvi.cz/lysa-nad-labem/
+2026-11-16 https://najdikadernictvi.cz/prelouc/
+2026-11-16 https://najdikadernictvi.cz/praha-9/ctvrt/cakovice/
+2026-11-16 https://najdikadernictvi.cz/praha-10/ctvrt/vinohrady/
+2026-11-16 https://najdikadernictvi.cz/praha-4/ctvrt/modrany/
+2026-11-16 https://najdikadernictvi.cz/praha-1/ctvrt/stare-mesto/
+2026-11-16 https://najdikadernictvi.cz/praha-6/ctvrt/brevnov/
+2026-11-16 https://najdikadernictvi.cz/praha-4/ctvrt/krc/
+2026-11-16 https://najdikadernictvi.cz/praha-8/ctvrt/kobylisy/
