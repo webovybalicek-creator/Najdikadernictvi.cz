@@ -41,3 +41,13 @@
 2026-11-16 https://najdikadernictvi.cz/praha-6/ctvrt/brevnov/
 2026-11-16 https://najdikadernictvi.cz/praha-4/ctvrt/krc/
 2026-11-16 https://najdikadernictvi.cz/praha-8/ctvrt/kobylisy/
+2026-11-17 https://najdikadernictvi.cz/most/
+2026-11-17 https://najdikadernictvi.cz/praha-6/ctvrt/ruzyne/
+2026-11-17 https://najdikadernictvi.cz/praha-10/ctvrt/petrovice/
+2026-11-17 https://najdikadernictvi.cz/kutna-hora/ctvrt/hlouska/
+2026-11-17 https://najdikadernictvi.cz/praha-9/ctvrt/prosek/
+2026-11-17 https://najdikadernictvi.cz/praha-8/ctvrt/liben/
+2026-11-17 https://najdikadernictvi.cz/praha-4/ctvrt/michle/
+2026-11-17 https://najdikadernictvi.cz/praha-5/ctvrt/hlubocepy/
+2026-11-17 https://najdikadernictvi.cz/praha-4/ctvrt/haje/
+2026-11-17 https://najdikadernictvi.cz/praha-9/ctvrt/liben/
