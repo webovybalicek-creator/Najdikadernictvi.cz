@@ -82,7 +82,7 @@ Pravidla (AdSense, soukromí):
 - [ ] Náchod
 - [x] Rokycany (10. 11. 2026)
 - [x] Sušice (10. 11. 2026)
-- [ ] Hlinsko (10. 11. 2026 doplněny jen 2 salony, na indexaci chybí třetí; hledat „holičství Hlinsko“)
+- [x] Hlinsko (17. 11. 2026, třetí salon přes „holičství Hlinsko“)
 - [ ] Bílina
 - [x] Kralupy nad Vltavou (12. 11. 2026)
 - [x] Blansko (12. 11. 2026)
@@ -97,6 +97,7 @@ Pravidla (AdSense, soukromí):
 - [x] Mukařov, Tanvald (16. 11. 2026)
 - [ ] Rousínov (16. 11. 2026 doplněny 2 salony, na indexaci chybí třetí; Studio Bianco je na Mapách „Prodejna“)
 - [ ] Úvaly (16. 11. 2026 doplněn 1 salon, na indexaci chybí třetí; Studio Dani je na Mapách „Kosmetický salon“)
+- [ ] Uhlířské Janovice (17. 11. 2026 Google spároval jen 1 salon, bez telefonu i hodin)
 
 ## Čtvrti
 - [x] Opava – Předměstí, Brno – Bystrc, Třebíč – Nové Dvory, Liberec – Nové Město (12. 11. 2026)
@@ -118,6 +119,10 @@ Pravidla (AdSense, soukromí):
 - [ ] Písek – Vnitřní Město (17. 11. 2026 doplněny 2 salony, na indexaci chybí třetí; Studio Tracy je na Mapách „Kosmetický salón“)
 - [ ] Kutná Hora – Šipší (17. 11. 2026 doplněn 1 salon, Google nevrací další salony z této čtvrti)
 - [ ] Poděbrady – Poděbrady II (17. 11. 2026 doplněny 2 salony, na indexaci chybí třetí; SmidHair má na Mapách kategorii „Ústředí společnosti“)
+- [x] Brno – Lesná, Praha 5 – Zličín, Praha 1 – Malá Strana, Praha 10 – Kolovraty, Praha 5 – Radotín, Praha 2 – Nusle (17. 11. 2026)
+- [ ] Hradec Králové – Malšovice (17. 11. 2026 hledání nespárovalo žádný salon z této čtvrti)
+- [ ] Praha 7 – Bubeneč (17. 11. 2026 hledání nespárovalo žádný salon z této čtvrti)
+- [ ] Brno – Dolní Heršpice (17. 11. 2026 nalezen 1 salon, nedoplněn – stránka by měla jen ~500 znaků)
 
 ## Barbershopy ve velkých městech (hledat „barbershop <Obec>“)
 - [ ] Praha
