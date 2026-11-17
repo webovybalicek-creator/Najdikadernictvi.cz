@@ -48,7 +48,7 @@ Pravidla (AdSense, soukromí):
 - [x] Kladno, Karlovy Vary, Opava, Teplice, Mladá Boleslav (10. 11. 2026)
 - [x] Prostějov, Jihlava, Frýdek-Místek, Příbram (10. 11. 2026)
 - [x] Jablonec nad Nisou, Třebíč, Cheb, Chomutov (10. 11. 2026)
-- [ ] Most (jen 2 salony s údaji; hledat „kadeřnictví Most Litvínov“ nebo přiblížit mapu)
+- [x] Most (17. 11. 2026)
 - [x] Havířov (11. 11. 2026)
 - [x] Česká Lípa (10. 11. 2026)
 - [x] Kroměříž (10. 11. 2026)
@@ -114,6 +114,10 @@ Pravidla (AdSense, soukromí):
 - [x] České Budějovice – České Budějovice 6, Třebíč – Vnitřní Město, Písek – Pražské Předměstí (16. 11. 2026)
 - [ ] Chrudim – Chrudim III (16. 11. 2026 hledání „kadeřnictví Chrudim“ nespárovalo žádný salon z této čtvrti)
 - [x] Praha 10 – Horní Měcholupy, Jičín – Nové Město, Chrudim – Chrudim II, Ústí nad Labem – Severní Terasa (16. 11. 2026)
+- [x] Havířov – Šumbark, Praha 6 – Ruzyně, Praha 10 – Petrovice, Kutná Hora – Hlouška (17. 11. 2026)
+- [ ] Písek – Vnitřní Město (17. 11. 2026 doplněn 2 salony, na indexaci chybí třetí; Studio Tracy je na Mapách „Kosmetický salón“)
+- [ ] Kutná Hora – Šipší (17. 11. 2026 doplněn 1 salon, Google nevrací další salony z této čtvrti)
+- [ ] Poděbrady – Poděbrady II (17. 11. 2026 doplněn 2 salony, na indexaci chybí třetí; SmidHair má na Mapách kategorii „Ústředí společnosti“)
 
 ## Barbershopy ve velkých městech (hledat „barbershop <Obec>“)
 - [ ] Praha
