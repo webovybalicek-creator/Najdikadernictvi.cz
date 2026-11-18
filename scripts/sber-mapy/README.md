@@ -123,6 +123,9 @@ Pravidla (AdSense, soukromí):
 - [ ] Hradec Králové – Malšovice (17. 11. 2026 hledání nespárovalo žádný salon z této čtvrti)
 - [ ] Praha 7 – Bubeneč (17. 11. 2026 hledání nespárovalo žádný salon z této čtvrti)
 - [ ] Brno – Dolní Heršpice (17. 11. 2026 nalezen 1 salon, nedoplněn – stránka by měla jen ~500 znaků)
+- [x] Praha 4 – Kunratice, Příbram – Příbram I, Třebíč – Horka-Domky, Jičín – Holínské Předměstí, Brno – Nový Lískovec, Praha 4 – Libuš, Brno – Žebětín (18. 11. 2026)
+- [ ] Uherské Hradiště – Mařatice (18. 11. 2026 hledání nespárovalo žádný salon z této čtvrti)
+- [ ] Praha 9 – Kyje (18. 11. 2026 doplněn 1 salon; Studio Snip je na Mapách „Kosmetický salón“, Tereza Banková bez údajů)
 
 ## Barbershopy ve velkých městech (hledat „barbershop <Obec>“)
 - [ ] Praha
