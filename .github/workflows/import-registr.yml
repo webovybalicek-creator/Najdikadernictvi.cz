@@ -8,8 +8,8 @@ on:
         required: false
         default: '300'
   schedule:
-    # denně ve 2:23 UTC – dokud není cache kompletní, doplňuje; pak jen obnovuje staré záznamy
-    - cron: '23 2 * * *'
+    # každou středu ve 2:23 UTC – doplňuje / obnovuje staré záznamy (týdně kvůli minutám GitHub Actions)
+    - cron: '23 2 * * 3'
 
 permissions:
   contents: write

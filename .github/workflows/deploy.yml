@@ -3,6 +3,8 @@ name: Build a deploy
 on:
   push:
     branches: [main]
+    # dokumentace a nastavení workflow build nepotřebují (šetří minuty GitHub Actions)
+    paths-ignore: ['**.md']
   workflow_dispatch:
 
 concurrency:
@@ -27,6 +29,15 @@ jobs:
           cache: npm
 
       - run: npm ci
+
+      # Zmenšené obrázky (AVIF/WebP) z minulého buildu – bez cache trvá jejich převod ~7 min z celkových ~9.
+      # Musí být až po npm ci (to node_modules smaže). Klíč podle zdrojových obrázků, starší cache se použije jako základ.
+      - uses: actions/cache@v4
+        with:
+          path: node_modules/.astro/assets
+          key: astro-obrazky-${{ hashFiles('src/**/*.jpg', 'src/**/*.jpeg', 'src/**/*.png', 'src/**/*.webp', 'astro.config.mjs') }}
+          restore-keys: astro-obrazky-
+
       - run: npm run build
 
       - name: Kontrola tenkých stránek (jen varování)

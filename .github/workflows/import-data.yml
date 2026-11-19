@@ -8,8 +8,8 @@ on:
         required: false
         default: ''
   schedule:
-    # každé pondělí ve 3:17 UTC
-    - cron: '17 3 * * 1'
+    # 1. den v měsíci ve 3:17 UTC (import trvá ~1–2 h kvůli limitům Overpass API – šetří minuty GitHub Actions)
+    - cron: '17 3 1 * *'
 
 permissions:
   contents: write

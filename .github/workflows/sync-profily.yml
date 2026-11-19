@@ -4,7 +4,7 @@ name: Synchronizace profilů od majitelů
 on:
   workflow_dispatch:
   schedule:
-    - cron: '41 */3 * * *'
+    - cron: '41 3 * * *'   # jednou denně (4:41 v zimě) – šetří minuty GitHub Actions
 
 permissions:
   contents: write
