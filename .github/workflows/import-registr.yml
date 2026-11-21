@@ -6,10 +6,10 @@ on:
       max_minut:
         description: 'Kolik minut nejvýš dotazovat ARES (zbytek pokračuje příště)'
         required: false
-        default: '300'
+        default: '90'
   schedule:
-    # každou středu ve 2:23 UTC – doplňuje / obnovuje staré záznamy (týdně kvůli minutám GitHub Actions)
-    - cron: '23 2 * * 3'
+    # 1. den každého 2. měsíce ve 2:23 UTC – data jsou z většiny hotová, stačí občasná obnova
+    - cron: '23 2 1 */2 *'
 
 permissions:
   contents: write
@@ -22,7 +22,7 @@ concurrency:
 jobs:
   import:
     runs-on: ubuntu-latest
-    timeout-minutes: 345
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
 
@@ -34,7 +34,7 @@ jobs:
 
       - run: python scripts/import-registr.py
         env:
-          MAX_MINUT: ${{ inputs.max_minut || '300' }}
+          MAX_MINUT: ${{ inputs.max_minut || '90' }}
 
       - name: Commit dat
         id: commit
