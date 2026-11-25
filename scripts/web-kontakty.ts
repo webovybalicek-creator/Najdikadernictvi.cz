@@ -10,6 +10,8 @@
  *  - online rezervace: odkaz nebo iframe na rezervační systém (Reservio, MyFox, Fresha, Booksy…) s adresou konkrétního
  *    salonu; převezme se, když web uvádí adresu salonu NEBO ho v katalogu nepoužívá žádný jiný salon (u řetězců by
  *    odkaz mohl vést na jinou pobočku). Víc různých rezervačních odkazů = nic (nejde poznat, který patří salonu).
+ *  - bez objednání: web výslovně píše „bez objednání“ / „walk-in“ / „bez rezervace“ (a nepíše „jen na objednání“);
+ *    jen když web uvádí adresu salonu → služba `bez-objednani`
  * Výsledek se zapíše do src/data/doplneno.json – jen pole, která tam ani v katalogu nejsou.
  *
  * Použití:  npx tsx scripts/web-kontakty.ts [--zkouska] [--id r123,n456] [--max 300]
@@ -173,6 +175,13 @@ function jsonLd(html: string): any[] {
   return out;
 }
 
+// ---------- bez objednání ----------
+export function bezObjednani(t: string): boolean {
+  const n = norm(t);
+  if (/(pouze|jen|vyhradne|vyhradne jen) na objedn|nutne se objednat|bez objednani (nelze|nestrih|neprijim|nebereme)/.test(n)) return false;
+  return /\bbez (predchoziho )?(objednani|objednavky|objednavani|rezervace)\b|\bwalk[- ]?ins?\b/.test(n);
+}
+
 // ---------- online rezervace ----------
 export function rezervace(html: string): string | null {
   const nalezy = new Map<string, string>();
@@ -224,12 +233,13 @@ async function zpracuj(p: any) {
   const ld = jsonLd(html);
   const ldAdresa = ld.map((o) => [o.address?.streetAddress, o.address?.addressLocality].filter(Boolean).join(' ')).join('\n');
   const sedi = adresaSedi(p, t + '\n' + ldAdresa);
-  const e: Record<string, string> = {};
+  const e: Record<string, any> = {};
   if (!p.rezervace && (sedi || SDILENE.get(hostWebu(web)) === 1)) {
     const r = rezervace(html);
     if (r) e.rezervace = r;
   }
   if (!sedi) return { stav: Object.keys(e).length ? 'ok' : 'adresa nesedi', e };
+  if (!p.sluzby?.includes('bez-objednani') && bezObjednani(t)) e.sluzby = ['bez-objednani'] as any;
   if (!p.telefon) {
     const tel = telefony(html, t, ld);
     if (tel.length === 1) e.telefon = formatTel(tel[0]);
@@ -245,7 +255,7 @@ async function main() {
   const data = JSON.parse(fs.readFileSync(SOUBOR, 'utf8'));
   const kandidati = (PROVOZOVNY as any[])
     .filter((p) => (IDS ? IDS.includes(p.id) : true))
-    .filter((p) => p.web && !PRESKOCIT.test(p.web) && !jeRezervace(p.web) && (!p.telefon || !p.oteviraciDoba || !p.rezervace))
+    .filter((p) => p.web && !PRESKOCIT.test(p.web) && !jeRezervace(p.web) && (!p.telefon || !p.oteviraciDoba || !p.rezervace || !p.sluzby?.includes('bez-objednani')))
     .slice(0, MAX);
   console.log(`kandidátů: ${kandidati.length}`);
   const stat: Record<string, number> = {};
@@ -258,7 +268,10 @@ async function main() {
         stat[r.stav] = (stat[r.stav] ?? 0) + 1;
         if (r.stav === 'ok') {
           const cil = (data.salony[p.id] ??= {});
-          for (const [k, v] of Object.entries(r.e!)) if (!cil[k]) cil[k] = v;
+          for (const [k, v] of Object.entries(r.e!)) {
+            if (k === 'sluzby') cil.sluzby = [...new Set([...(cil.sluzby ?? []), ...(v as string[])])];
+            else if (!cil[k]) cil[k] = v;
+          }
           console.log(`ok ${p.id} ${p.web} ${JSON.stringify(r.e)}`);
         }
         if (++i % 50 === 0) console.log(`… ${i}/${kandidati.length}`);

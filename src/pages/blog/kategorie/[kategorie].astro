@@ -11,9 +11,11 @@ export function getStaticPaths() {
 
 const { k } = Astro.props as { k: (typeof KATEGORIE)[number] };
 const vse = (await clanky()).filter((c) => c.data.kategorie === k);
+// Kategorie s pár články je jen rozcestník bez vlastního obsahu: do vyhledávačů až od MIN_KATEGORIE článků
+const MIN_KATEGORIE = 5;
 ---
 
-<Base title={`${k}: rady a tipy`} description={`Články v kategorii ${k}: praktické rady o střizích, barvení a péči o vlasy.`}>
+<Base noindex={vse.length < MIN_KATEGORIE} title={`${k}: rady a tipy`} description={`Články v kategorii ${k}: praktické rady o střizích, barvení a péči o vlasy.`}>
   <div class="wrap section">
     <Breadcrumb items={[{ nazev: 'Rady a tipy', href: '/blog/' }, { nazev: k }]} />
     <span class="eyebrow">Blog</span>

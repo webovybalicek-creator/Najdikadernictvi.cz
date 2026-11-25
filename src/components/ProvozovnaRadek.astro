@@ -9,8 +9,10 @@ interface Props {
   sMestem?: boolean;
   /** Malý náhled „pohled z ulice“ (stojí kredity Mapy.com, jen ve výpisech měst) */
   nahled?: boolean;
+  /** Statický řádek pod adresou (např. otevírací doba k tématu výběru, telefon) */
+  detail?: string;
 }
-const { p, vzdalenost, sMestem = false, nahled = false } = Astro.props;
+const { p, vzdalenost, sMestem = false, nahled = false, detail } = Astro.props;
 const t = tyden(p);
 const cena = cenaOd(p);
 // Profily, které neindexujeme (jen z rejstříku), Google nemusí procházet
@@ -39,6 +41,7 @@ const rel = indexovatDetail(p) ? undefined : 'nofollow';
   <div class="row__main">
     <h3 class="row__name"><a href={url(p)} rel={rel}>{p.nazev}</a>{p.overeno && <Overeno mini />}</h3>
     <p class="row__adr">{adresa(p, sMestem) || p.mesto} <span class="hod-mini" data-hod-id={p.id}><span class="hv" style="--p:0%"></span></span></p>
+    {detail && <p class="row__detail">{detail}</p>}
   </div>
   <div class="row__meta">
     <span class:list={['tag', p.typ === 'barber' && 'tag--barber']}>{TYP_NAZEV[p.typ]}</span>
@@ -50,6 +53,11 @@ const rel = indexovatDetail(p) ? undefined : 'nofollow';
 </li>
 
 <style is:global>
+  .row__detail {
+    margin: 0.15rem 0 0;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
   .row {
     content-visibility: auto;
     contain-intrinsic-size: auto 96px;

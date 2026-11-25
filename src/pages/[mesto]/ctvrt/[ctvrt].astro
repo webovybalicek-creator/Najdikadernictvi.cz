@@ -1,5 +1,6 @@
 ---
 import Base from '../../../layouts/Base.astro';
+import { radekDetail } from '../../../lib/meta';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
 import ProvozovnaRadek from '../../../components/ProvozovnaRadek.astro';
 import MapaSalonu from '../../../components/MapaSalonu.astro';
@@ -53,7 +54,7 @@ const breadcrumb = [
     </Hlavicka>
 
     <ul class="seznam">
-      {s.map((p, i) => <ProvozovnaRadek p={p} nahled={i < 20} />)}
+      {s.map((p, i) => <ProvozovnaRadek p={p} nahled={i < 20} detail={radekDetail(p)} />)}
     </ul>
 
     <section class="blok">

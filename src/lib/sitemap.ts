@@ -18,10 +18,11 @@ export async function polozky(cast: Cast): Promise<Polozka[]> {
     const nejnovejsi = blog.reduce((m, c) => (c.data.datum > m ? c.data.datum : m), new Date(0));
     return [
       { loc: '/', lastmod: dataZmena },
-      ...['/mapa/', '/kadernictvi-v-cislech/', '/kdy-se-ostriham/', '/kadernictvi-o-svatcich/'].map((loc) => ({ loc, lastmod: dataZmena })),
+      ...['/kadernictvi-v-cislech/', '/kdy-se-ostriham/', '/kadernictvi-o-svatcich/'].map((loc) => ({ loc, lastmod: dataZmena })),
       ...KRAJE.map((k) => ({ loc: krajUrl(k.slug), lastmod: dataZmena })),
       { loc: '/blog/', lastmod: den(nejnovejsi) },
-      ...KATEGORIE.map((k) => ({ loc: kategorieUrl(k), lastmod: den(nejnovejsi) })),
+      // kategorie s méně než 5 články mají noindex (blog/kategorie/[kategorie].astro)
+      ...KATEGORIE.filter((k) => blog.filter((c) => c.data.kategorie === k).length >= 5).map((k) => ({ loc: kategorieUrl(k), lastmod: den(nejnovejsi) })),
       ...blog.map((c) => ({ loc: `/blog/${c.id}/`, lastmod: den(c.data.datum) })),
       ...['/o-webu/', '/kontakt/', '/pridat-provozovnu/', '/pro-salony/', '/ochrana-osobnich-udaju/', '/podminky-uziti/'].map((loc) => ({ loc })),
     ];

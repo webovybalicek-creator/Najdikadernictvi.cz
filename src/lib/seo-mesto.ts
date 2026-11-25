@@ -1,5 +1,5 @@
 // Unikátní obsah stránek měst a cílených podstránek generovaný z dat (žádný šablonový text bez čísel)
-import { tyden, url, mestoUrl, pocetText, type Mesto, type Provozovna } from './data';
+import { tyden, url, mestoUrl, pocetText, mesta, indexovatDetail, type Mesto, type Provozovna } from './data';
 import { hhmm } from './oteviraci-doba';
 import { SITE } from './config';
 
@@ -79,6 +79,12 @@ export const ZAMERY: Zamer[] = [
     popis: 'salony, kde se objednáte online bez telefonování',
     filtr: (p) => !!p.rezervace,
   },
+  {
+    slug: 'bez-objednani',
+    nazev: (m) => `Kadeřnictví bez objednání: ${m}`,
+    popis: 'salony, kam můžete přijít bez objednání (podle salonu nebo jeho webu)',
+    filtr: (p) => !!p.sluzby?.includes('bez-objednani'),
+  },
 ];
 
 /** Cílené podstránky vznikají jen tam, kde mají aspoň tolik výsledků */
@@ -101,6 +107,23 @@ export const zameryMesta = (m: Mesto) => {
   }
   return _zamery.get(k)!;
 };
+
+/** Nejsilnější indexované výběry daného typu napříč městy (pro vnitřní odkazy v patičce a na úvodu) */
+const _top = new Map<string, { nazev: string; href: string; pocet: number }[]>();
+export function topZamery(slug: string, n: number) {
+  const k = `${slug}:${n}`;
+  if (!_top.has(k)) {
+    _top.set(
+      k,
+      mesta()
+        .flatMap((m) => zameryMesta(m).filter((x) => x.z.slug === slug && x.salony.filter(indexovatDetail).length >= MIN_ZAMER).map((x) => ({ m, x })))
+        .sort((a, b) => b.x.salony.length - a.x.salony.length)
+        .slice(0, n)
+        .map(({ m, x }) => ({ nazev: m.nazev, href: zamerUrl(x.z, m.slug), pocet: x.salony.length })),
+    );
+  }
+  return _top.get(k)!;
+}
 
 const jmena = (s: Provozovna[], n = 4) => {
   const v = s.slice(0, n).map((p) => p.nazev);

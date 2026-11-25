@@ -1,6 +1,8 @@
 ---
 import { SITE } from '../lib/config';
 import Logo from './Logo.astro';
+import { topZamery } from '../lib/seo-mesto';
+const barbery = topZamery('barbershopy', 6);
 
 const { reklamy = false } = Astro.props as { reklamy?: boolean };
 const rok = new Date().getFullYear();
@@ -29,6 +31,16 @@ const p = SITE.provozovatel;
         <li><a href="/naposledy-prohlizene/">Naposledy prohlížené</a></li>
       </ul>
     </nav>
+    {
+      barbery.length > 0 && (
+        <nav class="ftr__col" aria-label="Barbershopy">
+          <h2 class="ftr__h">Barbershopy</h2>
+          <ul>
+            {barbery.map((b) => <li><a href={b.href}>{b.nazev}</a></li>)}
+          </ul>
+        </nav>
+      )
+    }
     <nav class="ftr__col" aria-label="Obsah">
       <h2 class="ftr__h">Čtení</h2>
       <ul>
@@ -97,7 +109,7 @@ const p = SITE.provozovatel;
   .ftr__grid {
     display: grid;
     gap: 2.5rem 2rem;
-    grid-template-columns: 1.6fr 1fr 1fr 1fr;
+    grid-template-columns: 1.6fr repeat(4, 1fr);
     padding-top: 64px;
     padding-bottom: 40px;
   }

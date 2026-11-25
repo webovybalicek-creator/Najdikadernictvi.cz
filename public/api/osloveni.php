@@ -69,90 +69,54 @@ function odkazSpravy(string $salon, string $url, string $email, callable $podpis
 }
 
 /**
- * E-mail pro salon: [předmět, prostý text, HTML]. Píše se z pohledu majitele: co z toho bude mít.
- * HTML je tabulkové s inline styly (Gmail, Seznam, Outlook), prostý text je záložní část multipart zprávy.
+ * E-mail pro salon: [předmět, prostý text, HTML].
+ * Krátký osobní dopis s jednou prosbou (zkontrolovat otevírací dobu), ne reklamní newsletter:
+ * bez obrázků a ikon, ať nepadá do „Promo akcí“ a působí jako zpráva od člověka.
+ * Od 15. 11. do 6. 1. je důvodem otevírací doba o svátcích (nejsilnější důvod odpovědět).
  */
 function textEmailu(array $s, string $klik, string $odhlasit): array
 {
     $e = fn($t): string => htmlspecialchars((string)$t, ENT_QUOTES, 'UTF-8');
-    $barber = ($s['typ'] ?? '') === 'barber';
     $profil = WEB . $s['url'];
-    $polozky = [
-        ['Otevírací doba', (bool)$s['doba']],
-        ['Fotky salonu', (bool)$s['fotky']],
-        ['Ceník', (bool)$s['cenik']],
-    ];
-    $predmet = $s['nazev'] . ': víc zákazníků z vašeho profilu na Najdi kadeřnictví';
-    $google = !empty($s['index'])
-        ? 'Profil vašeho salonu už lidé najdou v Googlu.'
-        : 'Jakmile profil doplníte, ukážeme ho i ve vyhledávání Googlu.';
-    $vyhody = [
-        ['📸', 'Zákazníci vás uvidí dřív, než přijdou', 'Lidé si salon vybírají podle fotek. Úplné profily s fotkami a ceníkem řadíme ve výpisech výš.'],
-        ['📞', 'Méně telefonátů „Máte otevřeno?“', 'Otevírací doba (i o svátcích) a ceník jsou na očích. Telefon zvoní hlavně kvůli objednání.'],
-        ['✅', 'Údaje máte pod kontrolou', 'Opravíte, co je špatně, a profil dostane odznak „Ověřeno majitelem“. ' . $google],
-        ['🎁', 'Zdarma, bez registrace, 5 minut z mobilu', 'Žádné předplatné ani závazek. Navíc si stáhnete plakát s QR kódem do výlohy.'],
-    ];
+    $md = (int)date('n') * 100 + (int)date('j');
+    $svatky = $md >= 1115 || $md <= 106;
+    $nazev = $s['nazev'];
+
+    if ($svatky) {
+        $predmet = "Otevírací doba o Vánocích – $nazev";
+        $prosba = 'Před Vánoci u nás lidé nejčastěji hledají, kdo má otevřeno 23. a 27.–31. prosince. '
+            . 'Můžete mi prosím potvrdit, jak to budete mít? Stačí kliknout na odkaz níže a vyplnit dny o svátcích, zabere to minutu.';
+    } else {
+        $predmet = "$nazev: sedí otevírací doba?";
+        $prosba = $s['doba']
+            ? 'Můžete se prosím podívat, jestli u vás sedí otevírací doba a kontakt? Lidé se podle nich rozhodují, kam zajít.'
+            : 'U vašeho salonu nám chybí otevírací doba, a lidé se podle ní rozhodují, kam zajít. Můžete ji prosím doplnit?';
+    }
+    $navic = 'Když budete chtít, přidáte i pár fotek nebo ceník a stáhnete si plakát s QR kódem do výlohy. Je to zdarma, bez registrace a bez hesla.';
 
     // ---- prostý text
-    $text = "Váš salon už je na Najdikadernictvi.cz\n" . $s['nazev'] . "\n\n"
-        . "Dobrý den,\n\nprovozujeme najdikadernictvi.cz, katalog kadeřnictví a barbershopů v Česku. Váš salon v něm už má profil:\n$profil\n\n"
-        . "Co vám doplněný profil přinese:\n";
-    foreach ($vyhody as [, $t, $d]) $text .= "- $t. $d\n";
-    $text .= "\nCo v profilu zatím chybí: " . (implode(', ', array_map(fn($p) => mb_strtolower($p[0]), array_filter($polozky, fn($p) => !$p[1]))) ?: 'nic, jen zkontrolujte údaje') . ".\n\n"
-        . "Doplnit profil (osobní odkaz, bez hesla):\n$klik\n\n"
-        . "Když je něco špatně nebo v katalogu být nechcete, stačí odpovědět na tento e-mail.\n\n"
-        . "Vladimír Fischer\nnajdikadernictvi.cz · " . PRIJEMCE . "\n\n--\n"
-        . "Píšeme vám jednou na veřejný e-mail salonu. Nechcete-li ani případné budoucí zprávy: $odhlasit\n";
+    $text = "Dobrý den,\n\n"
+        . "píšu z najdikadernictvi.cz, kde lidé hledají kadeřnictví a barbershopy v okolí. Váš salon $nazev tam má profil:\n$profil\n\n"
+        . "$prosba\n$klik\n\n"
+        . "$navic\n\n"
+        . "Kdyby bylo cokoli špatně nebo v katalogu být nechcete, stačí odpovědět na tento e-mail.\n\n"
+        . "Děkuji a hezký den\nVladimír Fischer\nnajdikadernictvi.cz\n\n--\n"
+        . "Píšu jednou na veřejný e-mail salonu. Další zprávy nechcete: $odhlasit\n";
 
-    // ---- HTML
-    $f = "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
-    $radkyVyhod = '';
-    foreach ($vyhody as [$ikona, $t, $d]) {
-        $radkyVyhod .= '<tr><td width="48" valign="top" style="padding:0 14px 18px 0"><div style="width:44px;height:44px;line-height:44px;text-align:center;border-radius:12px;background:#fff1f3;font-size:21px">' . $ikona . '</div></td>'
-            . '<td valign="top" style="padding:0 0 18px;' . $f . '"><div style="font-size:16px;font-weight:600;color:#222;line-height:1.35">' . $e($t) . '</div>'
-            . '<div style="font-size:14px;color:#5f5f5f;line-height:1.5;margin-top:3px">' . $e($d) . '</div></td></tr>';
-    }
-    $radkyStav = '';
-    foreach ($polozky as [$nazev, $ok]) {
-        $radkyStav .= '<td width="33%" align="center" style="padding:12px 6px;' . $f . '">'
-            . '<div style="font-size:18px;line-height:1;color:' . ($ok ? '#1a7f37' : '#e00b41') . '">' . ($ok ? '✓' : '+') . '</div>'
-            . '<div style="font-size:13px;color:#222;margin-top:6px;font-weight:600">' . $nazev . '</div>'
-            . '<div style="font-size:12px;color:' . ($ok ? '#1a7f37' : '#e00b41') . ';margin-top:2px">' . ($ok ? 'hotovo' : 'chybí') . '</div></td>';
-    }
-    $html = '<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>' . $e($predmet) . '</title></head>'
-        . '<body style="margin:0;padding:0;background:#f4f2ee">'
-        . '<div style="display:none;max-height:0;overflow:hidden;opacity:0">Zdarma a bez registrace doplníte fotky, ceník a otevírací dobu. Zabere to 5 minut z mobilu.</div>'
-        . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f2ee"><tr><td align="center" style="padding:24px 12px">'
-        . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:16px;overflow:hidden">'
-        // logo
-        . '<tr><td style="padding:20px 28px;' . $f . ';font-size:19px;color:#222">najdi<b style="color:#ff385c">kadeřnictví</b></td></tr>'
-        // úzká fotka
-        . '<tr><td><img src="' . WEB . '/email/' . ($barber ? 'barber' : 'kadernictvi') . '.jpg" width="600" height="180" alt="" style="display:block;width:100%;max-width:600px;height:auto;border:0"></td></tr>'
-        // úvod
-        . '<tr><td style="padding:28px 28px 8px;' . $f . '">'
-        . '<h1 style="margin:0 0 14px;font-size:23px;line-height:1.3;color:#222;font-weight:700">Váš salon už je na Najdikadernictvi.cz<br><span style="color:#ff385c">' . $e($s['nazev']) . '</span></h1>'
-        . '<p style="margin:0;font-size:15px;line-height:1.6;color:#444">Dobrý den, provozujeme <a href="' . WEB . '" style="color:#222">najdikadernictvi.cz</a>, katalog kadeřnictví a barbershopů v Česku. '
-        . 'Váš salon v něm už má profil: <a href="' . $e($profil) . '" style="color:#e00b41">zobrazit</a>. '
-        . 'Když ho doplníte, pomůže vám získat nové zákazníky.</p></td></tr>'
-        // stav profilu
-        . '<tr><td style="padding:18px 28px 6px">'
-        . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #ececec;border-radius:12px;background:#fafafa"><tr>' . $radkyStav . '</tr></table></td></tr>'
-        // výhody
-        . '<tr><td style="padding:22px 28px 4px;' . $f . '"><div style="font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#888;margin-bottom:14px">Co z toho budete mít</div>'
-        . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0">' . $radkyVyhod . '</table></td></tr>'
-        // tlačítko
-        . '<tr><td align="center" style="padding:6px 28px 8px">'
-        . '<a href="' . $e($klik) . '" style="display:inline-block;background:#ff385c;color:#ffffff;text-decoration:none;' . $f . ';font-size:16px;font-weight:700;padding:15px 30px;border-radius:12px">Doplnit profil zdarma</a>'
-        . '<div style="' . $f . ';font-size:13px;color:#888;margin-top:10px">Osobní odkaz, bez hesla a registrace. Funguje i v mobilu.</div></td></tr>'
-        // podpis
-        . '<tr><td style="padding:24px 28px 28px;' . $f . ';font-size:15px;line-height:1.6;color:#444">'
-        . 'Kdyby bylo cokoli špatně nebo nechcete být v katalogu, stačí odpovědět na tento e-mail.<br><br>'
-        . 'Přeji hodně spokojených zákazníků<br><b style="color:#222">Vladimír Fischer</b><br><span style="color:#888;font-size:14px">najdikadernictvi.cz · ' . PRIJEMCE . '</span></td></tr>'
-        . '</table>'
-        // patička
-        . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px"><tr><td style="padding:16px 28px;' . $f . ';font-size:12px;line-height:1.5;color:#999;text-align:center">'
-        . 'Píšeme vám jednou na veřejný e-mail salonu. Nechcete-li ani případné budoucí zprávy, <a href="' . $e($odhlasit) . '" style="color:#999">odhlaste se</a>.</td></tr></table>'
-        . '</td></tr></table></body></html>';
+    // ---- HTML: vypadá jako běžný e-mail (bez obrázků, bez tlačítek)
+    $f = "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;color:#222";
+    $html = '<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' . $e($predmet) . '</title></head>'
+        . '<body style="margin:0;padding:16px;background:#ffffff"><div style="max-width:560px;' . $f . '">'
+        . '<p style="margin:0 0 14px">Dobrý den,</p>'
+        . '<p style="margin:0 0 14px">píšu z <a href="' . WEB . '" style="color:#222">najdikadernictvi.cz</a>, kde lidé hledají kadeřnictví a barbershopy v okolí. '
+        . 'Váš salon <a href="' . $e($profil) . '" style="color:#222">' . $e($nazev) . '</a> tam má profil.</p>'
+        . '<p style="margin:0 0 14px">' . $e($prosba) . '</p>'
+        . '<p style="margin:0 0 14px"><a href="' . $e($klik) . '" style="color:#e00b41;font-weight:600">' . ($svatky ? 'Vyplnit otevírací dobu o svátcích' : 'Zkontrolovat profil salonu') . '</a></p>'
+        . '<p style="margin:0 0 14px">' . $e($navic) . '</p>'
+        . '<p style="margin:0 0 14px">Kdyby bylo cokoli špatně nebo v katalogu být nechcete, stačí odpovědět na tento e-mail.</p>'
+        . '<p style="margin:0 0 24px">Děkuji a hezký den<br>Vladimír Fischer<br>najdikadernictvi.cz</p>'
+        . '<p style="margin:0;font-size:12px;color:#999">Píšu jednou na veřejný e-mail salonu. Další zprávy nechcete? <a href="' . $e($odhlasit) . '" style="color:#999">Odhlásit</a>.</p>'
+        . '</div></body></html>';
     return [$predmet, $text, $html];
 }
 
@@ -190,7 +154,9 @@ if (isset($_GET['k'])) {
         stranka('Platnost vypršela', '<h1>Platnost odkazu vypršela</h1><p>Nový přihlašovací odkaz si vyžádáte na stránce svého salonu (tlačítko „Spravovat profil“):</p><p><a href="' . WEB . $h($s['url']) . '">' . $h($s['nazev']) . '</a></p>');
     }
     $db->prepare('UPDATE osloveni SET kliknuto = COALESCE(kliknuto, ?), pocet_kliku = pocet_kliku + 1 WHERE id = ?')->execute([date('c'), $id]);
-    header('Location: ' . odkazSpravy($o['salon'], $s['url'], $o['email'], $podpis, $b64), true, 302);
+    // v sezóně svátků rovnou na pole „Otevírací doba o svátcích“ (o to e-mail prosí)
+    $md = (int)date('n') * 100 + (int)date('j');
+    header('Location: ' . odkazSpravy($o['salon'], $s['url'], $o['email'], $podpis, $b64) . ($md >= 1115 || $md <= 106 ? '#svatky' : ''), true, 302);
     exit;
 }
 

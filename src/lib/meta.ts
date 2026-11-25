@@ -33,6 +33,9 @@ export function dobaKratce(p: Provozovna, max = 3): string {
     .join(', ');
 }
 
+/** Statický řádek u salonu ve výpisu obce / čtvrti: otevírací doba v kostce a telefon */
+export const radekDetail = (p: Provozovna) => [dobaKratce(p, 2), p.telefon && `tel. ${p.telefon}`].filter(Boolean).join(' · ');
+
 /** Salony z živnostenského rejstříku mají jen vygenerovaný název „Kadeřnictví + adresa“ */
 const generovany = (p: Provozovna) => p.zdroj === 'rzp' && !p.overeno;
 const bezTecky = (t: string) => t;
@@ -151,12 +154,17 @@ const HACKY: Record<string, string> = {
   'bezbarierova-kadernictvi': 'Potřebujete bezbariérový vstup?',
   'kadernictvi-platba-kartou': 'Nemáte u sebe hotovost?',
   'online-rezervace': 'Nechcete telefonovat?',
+  'bez-objednani': 'Potřebujete se ostříhat hned?',
 };
 export function metaZameru(slug: string, nazev: string, misto: string, popis: string, salony: Provozovna[], st: Statistiky) {
   const n = salony.length;
   const jmena = vyjmenuj(nejlepsi(salony), 2);
   return {
-    title: `${nazev} – ${pocetText(n, 'salon', 'salony', 'salonů')}`,
+    // „barber praha 1“ hledá víc lidí než „barbershopy praha 1“: obě varianty v titulku
+    title:
+      slug === 'barbershopy'
+        ? `Barber ${misto}: ${pocetText(n, 'barbershop', 'barbershopy', 'barbershopů')} s otevírací dobou`
+        : `${nazev} – ${pocetText(n, 'salon', 'salony', 'salonů')}`,
     description: slozit([
       HACKY[slug],
       `${misto}: ${pocetText(n, 'salon', 'salony', 'salonů')}${popis.startsWith('salony, ') ? popis.slice(6) : popis.startsWith('salony ') ? popis.slice(6) : ` – ${popis}`}.`,

@@ -68,28 +68,47 @@ data a indexace výpisů, ne nové funkce.
   by se tím zhruba zdvojnásobily (1 405 → ~3 000) a vznikly by výběry („otevřeno v sobotu“…) i tam, kde chybí.
 - Měřit: počet `indexovatDetail` po každém běhu (stačí čísla z tabulky výše).
 
-### 2. Oslovení salonů: zjistit, proč 0 % reakcí
+### 2. Oslovení salonů: zjistit, proč 0 % reakcí (25. 11.: nový e-mail ✅)
 - Denní dávky běží (`docs/OSLOVENI-SALONU.md`), ale ověřený ani upravený profil zatím není žádný.
 - Zkontrolovat v administraci: odesláno → otevřeli odkaz → upravili. Když skoro nikdo neotevírá, jde nejspíš o spam:
   ověřit SPF/DKIM (Exon → Email Deliverability) a testovací e-mail na Gmail a Seznam.
 - Když otevírají, ale neupravují, zkrátit e-mail na jednu prosbu: „Zkontrolujte otevírací dobu o Vánocích“
   (sváteční doba je teď ten nejlepší důvod) a nabídnout jen tuhle jednu věc, ne celý profil.
 - Profily od majitelů jsou nejsilnější unikátní obsah. Bez nich zůstane web pro AdSense „katalogem adres“.
+- **Stav podle souhrnů v Gmailu:** poslední dávka 18. 11. – osloveno 61 salonů, odkaz otevřel 1, profil upravil 1,
+  zbývá 74. Salonů s veřejným e-mailem je v katalogu jen ~135, takže e-mailem se nedá oslovit víc než ~1 % katalogu.
+  Od 19. 11. žádný souhrn nepřišel: dávky spouští GitHub Actions, kterým nejspíš došly minuty (obnoví se 1. 12.).
+  Řešení nezávislé na GitHubu: cron v cPanelu na Exonu (Po–Pá 9:20)
+  `curl -s -X POST -A najdikadernictvi-osloveni "https://najdikadernictvi.cz/api/osloveni.php?auto=1"`.
+  Server sám hlídá jednu dávku denně, takže souběh s GitHub Actions nevadí.
+- **25. 11. ověřeno:** SPF obsahuje IP webu (87.236.195.134), DKIM klíč `default._domainkey` je publikovaný,
+  DMARC `p=none`. Technicky je doručení v pořádku, problém byl spíš v obsahu.
+- **25. 11. změněno:** e-mail je krátký osobní dopis bez obrázků a tlačítek (dřív grafický „newsletter“ s výhodami,
+  který končí v Promo akcích). Jedna prosba: do 6. 1. „Otevírací doba o Vánocích“, jinak „sedí otevírací doba?“.
+  Klik vede rovnou na pole se svátky ve správě profilu. Vyhodnotit po 2 týdnech (klikli / upravili v souhrnu dávek).
+  Když ani to nezabere, zkusit předmět s ulicí salonu („Kadeřnictví na Nerudově: otevírací doba o Vánocích“).
 
-### 3. Tenké stránky (106) před další žádostí o AdSense
+### 3. Tenké stránky před další žádostí o AdSense (25. 11.: 106 → 77 ✅ částečně)
 - Výběry v pražských obvodech s pár salony: zvednout `MIN_ZAMER` pro výběry v obvodech (např. na 8), nebo je
   sloučit do výběru celé Prahy s rozpadem podle obvodů. Obojí sníží počet tenkých stránek v indexu.
 - `/blog/kategorie/pece-o-vlasy/` má jen pár článků: přidat úvodní text kategorie, nebo dát `noindex`, dokud
   nebude mít aspoň 5 článků.
 - `/mapa/` a `/kontakt/` jsou tenké „z podstaty“, dát jim `noindex` (do Googlu nepatří, nic tím neztratíme).
 - Kontrola: `node scripts/kontrola-indexace.mjs` po buildu musí ukázat 0.
+- **25. 11. hotovo:** `/mapa/` noindex (a mimo sitemapu), kategorie blogu pod 5 články noindex, rozšířená stránka
+  Kontakt, ve výběrech u každého salonu časy k tématu (So 8:00–12:00, Po–Pá do 20:00…) a telefon, ve výpisech obcí
+  a čtvrtí otevírací doba a telefon. Zbývá 77 stránek s 680–1 200 znaky: výběry a čtvrti s 5–6 salony.
+  Mají reálná data (časy, telefony), proto zatím zůstávají v indexu. Zmizí s doplněním dat (bod 1).
 
-### 4. Dostat do Googlu výběry a obvody
+### 4. Dostat do Googlu výběry a obvody (25. 11.: odkazy a titulky ✅)
 - Výběry (`/barbershopy/praha-1/` atd.) mají pozici 36 a 0 kliknutí, na „barber praha 1“ místo nich Google
   ukazuje detail salonu na 80. místě. V Search Console ověřit (Kontrola URL), jestli jsou výběry vůbec indexované.
 - Když ne, posílit vnitřní odkazy: z detailu salonu odkazovat na výběr hned nahoře (u štítku „Barbershop“
   odkaz „Další barbershopy v Praze 1“), z úvodní stránky přidat odkazy na barbershopy ve velkých městech.
   Do titulku výběru dát i variantu dotazu, kterou lidé píšou: „Barber Praha 1: 15 barbershopů…“.
+- **25. 11. hotovo:** v hlavičce detailu odkaz „Další barbershopy: Praha 7 (10)“ (u kadeřnictví na obec),
+  v patičce sloupec Barbershopy (6 nejsilnějších výběrů), titulek výběru „Barber Praha 1: 15 barbershopů
+  s otevírací dobou“. Za 2–4 týdny ověřit v Search Console pozice výběrů.
 - Totéž pro „Kadeřnictví Praha N“: titulek obvodu je dnes „Kadeřnictví Praha 1: 185 salonů – kdo má otevřeno
   právě teď“, což sedí, jen chybí síla (odkazy, data). Přímo souvisí s bodem 1.
 
@@ -100,12 +119,14 @@ data a indexace výpisů, ne nové funkce.
 
 ## P2: nové funkce podložené daty z Googlu
 
-### 6. „Bez objednání“ (64 dotazů za 28 dní)
+### 6. „Bez objednání“ (64 dotazů za 28 dní) ✅ 25. 11.
 - Doplnit detekci do `scripts/web-kontakty.ts`: text „bez objednání“, „walk-in“, „bez rezervace“ na webu salonu
   → služba `bez-objednani` v `doplneno.json` (do `data.ts` přidat převzetí pole `sluzby` z doplněných údajů).
   Navíc salony, které to mají v názvu (Walk-In Barber Brno, The Original Walk-In Barber Olomouc, Haircut Express…).
 - Pak výběr `/bez-objednani/<město>/` (stejně jako `online-rezervace`), vznikne sám od 3 salonů.
 - Datový článek „Kde se ostříhat bez objednání v Brně / Praze“, až bude dost salonů.
+- **25. 11. hotovo:** podle názvu (4 salony) a z webů salonů v nedělním běhu „Kontakty z webů salonů“
+  (fráze „bez objednání“, „bez rezervace“, „walk-in“; „jen na objednání“ se nebere), výběry `/bez-objednani/<město>/`.
 
 ### 7. Online rezervace (hotovo 25. 11., vyhodnotit)
 - Odkaz se hledá na webech salonů v nedělním běhu „Kontakty z webů salonů“ (Reservio, MyFox, Fresha, Booksy,
@@ -121,10 +142,11 @@ data a indexace výpisů, ne nové funkce.
 - Další krok: výběry „Kadeřnictví u metra Anděl“ pro stanice pražského metra s aspoň 5 salony do 400 m.
   Lidé tak hledají („barber anděl“, „kadeřnictví kubánské náměstí“, „barber budějovická“ jsou v datech).
 
-### 9. Hodnocení a „recenze“ (26 dotazů)
+### 9. Hodnocení a „recenze“ (26 dotazů) (25. 11.: výzva ✅)
 - Hodnocení se už zapéká do HTML i do JSON-LD, jen nikdo nehodnotí (1 salon).
 - Nabízet plakát s QR kódem (`/plakat/`) v oslovovacím e-mailu jako hlavní výhodu pro salon.
-- Na detailu salonu krátká výzva „Byli jste tu?“ až po návratu na stránku (návštěvník, který salon hledal znovu).
+- **25. 11. hotovo:** návštěvník, který se na salon vrátí po víc než 3 hodinách, uvidí v hlavičce výzvu k hodnocení.
+  Plakát s QR kódem je zmíněný v novém oslovovacím e-mailu.
 
 ## P3: obsah
 
@@ -150,6 +172,14 @@ data a indexace výpisů, ne nové funkce.
   až bude česká verze silná.
 - Filtr podle ceny střihu: data o cenách zatím nejsou (0 ceníků, ceny od návštěvníků u 0 salonů).
 - Zrychlit build (dnes ~6,5 min, 17 700 stránek): zatím netřeba.
+
+## Upozornění
+- GitHub Actions: podle připomínky z 21. 11. se minuty obnoví 1. 12. Pokud do té doby nejsou, deploy ani
+  workflow (zastávky, kontakty z webů, oslovení) nepoběží a změny se na web dostanou až po obnovení.
+
+## Hotovo 25. 11. 2026 (2. část)
+- Oslovení: nový krátký e-mail se sváteční otevírací dobou, odkaz rovnou na pole svátků (`osloveni.php`, `sprava.astro`).
+- Tenké stránky, vnitřní odkazy na výběry, titulky barbershopů, bez objednání, výzva k hodnocení (viz body výše).
 
 ## Hotovo 25. 11. 2026
 - Zásobník článků: ples nahoru, vypadávání vlasů bez „na podzim“, zimní péče dřív, 8 duplicit vyřazeno.

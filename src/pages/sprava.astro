@@ -70,7 +70,7 @@ import Breadcrumb from '../components/Breadcrumb.astro';
         <h2>Otevírací doba</h2>
         <table class="doba-ed" data-sp-doba></table>
         <p class="muted mala">Polední pauzu zadáte jako druhý čas (např. 9:00–12:00 a 13:00–18:00).</p>
-        <label class="pole"><span>Otevírací doba o svátcích <em>(Vánoce, Silvestr, Velikonoce…)</em></span><textarea name="svatky" rows="2" maxlength="300" placeholder="23. 12. do 14:00, 24.–26. 12. zavřeno, 31. 12. 8–12"></textarea></label>
+        <label class="pole" id="svatky"><span>Otevírací doba o svátcích <em>(Vánoce, Silvestr, Velikonoce…)</em></span><textarea name="svatky" rows="2" maxlength="300" placeholder="23. 12. do 14:00, 24.–26. 12. zavřeno, 31. 12. 8–12"></textarea></label>
 
         <h2>O salonu</h2>
         <label class="pole"><span>Krátký popis <em>(max. 1000 znaků, bez odkazů)</em></span><textarea name="popis" rows="4" maxlength="1000"></textarea></label>
@@ -278,6 +278,14 @@ import Breadcrumb from '../components/Breadcrumb.astro';
     (form.elements.namedItem('googleH') as HTMLInputElement).value = v.google ? String(v.google.h) : '';
     (form.elements.namedItem('googleN') as HTMLInputElement).value = v.google ? String(v.google.n) : '';
     (form.elements.namedItem('googleUrl') as HTMLInputElement).value = v.google?.url ?? '';
+    // Odkaz z e-mailu „Otevírací doba o Vánocích“ vede rovnou na pole se svátky
+    if (location.hash === '#svatky') {
+      const pole = document.getElementById('svatky');
+      requestAnimationFrame(() => {
+        pole?.scrollIntoView({ block: 'center' });
+        pole?.querySelector('textarea')?.focus({ preventScroll: true });
+      });
+    }
 
     const doba = $<HTMLTableElement>('[data-sp-doba]');
     doba.innerHTML = DNY.map((den, i) => {

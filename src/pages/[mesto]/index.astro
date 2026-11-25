@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { radekDetail } from '../../lib/meta';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import ProvozovnaRadek from '../../components/ProvozovnaRadek.astro';
 import MapaSalonu from '../../components/MapaSalonu.astro';
@@ -184,7 +185,7 @@ const jsonLd = [itemListJsonLd(`Kadeřnictví ${m.nazev}`, vse), ...(faq.length 
     }
 
     <ul class:list={['seznam', vse.length > ZOBRAZIT && 'zkraceny']} data-seznam style={`--zobrazit:${ZOBRAZIT}`}>
-      {vse.map((p, i) => <ProvozovnaRadek p={p} nahled={i < 30} />)}
+      {vse.map((p, i) => <ProvozovnaRadek p={p} nahled={i < 30} detail={radekDetail(p)} />)}
     </ul>
     {
       vse.length > ZOBRAZIT && (

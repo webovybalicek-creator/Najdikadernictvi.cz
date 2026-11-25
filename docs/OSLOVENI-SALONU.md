@@ -10,7 +10,10 @@ Cíl: majitelé doplní fotky, ceník, popis a otevírací dobu. Je to nejsilně
    odesláno → otevřel odkaz → profil upraven, případně odhlášeno.
 3. Filtrem vyberte město nebo jen salony bez otevírací doby, klikněte „Vybrat prvních N“ a „Odeslat vybrané“.
    Denní limit je **20 e-mailů** (ochrana pověsti domény). E-maily odchází z info@najdikadernictvi.cz po 1,5 s.
-4. Salon dostane **jeden** osobní e-mail (prostý text, od Vladimíra) s odkazem, který ho přihlásí rovnou do
+4. Salon dostane **jeden** krátký osobní e-mail od Vladimíra (bez obrázků a tlačítek, ať nepůsobí jako reklama a nepadá
+   do Promo akcí) s jednou prosbou: od 15. 11. do 6. 1. „Otevírací doba o Vánocích“ (odkaz vede rovnou na pole se svátky),
+   jinak „sedí otevírací doba?“. Původní grafický e-mail s výhodami (do 25. 11. 2026) neměl žádnou odezvu.
+   E-mail obsahuje osobní odkaz, který majitele přihlásí rovnou do
    správy profilu, bez registrace a hesla. Odkaz v e-mailu platí 90 dní, po kliknutí platí přihlášení 30 dní.
    E-mail je na veřejné adrese salonu z katalogu, takže kliknutí zároveň ověřuje, že jde o majitele.
 5. Ve správě profilu majitel vidí, z kolika % je profil vyplněný a co chybí. Fotky nahraje víc naráz přímo

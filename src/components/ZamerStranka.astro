@@ -3,9 +3,10 @@ import Base from '../layouts/Base.astro';
 import Breadcrumb from './Breadcrumb.astro';
 import ProvozovnaRadek from './ProvozovnaRadek.astro';
 import MapaSalonu from './MapaSalonu.astro';
-import { mestoUrl, krajUrl, pocetText, indexovatDetail, type Mesto, type Provozovna } from '../lib/data';
+import { mestoUrl, krajUrl, pocetText, indexovatDetail, tyden, rezervacniSystem, type Mesto, type Provozovna } from '../lib/data';
 import { ZAMERY, zamerUrl, zameryMesta, statistiky, itemListJsonLd, MIN_ZAMER, type Zamer } from '../lib/seo-mesto';
-import { hhmm } from '../lib/oteviraci-doba';
+import { hhmm, denText, DNY_KRATCE } from '../lib/oteviraci-doba';
+import { dobaKratce } from '../lib/meta';
 import { metaZameru } from '../lib/meta';
 import { nahled, TEMA_ZAMERU } from '../lib/nahled';
 import Hlavicka from './Hlavicka.astro';
@@ -32,6 +33,34 @@ if (z.slug === 'bezbarierova-kadernictvi') vety.push('Údaje o bezbariérovosti 
 if (st.nejdrive && den < 0 && z.slug !== 'otevreno-vecer') vety.push(`Ve všední dny nejdříve otevírá ${st.nejdrive.p.nazev} (od ${hhmm(st.nejdrive.od)}).`);
 if (den >= 0) vety.push('Otevírací dobu přebíráme z veřejných zdrojů a o svátcích se může lišit. Před návštěvou ji raději ověřte telefonicky.');
 
+// Řádek u salonu: časy, které odpovídají tématu výběru (ať stránka odpoví na dotaz bez proklikávání), + telefon
+const dnyKde = (p: Provozovna, f: (d: [number, number][]) => [number, number] | undefined, popis: (u: [number, number]) => string) => {
+  const t = tyden(p);
+  if (!t) return '';
+  const casti = t.slice(0, 5).map((d, i) => [i, f(d)] as const).filter(([, u]) => u);
+  if (!casti.length) return '';
+  // stejný čas v souvislé řadě dnů sloučit: „Po–Čt do 20:00“
+  const skup: { od: number; do: number; text: string }[] = [];
+  for (const [i, u] of casti) {
+    const text = popis(u!);
+    const last = skup[skup.length - 1];
+    if (last && last.text === text && last.do === i - 1) last.do = i;
+    else skup.push({ od: i, do: i, text });
+  }
+  return skup.map((g) => `${DNY_KRATCE[g.od]}${g.do > g.od ? `–${DNY_KRATCE[g.do]}` : ''} ${g.text}`).join(', ');
+};
+function detail(p: Provozovna): string {
+  const t = tyden(p);
+  let cas = '';
+  if (z.slug === 'otevreno-v-sobotu' && t?.[5]?.length) cas = `So ${denText(t[5])}`;
+  else if (z.slug === 'otevreno-v-nedeli' && t?.[6]?.length) cas = `Ne ${denText(t[6])}`;
+  else if (z.slug === 'otevreno-vecer') cas = dnyKde(p, (d) => d.find(([, b]) => b >= 19 * 60), ([, b]) => `do ${hhmm(b)}`);
+  else if (z.slug === 'otevreno-rano') cas = dnyKde(p, (d) => d.find(([a]) => a <= 7 * 60 + 30), ([a]) => `od ${hhmm(a)}`);
+  else cas = dobaKratce(p, 2);
+  const rez = z.slug === 'online-rezervace' && p.rezervace ? `rezervace: ${rezervacniSystem(p.rezervace) ?? 'online'}` : '';
+  return [cas, rez, p.telefon && `tel. ${p.telefon}`].filter(Boolean).join(' · ');
+}
+
 const breadcrumb = [
   ...(m.kraj.nazev !== m.nazev ? [{ nazev: m.kraj.nazev, href: krajUrl(m.kraj.slug) }] : []),
   { nazev: m.nazev, href: mestoUrl(m.slug) },
@@ -54,7 +83,7 @@ const breadcrumb = [
     </Hlavicka>
 
     <ul class="seznam">
-      {salony.map((p, i) => <ProvozovnaRadek p={p} nahled={i < 30} />)}
+      {salony.map((p, i) => <ProvozovnaRadek p={p} nahled={i < 30} detail={detail(p)} />)}
     </ul>
 
     <section class="blok">

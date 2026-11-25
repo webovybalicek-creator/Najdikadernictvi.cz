@@ -152,7 +152,7 @@ interface RegistrZaznam {
   lon: number;
 }
 
-const REZERVOVANE = new Set(['blog', 'kraj', 'kraje', 'hledat', 'kontakt', 'o-webu', 'pridat-provozovnu', 'ochrana-osobnich-udaju', 'okoli', 'praha-hub', 'barbershopy', 'detska-kadernictvi', 'otevreno-v-sobotu', 'otevreno-v-nedeli', 'pro-salony', 'podminky-uziti', 'oblibene', 'mapa', 'panska-kadernictvi', 'damska-kadernictvi', 'otevreno-vecer', 'otevreno-rano', 'bezbarierova-kadernictvi', 'kadernictvi-platba-kartou', 'porovnat', 'ceny-kadernictvi', 'sprava', 'naposledy-prohlizene', 'nemerit', 'navstenost', 'online-rezervace']);
+const REZERVOVANE = new Set(['blog', 'kraj', 'kraje', 'hledat', 'kontakt', 'o-webu', 'pridat-provozovnu', 'ochrana-osobnich-udaju', 'okoli', 'praha-hub', 'barbershopy', 'detska-kadernictvi', 'otevreno-v-sobotu', 'otevreno-v-nedeli', 'pro-salony', 'podminky-uziti', 'oblibene', 'mapa', 'panska-kadernictvi', 'damska-kadernictvi', 'otevreno-vecer', 'otevreno-rano', 'bezbarierova-kadernictvi', 'kadernictvi-platba-kartou', 'porovnat', 'ceny-kadernictvi', 'sprava', 'naposledy-prohlizene', 'nemerit', 'navstenost', 'online-rezervace', 'bez-objednani']);
 const OBVOD = /^Praha \d+$/;
 const nn = <T,>(v: T | null | undefined) => (v == null || v === '' ? undefined : v);
 
@@ -308,10 +308,12 @@ function sestav(): Provozovna[] {
     }
   }
   // Údaje doplněné redakcí z veřejných profilů: jen chybějící pole (majitel a ruční opravy níže mají přednost)
-  const dopl = (doplnenoRaw as { salony: Record<string, Partial<Pick<Provozovna, 'telefon' | 'web' | 'facebook' | 'oteviraciDoba' | 'rezervace'>>> }).salony;
+  const dopl = (doplnenoRaw as { salony: Record<string, Partial<Pick<Provozovna, 'telefon' | 'web' | 'facebook' | 'oteviraciDoba' | 'rezervace' | 'sluzby'>>> }).salony;
   for (const p of vse) {
     const d = dopl[p.id];
     if (d) for (const k of ['telefon', 'web', 'facebook', 'oteviraciDoba', 'rezervace'] as const) if (d[k] && !p[k]) p[k] = d[k];
+    // služby zjištěné z webu salonu (např. „bez objednání“) se přičítají; majitel je níže může přepsat
+    if (d?.sluzby?.length) p.sluzby = [...new Set([...(p.sluzby ?? []), ...d.sluzby])];
     // Web salonu, který je sám rezervační stránkou (salon.reservio.com…), slouží i jako odkaz na online rezervaci
     if (!p.rezervace && p.web && jeRezervace(p.web)) p.rezervace = p.web;
   }
@@ -373,8 +375,11 @@ const SLUZBA_V_CENIKU: [string, RegExp][] = [
   ['barveni', /barv|melír|balayage|odbarv|přeliv/i],
   ['prodluzovani', /prodlu[zž]/i],
 ];
+/** Název salonu, který sám říká, že se chodí bez objednání („Walk-In Barber“, „Kadeřnictví bez objednání“) */
+export const BEZ_OBJEDNANI_NAZEV = /walk[- ]?in|bez objedn/i;
 function sluzbyZUdaju(p: Provozovna): string[] {
   const out = new Set((p.sluzby ?? []).filter((k) => k in SLUZBY_NAZEV));
+  if (BEZ_OBJEDNANI_NAZEV.test(p.nazev)) out.add('bez-objednani');
   for (const c of p.cenik ?? []) for (const [k, re] of SLUZBA_V_CENIKU) if (re.test(c.polozka)) out.add(k);
   return Object.keys(SLUZBY_NAZEV).filter((k) => out.has(k));
 }
