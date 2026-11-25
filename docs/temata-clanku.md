@@ -4,10 +4,13 @@ Automatická úloha bere témata shora. Hotové téma přesune do sekce „Hotov
 Nová témata přidávej na konec zásobníku. Kategorie: Pro pány | Pro ženy | Péče o vlasy | Rady a návody.
 
 ## Zásobník
+<!-- 25. 11. 2026: plesová sezóna začíná v lednu, článek musí vyjít do poloviny prosince (indexace). Svatební účes je sekce v damske-strihy-a-ucesy.md (články byly v listopadu sloučené), samostatný článek nepsat – sekci před jarem rozšířit. -->
+- Účesy na ples a maturitní ples: inspirace a kdy se objednat (+ salony otevřené v sobotu ráno z katalogu) | Pro ženy
 - Kadeřnictví v Praze brzy ráno (Data, otevreno-rano) | Rady a návody
 <!-- Pořadí 10. 11. 2026: nahoře témata rubrik Pro ženy a Péče o vlasy (mají jen 2 články, pás „Podle témat“ na úvodu se v nich nemá čím střídat), řazená podle odhadu hledanosti. -->
-- Vypadávání vlasů na podzim: co je normální a kdy k lékaři | Péče o vlasy
+- Vypadávání vlasů: co je normální a kdy k lékaři | Péče o vlasy
 - Ofina: druhy a jak ji upravovat | Pro ženy
+- Zimní péče o vlasy pod čepicí | Péče o vlasy
 - Lupy: příčiny a jak se jich zbavit | Péče o vlasy
 - Pixie střih: pro koho je a jak ho udržovat | Pro ženy
 - Mastné vlasy: jak často mýt a co pomáhá | Péče o vlasy
@@ -19,19 +22,14 @@ Nová témata přidávej na konec zásobníku. Kategorie: Pro pány | Pro ženy 
 - Odbarvování vlasů na blond: postup a rizika | Pro ženy
 - Roztřepené konečky: jak jim předejít | Péče o vlasy
 - Účesy pro holčičky do školky a školy | Rady a návody
-- Střihy pro kulatý obličej | Pro ženy
-- Zimní péče o vlasy pod čepicí | Péče o vlasy
 - Dětský střih pro kluky: nejoblíbenější varianty | Rady a návody
-- Účesy na ples a večírek | Pro ženy
 - Vlasy po porodu: co se děje a jak o ně pečovat | Péče o vlasy
-- Jak si vybrat barbershop | Pro pány
 - Vlasy 50+: střihy a péče | Pro ženy
 - Žehlička a kulma: jak nepoškodit vlasy | Péče o vlasy
 - Pánské dlouhé vlasy: jak je nechat dorůst | Pro pány
 - Copánky a pletení: návod na základní copy | Pro ženy
 - Barvení vlasů přírodními barvami (henna) | Péče o vlasy
 - Pánský culík a man bun | Pro pány
-- Drdol a uzly: rychlé účesy | Pro ženy
 - Vlasy a chlor: péče v létě a po bazénu | Péče o vlasy
 - Jak upravit vousy podle tvaru obličeje | Pro pány
 - Střihy pro silné a husté vlasy | Pro ženy
@@ -41,13 +39,8 @@ Nová témata přidávej na konec zásobníku. Kategorie: Pro pány | Pro ženy 
 - Jak správně česat vlasy (kartáče a hřebeny) | Péče o vlasy
 - Kadeřník pro seniory a návštěvy doma | Rady a návody
 - Prodlužování vlasů vs. clip-in vlasy | Pro ženy
-- Kolik vydrží barva na vlasech | Péče o vlasy
-- Kadeřnictví s dětmi: jak zvládnout první návštěvy bez stresu | Rady a návody
 - Jak reklamovat nepovedený střih nebo barvu | Rady a návody
 - Online rezervace v kadeřnictví: jak funguje | Rady a návody
-- Pánské střihy 2026: trendy | Pro pány
-- Undercut: jak ho nosit | Pro pány
-- Buzz cut a crew cut | Pro pány
 - Barvení šedin u mužů | Pro pány
 - Účes na pohovor a do práce | Rady a návody
 
@@ -68,3 +61,11 @@ Nová témata přidávej na konec zásobníku. Kategorie: Pro pány | Pro ženy 
 - Bezbariérová kadeřnictví v Brně (nové datové téma, zásobník žádné neměl) → bezbarierova-kadernictvi-brno.md (2026-11-13)
 - Kadeřnictví v Brně otevřená v sobotu → kadernictvi-brno-sobota.md (2026-11-16)
 - Bezbariérová kadeřnictví v Praze → bezbarierova-kadernictvi-praha.md (2026-11-18)
+- Střihy pro kulatý obličej → přeskočeno (2026-11-25): duplicitní, pokryto v damske-strihy-a-ucesy.md (sekce Kulatý obličej); samostatný článek by soupeřil ve vyhledávání se sloučeným článkem
+- Drdol a uzly: rychlé účesy → přeskočeno (2026-11-25): duplicitní, pokryto v damske-strihy-a-ucesy.md (sekce Rychlé účesy); samostatný článek by soupeřil ve vyhledávání se sloučeným článkem
+- Undercut: jak ho nosit → přeskočeno (2026-11-25): duplicitní, pokryto v panske-strihy-prehled.md (sekce Undercut); samostatný článek by soupeřil ve vyhledávání se sloučeným článkem
+- Buzz cut a crew cut → přeskočeno (2026-11-25): duplicitní, pokryto v panske-strihy-prehled.md (sekce Buzz cut, Crew cut); samostatný článek by soupeřil ve vyhledávání se sloučeným článkem
+- Pánské střihy 2026: trendy → přeskočeno (2026-11-25): duplicitní, pokryto v panske-strihy-prehled.md (stejný záměr hledání); samostatný článek by soupeřil ve vyhledávání se sloučeným článkem
+- Kolik vydrží barva na vlasech → přeskočeno (2026-11-25): duplicitní, pokryto v pece-o-vlasy-doma.md (sekce Jak dlouho barva vydrží); samostatný článek by soupeřil ve vyhledávání se sloučeným článkem
+- Kadeřnictví s dětmi: jak zvládnout první návštěvy bez stresu → přeskočeno (2026-11-25): duplicitní, pokryto v prvni-strih-ditete.md; samostatný článek by soupeřil ve vyhledávání se sloučeným článkem
+- Jak si vybrat barbershop → přeskočeno (2026-11-25): duplicitní, pokryto v barbershop-nebo-kadernictvi.md + jak-vybrat-kadernika.md; samostatný článek by soupeřil ve vyhledávání se sloučeným článkem

@@ -1,5 +1,5 @@
 {
-  "_popis": "Údaje salonů doplněné redakcí z veřejných profilů (Google Mapy, web salonu): telefon, web, facebook, oteviraciDoba (formát OSM). Doplňují jen chybějící pole; údaje od majitele (/sprava/) a ruční opravy (overene.json) mají přednost. Klíč = id salonu. Datum sběru: 2026-11-10.",
+  "_popis": "Údaje salonů doplněné redakcí z veřejných profilů (Google Mapy, web salonu): telefon, web, facebook, oteviraciDoba (formát OSM), rezervace (odkaz na online rezervaci). Doplňují jen chybějící pole; údaje od majitele (/sprava/) a ruční opravy (overene.json) mají přednost. Klíč = id salonu. Datum sběru: 2026-11-10.",
   "salony": {
     "r78664551": {
       "telefon": "+420 602 976 439",

@@ -7,6 +7,9 @@
  *  - telefon: z JSON-LD (schema.org), odkazů tel: nebo textu; jen když web uvádí právě jedno číslo
  *  - otevírací doba: z JSON-LD (openingHours / openingHoursSpecification) nebo z textu za „Otevírací doba“
  *    (např. „Po–Pá 7–18, So 8–12“); když text nejde celý přečíst, nebere se nic
+ *  - online rezervace: odkaz nebo iframe na rezervační systém (Reservio, MyFox, Fresha, Booksy…) s adresou konkrétního
+ *    salonu; převezme se, když web uvádí adresu salonu NEBO ho v katalogu nepoužívá žádný jiný salon (u řetězců by
+ *    odkaz mohl vést na jinou pobočku). Víc různých rezervačních odkazů = nic (nejde poznat, který patří salonu).
  * Výsledek se zapíše do src/data/doplneno.json – jen pole, která tam ani v katalogu nejsou.
  *
  * Použití:  npx tsx scripts/web-kontakty.ts [--zkouska] [--id r123,n456] [--max 300]
@@ -14,7 +17,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { PROVOZOVNY } from '../src/lib/data.ts';
+import { PROVOZOVNY, jeRezervace } from '../src/lib/data.ts';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const SOUBOR = path.join(ROOT, 'src/data/doplneno.json');
@@ -170,17 +173,41 @@ function jsonLd(html: string): any[] {
   return out;
 }
 
+// ---------- online rezervace ----------
+export function rezervace(html: string): string | null {
+  const nalezy = new Map<string, string>();
+  for (const m of html.matchAll(/(?:href|src|data-url|data-href)=["']([^"']+)["']/gi)) {
+    const u = m[1].replace(/&amp;/g, '&').trim();
+    if (!/^https?:/i.test(u) || !jeRezervace(u)) continue;
+    // klíč = salon v rezervačním systému (subdoména nebo první část cesty), ať se různé podstránky téhož salonu nesčítají
+    const x = new URL(u);
+    const klic = x.host.split('.').length > 2 && !/^www\./.test(x.host) ? x.host : `${x.host}/${x.pathname.split('/').filter(Boolean).slice(0, 3).join('/')}`;
+    if (!nalezy.has(klic)) nalezy.set(klic, `${x.origin}${x.pathname}`.replace(/\/(booking|embed|widget)\/?$/i, '/'));
+  }
+  return nalezy.size === 1 ? [...nalezy.values()][0] : null;
+}
+
 function podstranky(html: string, base: string) {
   const host = new URL(base).host;
   const r = new Set<string>();
   for (const m of html.matchAll(/href=["']([^"'#]+)["']/gi)) {
     try {
       const u = new URL(m[1], base);
-      if (u.host === host && /kontakt|contact|oteviraci|otevirac|o-nas|onas|about|cenik|provozovna/i.test(u.pathname)) r.add(u.href);
+      if (u.host === host && /kontakt|contact|oteviraci|otevirac|o-nas|onas|about|cenik|provozovna|rezervac|objedn|booking/i.test(u.pathname)) r.add(u.href);
     } catch {}
   }
   return [...r].slice(0, 3);
 }
+
+const hostWebu = (w: string) => {
+  try {
+    return new URL(/^https?:/.test(w) ? w : 'https://' + w).host.replace(/^www\./, '');
+  } catch {
+    return w;
+  }
+};
+const SDILENE = new Map<string, number>();
+for (const p of PROVOZOVNY as any[]) if (p.web) SDILENE.set(hostWebu(p.web), (SDILENE.get(hostWebu(p.web)) ?? 0) + 1);
 
 async function zpracuj(p: any) {
   let web = String(p.web);
@@ -196,8 +223,13 @@ async function zpracuj(p: any) {
   const t = stranky.map(text).join('\n');
   const ld = jsonLd(html);
   const ldAdresa = ld.map((o) => [o.address?.streetAddress, o.address?.addressLocality].filter(Boolean).join(' ')).join('\n');
-  if (!adresaSedi(p, t + '\n' + ldAdresa)) return { stav: 'adresa nesedi' };
+  const sedi = adresaSedi(p, t + '\n' + ldAdresa);
   const e: Record<string, string> = {};
+  if (!p.rezervace && (sedi || SDILENE.get(hostWebu(web)) === 1)) {
+    const r = rezervace(html);
+    if (r) e.rezervace = r;
+  }
+  if (!sedi) return { stav: Object.keys(e).length ? 'ok' : 'adresa nesedi', e };
   if (!p.telefon) {
     const tel = telefony(html, t, ld);
     if (tel.length === 1) e.telefon = formatTel(tel[0]);
@@ -213,7 +245,7 @@ async function main() {
   const data = JSON.parse(fs.readFileSync(SOUBOR, 'utf8'));
   const kandidati = (PROVOZOVNY as any[])
     .filter((p) => (IDS ? IDS.includes(p.id) : true))
-    .filter((p) => p.web && !PRESKOCIT.test(p.web) && (!p.telefon || !p.oteviraciDoba))
+    .filter((p) => p.web && !PRESKOCIT.test(p.web) && !jeRezervace(p.web) && (!p.telefon || !p.oteviraciDoba || !p.rezervace))
     .slice(0, MAX);
   console.log(`kandidátů: ${kandidati.length}`);
   const stat: Record<string, number> = {};

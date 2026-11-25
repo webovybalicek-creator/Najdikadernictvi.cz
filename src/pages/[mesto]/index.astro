@@ -34,8 +34,8 @@ const barberu = vse.filter((p) => p.typ === 'barber').length;
 const sDobou = vse.filter((p) => tyden(p)).length;
 const casti = [...new Set(vse.map((p) => p.cast).filter(Boolean) as string[])].sort((a, b) => a.localeCompare(b, 'cs'));
 // Filtr se nabídne, až když ho ve městě splní aspoň 2 salony (jinak by jen vyprázdnil výpis)
-const zamereni = ['panske', 'damske', 'detske', 'bezbarierove', 'karta', ...Object.keys(SLUZBY_NAZEV)].filter((z) => vse.filter((p) => vlastnosti(p).includes(z)).length >= 2);
-const ZN: Record<string, string> = { panske: 'Pánské', damske: 'Dámské', detske: 'Dětské', bezbarierove: 'Bezbariérové', karta: 'Platba kartou', ...SLUZBY_NAZEV };
+const zamereni = ['panske', 'damske', 'detske', 'bezbarierove', 'karta', 'rezervace', ...Object.keys(SLUZBY_NAZEV)].filter((z) => vse.filter((p) => vlastnosti(p).includes(z)).length >= 2);
+const ZN: Record<string, string> = { panske: 'Pánské', damske: 'Dámské', detske: 'Dětské', bezbarierove: 'Bezbariérové', karta: 'Platba kartou', rezervace: 'Online rezervace', ...SLUZBY_NAZEV };
 // Ceny střihu: filtr a řazení jen ve městech, kde cenu známe aspoň u 2 salonů
 const ceny = vse.map((p) => cenaOd(p)).filter((c): c is number => c !== undefined);
 const sCenou = ceny.length >= 2;

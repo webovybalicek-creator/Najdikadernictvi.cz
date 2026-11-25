@@ -11,6 +11,7 @@ import fotkyRaw from '../data/fotky.json';
 import hodnoceniRaw from '../data/hodnoceni.json';
 import doplnenoRaw from '../data/doplneno.json';
 import cenyRaw from '../data/ceny.json';
+import zastavkyRaw from '../data/zastavky.json';
 import { KRAJE, type Kraj } from './kraje';
 import { parseTyden, type Tyden } from './oteviraci-doba';
 import { slugify } from './slug';
@@ -47,7 +48,10 @@ export interface Provozovna {
   overeno?: string;
   popis?: string;
   cenik?: { polozka: string; cena: string }[];
+  /** Odkaz na online rezervaci (Reservio, MyFox, Fresha…): od majitele, nebo nalezený na webu salonu */
   rezervace?: string;
+  /** Nejbližší zastávky MHD z OpenStreetMap (nejbližší první) */
+  zastavky?: Zastavka[];
   /** Testovací záznam (nikdy se neindexuje) */
   test?: boolean;
   /** Otevírací doba o svátcích od majitele (volný text) */
@@ -65,6 +69,29 @@ export interface Provozovna {
   /** Orientační cena střihu v Kč: z ceníku majitele, jinak medián cen od návštěvníků */
   cena?: CenaStrihu;
 }
+
+export interface Zastavka {
+  /** název zastávky */
+  n: string;
+  /** vzdálenost vzdušnou čarou v metrech */
+  m: number;
+  /** druh: metro | tram | bus | vlak */
+  t: 'metro' | 'tram' | 'bus' | 'vlak';
+}
+
+/** Rezervační systémy, jejichž odkaz vede na rezervaci konkrétního salonu (ne na úvodní stránku služby) */
+export const REZERVACNI_SYSTEMY: [string, RegExp][] = [
+  ['Reservio', /^https?:\/\/(?!www\.)[\w-]+\.reservio\.com/i],
+  ['MyFox', /^https?:\/\/(?!www\.)[\w.-]+\.myfox\.cz/i],
+  ['Fresha', /^https?:\/\/(www\.)?fresha\.com\/([a-z-]+\/)?a\/[\w-]+/i],
+  ['Booksy', /^https?:\/\/(www\.)?booksy\.com\/[a-z-]+\/\d+_/i],
+  ['Bookio', /^https?:\/\/(www\.)?(services\.)?bookio\.com\/[\w-]{3,}/i],
+  ['Noona', /^https?:\/\/(www\.)?noona\.(is|app)\/[\w-]{3,}/i],
+  ['Reservanto', /^https?:\/\/([\w-]+\.)?reservanto\.cz\/[\w/-]{3,}/i],
+  ['SimplyBook', /^https?:\/\/(?!www\.)[\w-]+\.simplybook\.(it|me|cz)/i],
+];
+export const jeRezervace = (u: string) => REZERVACNI_SYSTEMY.some(([, re]) => re.test(u));
+export const rezervacniSystem = (u: string) => REZERVACNI_SYSTEMY.find(([, re]) => re.test(u))?.[0];
 
 export interface CenaStrihu {
   pansky?: number;
@@ -125,7 +152,7 @@ interface RegistrZaznam {
   lon: number;
 }
 
-const REZERVOVANE = new Set(['blog', 'kraj', 'kraje', 'hledat', 'kontakt', 'o-webu', 'pridat-provozovnu', 'ochrana-osobnich-udaju', 'okoli', 'praha-hub', 'barbershopy', 'detska-kadernictvi', 'otevreno-v-sobotu', 'otevreno-v-nedeli', 'pro-salony', 'podminky-uziti', 'oblibene', 'mapa', 'panska-kadernictvi', 'damska-kadernictvi', 'otevreno-vecer', 'otevreno-rano', 'bezbarierova-kadernictvi', 'kadernictvi-platba-kartou', 'porovnat', 'ceny-kadernictvi', 'sprava', 'naposledy-prohlizene', 'nemerit', 'navstenost']);
+const REZERVOVANE = new Set(['blog', 'kraj', 'kraje', 'hledat', 'kontakt', 'o-webu', 'pridat-provozovnu', 'ochrana-osobnich-udaju', 'okoli', 'praha-hub', 'barbershopy', 'detska-kadernictvi', 'otevreno-v-sobotu', 'otevreno-v-nedeli', 'pro-salony', 'podminky-uziti', 'oblibene', 'mapa', 'panska-kadernictvi', 'damska-kadernictvi', 'otevreno-vecer', 'otevreno-rano', 'bezbarierova-kadernictvi', 'kadernictvi-platba-kartou', 'porovnat', 'ceny-kadernictvi', 'sprava', 'naposledy-prohlizene', 'nemerit', 'navstenost', 'online-rezervace']);
 const OBVOD = /^Praha \d+$/;
 const nn = <T,>(v: T | null | undefined) => (v == null || v === '' ? undefined : v);
 
@@ -281,12 +308,16 @@ function sestav(): Provozovna[] {
     }
   }
   // Údaje doplněné redakcí z veřejných profilů: jen chybějící pole (majitel a ruční opravy níže mají přednost)
-  const dopl = (doplnenoRaw as { salony: Record<string, Partial<Pick<Provozovna, 'telefon' | 'web' | 'facebook' | 'oteviraciDoba'>>> }).salony;
+  const dopl = (doplnenoRaw as { salony: Record<string, Partial<Pick<Provozovna, 'telefon' | 'web' | 'facebook' | 'oteviraciDoba' | 'rezervace'>>> }).salony;
   for (const p of vse) {
     const d = dopl[p.id];
-    if (!d) continue;
-    for (const k of ['telefon', 'web', 'facebook', 'oteviraciDoba'] as const) if (d[k] && !p[k]) p[k] = d[k];
+    if (d) for (const k of ['telefon', 'web', 'facebook', 'oteviraciDoba', 'rezervace'] as const) if (d[k] && !p[k]) p[k] = d[k];
+    // Web salonu, který je sám rezervační stránkou (salon.reservio.com…), slouží i jako odkaz na online rezervaci
+    if (!p.rezervace && p.web && jeRezervace(p.web)) p.rezervace = p.web;
   }
+  // Nejbližší zastávky MHD (z OpenStreetMap, workflow Zastávky MHD)
+  const zast = (zastavkyRaw as { salony: Record<string, Zastavka[]> }).salony;
+  for (const p of vse) if (zast[p.id]?.length) p.zastavky = zast[p.id];
   // Údaje ověřené majitelem (po přidělení slugu, aby se URL neměnila)
   // Nejdřív údaje, které majitel upravil sám (/sprava/), pak ruční opravy redakce (mají přednost)
   for (const zdroj of [majiteleRaw.salony, overeneRaw.salony] as Record<string, Overeni>[]) {
@@ -375,6 +406,7 @@ export const vlastnosti = (p: Provozovna): string[] => [
   ...p.zamereni,
   ...(p.bezbarierove === 'yes' || p.bezbarierove === 'limited' ? ['bezbarierove'] : []),
   ...(p.platbaKartou === 'yes' ? ['karta'] : []),
+  ...(p.rezervace ? ['rezervace'] : []),
   ...(p.sluzby ?? []),
 ];
 

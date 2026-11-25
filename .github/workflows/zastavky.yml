@@ -1,0 +1,61 @@
+name: Zastávky MHD
+
+# Ke každému salonu najde nejbližší zastávku MHD (a stanici metra / vlaku) z OpenStreetMap
+# a uloží je do src/data/zastavky.json. Viz scripts/zastavky.ts.
+on:
+  workflow_dispatch:
+    inputs:
+      kraje:
+        description: 'Jen vybrané kraje (ISO kódy oddělené čárkou, např. CZ-10,CZ-64). Prázdné = všechny.'
+        required: false
+        default: ''
+  schedule:
+    # 3. den v měsíci (po importu salonů z OSM 1. dne)
+    - cron: '41 2 3 * *'
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: import
+  cancel-in-progress: false
+
+jobs:
+  zastavky:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Zastávky z OpenStreetMap
+        run: npx -y tsx scripts/zastavky.ts | tee /tmp/vystup.txt
+        env:
+          IMPORT_KRAJE: ${{ inputs.kraje }}
+      - name: Souhrn
+        if: always()
+        run: |
+          { echo '### Zastávky MHD'; echo '```'; grep -E '^(výsledek|  se zastávkou)' /tmp/vystup.txt || true; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Commit
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/zastavky.json
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Zastávky MHD z OpenStreetMap"
+            git pull --rebase origin main
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Spuštění deploye
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main

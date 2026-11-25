@@ -73,6 +73,12 @@ export const ZAMERY: Zamer[] = [
     popis: 'salony, které uvádějí možnost platby kartou',
     filtr: (p) => p.platbaKartou === 'yes',
   },
+  {
+    slug: 'online-rezervace',
+    nazev: (m) => `Kadeřnictví s online rezervací: ${m}`,
+    popis: 'salony, kde se objednáte online bez telefonování',
+    filtr: (p) => !!p.rezervace,
+  },
 ];
 
 /** Cílené podstránky vznikají jen tam, kde mají aspoň tolik výsledků */

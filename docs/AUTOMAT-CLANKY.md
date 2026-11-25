@@ -31,6 +31,9 @@ Při prvním běhu v každém měsíci (první pondělí) napiš místo tématu 
 ## Postup jednoho běhu
 1. `git pull`. Vezmi první vhodné téma ze zásobníku (datová témata mají přednost) v `docs/temata-clanku.md`.
    Zkontroluj, že podobný článek v `src/content/blog/` ještě není (jinak téma přeskoč a přesuň do Hotovo s poznámkou „duplicitní“).
+   Kontroluj i **sekce** (`##`/`###`) velkých sloučených článků (např. `damske-strihy-a-ucesy`, `panske-strihy-prehled`,
+   `pece-o-vlasy-doma`, `salonni-sluzby-pro-zeny`, `jak-vybrat-kadernika`): když téma pokrývá sekce, nepiš nový článek,
+   ale sekci rozšiř (víc praktických rad, odkazy do katalogu). Staré samostatné články byly do nich v listopadu 2026 sloučené (301 v `public/.htaccess`).
 2. Ke každému tématu udělej rešerši webovým vyhledáváním (česky). Fakta, čísla a zdravotní tvrzení jen z dohledatelných zdrojů;
    konkrétní čísla (ceny, procenta) vždy s odkazem na zdroj v textu nebo na konci. Nic nevymýšlej.
    U zdravotních témat (vypadávání vlasů, lupy, těhotenství…) piš opatrně a doporuč lékaře/dermatologa.

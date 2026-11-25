@@ -150,6 +150,7 @@ const HACKY: Record<string, string> = {
   'otevreno-rano': 'Ostříhat ještě před prací?',
   'bezbarierova-kadernictvi': 'Potřebujete bezbariérový vstup?',
   'kadernictvi-platba-kartou': 'Nemáte u sebe hotovost?',
+  'online-rezervace': 'Nechcete telefonovat?',
 };
 export function metaZameru(slug: string, nazev: string, misto: string, popis: string, salony: Provozovna[], st: Statistiky) {
   const n = salony.length;

@@ -1,0 +1,6 @@
+{
+  "_popis": "Nejbližší zastávky MHD ke každému salonu (OpenStreetMap, © přispěvatelé OSM, ODbL). Generuje scripts/zastavky.ts (workflow Zastávky MHD). Klíč = id salonu, n = název, m = metry vzdušnou čarou, t = metro|tram|bus|vlak.",
+  "salony": {
+
+  }
+}

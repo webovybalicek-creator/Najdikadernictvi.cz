@@ -67,6 +67,17 @@ if (t) {
 }
 const kontakt = [p.telefon && 'telefonicky', p.web && 'přes web', (p.facebook || p.instagram) && 'přes sociální sítě'].filter(Boolean);
 if (kontakt.length) vety.push(`Objednat se můžete ${kontakt.join(', ').replace(/, ([^,]*)$/, ' nebo $1')}.`);
+// Doprava: nejbližší zastávky MHD (vzdušná čára × 1,25 ≈ skutečná cesta, chůze 75 m/min)
+const DRUH: Record<string, string> = { metro: 'metro', tram: 'tramvaj', bus: 'autobus', vlak: 'vlak' };
+const pesky = (m: number) => Math.max(1, Math.round((m * 1.25) / 75));
+const zast = p.zastavky ?? [];
+if (zast[0]) {
+  const z = zast[0];
+  vety.push(
+    `Nejbližší zastávka MHD je ${z.n} (${DRUH[z.t]}), asi ${pesky(z.m)} min chůze` +
+      (zast[1] ? `; ${zast[1].t === 'metro' ? 'stanice metra' : 'nádraží'} ${zast[1].n} je zhruba ${pesky(zast[1].m)} min pěšky.` : '.'),
+  );
+}
 if (vMeste > 1) vety.push(`V obci ${p.mesto} evidujeme celkem ${pocetText(vMeste, 'salon', 'salony', 'salonů')}.`);
 
 const jsonLd = {
@@ -220,6 +231,7 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
           <dl class="udaje">
             <dt>Adresa</dt>
             <dd>{adr || p.mesto}{p.cast && p.cast !== p.mesto && !adr.includes(p.cast) && <>, {p.cast}</>}</dd>
+            {zast.length > 0 && (<><dt>MHD</dt><dd class="mhd">{zast.map((z) => <span><span class:list={['mhd__druh', `mhd__druh--${z.t}`]}>{DRUH[z.t]}</span> {z.n} <span class="muted">· {pesky(z.m)} min pěšky</span></span>)}</dd></>)}
             {p.telefon && (<><dt>Telefon</dt><dd><a href={`tel:${p.telefon.replace(/\s/g, '')}`}>{p.telefon}</a></dd></>)}
             {p.email && (<><dt>E-mail</dt><dd><a href={`mailto:${p.email}`}>{p.email}</a></dd></>)}
             {p.web && (<><dt>Web</dt><dd><a href={p.web} rel="noopener nofollow" target="_blank">{host(p.web)}</a></dd></>)}
@@ -512,6 +524,26 @@ const host = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/,
     display: flex;
     flex-wrap: wrap;
     gap: 0.35rem;
+  }
+  .mhd {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .mhd__druh {
+    display: inline-block;
+    min-width: 4.2rem;
+    padding: 0.05rem 0.4rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line);
+    font-size: 0.78rem;
+    text-align: center;
+    color: var(--ink-soft);
+  }
+  .mhd__druh--metro {
+    border-color: var(--ink);
+    color: var(--ink);
+    font-weight: 600;
   }
   .mlista {
     display: none;
