@@ -127,6 +127,16 @@ Pravidla (AdSense, soukromí):
 - [ ] Uherské Hradiště – Mařatice (18. 11. 2026 hledání nespárovalo žádný salon z této čtvrti)
 - [ ] Praha 9 – Kyje (18. 11. 2026 doplněn 1 salon; Studio Snip je na Mapách „Kosmetický salón“, Tereza Banková bez údajů)
 
+## Velká města (26. 11. 2026 hledáno po čtvrtích; MAX fronty 40)
+- [x] Ostrava – 35 salonů (centrum, Poruba, Zábřeh, Moravská Ostrava); zbývá Hrabůvka, Výškovice, Dubina, Mariánské Hory, Přívoz, Vítkovice
+- [x] Liberec – 19 salonů (centrum, Rochlice)
+- [ ] Zlín – 9 salonů (centrum); hodně profilů se v prohlížeči nenačetlo („prazdne“), zopakovat
+- [ ] Karviná, Olomouc, České Budějovice, Plzeň, Ústí nad Labem, Opava
+
+Tip: hledání „kadeřnictví <Obec>“ vrací ve velkých městech jen ~10–40 výsledků, proto hledat i
+„kadeřnictví <Čtvrť> <Obec>“ a v najdiPREP předat obec přesně jako v katalogu (např. 'Ostrava').
+Při opakovaném „prazdne“ pomůže delší čekání (5 s) mezi najdiGO a najdiEXT, nebo běh později.
+
 ## Barbershopy ve velkých městech (hledat „barbershop <Obec>“)
 - [ ] Praha
 - [ ] Brno

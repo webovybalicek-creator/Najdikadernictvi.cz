@@ -60,13 +60,16 @@ data a indexace výpisů, ne nové funkce.
 
 ## P1: nejvyšší dopad (AdSense + návštěvnost)
 
-### 1. Doplnit data v okresních městech (Google Mapy)
+### 1. Doplnit data v okresních městech (Google Mapy) (26. 11.: Ostrava, Liberec, Zlín rozpracované)
 - Postup je hotový v `scripts/sber-mapy/README.md`. Pořadí podle poměru „salonů celkem / s obsahem“:
   **Ostrava, Liberec, Zlín, Karviná, Most, Olomouc, České Budějovice, Opava, Kladno, Karlovy Vary, Ústí n. L.**,
   pak okresní města, kde vede orlovekrasy.cz (viz KONKURENCE).
 - Cíl: v každém z 20 největších měst aspoň 30 % salonů s otevírací dobou nebo telefonem. Indexovatelné detaily
   by se tím zhruba zdvojnásobily (1 405 → ~3 000) a vznikly by výběry („otevřeno v sobotu“…) i tam, kde chybí.
 - Měřit: počet `indexovatDetail` po každém běhu (stačí čísla z tabulky výše).
+- **26. 11.:** Ostrava 16 → 46, Liberec 16 → 30, Zlín 3 → 12 indexovatelných detailů (63 salonů z Map).
+  Celkem 1 405 → 1 458. Postup a co zbývá: `scripts/sber-mapy/README.md` (sekce Velká města).
+  Ruční běh je pomalý (~3 salony za minutu); na zbytek se hodí denní naplánovaná úloha.
 
 ### 2. Oslovení salonů: zjistit, proč 0 % reakcí (25. 11.: nový e-mail ✅)
 - Denní dávky běží (`docs/OSLOVENI-SALONU.md`), ale ověřený ani upravený profil zatím není žádný.
