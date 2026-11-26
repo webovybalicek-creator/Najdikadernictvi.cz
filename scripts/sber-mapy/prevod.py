@@ -34,7 +34,7 @@ def prevod(radek: str):
     if len(tel) == 9:
         e['telefon'] = f'+420 {tel[:3]} {tel[3:6]} {tel[6:]}'
     # rejstříky firem a Instagram nejsou web salonu; u facebook.com/profile.php zůstává ?id=
-    if web and not re.search(r'kurzy\.cz|firmy\.cz|zlatestranky|instagram\.com', web):
+    if web and not re.search(r'kurzy\.cz|firmy\.cz|zlatestranky|instagram\.com|notino\.', web):
         m = re.match(r'(.*profile\.php\?id=\d+)', web)
         w = m.group(1) if m else re.sub(r'\?.*$', '', web).rstrip('/')
         w = re.sub(r'^(https?://)?m\.facebook\.com', 'facebook.com', w)
