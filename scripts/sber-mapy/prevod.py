@@ -33,8 +33,11 @@ def prevod(radek: str):
     tel = re.sub(r'\D', '', tel)[-9:]
     if len(tel) == 9:
         e['telefon'] = f'+420 {tel[:3]} {tel[3:6]} {tel[6:]}'
-    if web:
-        w = re.sub(r'\?.*$', '', web).rstrip('/')
+    # rejstříky firem a Instagram nejsou web salonu; u facebook.com/profile.php zůstává ?id=
+    if web and not re.search(r'kurzy\.cz|firmy\.cz|zlatestranky|instagram\.com', web):
+        m = re.match(r'(.*profile\.php\?id=\d+)', web)
+        w = m.group(1) if m else re.sub(r'\?.*$', '', web).rstrip('/')
+        w = re.sub(r'^(https?://)?m\.facebook\.com', 'facebook.com', w)
         w = w if w.startswith('http') else 'https://' + w
         e['facebook' if 'facebook.com' in w else 'web'] = w
     if hodiny and '24 hodin' not in hodiny:
@@ -60,7 +63,8 @@ def main():
             continue
         id_, e = prevod(radek)
         if e:
-            data['salony'][id_] = e
+            # sloučit s dřívějšími údaji (např. rezervace a služby z webů salonů se nesmí ztratit)
+            data['salony'][id_] = {**data['salony'].get(id_, {}), **e}
             pridano += 1
         else:
             vynechano += 1
