@@ -87,10 +87,27 @@ export const REZERVACNI_SYSTEMY: [string, RegExp][] = [
   ['Booksy', /^https?:\/\/(www\.)?booksy\.com\/[a-z-]+\/\d+_/i],
   ['Bookio', /^https?:\/\/(www\.)?(services\.)?bookio\.com\/[\w-]{3,}/i],
   ['Noona', /^https?:\/\/(www\.)?noona\.(is|app)\/[\w-]{3,}/i],
-  ['Reservanto', /^https?:\/\/([\w-]+\.)?reservanto\.cz\/[\w/-]{3,}/i],
+  // Reservanto: salon pozná jen parametr id (booking.reservanto.cz/Modal/?id=123); skripty a obecné URL ne
+  ['Reservanto', /^https?:\/\/([\w-]+\.)?reservanto\.cz\/(?!script)[^?#]*\?(?:[^#]*&)?id=\d+/i],
   ['SimplyBook', /^https?:\/\/(?!www\.)[\w-]+\.simplybook\.(it|me|cz)/i],
 ];
 export const jeRezervace = (u: string) => REZERVACNI_SYSTEMY.some(([, re]) => re.test(u));
+/** Odkaz na úvodní rezervační stránku salonu (bez podstránek jako /gift-cards, /services, /booking/…) */
+export function normalizujRezervaci(u: string): string {
+  try {
+    const x = new URL(u);
+    const cesta = x.pathname.split('/').filter(Boolean);
+    const sys = rezervacniSystem(u);
+    if (sys === 'Reservio' || sys === 'MyFox' || sys === 'SimplyBook') return `${x.origin}/`;
+    if (sys === 'Bookio' || sys === 'Noona') return `${x.origin}/${cesta[0]}/`;
+    if (sys === 'Fresha') return `${x.origin}/${cesta.slice(0, cesta.indexOf('a') + 2).join('/')}`;
+    if (sys === 'Booksy') return `${x.origin}/${cesta.slice(0, 2).join('/')}`;
+    if (sys === 'Reservanto') return `${x.origin}${x.pathname}?id=${x.searchParams.get('id')}`;
+    return `${x.origin}${x.pathname}`;
+  } catch {
+    return u;
+  }
+}
 export const rezervacniSystem = (u: string) => REZERVACNI_SYSTEMY.find(([, re]) => re.test(u))?.[0];
 
 export interface CenaStrihu {
@@ -316,6 +333,8 @@ function sestav(): Provozovna[] {
     if (d?.sluzby?.length) p.sluzby = [...new Set([...(p.sluzby ?? []), ...d.sluzby])];
     // Web salonu, který je sám rezervační stránkou (salon.reservio.com…), slouží i jako odkaz na online rezervaci
     if (!p.rezervace && p.web && jeRezervace(p.web)) p.rezervace = p.web;
+    // nalezené odkazy bez podstránek; odkaz, který rezervaci konkrétního salonu nepozná, zahodit
+    if (p.rezervace) p.rezervace = jeRezervace(p.rezervace) ? normalizujRezervaci(p.rezervace) : undefined;
   }
   // Nejbližší zastávky MHD (z OpenStreetMap, workflow Zastávky MHD)
   const zast = (zastavkyRaw as { salony: Record<string, Zastavka[]> }).salony;

@@ -19,7 +19,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { PROVOZOVNY, jeRezervace } from '../src/lib/data.ts';
+import { PROVOZOVNY, jeRezervace, normalizujRezervaci } from '../src/lib/data.ts';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const SOUBOR = path.join(ROOT, 'src/data/doplneno.json');
@@ -189,9 +189,9 @@ export function rezervace(html: string): string | null {
     const u = m[1].replace(/&amp;/g, '&').trim();
     if (!/^https?:/i.test(u) || !jeRezervace(u)) continue;
     // klíč = salon v rezervačním systému (subdoména nebo první část cesty), ať se různé podstránky téhož salonu nesčítají
-    const x = new URL(u);
-    const klic = x.host.split('.').length > 2 && !/^www\./.test(x.host) ? x.host : `${x.host}/${x.pathname.split('/').filter(Boolean).slice(0, 3).join('/')}`;
-    if (!nalezy.has(klic)) nalezy.set(klic, `${x.origin}${x.pathname}`.replace(/\/(booking|embed|widget)\/?$/i, '/'));
+    // klíč = salon v rezervačním systému, ať se různé podstránky téhož salonu nesčítají
+    const n = normalizujRezervaci(u);
+    if (!nalezy.has(n)) nalezy.set(n, n);
   }
   return nalezy.size === 1 ? [...nalezy.values()][0] : null;
 }
