@@ -24,7 +24,7 @@ concurrency:
 jobs:
   zastavky:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -33,6 +33,9 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Zastávky z OpenStreetMap
+        # Overpass bývá přetížený: krok smí vypršet, hotové kraje se i tak uloží a commitnou
+        timeout-minutes: 150
+        continue-on-error: true
         run: npx -y tsx scripts/zastavky.ts | tee /tmp/vystup.txt
         env:
           IMPORT_KRAJE: ${{ inputs.kraje }}

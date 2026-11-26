@@ -129,6 +129,17 @@ export function nejblizsi(p: { lat: number; lon: number }, kandidati: Bod[]): Za
   return out;
 }
 
+/** Zápis souboru (volá se po každém kraji, ať se při přerušení běhu neztratí hotová práce) */
+function uloz(data: { _popis: string; salony: Record<string, Zastavka[]> }) {
+  // salony, které z katalogu zmizely
+  const ids = new Set(PROVOZOVNY.map((p) => p.id));
+  for (const id of Object.keys(data.salony)) if (!ids.has(id)) delete data.salony[id];
+  const serazeno = Object.entries(data.salony).sort(([a], [b]) => a.localeCompare(b));
+  // jeden salon na řádek: čitelné rozdíly v gitu, malý soubor
+  const radky = serazeno.map(([id, z]) => `    ${JSON.stringify(id)}: ${JSON.stringify(z)}`);
+  fs.writeFileSync(SOUBOR, `{\n  "_popis": ${JSON.stringify(data._popis)},\n  "salony": {\n${radky.join(',\n')}\n  }\n}\n`);
+}
+
 async function main() {
   const data = JSON.parse(fs.readFileSync(SOUBOR, 'utf8')) as { _popis: string; salony: Record<string, Zastavka[]> };
   const kraje = KRAJE.filter((k) => !JEN.length || JEN.includes(k.iso));
@@ -160,16 +171,11 @@ async function main() {
     }
     celkem += s;
     console.log(`  se zastávkou: ${s}`);
+    uloz(data);
     await sleep(5000);
   }
-  // salony, které z katalogu zmizely
-  const ids = new Set(PROVOZOVNY.map((p) => p.id));
-  for (const id of Object.keys(data.salony)) if (!ids.has(id)) delete data.salony[id];
-  const serazeno = Object.fromEntries(Object.entries(data.salony).sort(([a], [b]) => a.localeCompare(b)));
-  // jeden salon na řádek: čitelné rozdíly v gitu, malý soubor
-  const radky = Object.entries(serazeno).map(([id, z]) => `    ${JSON.stringify(id)}: ${JSON.stringify(z)}`);
-  fs.writeFileSync(SOUBOR, `{\n  "_popis": ${JSON.stringify(data._popis)},\n  "salony": {\n${radky.join(',\n')}\n  }\n}\n`);
-  console.log(`výsledek: ${celkem} salonů se zastávkou (celkem v souboru ${Object.keys(serazeno).length})`);
+  uloz(data);
+  console.log(`výsledek: ${celkem} salonů se zastávkou (celkem v souboru ${Object.keys(data.salony).length})`);
 }
 
 if (process.argv[1]?.endsWith('zastavky.ts')) await main();

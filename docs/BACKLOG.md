@@ -75,12 +75,10 @@ data a indexace výpisů, ne nové funkce.
 - Když otevírají, ale neupravují, zkrátit e-mail na jednu prosbu: „Zkontrolujte otevírací dobu o Vánocích“
   (sváteční doba je teď ten nejlepší důvod) a nabídnout jen tuhle jednu věc, ne celý profil.
 - Profily od majitelů jsou nejsilnější unikátní obsah. Bez nich zůstane web pro AdSense „katalogem adres“.
-- **Stav podle souhrnů v Gmailu:** poslední dávka 18. 11. – osloveno 61 salonů, odkaz otevřel 1, profil upravil 1,
-  zbývá 74. Salonů s veřejným e-mailem je v katalogu jen ~135, takže e-mailem se nedá oslovit víc než ~1 % katalogu.
-  Od 19. 11. žádný souhrn nepřišel: dávky spouští GitHub Actions, kterým nejspíš došly minuty (obnoví se 1. 12.).
-  Řešení nezávislé na GitHubu: cron v cPanelu na Exonu (Po–Pá 9:20)
-  `curl -s -X POST -A najdikadernictvi-osloveni "https://najdikadernictvi.cz/api/osloveni.php?auto=1"`.
-  Server sám hlídá jednu dávku denně, takže souběh s GitHub Actions nevadí.
+- **Stav 26. 11.:** osloveno 91 salonů, odkaz otevřel 1, profil upravil 1, zbývá 44 (asi 5 pracovních dní).
+  Salonů s veřejným e-mailem je v katalogu jen ~135, takže e-mailem se nedá oslovit víc než ~1 % katalogu.
+  Dávky 21.–25. 11. neproběhly (GitHub Actions bez minut), od 26. 11. je repozitář veřejný a běží zase denně.
+  26. 11. odešla první dávka s novým e-mailem (10 salonů).
 - **25. 11. ověřeno:** SPF obsahuje IP webu (87.236.195.134), DKIM klíč `default._domainkey` je publikovaný,
   DMARC `p=none`. Technicky je doručení v pořádku, problém byl spíš v obsahu.
 - **25. 11. změněno:** e-mail je krátký osobní dopis bez obrázků a tlačítek (dřív grafický „newsletter“ s výhodami,
@@ -172,10 +170,6 @@ data a indexace výpisů, ne nové funkce.
   až bude česká verze silná.
 - Filtr podle ceny střihu: data o cenách zatím nejsou (0 ceníků, ceny od návštěvníků u 0 salonů).
 - Zrychlit build (dnes ~6,5 min, 17 700 stránek): zatím netřeba.
-
-## Upozornění
-- GitHub Actions: podle připomínky z 21. 11. se minuty obnoví 1. 12. Pokud do té doby nejsou, deploy ani
-  workflow (zastávky, kontakty z webů, oslovení) nepoběží a změny se na web dostanou až po obnovení.
 
 ## Hotovo 25. 11. 2026 (2. část)
 - Oslovení: nový krátký e-mail se sváteční otevírací dobou, odkaz rovnou na pole svátků (`osloveni.php`, `sprava.astro`).
