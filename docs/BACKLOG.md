@@ -117,7 +117,7 @@ data a indexace výpisů, ne nové funkce.
 
 ## P2: nové funkce podložené daty z Googlu
 
-### 6. „Bez objednání“ (64 dotazů za 28 dní) ✅ 25. 11.
+### 6. „Bez objednání“ (64 dotazů za 28 dní) ✅ 26. 11.: 25 salonů
 - Doplnit detekci do `scripts/web-kontakty.ts`: text „bez objednání“, „walk-in“, „bez rezervace“ na webu salonu
   → služba `bez-objednani` v `doplneno.json` (do `data.ts` přidat převzetí pole `sluzby` z doplněných údajů).
   Navíc salony, které to mají v názvu (Walk-In Barber Brno, The Original Walk-In Barber Olomouc, Haircut Express…).
@@ -126,7 +126,7 @@ data a indexace výpisů, ne nové funkce.
 - **25. 11. hotovo:** podle názvu (4 salony) a z webů salonů v nedělním běhu „Kontakty z webů salonů“
   (fráze „bez objednání“, „bez rezervace“, „walk-in“; „jen na objednání“ se nebere), výběry `/bez-objednani/<město>/`.
 
-### 7. Online rezervace (hotovo 25. 11., vyhodnotit)
+### 7. Online rezervace (hotovo, 26. 11.: 58 salonů)
 - Odkaz se hledá na webech salonů v nedělním běhu „Kontakty z webů salonů“ (Reservio, MyFox, Fresha, Booksy,
   Bookio, Noona, Reservanto, SimplyBook). Filtr „Online rezervace“ ve výpisu obce se ukáže od 2 salonů, výběr
   `/online-rezervace/<město>/` od 3.
@@ -134,9 +134,9 @@ data a indexace výpisů, ne nové funkce.
   „Online rezervace v kadeřnictví: jak funguje“ v zásobníku nahoru a napsat ho jako datový.
 - Později: filtr i na `/mapa/` a `/okoli/` (vyžaduje přidat příznak do dlaždic v `src/lib/dlazdice.ts`).
 
-### 8. Zastávky MHD (hotovo 25. 11., spustit)
-- Workflow „Zastávky MHD“ je potřeba **jednou spustit ručně** (GitHub → Actions → Zastávky MHD → Run workflow),
-  pak běží 3. den v měsíci. Na detailu salonu se ukáže nejbližší zastávka a stanice metra nebo vlaku.
+### 8. Zastávky MHD (hotovo, 26. 11.: 14 319 salonů)
+- Workflow „Zastávky MHD“ běží 3. den v měsíci (první běh 26. 11.: zastávka u 14 319 z 14 649 salonů). Overpass
+  bývá přetížený, skript proto ukládá po každém kraji. Na detailu salonu se ukáže nejbližší zastávka a stanice metra nebo vlaku.
 - Další krok: výběry „Kadeřnictví u metra Anděl“ pro stanice pražského metra s aspoň 5 salony do 400 m.
   Lidé tak hledají („barber anděl“, „kadeřnictví kubánské náměstí“, „barber budějovická“ jsou v datech).
 
