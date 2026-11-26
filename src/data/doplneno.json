@@ -18,7 +18,8 @@
     "r1436856": {
       "telefon": "+420 720 353 617",
       "web": "https://mikkelsen.cz",
-      "oteviraciDoba": "Mo 09:00-20:00; Tu 09:00-20:00; We 09:00-16:00; Th 12:00-20:00; Fr 09:00-17:00; Su 10:00-17:00"
+      "oteviraciDoba": "Mo 09:00-20:00; Tu 09:00-20:00; We 09:00-16:00; Th 12:00-20:00; Fr 09:00-17:00; Su 10:00-17:00",
+      "rezervace": "https://mikkelsen.reservio.com/"
     },
     "r1441582": {
       "telefon": "+420 725 171 919",
@@ -90,7 +91,8 @@
     "r20236964": {
       "telefon": "+420 778 037 851",
       "web": "https://www.evaeichlerova.cz",
-      "oteviraciDoba": "Mo 13:00-20:00; Tu 13:00-20:00; We 10:00-15:00; Th 13:00-20:00; Fr 09:00-15:00"
+      "oteviraciDoba": "Mo 13:00-20:00; Tu 13:00-20:00; We 10:00-15:00; Th 13:00-20:00; Fr 09:00-15:00",
+      "rezervace": "https://estyle.reservio.com/booking/business/service"
     },
     "r21248885": {
       "telefon": "+420 773 939 303",
@@ -103,7 +105,11 @@
     "r21235830": {
       "telefon": "+420 722 171 407",
       "web": "https://jkbarbers.cz",
-      "oteviraciDoba": "Mo 09:00-20:00; Tu 09:00-20:00; We 09:00-20:00; Th 09:00-20:00; Fr 09:00-20:00; Sa 09:00-18:00; Su 10:00-14:00"
+      "oteviraciDoba": "Mo 09:00-20:00; Tu 09:00-20:00; We 09:00-20:00; Th 09:00-20:00; Fr 09:00-20:00; Sa 09:00-18:00; Su 10:00-14:00",
+      "rezervace": "https://jk-barbers.reservio.com/",
+      "sluzby": [
+        "bez-objednani"
+      ]
     },
     "r21243638": {
       "telefon": "+420 730 551 233",
@@ -112,7 +118,10 @@
     "n12107762552": {
       "telefon": "+420 735 082 419",
       "web": "https://www.pvkadernictvi.eu",
-      "oteviraciDoba": "Mo 06:30-18:00; Tu 06:30-18:00; We 06:30-18:00; Th 06:30-18:00; Fr 06:30-18:00; Sa 07:30-11:30"
+      "oteviraciDoba": "Mo 06:30-18:00; Tu 06:30-18:00; We 06:30-18:00; Th 06:30-18:00; Fr 06:30-18:00; Sa 07:30-11:30",
+      "sluzby": [
+        "bez-objednani"
+      ]
     },
     "r25199838": {
       "telefon": "+420 732 852 773",
@@ -188,7 +197,8 @@
     "r20429240": {
       "telefon": "+420 731 723 395",
       "web": "https://www.mensvision.cz",
-      "oteviraciDoba": "Mo 08:00-20:00; Tu 08:00-20:00; We 08:00-20:00; Th 08:00-20:00; Fr 08:00-20:00; Sa 10:00-16:00"
+      "oteviraciDoba": "Mo 08:00-20:00; Tu 08:00-20:00; We 08:00-20:00; Th 08:00-20:00; Fr 08:00-20:00; Sa 10:00-16:00",
+      "rezervace": "https://mensvisionbarbersalon.reservio.com/mensvision"
     },
     "r23001232": {
       "telefon": "+420 602 343 415",
@@ -243,7 +253,8 @@
     "n3413991884": {
       "telefon": "+420 731 055 921",
       "web": "https://kadernicebara.cz",
-      "oteviraciDoba": "Mo 08:00-18:30; Tu 08:00-18:30; We 08:30-19:00; Th 08:00-18:30; Fr 09:00-19:00"
+      "oteviraciDoba": "Mo 08:00-18:30; Tu 08:00-18:30; We 08:30-19:00; Th 08:00-18:30; Fr 09:00-19:00",
+      "rezervace": "https://kadernictvi-trebic-barbora-binova.snippet.myfox.cz/"
     },
     "r18773966": {
       "telefon": "+420 608 758 324",
@@ -290,7 +301,10 @@
     "r23492872": {
       "telefon": "+420 474 651 294",
       "web": "https://hygiecv.cz",
-      "oteviraciDoba": "Mo 07:00-18:00; Tu 07:00-18:00; We 07:00-18:00; Th 07:00-18:00; Fr 07:00-18:00; Sa 07:30-12:30"
+      "oteviraciDoba": "Mo 07:00-18:00; Tu 07:00-18:00; We 07:00-18:00; Th 07:00-18:00; Fr 07:00-18:00; Sa 07:30-12:30",
+      "sluzby": [
+        "bez-objednani"
+      ]
     },
     "r23492597": {
       "telefon": "+420 722 272 229",
@@ -344,7 +358,10 @@
     "r5523214": {
       "telefon": "+420 777 039 158",
       "web": "https://salonzyla.cz",
-      "oteviraciDoba": "Mo 09:00-17:00; Tu 09:00-20:00; We 09:00-20:00; Th 09:00-20:00; Fr 09:00-20:00; Sa 09:00-14:00"
+      "oteviraciDoba": "Mo 09:00-17:00; Tu 09:00-20:00; We 09:00-20:00; Th 09:00-20:00; Fr 09:00-20:00; Sa 09:00-14:00",
+      "sluzby": [
+        "bez-objednani"
+      ]
     },
     "r5521386": {
       "telefon": "+420 607 046 854",
@@ -394,7 +411,8 @@
     "r23460822": {
       "telefon": "+420 705 722 867",
       "web": "https://www.stanleyfranco.cz",
-      "oteviraciDoba": "Mo 08:00-18:00; Tu 08:00-18:00; We 08:00-18:00; Th 08:00-18:00; Fr 08:00-18:00; Sa 08:00-12:00"
+      "oteviraciDoba": "Mo 08:00-18:00; Tu 08:00-18:00; We 08:00-18:00; Th 08:00-18:00; Fr 08:00-18:00; Sa 08:00-12:00",
+      "rezervace": "https://stanley-franco2.reservio.com/"
     },
     "r23484853": {
       "telefon": "+420 739 392 080",
@@ -518,7 +536,10 @@
     },
     "n12632985952": {
       "web": "https://kadernictvi-nika.cz",
-      "oteviraciDoba": "Mo 07:00-18:00; Tu 07:00-18:00; We 07:00-18:00; Th 07:00-18:00; Fr 07:00-18:00; Sa 08:00-12:00"
+      "oteviraciDoba": "Mo 07:00-18:00; Tu 07:00-18:00; We 07:00-18:00; Th 07:00-18:00; Fr 07:00-18:00; Sa 08:00-12:00",
+      "sluzby": [
+        "bez-objednani"
+      ]
     },
     "n296584571": {
       "telefon": "+420 721 256 707"
@@ -535,7 +556,8 @@
     "n10053792398": {
       "telefon": "+420 792 778 781",
       "web": "https://www.napana.cz",
-      "oteviraciDoba": "Mo 08:00-18:00; Tu 08:00-20:30; We 08:00-21:00; Th 08:00-20:30; Fr 08:00-17:00"
+      "oteviraciDoba": "Mo 08:00-18:00; Tu 08:00-20:30; We 08:00-21:00; Th 08:00-20:30; Fr 08:00-17:00",
+      "rezervace": "https://https-barber-shop-na-pana-reservio-com.reservio.com/barber-shop-na-pana"
     },
     "n4180803450": {
       "telefon": "+420 775 374 065"
@@ -544,7 +566,8 @@
       "oteviraciDoba": "Mo 08:00-20:00; Tu 08:00-20:00; We 08:00-20:00; Th 08:00-20:00; Fr 08:00-20:00; Sa 08:00-18:00; Su 10:00-18:00"
     },
     "n14321628529": {
-      "telefon": "+420 737 327 764"
+      "telefon": "+420 737 327 764",
+      "rezervace": "https://akm-barber-company-s-r-o.reservio.com/"
     },
     "n3754163223": {
       "telefon": "+420 725 511 123"
@@ -553,7 +576,8 @@
       "telefon": "+420 607 187 679"
     },
     "n12479230901": {
-      "telefon": "+420 775 155 195"
+      "telefon": "+420 775 155 195",
+      "rezervace": "https://services.bookio.com/glow-up/gift-cards"
     },
     "n12864881501": {
       "telefon": "+420 775 459 754"
@@ -562,7 +586,11 @@
       "telefon": "+420 777 221 061"
     },
     "n14136807435": {
-      "telefon": "+420 778 084 167"
+      "telefon": "+420 778 084 167",
+      "rezervace": "https://yuth-barbershop2.reservio.com/",
+      "sluzby": [
+        "bez-objednani"
+      ]
     },
     "r23199725": {
       "telefon": "+420 774 718 866",
@@ -600,7 +628,8 @@
     "r4506111": {
       "telefon": "+420 739 996 795",
       "web": "https://luciehair.cz",
-      "oteviraciDoba": "Mo 09:00-17:00; Tu 09:00-17:00; We 09:00-17:00; Th 09:00-17:00; Fr 09:00-17:00"
+      "oteviraciDoba": "Mo 09:00-17:00; Tu 09:00-17:00; We 09:00-17:00; Th 09:00-17:00; Fr 09:00-17:00",
+      "rezervace": "https://lucie-schreiberova.reservio.com/"
     },
     "r4503783": {
       "telefon": "+420 602 779 937",
@@ -712,7 +741,10 @@
     },
     "r15221881": {
       "telefon": "+420 730 266 377",
-      "web": "https://kadernictviblansko.webnode.cz"
+      "web": "https://kadernictviblansko.webnode.cz",
+      "sluzby": [
+        "bez-objednani"
+      ]
     },
     "r15239195": {
       "telefon": "+420 720 627 005",
@@ -721,7 +753,10 @@
     "r3279103": {
       "telefon": "+420 608 550 175",
       "web": "https://www.kadernictviestetic.cz",
-      "oteviraciDoba": "Mo 07:00-18:00; Tu 07:00-18:00; We 07:00-18:00; Th 07:00-18:00; Fr 07:00-18:00; Sa 07:00-12:00"
+      "oteviraciDoba": "Mo 07:00-18:00; Tu 07:00-18:00; We 07:00-18:00; Th 07:00-18:00; Fr 07:00-18:00; Sa 07:00-12:00",
+      "sluzby": [
+        "bez-objednani"
+      ]
     },
     "r25551639": {
       "telefon": "+420 596 780 717",
@@ -730,7 +765,8 @@
     "r26729423": {
       "telefon": "+420 731 271 961",
       "web": "https://alessandrobarbershop.cz",
-      "oteviraciDoba": "Mo 08:00-19:00; Tu 08:00-19:00; We 08:00-19:00; Th 08:00-19:00; Fr 07:00-19:00; Sa 08:00-19:00; Su 07:00-19:00"
+      "oteviraciDoba": "Mo 08:00-19:00; Tu 08:00-19:00; We 08:00-19:00; Th 08:00-19:00; Fr 07:00-19:00; Sa 08:00-19:00; Su 07:00-19:00",
+      "rezervace": "https://services.bookio.com/alessandro-barbershop/"
     },
     "r15262600": {
       "telefon": "+420 608 222 972",
@@ -739,7 +775,8 @@
     "r15280152": {
       "telefon": "+420 734 480 822",
       "web": "https://www.thehighestbarbers.cz",
-      "oteviraciDoba": "Mo 06:30-18:00; Tu 06:30-18:00; We 06:30-18:00; Th 06:30-18:00; Fr 06:30-18:00"
+      "oteviraciDoba": "Mo 06:30-18:00; Tu 06:30-18:00; We 06:30-18:00; Th 06:30-18:00; Fr 06:30-18:00",
+      "rezervace": "https://the-highest-barbers.reservio.com/"
     },
     "r15259668": {
       "telefon": "+420 736 692 261",
@@ -920,7 +957,8 @@
     "r27222136": {
       "telefon": "+420 606 623 523",
       "web": "https://kadernictviuhrineves.cz",
-      "oteviraciDoba": "Mo 08:00-23:00; Tu 08:00-23:00; We 08:00-23:00; Th 08:00-23:00; Fr 08:00-23:00; Su 08:00-23:00"
+      "oteviraciDoba": "Mo 08:00-23:00; Tu 08:00-23:00; We 08:00-23:00; Th 08:00-23:00; Fr 08:00-23:00; Su 08:00-23:00",
+      "rezervace": "https://vlasovy-atelier-jany-sklenarove.reservio.com/"
     },
     "r22639659": {
       "telefon": "+420 267 714 503",
@@ -951,7 +989,8 @@
     "r12918636": {
       "telefon": "+420 735 731 799",
       "web": "https://yptk8izbbt.wixsite.com/martina-the-barbersh",
-      "oteviraciDoba": "Mo 09:00-17:00; Tu 09:00-17:00; We 09:00-17:00; Th 09:00-17:00; Fr 09:00-17:00"
+      "oteviraciDoba": "Mo 09:00-17:00; Tu 09:00-17:00; We 09:00-17:00; Th 09:00-17:00; Fr 09:00-17:00",
+      "rezervace": "https://cuts-beards-by-marti8.reservio.com/services"
     },
     "r12970522": {
       "telefon": "+420 606 545 962",
@@ -1094,7 +1133,8 @@
     "r5546699": {
       "telefon": "+420 606 052 025",
       "web": "https://www.katesbarber.cz",
-      "oteviraciDoba": "Mo 08:00-20:00; Tu 08:00-20:00; We 08:00-20:00; Th 08:00-20:00; Fr 08:00-20:00"
+      "oteviraciDoba": "Mo 08:00-20:00; Tu 08:00-20:00; We 08:00-20:00; Th 08:00-20:00; Fr 08:00-20:00",
+      "rezervace": "https://kate-s-chop-shop-barber3.reservio.com/booking/business/service"
     },
     "r6559131": {
       "telefon": "+420 723 980 399",
@@ -1149,7 +1189,8 @@
     "r18876871": {
       "telefon": "+420 606 930 262",
       "web": "https://www.kadernictvi-suchanek.cz",
-      "oteviraciDoba": "Mo 09:00-17:00; Tu 09:00-17:00; Th 09:00-17:00; Fr 09:00-17:00"
+      "oteviraciDoba": "Mo 09:00-17:00; Tu 09:00-17:00; Th 09:00-17:00; Fr 09:00-17:00",
+      "rezervace": "https://vojtech-suchanek.snippet.myfox.cz/"
     },
     "r82187517": {
       "telefon": "+420 606 403 807",
@@ -1198,7 +1239,10 @@
     "r22598391": {
       "telefon": "+420 721 786 188",
       "web": "https://kadernictvi-tessa.webnode.cz",
-      "oteviraciDoba": "Mo 09:00-14:00; Tu 09:00-21:00; We 09:00-21:00; Fr 09:00-14:00"
+      "oteviraciDoba": "Mo 09:00-14:00; Tu 09:00-21:00; We 09:00-21:00; Fr 09:00-14:00",
+      "sluzby": [
+        "bez-objednani"
+      ]
     },
     "r27766764": {
       "telefon": "+420 777 604 400",
@@ -1353,7 +1397,10 @@
     "r21895163": {
       "telefon": "+420 722 522 103",
       "web": "https://premiumbarber.cz",
-      "oteviraciDoba": "Mo 10:00-20:00; Tu 10:00-20:00; We 10:00-20:00; Th 10:00-20:00; Fr 10:00-20:00; Sa 10:00-19:00"
+      "oteviraciDoba": "Mo 10:00-20:00; Tu 10:00-20:00; We 10:00-20:00; Th 10:00-20:00; Fr 10:00-20:00; Sa 10:00-19:00",
+      "sluzby": [
+        "bez-objednani"
+      ]
     },
     "r21901996": {
       "telefon": "+420 736 784 468",
@@ -1362,7 +1409,8 @@
     "r27354296": {
       "telefon": "+420 703 637 373",
       "web": "https://www.olala.cz",
-      "oteviraciDoba": "Mo 09:00-17:00; Tu 09:00-17:00; We 09:00-17:00; Th 09:00-17:00; Fr 09:00-17:00"
+      "oteviraciDoba": "Mo 09:00-17:00; Tu 09:00-17:00; We 09:00-17:00; Th 09:00-17:00; Fr 09:00-17:00",
+      "rezervace": "https://booking.reservanto.cz/Modal/"
     },
     "r41135628": {
       "telefon": "+420 603 821 077",
@@ -1373,6 +1421,143 @@
       "telefon": "+420 775 978 031",
       "web": "https://www.atelierkrasypodsluncem.cz",
       "oteviraciDoba": "Mo 09:00-20:00; Tu 09:00-20:00; We 09:00-20:00; Th 09:00-20:00; Fr 09:00-20:00; Sa 09:00-19:00; Su 09:00-19:00"
+    },
+    "n14046416836": {
+      "rezervace": "https://barber-panda.reservio.com/"
+    },
+    "n7732022040": {
+      "rezervace": "https://copanky.simplybook.it/v2/"
+    },
+    "n7825576849": {
+      "rezervace": "https://jine-holicstvi-brno.reservio.com/",
+      "sluzby": [
+        "bez-objednani"
+      ]
+    },
+    "n4478037389": {
+      "rezervace": "https://booking.reservanto.cz/Modal"
+    },
+    "n11865799276": {
+      "rezervace": "https://booking.reservanto.cz/Modal"
+    },
+    "n12216388330": {
+      "rezervace": "https://who-s-next-barber-shop.reservio.com/"
+    },
+    "n9785924443": {
+      "sluzby": [
+        "bez-objednani"
+      ]
+    },
+    "n11981150010": {
+      "sluzby": [
+        "bez-objednani"
+      ]
+    },
+    "n12117341677": {
+      "rezervace": "http://studiodiva.reservio.com/"
+    },
+    "n13458263024": {
+      "sluzby": [
+        "bez-objednani"
+      ]
+    },
+    "n9885505544": {
+      "rezervace": "https://rejzr-barbershop.reservio.com/"
+    },
+    "n12051085765": {
+      "rezervace": "https://booking.reservanto.cz/Modal/"
+    },
+    "n3966804642": {
+      "rezervace": "https://https-barber-shop-na-pana-reservio-com.reservio.com/barber-shop-na-pana-frydlant-n-o"
+    },
+    "n13625382574": {
+      "sluzby": [
+        "bez-objednani"
+      ]
+    },
+    "n2301864892": {
+      "rezervace": "https://services.bookio.com/vsb-network/"
+    },
+    "n5020200489": {
+      "rezervace": "https://classic-man-barber-shop.reservio.com/classic-man-barber-shop"
+    },
+    "n14337831366": {
+      "sluzby": [
+        "bez-objednani"
+      ]
+    },
+    "n12343370766": {
+      "sluzby": [
+        "bez-objednani"
+      ]
+    },
+    "n13430278028": {
+      "rezervace": "https://the-drop-bs.reservio.com/"
+    },
+    "n11973777226": {
+      "rezervace": "https://hanakropackova.snippet.myfox.cz/"
+    },
+    "n13041886138": {
+      "rezervace": "https://menscut.reservio.com/"
+    },
+    "n13289937087": {
+      "sluzby": [
+        "bez-objednani"
+      ]
+    },
+    "n296740330": {
+      "rezervace": "https://www.fresha.com/a/the-canadian-barbershop-praha-francouzska-400-112-9lzz3gzq"
+    },
+    "n13988774101": {
+      "rezervace": "https://www.fresha.com/cs/a/cutegory-brno-jihomoravsky-kraj-za-divadlem-tf6lr9uf/"
+    },
+    "n12923541217": {
+      "sluzby": [
+        "bez-objednani"
+      ]
+    },
+    "n12883790801": {
+      "rezervace": "https://men-s-hut-barbershop.reservio.com/"
+    },
+    "n3156266466": {
+      "rezervace": "https://booking.reservanto.cz/Script/reservanto-iframe.js"
+    },
+    "n12514110985": {
+      "rezervace": "https://navi-barbershop.reservio.com/"
+    },
+    "n14066107939": {
+      "sluzby": [
+        "bez-objednani"
+      ]
+    },
+    "n4175304553": {
+      "sluzby": [
+        "bez-objednani"
+      ]
+    },
+    "n13140696002": {
+      "rezervace": "https://kadernickestudiodavidwebnodecz.simplybook.it/v2/"
+    },
+    "n13317799918": {
+      "rezervace": "https://services.bookio.com/barbershop-dejvice/"
+    },
+    "n8737455878": {
+      "rezervace": "https://thestage-barbershop.reservio.com/"
+    },
+    "n4368535241": {
+      "rezervace": "https://noona.app/salonani/book"
+    },
+    "n12043875551": {
+      "rezervace": "https://barber-david-bily2.reservio.com/services"
+    },
+    "n10243080555": {
+      "rezervace": "https://barbertisnov.reservio.com/"
+    },
+    "n13628527557": {
+      "rezervace": "https://noona.app/bradkapraha"
+    },
+    "n13184120082": {
+      "rezervace": "https://performancebarber.snippet.myfox.cz/"
     }
   }
 }
